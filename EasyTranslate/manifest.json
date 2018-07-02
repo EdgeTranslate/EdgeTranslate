@@ -2,10 +2,21 @@
   "name": "Easy Translate",
   "description": "Translate what you want.",
   "version": "0.0.1",
-  "permissions": ["contextMenus"],
+  "permissions": [
+      "contextMenus", 
+      "https://translate.google.cn/*"
+    ],
+    
   "background": {
     "persistent": false,
     "scripts": ["main.js"]
   },
+
+  "browser_action": {
+    "default_popup": "popup.html"
+  },
+
+
+
   "manifest_version": 2
 }
