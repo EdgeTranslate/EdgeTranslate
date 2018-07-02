@@ -1,0 +1,11 @@
+{
+  "name": "Easy Translate",
+  "description": "Translate what you want.",
+  "version": "0.0.1",
+  "permissions": ["contextMenus"],
+  "background": {
+    "persistent": false,
+    "scripts": ["main.js"]
+  },
+  "manifest_version": 2
+}
