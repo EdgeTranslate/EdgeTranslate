@@ -1,0 +1,8 @@
+#translate_frame {
+    height:100%;
+    width:20%;
+    background-color: white;
+    position:fixed;
+    right:0;
+    top:0;
+}

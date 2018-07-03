@@ -18,5 +18,16 @@
   "browser_action": {
     "default_popup": "options.html"
   },
+  "content_scripts": [
+    {
+      "matches": [
+        "file://*",
+        "*://*/*"
+      ],
+      "css": [
+        "./display/display.css"
+      ]
+    }
+  ],
   "manifest_version": 2
 }
