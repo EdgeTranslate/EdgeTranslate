@@ -1,8 +1,10 @@
 #translate_frame {
     height:100%;
-    width:20%;
+    width:15%;
     background-color: white;
     position:fixed;
     right:0;
     top:0;
+    z-index: 10000;
+    transition:right 300ms;
 }
