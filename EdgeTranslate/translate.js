@@ -38,8 +38,3 @@ var showTranslate = function (tabs, content) {
 }
 
 chrome.contextMenus.onClicked.addListener(onClickHandler);
-
-// Set up context menu tree at install time.
-chrome.runtime.onInstalled.addListener(function () {
-    chrome.contextMenus.create({ "title": "Easy Translate", "contexts": ["selection"], "id": "context_selection" });
-});

@@ -3,7 +3,7 @@
  */
 window.onload = function () {
     // 获得用户之前选择的语言翻译选项。
-    chrome.storage.sync.get({"language_setting": default_language_setting}, function (result) {
+    chrome.storage.sync.get("language_setting", function (result) {
         language_setting = result.language_setting;
 
         // 获取下拉列表元素。

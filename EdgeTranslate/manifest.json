@@ -1,33 +1,37 @@
 {
-  "name": "Edge Translate",
-  "description": "Translate what you want.",
-  "version": "0.0.1",
-  "permissions": [
-    "contextMenus",
-    "storage",
-    "tabs",
-    "file://*",
-    "*://*/*"
-  ],
-  "background": {
-    "persistent": false,
-    "scripts": [
-      "translate.js"
-    ]
-  },
-  "browser_action": {
-    "default_popup": "./options/options.html"
-  },
-  "content_scripts": [
-    {
-      "matches": [
+    "name": "Edge Translate",
+    "description": "Translate what you want.",
+    "version": "0.0.1",
+    "permissions": [
+        "contextMenus",
+        "storage",
+        "tabs",
         "file://*",
         "*://*/*"
-      ],
-      "css": [
-        "./display/display.css"
-      ]
-    }
-  ],
-  "manifest_version": 2
+    ],
+
+    "background": {
+        "persistent": false,
+        "scripts": [
+            "init.js",
+            "translate.js"
+        ]
+    },
+
+    "browser_action": {
+        "default_popup": "./options/options.html"
+    },
+    
+    "content_scripts": [
+        {
+            "matches": [
+                "file://*",
+                "*://*/*"
+            ],
+            "css": [
+                "./display/display.css"
+            ]
+        }
+    ],
+    "manifest_version": 2
 }
