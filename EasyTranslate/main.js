@@ -7,6 +7,7 @@ function onClickHandler(info, tabs) {
     request.onreadystatechange = function () {
         if (request.readyState == 4 && request.status == 200) {
             var response = JSON.parse(request.response);
+            console.log(response);
             var meanings = response[5][0][2];
             var meaning = "";
             for (var i = 0; i < meanings.length; i++) {
