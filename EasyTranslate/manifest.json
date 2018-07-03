@@ -3,20 +3,20 @@
   "description": "Translate what you want.",
   "version": "0.0.1",
   "permissions": [
-      "contextMenus", 
-      "https://translate.google.cn/*"
-    ],
-    
+    "contextMenus",
+    "storage",
+    "tabs",
+    "file://*",
+    "*://*/*"
+  ],
   "background": {
     "persistent": false,
-    "scripts": ["main.js"]
+    "scripts": [
+      "main.js"
+    ]
   },
-
   "browser_action": {
     "default_popup": "options.html"
   },
-
-
-
   "manifest_version": 2
 }
