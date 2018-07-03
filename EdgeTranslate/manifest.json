@@ -1,5 +1,5 @@
 {
-  "name": "Easy Translate",
+  "name": "Edge Translate",
   "description": "Translate what you want.",
   "version": "0.0.1",
   "permissions": [
@@ -12,7 +12,7 @@
   "background": {
     "persistent": false,
     "scripts": [
-      "main.js"
+      "translate.js"
     ]
   },
   "browser_action": {

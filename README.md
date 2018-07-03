@@ -1,2 +1,2 @@
-# EasyTranslate
+# EdgeTranslate
 A Chrome translator extension.
