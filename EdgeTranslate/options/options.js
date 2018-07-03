@@ -3,42 +3,42 @@
  */
 window.onload = function () {
     // 获得用户之前选择的语言翻译选项。
-    chrome.storage.sync.get("language_setting", function (result) {
-        language_setting = result.language_setting;
+    chrome.storage.sync.get("languageSetting", function (result) {
+        var languageSetting = result.languageSetting;
 
         // 获取下拉列表元素。
-        var source_language = document.getElementById("sl");
-        var target_language = document.getElementById("tl");
+        var sourceLanguage = document.getElementById("sl");
+        var targetLanguage = document.getElementById("tl");
 
-        // console.log("language_setting: " + language_setting);
+        // console.log("languageSetting: " + languageSetting);
 
         // languages是可选的源语言和目标语言的列表。
-        languages.forEach(element => {
+        LANGUAGES.forEach(element => {
             // console.log("ele_value: " + element.value);
-            if (language_setting && element.value == language_setting.sl) {
-                source_language.options.add(new Option(element.name, element.value, true, true));
+            if (languageSetting && element.value == languageSetting.sl) {
+                sourceLanguage.options.add(new Option(element.name, element.value, true, true));
             } else {
-                source_language.options.add(new Option(element.name, element.value));
+                sourceLanguage.options.add(new Option(element.name, element.value));
             }
 
-            if (language_setting && element.value == language_setting.tl) {
-                target_language.options.add(new Option(element.name, element.value, true, true));
+            if (languageSetting && element.value == languageSetting.tl) {
+                targetLanguage.options.add(new Option(element.name, element.value, true, true));
             } else {
-                target_language.options.add(new Option(element.name, element.value));
+                targetLanguage.options.add(new Option(element.name, element.value));
             }
         });
 
-        source_language.onchange = function () {
-            update_language_setting(
-                source_language.options[source_language.selectedIndex].value, 
-                target_language.options[target_language.selectedIndex].value
+        sourceLanguage.onchange = function () {
+            updateLanguageSetting(
+                sourceLanguage.options[sourceLanguage.selectedIndex].value, 
+                targetLanguage.options[targetLanguage.selectedIndex].value
             );
         };
 
-        target_language.onchange = function () {
-            update_language_setting(
-                source_language.options[source_language.selectedIndex].value, 
-                target_language.options[target_language.selectedIndex].value
+        targetLanguage.onchange = function () {
+            updateLanguageSetting(
+                sourceLanguage.options[sourceLanguage.selectedIndex].value, 
+                targetLanguage.options[targetLanguage.selectedIndex].value
             );
         };
     });
@@ -47,11 +47,11 @@ window.onload = function () {
 /**
  * 保存翻译语言设定。
  * 
- * @param {*} source_language 源语言
- * @param {*} target_language 目标语言
+ * @param {*} sourceLanguage 源语言
+ * @param {*} targetLanguage 目标语言
  */
-function update_language_setting(source_language, target_language) {
-    save_option("language_setting", {"sl": source_language, "tl": target_language});
+function updateLanguageSetting(sourceLanguage, targetLanguage) {
+    saveOption("languageSetting", {"sl": sourceLanguage, "tl": targetLanguage});
 }
 
 /**
@@ -60,7 +60,7 @@ function update_language_setting(source_language, target_language) {
  * @param {*} key 设置项名
  * @param {*} value 设置项值
  */
-function save_option(key, value) {
+function saveOption(key, value) {
     var item = {};
     item[key] = value;
     chrome.storage.sync.set(item);

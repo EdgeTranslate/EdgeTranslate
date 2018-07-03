@@ -37,4 +37,8 @@ var showTranslate = function (tabs, content) {
     })
 }
 
+function generateUrl() {
+    
+}
+
 chrome.contextMenus.onClicked.addListener(onClickHandler);
