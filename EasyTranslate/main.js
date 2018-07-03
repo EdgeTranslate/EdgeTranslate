@@ -24,7 +24,7 @@ var showTranslate = function (tabs, content) {
         }
         else {
             chrome.tabs.executeScript(tabs[0].id, {
-                file: 'display.js'
+                file: './display/display.js'
             }, function (tab) {
                 if (chrome.runtime.lastError) {
                     alert(content);
