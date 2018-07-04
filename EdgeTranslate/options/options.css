@@ -1,6 +1,5 @@
 html {
     width: 200px;
-    padding: 0 5% 5% 0;
 }
 
 .frame {
@@ -24,4 +23,14 @@ select {
     max-width: 130px;
     height: 25px;
     background-color: #eee;
+}
+
+footer {
+    font-size: xx-small;
+    color: gray;
+    text-align: center;
+}
+
+a {
+    color: gray;
 }
