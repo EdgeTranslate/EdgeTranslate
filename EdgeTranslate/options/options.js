@@ -9,8 +9,8 @@ window.onload = function () {
         // 获取下拉列表元素。
         var sourceLanguage = document.getElementById("sl");
         var targetLanguage = document.getElementById("tl");
-
-        // console.log("languageSetting: " + languageSetting);
+        // 翻译结果的展示内容
+        var detailTranslate = document.getElementById("dt");
 
         // languages是可选的源语言和目标语言的列表。
         LANGUAGES.forEach(element => {
@@ -30,14 +30,14 @@ window.onload = function () {
 
         sourceLanguage.onchange = function () {
             updateLanguageSetting(
-                sourceLanguage.options[sourceLanguage.selectedIndex].value, 
+                sourceLanguage.options[sourceLanguage.selectedIndex].value,
                 targetLanguage.options[targetLanguage.selectedIndex].value
             );
         };
 
         targetLanguage.onchange = function () {
             updateLanguageSetting(
-                sourceLanguage.options[sourceLanguage.selectedIndex].value, 
+                sourceLanguage.options[sourceLanguage.selectedIndex].value,
                 targetLanguage.options[targetLanguage.selectedIndex].value
             );
         };
@@ -51,7 +51,7 @@ window.onload = function () {
  * @param {*} targetLanguage 目标语言
  */
 function updateLanguageSetting(sourceLanguage, targetLanguage) {
-    saveOption("languageSetting", {"sl": sourceLanguage, "tl": targetLanguage});
+    saveOption("languageSetting", { "sl": sourceLanguage, "tl": targetLanguage });
 }
 
 /**

@@ -1,26 +1,36 @@
 html {
-    width: 200px;
+    width: 300px;
 }
 
 .frame {
     margin: 5%;
 }
 
-.line {
+.row {
     display: flex;
     align-items: center;
     line-height: 4em;
 }
 
+.col {
+    flex: 1 1 50%;
+}
+
+.selection {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
 label {
-    flex: 1 1 40%;
-    font-size: small;
+    text-align: center;
+    font-size: medium;
 }
 
 select {
-    flex: 1 1 60%;
-    width: 60%;
-    max-width: 130px;
+    width: 90%;
+    max-width: 150px;
     height: 25px;
     background-color: #eee;
 }
@@ -29,6 +39,19 @@ footer {
     font-size: xx-small;
     color: gray;
     text-align: center;
+}
+
+.multiple {
+    flex: 1 1 60%;
+    display: inline-block;
+}
+
+.select {
+    background-color: #eee;
+}
+
+.option {
+    line-height: 20px;
 }
 
 a {
