@@ -1,24 +1,64 @@
+/**
+ * 翻译接口。
+ */
+const BASE_URL = "https://translate.google.cn/translate_a/single?client=gtx";
+
+/**
+ * 菜单点击事件监听器。
+ * 
+ * @param {*} info 事件信息
+ * @param {*} tabs 
+ */
 function onClickHandler(info, tabs) {
     var text = info.selectionText;
 
-    var request = new XMLHttpRequest();
-    request.open("GET", "https://translate.google.cn/translate_a/single?client=gtx&sl=en&tl=zh&dt=t&dt=at&q=" + text, true);
-    request.send();
-    request.onreadystatechange = function () {
-        if (request.readyState == 4 && request.status == 200) {
-            var response = JSON.parse(request.response);
-            console.log(response);
-            var meanings = response[5][0][2];
-            var meaning = "";
-            for (var i = 0; i < meanings.length; i++) {
-                meaning += meanings[i][0] + ", ";
+    // 获取翻译语言设定。
+    chrome.storage.sync.get("languageSetting", function (result) {
+        var languageSetting = result.languageSetting;
+        var tmpUrl = BASE_URL + "&sl=" + languageSetting.sl + "&tl=" + languageSetting.tl;
+
+        // 获取翻译参数设定。
+        chrome.storage.sync.get("DTSetting", function (result) {
+            var url = tmpUrl;
+            var DTSetting = result.DTSetting;
+            var request = new XMLHttpRequest();
+
+            DTSetting.forEach(element => {
+                url = url + "&dt=" + element;
+            });
+
+            request.open("GET", url + "&q=" + text, true);
+            request.send();
+            request.onreadystatechange = function () {
+                if (request.readyState === 4 && request.status === 200) {
+                    parseTranslate(JSON.parse(request.response));
+                }
             }
-            showTranslate(tabs, meaning);
-        }
-    }
+        });
+    });
 };
 
-var showTranslate = function (tabs, content) {
+/**
+ * 解析谷歌翻译返回的结果。
+ * 
+ * @param {Object} response 谷歌翻译返回的结果。
+ */
+function parseTranslate(response) {
+    console.log(response);
+    var meanings = response[5][0][2];
+    var meaning = "";
+    for (var i = 0; i < meanings.length; i++) {
+        meaning += meanings[i][0] + ", ";
+    }
+    showTranslate(meaning);
+}
+
+/**
+ * 展示翻译结果。
+ * 
+ * @param {Object} content 翻译结果。
+ */
+var showTranslate = function (content) {
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
         if (chrome.runtime.lastError) {
             alert(content);
@@ -35,10 +75,6 @@ var showTranslate = function (tabs, content) {
             })
         }
     })
-}
-
-function generateUrl() {
-    
 }
 
 chrome.contextMenus.onClicked.addListener(onClickHandler);
