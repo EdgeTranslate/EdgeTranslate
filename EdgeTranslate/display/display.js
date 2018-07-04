@@ -17,33 +17,41 @@ var display = function (content) {
  * @param {Object} content 翻译的结果
  */
 var createBlock = function (content) {
-    frame = document.createElement('DIV');
-    frame.id = 'translate_frame';
-    document.body.style.transition = 'width 500ms';
-    document.body.style.width = '85%';
-    document.documentElement.addEventListener('click', clickListener)
+    // 判断frame是否已经添加到了页面中
+    if (!isChildNode(frame, document.documentElement)) { // frame不在页面中，创建新的frame
+        frame = document.createElement('DIV');
+        frame.id = 'translate_frame';
+        document.body.style.transition = 'width 500ms';
+        document.body.style.width = '85%';
+        document.documentElement.addEventListener('click', clickListener)
 
-    var p = document.createElement('p');
-    p.innerText = content;
+        var p = document.createElement('p');
+        p.innerText = content;
 
-    let closeIcon = document.createElement('i');
-    closeIcon.className = 'translate-icon-close';
-    closeIcon.onclick = removeSlider;
+        let closeIcon = document.createElement('i');
+        closeIcon.className = 'translate-icon-close';
+        closeIcon.onclick = removeSlider;
 
-    document.documentElement.appendChild(frame);
-    frame.appendChild(closeIcon);
-    frame.appendChild(p);
+        document.documentElement.appendChild(frame);
+        frame.appendChild(closeIcon);
+        frame.appendChild(p);
+    } else { // frame已经在页面中，直接改变frame的值
+        frame.childNodes[1].innerText = content;
+    }
 }
 
 /**
  * 
  * 一个工具api,判断传入的第一个元素是否是传入的第二个元素的子节点
  * 
- * @param {Element} node1 第一个document Element 元素
- * @param {Element} node2 第二个document Element 元素
+ * @param {Element} node1 第一个document Element 元素,非空
+ * @param {Element} node2 第二个document Element 元素，非空
  */
 var isChildNode = function (node1, node2) {
-    while (!node1.isSameNode(document.body)) {
+    // 判断传入的参数是否合法
+    if (node1 === undefined || node1 === null || node2 === undefined || node2 === null)
+        return false;
+    while (node1 !== null && !node1.isSameNode(document.body)) {
         if (node1.isSameNode(node2))
             return true;
         else
