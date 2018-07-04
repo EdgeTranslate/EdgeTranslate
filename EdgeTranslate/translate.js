@@ -33,6 +33,9 @@ function onClickHandler(info, tabs) {
                 if (request.readyState === 4 && request.status === 200) {
                     parseTranslate(JSON.parse(request.response));
                 }
+                if (request.status !== 200) {
+                    alert('无法请求翻译，请检查网络连接');
+                }
             }
         });
     });
@@ -115,7 +118,8 @@ var showTranslate = function (content) {
                 if (chrome.runtime.lastError) {
                     alert(content);
                 } else {
-                    chrome.tabs.sendMessage(tabs[0].id, content);
+                    if (content)
+                        chrome.tabs.sendMessage(tabs[0].id, content);
                 }
             })
         }

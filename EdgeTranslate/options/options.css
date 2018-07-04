@@ -14,14 +14,17 @@
     font-style: normal;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    color: #4a8cf7;
 }
 
 .translate-icon-exchange::before {
     content: "\e643";
 }
 
-.translate-icon-exchange:active {
+#exchange {
+    color: #4a8cf7;
+}
+
+#exchange:active {
     color: grey;
 }
 
