@@ -44,7 +44,6 @@ function onClickHandler(info, tabs) {
  * @param {Object} response 谷歌翻译返回的结果。
  */
 function parseTranslate(response) {
-    console.log(response);
     var meanings = response[5][0][2];
     var meaning = "";
     for (var i = 0; i < meanings.length; i++) {
@@ -69,7 +68,7 @@ var showTranslate = function (content) {
             }, function (tab) {
                 if (chrome.runtime.lastError) {
                     alert(content);
-                } else{
+                } else {
                     chrome.tabs.sendMessage(tabs[0].id, content);
                 }
             })

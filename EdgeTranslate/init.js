@@ -1,12 +1,12 @@
 /**
  * 默认的源语言和目标语言。
  */
-const DEFAULT_LANGUAGE_SETTING = { "sl": "en", "tl": "zh-CN" };
+const DEFAULT_LANGUAGE_SETTING = { "sl": "auto", "tl": "zh-CN" };
 
 /**
  * 默认的翻译参数。
  */
-const DEFAULT_DT_SETTING = ["t", "bd", "ex", "md"];
+const DEFAULT_DT_SETTING = ["at", "bd", "ex", "md"];
 
 /**
  * 初始化插件配置。
