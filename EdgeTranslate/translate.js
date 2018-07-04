@@ -44,12 +44,60 @@ function onClickHandler(info, tabs) {
  * @param {Object} response 谷歌翻译返回的结果。
  */
 function parseTranslate(response) {
-    var meanings = response[5][0][2];
-    var meaning = "";
-    for (var i = 0; i < meanings.length; i++) {
-        meaning += meanings[i][0] + ", ";
+    var result = new Object();
+    for (i = 0; i < response.length; i++) {
+        if (response[i]) {
+            var items = response[i];
+            switch(i) {
+                // 单词的基本意思
+                case 0:
+                    result.baseMeaning = items[0];
+                    break;
+                // 单词的所有词性及对应的意思
+                case 1:
+                    result.detailedMeanings = new Array();
+                    items.forEach(item =>
+                        result.detailedMeanings.push({"type": item[0], "meaning": item[1].join(", ")})
+                    );
+                    break;
+                // 单词或句子的常见意思（单词的常见意思，句子的所有可能意思）
+                case 5:
+                    var meaningArray = new Array();
+                    items[0][2].forEach(item =>
+                        meaningArray.push(item[0])
+                    );
+                    result.commonMeanings = meaningArray.join(", ");
+                    break;
+                // 单词的定义及对应例子
+                case 12:
+                    result.definitions = new Array();
+                    items.forEach(item => {
+                        var definition = new Object();
+                        definition.type = item[0];
+                        definition.meanings = new Array();
+                        item[1].forEach(element =>
+                            definition.meanings.push({"meaning": element[0], "example": element[2]})
+                        );
+                        result.definitions.push(definition);
+                    });
+                    break;
+                // 单词的例句
+                case 13:
+                    result.examples = new Array();
+                    items.forEach(item =>
+                        item.forEach(element => 
+                            result.examples.push(element[0])
+                        )
+                    );
+                    break;
+                default:
+                    break;
+            }
+        }
     }
-    showTranslate(meaning);
+    console.log("examples: " + JSON.stringify(result.examples));
+    // console.log("detailedMeanings: " + JSON.stringify(result.detailedMeanings) + "\ncommonMeanings: " + result.commonMeanings + "\ndefinitions: " + JSON.stringify(result.definitions));
+    showTranslate(result.commonMeanings);
 }
 
 /**
