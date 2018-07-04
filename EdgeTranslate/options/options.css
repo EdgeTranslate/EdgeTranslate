@@ -1,0 +1,27 @@
+html {
+    width: 200px;
+    padding: 0 5% 5% 0;
+}
+
+.frame {
+    margin: 5%;
+}
+
+.line {
+    display: flex;
+    align-items: center;
+    line-height: 4em;
+}
+
+label {
+    flex: 1 1 40%;
+    font-size: small;
+}
+
+select {
+    flex: 1 1 60%;
+    width: 60%;
+    max-width: 130px;
+    height: 25px;
+    background-color: #eee;
+}
