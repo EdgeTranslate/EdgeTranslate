@@ -7,7 +7,7 @@ const BASE_URL = "https://translate.google.cn/translate_a/single?client=gtx";
  * 菜单点击事件监听器。
  * 
  * @param {*} info 事件信息
- * @param {*} tabs 
+ * @param {*} tabs 菜单栏点击位置的具体信息，是一个tab对象 
  */
 function onClickHandler(info, tabs) {
     var text = info.selectionText;
@@ -69,7 +69,7 @@ var showTranslate = function (content) {
             }, function (tab) {
                 if (chrome.runtime.lastError) {
                     alert(content);
-                } else{
+                } else {
                     chrome.tabs.sendMessage(tabs[0].id, content);
                 }
             })
