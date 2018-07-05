@@ -6,7 +6,7 @@ const DEFAULT_LANGUAGE_SETTING = { "sl": "auto", "tl": "zh-CN" };
 /**
  * 默认的翻译参数。
  */
-const DEFAULT_DT_SETTING = ["t", "at", "bd", "ex", "md"];
+const DEFAULT_DT_SETTING = ["t", "at", "bd", "ex", "md", "rw", "ss"];
 
 /**
  * 初始化插件配置。

@@ -33,7 +33,7 @@ function onClickHandler(info, tabs) {
                 if (request.readyState === 4 && request.status === 200) {
                     parseTranslate(JSON.parse(request.response));
                 }
-                if (request.status !== 200) {
+                else if (request.status !== 200) {
                     alert('无法请求翻译，请检查网络连接');
                 }
             }
@@ -54,7 +54,9 @@ function parseTranslate(response) {
             switch (i) {
                 // 单词的基本意思
                 case 0:
-                    result.baseMeaning = items[0];
+                    result.mainMeaning = items[0];
+                    result.originalText = items[1];
+                    // console.log("text: " + result.originalText + "\nmeaning: " + result.mainMeaning);
                     break;
                 // 单词的所有词性及对应的意思
                 case 1:
@@ -62,20 +64,34 @@ function parseTranslate(response) {
                     items.forEach(item =>
                         result.detailedMeanings.push({ "type": item[0], "meaning": item[1].join(", ") })
                     );
+                    // console.log("detailedMeanings: " + JSON.stringify(result.detailedMeanings));
                     break;
                 // 单词或句子的常见意思（单词的常见意思，句子的所有可能意思）
                 case 5:
-                    var meaningArray = new Array();
+                    let meaningArray = new Array();
                     items[0][2].forEach(item =>
                         meaningArray.push(item[0])
                     );
                     result.commonMeanings = meaningArray.join(", ");
+                    // console.log("commonMeanings: " + result.commonMeanings);
+                    break;
+                // 单词的同义词，根据词性分组
+                case 11:
+                    result.synonyms = new Array();
+                    items.forEach(item => {
+                        let element = new Object();
+                        element.type = item[0];
+                        element.words = new Array();
+                        item[1].forEach(words => element.words.push(words[0]));
+                        result.synonyms.push(element);
+                    });
+                    console.log("synonyms: " + JSON.stringify(result.synonyms));
                     break;
                 // 单词的定义及对应例子
                 case 12:
                     result.definitions = new Array();
                     items.forEach(item => {
-                        var definition = new Object();
+                        let definition = new Object();
                         definition.type = item[0];
                         definition.meanings = new Array();
                         item[1].forEach(element =>
@@ -83,6 +99,7 @@ function parseTranslate(response) {
                         );
                         result.definitions.push(definition);
                     });
+                    // console.log("definitions: " + JSON.stringify(result.definitions));
                     break;
                 // 单词的例句
                 case 13:
@@ -92,6 +109,12 @@ function parseTranslate(response) {
                             result.examples.push(element[0])
                         )
                     );
+                    // console.log("examples: " + JSON.stringify(result.examples));
+                    break;
+                // 单词构成的常见短语
+                case 14:
+                    result.phrases = items[0];
+                    console.log("phrases: " + JSON.stringify(result.phrases));
                     break;
                 default:
                     break;

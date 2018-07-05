@@ -18,7 +18,7 @@ window.onload = function () {
                 let tempValue = targetLanguage.value;
                 targetLanguage.value = sourceLanguage.value;
                 sourceLanguage.value = tempValue;
-                slChangeValue();
+                updateLanguageSetting(sourceLanguage.value, targetLanguage.value);
             }
         }
 
@@ -41,7 +41,7 @@ window.onload = function () {
         // 如何源语言是自动判断语言类型(值是auto),则按钮显示灰色，避免用户点击
         judgeValue(exchangeButton, sourceLanguage);
 
-        sourceLanguage.onchange = function slChangeValue() {
+        sourceLanguage.onchange = function () {
             // 如何源语言是自动判断语言类型(值是auto),则按钮显示灰色，避免用户点击,如果不是，则显示蓝色，可以点击
             judgeValue(exchangeButton, sourceLanguage);
             updateLanguageSetting(
@@ -50,7 +50,7 @@ window.onload = function () {
             );
         };
 
-        targetLanguage.onchange = function tlChangeValue() {
+        targetLanguage.onchange = function () {
             updateLanguageSetting(
                 sourceLanguage.options[sourceLanguage.selectedIndex].value,
                 targetLanguage.options[targetLanguage.selectedIndex].value
