@@ -5,77 +5,68 @@
 
 <body>
     <div class="frame">
-        <div class="line">
-            <div class="row">
-                <div class="col">
-                    <div class="selection">
-                        <label id="sl_label" for="sl">源语言：</label>
-                        <select id="sl">
-                            <option value="auto">自动检测</option>
-                        </select>
-                    </div>
-                </div>
-                <i class="translate-icon-exchange" id="exchange" title="交换两种语言"></i>
-                <div class="col">
-                    <div class="selection">
-                        <label id="tl_label" for="tl">目标语言：</label>
-                        <select id="tl">
-                        </select>
-                    </div>
+        <div class="row" style="align-items: flex-end;">
+            <div class="col">
+                <div class="selection">
+                    <label id="sl_label" class="select-label" for="sl">源语言：</label>
+                    <select id="sl">
+                        <option value="auto">自动检测</option>
+                    </select>
                 </div>
             </div>
-            <div class="line">
-                <label>翻译选项</label>
-                <input type="checkbox" value="t" checked="checked" /> 显示词义
-                <input type="checkbox" value="at" checked="checked" /> 显示近义词
-                <input type="checkbox" value="ex" checked="checked" /> 显示例句
-                <input type="checkbox" value="ss" checked="checked" /> 显示相关词
-                <input type="checkbox" value="md" checked="checked" /> 显示定义
-                <input type="checkbox" value="rw" checked="checked" /> 显示词组
-                <!-- <div class="multiple">
-                <input id="dt">
-                <div class="select">
-                    <div class="option">
-                        显示近义词
-                    </div>
-                    <div class="option">
-                        显示例句
-                    </div>
-                    <div class="option">
-                        显示相关词
-                    </div>
-                    <div class="option">
-                        显示定义
-                    </div>
-                    <div class="option">
-                        显示词组
-                    </div>
+            <i class="translate-icon-exchange" id="exchange" title="交换两种语言"></i>
+            <div class="col">
+                <div class="selection">
+                    <label id="tl_label" class="select-label" for="tl">目标语言：</label>
+                    <select id="tl">
+                    </select>
                 </div>
-            </div> -->
-                <!-- <option value="at">
-                显示近义词
-            </option>
-            <option value="ex">
-                显示例句
-            </option>
-            <option value="ss">
-                显示相关词
-            </option>
-            <option value="md">
-                显示定义
-            </option>
-            <option value="rw">
-                显示词组
-            </option> -->
             </div>
         </div>
+        <div class="row" style="align-items: flex-start;margin:5% 0;">
+            <label>翻译选项</label>
+            <div class="col">
+                <div class="row">
+                    <span>
 
-        <footer>
-            ©2018
-            <a href="https://github.com/nickyc975/EdgeTranslate" target="blank">
-                Edge Tranlate
-            </a>
-        </footer>
+                        <label for="t" class="checked-label">
+                            <input type="checkbox" style="background: blue;" value="t" id="t" checked="checked" />显示词义</label>
+                    </span>
+                    <span>
+                        <input type="checkbox" value="at" id="at" checked="checked" />
+                        <label for="at" class="checked-label">显示近义词</label>
+                    </span>
+                </div>
+                <div class="row">
+                    <span>
+                        <input type="checkbox" value="ex" id="ex" checked="checked" />
+                        <label for="ex" class="checked-label">显示例句</label>
+                    </span>
+                    <span>
+                        <input type="checkbox" value="ss" id="ss" checked="checked" />
+                        <label for="ss" class="checked-label">显示相关词</label>
+                    </span>
+                </div>
+                <div class="row">
+                    <span>
+                        <input type="checkbox" value="md" id="md" checked="checked" />
+                        <label for="md" class="checked-label">显示定义</label>
+                    </span>
+                    <span>
+                        <input type="checkbox" value="rw" id="rw" checked="checked" />
+                        <label for="rw" class="checked-label">显示词组</label>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        ©2018
+        <a href="https://github.com/nickyc975/EdgeTranslate" target="blank">
+            Edge Tranlate
+        </a>
+    </footer>
 </body>
 
 <script src="./options.js"></script>
