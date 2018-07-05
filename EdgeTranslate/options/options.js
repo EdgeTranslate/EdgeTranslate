@@ -24,7 +24,6 @@ window.onload = function () {
 
         // languages是可选的源语言和目标语言的列表。
         LANGUAGES.forEach(element => {
-            // console.log("ele_value: " + element.value);
             if (languageSetting && element.value == languageSetting.sl) {
                 sourceLanguage.options.add(new Option(element.name, element.value, true, true));
             } else {
@@ -58,6 +57,37 @@ window.onload = function () {
         };
     });
 
+    chrome.storage.sync.get('DTSetting', function (result) {
+        var DTSetting = result.DTSetting;
+
+        // 存储翻译选项的选择元素
+        var configCheckbox = [];
+
+        //添加翻译选项的选择元素
+        configCheckbox.push(document.getElementById('ex'));  // 显示例句选项框
+        configCheckbox.push(document.getElementById('ss'));  // 显示相关词选项框
+        configCheckbox.push(document.getElementById('md'));  // 显示定义选项框
+        configCheckbox.push(document.getElementById('rw'));  // 显示词组选项框
+        configCheckbox.push(document.getElementById('bd'));  // 显示所有含义选项框
+        configCheckbox.push(document.getElementById('at'));  // 显示常用意思选项框
+
+        // 首先将初始化的设置同步到页面中
+        for (let i = 0; i < configCheckbox.length; i++)
+            configCheckbox[i].checked = DTSetting.indexOf(configCheckbox[i].value) !== -1;
+
+        // 如果用户修改了选项，则添加事件监听,将修改的配置保存
+        for (let i = 0; i < configCheckbox.length; i++)
+            configCheckbox[i].onchange = function () {
+                // this 表示的当前的筛选框元素
+                if (this.checked) // 用户勾选了这一项
+                    DTSetting.push(this.value);
+                else // 用户删除了这一项
+                    DTSetting.splice(DTSetting.indexOf(this.value), 1);
+                // 同步修改后的设定
+                updateLanguageSetting(DTSetting);
+            }
+    })
+
     /**
      * 
      * 如果源语言是自动判断语言类型(值是auto),则按钮显示灰色，避免用户点击
@@ -81,6 +111,15 @@ window.onload = function () {
  */
 function updateLanguageSetting(sourceLanguage, targetLanguage) {
     saveOption("languageSetting", { "sl": sourceLanguage, "tl": targetLanguage });
+}
+
+/**
+ * 保存翻译选项设置(DTSetting)。
+ * 
+ * @param {*object} DTSetting 需要同步的翻译选项设定
+ */
+function updateLanguageSetting(DTSetting) {
+    saveOption("DTSetting", DTSetting);
 }
 
 /**
