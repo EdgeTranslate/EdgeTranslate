@@ -42,7 +42,46 @@ function onClickHandler(info, tabs) {
 };
 
 /**
- * 解析谷歌翻译返回的结果。
+ * <p>解析谷歌翻译返回的结果。解析结果结构如下：</p>
+ * 
+ * <pre>
+ *     result = {
+ *         "mainMeaning": <字符串，单词的主要意思，句子的最可能的意思>,
+ *         "originalText": <字符串，被翻译的单词或句子>,
+ *         "detailedMeanings": [
+ *             {
+ *                 "type": <字符串，单词的词性>,
+ *                 "meaning": <字符串，单词在该词性下的所有意思>
+ *             }
+ *         ],
+ *         "commonMeanings": <字符串，单词的常见意思，句子的所有可能意思>,
+ *         "synonyms": [
+ *             {
+ *                 "type": <字符串，单词的词性>,
+ *                 "words": [
+ *                     <字符串，单词在该词性下的近义词，根据意思分组>
+ *                 ]
+ *             }
+ *         ],
+ *         "definitions": [
+ *             {
+ *                 "type": <字符串，单词的词性>,
+ *                 "meanings": [
+ *                     {
+ *                         "meaning": <字符串，单词的意思（英文解释）>,
+ *                         "example": <字符串，例句>
+ *                     }
+ *                 ]
+ *             }
+ *         ],
+ *         "examples": [
+ *             <字符串，单词的例句>
+ *         ],
+ *         "phrases": [
+ *             <字符串，单词构成的短语>
+ *         ]
+ *     }
+ * </pre>
  * 
  * @param {Object} response 谷歌翻译返回的结果。
  */
@@ -82,10 +121,10 @@ function parseTranslate(response) {
                         let element = new Object();
                         element.type = item[0];
                         element.words = new Array();
-                        item[1].forEach(words => element.words.push(words[0]));
+                        item[1].forEach(words => element.words.push(words[0].join(", ")));
                         result.synonyms.push(element);
                     });
-                    console.log("synonyms: " + JSON.stringify(result.synonyms));
+                    // console.log("synonyms: " + JSON.stringify(result.synonyms));
                     break;
                 // 单词的定义及对应例子
                 case 12:
@@ -114,7 +153,7 @@ function parseTranslate(response) {
                 // 单词构成的常见短语
                 case 14:
                     result.phrases = items[0];
-                    console.log("phrases: " + JSON.stringify(result.phrases));
+                    // console.log("phrases: " + JSON.stringify(result.phrases));
                     break;
                 default:
                     break;
