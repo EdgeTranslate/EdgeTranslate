@@ -94,48 +94,55 @@ i {
     max-height: 35px;
 }
 
-span input {
-    background-color: white;
-    width: 30px;
-    height: 30px;
-    margin: 0;
-}
-
 .checked-label {
     display: block;
     cursor: pointer;
     font-size: 12px;
-    width: 70px;
-    padding-left: 25px;
+    width: 60%;
+    padding-left: 5%;
 }
 
-span input:checked::after {
+.checkbox {
+    position: relative;
+    width: 16px;
+    height: 16px;
+    background-clip: border-box;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin: -.15px .6px 0 0;
+    vertical-align: text-bottom;
+    border-radius: 3px;
+    -webkit-transition: background-color .25s;
+    transition: background-color .25s;
+    background-color: #fff;
+    border: 1px solid #d7d7d7;
+}
+
+.checkbox:checked:after {
     content: '';
-    opacity: 0.2;
-    /*设置复选框标签透明度0.2,半透明的对勾 下面悬停时候加深*/
-    position: absolute;
-    width: 9px;
-    height: 5px;
-    background: transparent;
-    right: 70px;
-    /* right: 120%; */
-    border: 3px solid #4a8cf7;
-    border-top: none;
-    border-right: none;
+    display: block;
+    height: 4px;
+    width: 7px;
+    border: 0 solid #fff;
+    border-width: 0 0 2px 2px;
     -webkit-transform: rotate(-45deg);
-    -moz-transform: rotate(-45deg);
-    -o-transform: rotate(-45deg);
-    -ms-transform: rotate(-45deg);
     transform: rotate(-45deg);
+    position: absolute;
+    top: 3px;
+    left: 3px;
 }
 
-span input:checked {
+.checkbox:disabled {
+    opacity: .65
+}
+
+.checkbox:focus {
+    outline: none;
+    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.075), 0 0 2px #38a7ff
+}
+
+.checkbox:checked {
     background-color: #4a8cf7;
     border-color: #4a8cf7;
-}
-
-span {
-    width: 100%;
-    display: block;
-    position: relative;
 }

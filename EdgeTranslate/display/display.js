@@ -51,7 +51,7 @@ var isChildNode = function (node1, node2) {
     // 判断传入的参数是否合法
     if (!(node1 && node2))
         return false;
-    while (!node1 && !node1.isSameNode(document.body)) {
+    while (node1 && !node1.isSameNode(document.body)) {
         if (node1.isSameNode(node2))
             return true;
         else
