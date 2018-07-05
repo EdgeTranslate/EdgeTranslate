@@ -38,7 +38,8 @@ html {
 
 .row {
     display: flex;
-    align-items: flex-end;
+    align-items: center;
+    justify-content: space-around;
     line-height: 4em;
 }
 
@@ -53,10 +54,10 @@ html {
     align-items: center;
 }
 
-label {
-    height: 40px;
-    text-align: center;
+.select-label {
     font-size: medium;
+    text-align: center;
+    height: 40px;
 }
 
 select {
@@ -91,4 +92,50 @@ a {
 
 i {
     max-height: 35px;
+}
+
+span input {
+    background-color: white;
+    width: 30px;
+    height: 30px;
+    margin: 0;
+}
+
+.checked-label {
+    display: block;
+    cursor: pointer;
+    font-size: 12px;
+    width: 70px;
+    padding-left: 25px;
+}
+
+span input:checked::after {
+    content: '';
+    opacity: 0.2;
+    /*设置复选框标签透明度0.2,半透明的对勾 下面悬停时候加深*/
+    position: absolute;
+    width: 9px;
+    height: 5px;
+    background: transparent;
+    right: 70px;
+    /* right: 120%; */
+    border: 3px solid #4a8cf7;
+    border-top: none;
+    border-right: none;
+    -webkit-transform: rotate(-45deg);
+    -moz-transform: rotate(-45deg);
+    -o-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+}
+
+span input:checked {
+    background-color: #4a8cf7;
+    border-color: #4a8cf7;
+}
+
+span {
+    width: 100%;
+    display: block;
+    position: relative;
 }
