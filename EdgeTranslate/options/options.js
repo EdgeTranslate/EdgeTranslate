@@ -84,7 +84,7 @@ window.onload = function () {
                 else // 用户删除了这一项
                     DTSetting.splice(DTSetting.indexOf(this.value), 1);
                 // 同步修改后的设定
-                updateLanguageSetting(DTSetting);
+                updateTranslateSetting(DTSetting);
             }
     })
 
@@ -118,7 +118,7 @@ function updateLanguageSetting(sourceLanguage, targetLanguage) {
  * 
  * @param {*object} DTSetting 需要同步的翻译选项设定
  */
-function updateLanguageSetting(DTSetting) {
+function updateTranslateSetting(DTSetting) {
     saveOption("DTSetting", DTSetting);
 }
 
