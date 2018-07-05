@@ -61,27 +61,28 @@ window.onload = function () {
         var DTSetting = result.DTSetting;
 
         // 存储翻译选项的选择元素
-        var configChedkbox = [];
+        var configCheckbox = [];
 
         //添加翻译选项的选择元素
-        configChedkbox.push(document.getElementById('ex'));  // 显示例句选项框
-        configChedkbox.push(document.getElementById('ss'));  // 显示相关词选项框
-        configChedkbox.push(document.getElementById('md'));  // 显示定义选项框
-        configChedkbox.push(document.getElementById('rw'));  // 显示词组选项框
-        configChedkbox.push(document.getElementById('bd'));  // 显示所有含义选项框
-        configChedkbox.push(document.getElementById('at'));  // 显示常用意思选项框
+        configCheckbox.push(document.getElementById('ex'));  // 显示例句选项框
+        configCheckbox.push(document.getElementById('ss'));  // 显示相关词选项框
+        configCheckbox.push(document.getElementById('md'));  // 显示定义选项框
+        configCheckbox.push(document.getElementById('rw'));  // 显示词组选项框
+        configCheckbox.push(document.getElementById('bd'));  // 显示所有含义选项框
+        configCheckbox.push(document.getElementById('at'));  // 显示常用意思选项框
 
         // 首先将初始化的设置同步到页面中
-        for (let i = 0; i < configChedkbox.length; i++)
-            configChedkbox[i].checked = DTSetting.indexOf(configChedkbox[i].value) !== -1;
+        for (let i = 0; i < configCheckbox.length; i++)
+            configCheckbox[i].checked = DTSetting.indexOf(configCheckbox[i].value) !== -1;
 
         // 如果用户修改了选项，则添加事件监听,将修改的配置保存
-        for (let i = 0; i < configChedkbox.length; i++)
-            configChedkbox[i].onchange = function () {
-                if (configChedkbox[i].checked) // 用户勾选了这一项
-                    DTSetting.push(configChedkbox[i].value);
+        for (let i = 0; i < configCheckbox.length; i++)
+            configCheckbox[i].onchange = function () {
+                // this 表示的当前的筛选框元素
+                if (this.checked) // 用户勾选了这一项
+                    DTSetting.push(this.value);
                 else // 用户删除了这一项
-                    DTSetting.splice(DTSetting.indexOf(configChedkbox[i].value));
+                    DTSetting.splice(DTSetting.indexOf(this.value), 1);
                 // 同步修改后的设定
                 updateLanguageSetting(DTSetting);
             }
