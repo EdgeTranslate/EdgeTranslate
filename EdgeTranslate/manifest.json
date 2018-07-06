@@ -9,7 +9,6 @@
         "file://*",
         "*://*/*"
     ],
-
     "background": {
         "persistent": false,
         "scripts": [
@@ -17,11 +16,9 @@
             "translate.js"
         ]
     },
-
     "browser_action": {
         "default_popup": "./options/options.html"
     },
-    
     "content_scripts": [
         {
             "matches": [
@@ -30,6 +27,9 @@
             ],
             "css": [
                 "./display/display.css"
+            ],
+            "js": [
+                "./display/template.js"
             ]
         }
     ],
