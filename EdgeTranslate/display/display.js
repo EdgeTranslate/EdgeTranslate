@@ -7,6 +7,7 @@ var frame;
  * @param {Object} content 翻译的结果
  */
 var display = function (content) {
+    console.log(content)
     createBlock(content);
     chrome.runtime.onMessage.removeListener(display);
 }

@@ -160,7 +160,7 @@ function parseTranslate(response) {
             }
         }
     }
-    showTranslate(result.commonMeanings);
+    showTranslate(result);
 }
 
 /**
@@ -170,9 +170,8 @@ function parseTranslate(response) {
  */
 var showTranslate = function (content) {
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-        if (chrome.runtime.lastError) {
+        if (chrome.runtime.lastError)
             alert(content);
-        }
         else {
             chrome.tabs.executeScript(tabs[0].id, {
                 file: './display/display.js'
