@@ -26,18 +26,11 @@ var createBlock = function (content) {
         document.body.style.width = '85%';
         document.documentElement.addEventListener('click', clickListener)
 
-        var p = document.createElement('p');
-        p.innerText = content;
-
-        let closeIcon = document.createElement('i');
-        closeIcon.className = 'translate-icon-close';
-        closeIcon.onclick = removeSlider;
-
+        frame.innerHTML = render(template, content);
+        // 将frame放入document中
         document.documentElement.appendChild(frame);
-        frame.appendChild(closeIcon);
-        frame.appendChild(p);
     } else { // frame已经在页面中，直接改变frame的值
-        frame.childNodes[1].innerText = content;
+        frame.innerHTML = render(template, content);
     }
 }
 

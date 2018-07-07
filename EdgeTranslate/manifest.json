@@ -29,7 +29,8 @@
                 "./display/display.css"
             ],
             "js": [
-                "./display/template.js"
+                "./display/template.js",
+                "./display/engine.js"
             ]
         }
     ],

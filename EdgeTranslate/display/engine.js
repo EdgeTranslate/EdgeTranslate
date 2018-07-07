@@ -5,7 +5,7 @@
  * @param {Object} contents 用于填充模板的数据。
  * @returns 渲染完成的HTML文本。
  */
-function render(template, contents) {
+var render = function (template, contents) {
     // 匹配模板中的待填充部分
     const CONTENT_REGEX = /<%\s*(.*?)\s*%>/g;
 

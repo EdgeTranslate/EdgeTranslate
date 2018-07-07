@@ -1,0 +1,1 @@
+var template = '<i class="translate-icon-close"></i><div><%this.commonMeanings%></div>';
