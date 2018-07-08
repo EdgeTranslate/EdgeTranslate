@@ -8,6 +8,8 @@
   /* iOS 4.1- */
 }
 
+/* 关闭页面的图标 */
+
 .translate-icon-close {
   font-family: "translateIcon" !important;
   font-size: 16px;
@@ -39,4 +41,12 @@
   box-shadow: -2px 0 1px 1px #ddd;
   z-index: 10000;
   transition: right 300ms;
+}
+
+.commonMeanings {
+  font-size: medium;
+}
+
+.mainMeaning {
+  font-size: medium;
 }
