@@ -19,17 +19,6 @@ var template = '<i class="translate-icon-close"></i>' +
                        '<% } %>' + 
                    '<% } %>' + 
                '</div>' + 
-               '<div class="translate-synonyms">' + 
-                   '<% if (this.synonyms && this.synonyms.length > 0) { %>' + 
-                       '<p class="translate-content-title">近同义词：</p>' + 
-                       '<% for (let i in this.synonyms) { %>' + 
-                           '<p class="translate-synonyms-content">' + 
-                               '<span class="translate-word-type"><% this.synonyms[i].type + ": " %></span>' + 
-                               '<span class="translate-synonyms-words"><% this.synonyms[i].words[0] %></span>' + 
-                           '</p>' + 
-                       '<% } %>' + 
-                   '<% } %>' +
-               '</div>' + 
                '<div class="translate-definitions">' + 
                    '<% if (this.definitions && this.definitions.length > 0) { %>' + 
                        '<p class="translate-content-title">单词定义：</p>' + 
@@ -48,15 +37,16 @@ var template = '<i class="translate-icon-close"></i>' +
                        '<% } %>' + 
                    '<% } %>' + 
                '</div>' + 
-               '<div class="translate-examples">' + 
-                   '<% if (this.examples && this.examples.length > 0) { %>' + 
-                       '<p class="translate-content-title">典型例句：</p>' + 
-                       '<ul class="translate-examples-list">' + 
-                           '<% for (let i in this.examples) { %>' + 
-                               '<li><% this.examples[i] %></li>' + 
-                           '<% } %>' + 
-                       '</ul>' + 
-                   '<% } %>' + 
+               '<div class="translate-synonyms">' + 
+                   '<% if (this.synonyms && this.synonyms.length > 0) { %>' + 
+                       '<p class="translate-content-title">近同义词：</p>' + 
+                       '<% for (let i in this.synonyms) { %>' + 
+                           '<p class="translate-synonyms-content">' + 
+                               '<span class="translate-word-type"><% this.synonyms[i].type + ": " %></span>' + 
+                               '<span class="translate-synonyms-words"><% this.synonyms[i].words[0] %></span>' + 
+                           '</p>' + 
+                       '<% } %>' + 
+                   '<% } %>' +
                '</div>' + 
                '<div class="translate-phrases">' + 
                    '<% if (this.phrases && this.phrases.length > 0) { %>' + 
@@ -64,6 +54,16 @@ var template = '<i class="translate-icon-close"></i>' +
                        '<ul class="translate-phrases-list">' + 
                            '<% for (let i in this.phrases) { %>' + 
                                '<li><% this.phrases[i] %></li>' + 
+                           '<% } %>' + 
+                       '</ul>' + 
+                   '<% } %>' + 
+               '</div>' + 
+               '<div class="translate-examples">' + 
+                   '<% if (this.examples && this.examples.length > 0) { %>' + 
+                       '<p class="translate-content-title">典型例句：</p>' + 
+                       '<ul class="translate-examples-list">' + 
+                           '<% for (let i in this.examples) { %>' + 
+                               '<li><% this.examples[i] %></li>' + 
                            '<% } %>' + 
                        '</ul>' + 
                    '<% } %>' + 
