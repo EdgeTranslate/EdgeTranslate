@@ -44,9 +44,13 @@
 }
 
 .commonMeanings {
-  font-size: medium;
+  font-size: small;
+  padding: 5%;
+  font-weight: lighter;
 }
 
 .mainMeaning {
   font-size: medium;
+  font-weight: bold;
+  padding: 5%;
 }
