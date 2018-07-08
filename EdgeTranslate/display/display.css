@@ -42,34 +42,37 @@
   box-shadow: -2px 0 1px 1px #ddd;
   z-index: 10000;
   transition: right 300ms;
+  overflow-y: scroll;
 }
 
-.common-meanings-title {
+.translate-content-title {
   color: gray;
   font-size: medium;
 }
 
-.common-meanings-content {
-  font-size: small;
-  font-weight: lighter;
-}
-
-.main-meaning-content {
-  font-size: medium;
-  font-weight: bold;
-}
-
-.detailed-meanings-title {
-  color: gray;
-  font-size: medium;
-}
-
-.word-type {
+.translate-word-type {
   color: gray;
   font-size: smaller;
 }
 
-.word-meaning {
+.translate-common-meanings-content {
+  font-size: small;
+  font-weight: lighter;
+}
+
+.translate-main-meaning-content {
+  font-size: medium;
+  font-weight: bold;
+}
+
+.translate-detailed-meanings-word-meaning {
+  font-size: smaller;
+  display: block;
+  margin-left: 15%;
+  font-weight: light;
+}
+
+.translate-synonyms-words {
   font-size: smaller;
   display: block;
   margin-left: 15%;

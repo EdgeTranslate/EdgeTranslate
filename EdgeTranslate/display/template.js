@@ -20,7 +20,7 @@ var template = '<i class="translate-icon-close"></i>' +
                    '<% for (let i in this.synonyms) { %>' + 
                        '<p class="translate-synonyms-content">' + 
                            '<span class="translate-synonyms-word-type"><% this.synonyms[i].type + ": " %></span>' + 
-                           '<span class="translate-synonyms-words"><% this.synonyms[i].words[0] %></span>' + 
+                           '<li class="translate-synonyms-words"><% this.synonyms[i].words[0] %></li>' + 
                        '</p>' + 
                    '<% } %>' + 
                '</div>';
