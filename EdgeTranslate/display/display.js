@@ -29,10 +29,10 @@ var createBlock = function (content) {
         frame.innerHTML = render(template, content);
         // 将frame放入document
         document.documentElement.appendChild(frame);
-        addEventListener();
     } else { // frame已经在页面中，直接改变frame的值
         frame.innerHTML = render(template, content);
     }
+    addEventListener();
 }
 
 /**
