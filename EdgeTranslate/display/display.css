@@ -19,8 +19,8 @@
   color: #aaa;
   width: 5%;
   position: relative;
-  top: 2%;
-  left: 88%;
+  top: 3%;
+  left: 97%;
 }
 
 .translate-icon-close:hover {
@@ -34,6 +34,7 @@
 #translate_frame {
   height: 100%;
   width: 15%;
+  padding: 0 2%;
   background-color: white;
   position: fixed;
   right: 0;
@@ -43,14 +44,34 @@
   transition: right 300ms;
 }
 
-.commonMeanings {
+.common-meanings-title {
+  color: gray;
+  font-size: medium;
+}
+
+.common-meanings-content {
   font-size: small;
-  padding: 5%;
   font-weight: lighter;
 }
 
-.mainMeaning {
+.main-meaning-content {
   font-size: medium;
   font-weight: bold;
-  padding: 5%;
+}
+
+.detailed-meanings-title {
+  color: gray;
+  font-size: medium;
+}
+
+.word-type {
+  color: gray;
+  font-size: smaller;
+}
+
+.word-meaning {
+  font-size: smaller;
+  display: block;
+  margin-left: 15%;
+  font-weight: light;
 }
