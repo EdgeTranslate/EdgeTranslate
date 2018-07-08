@@ -93,8 +93,8 @@ function parseTranslate(response) {
             switch (i) {
                 // 单词的基本意思
                 case 0:
-                    result.mainMeaning = items[0];
-                    result.originalText = items[1];
+                    result.mainMeaning = items[0][0];
+                    result.originalText = items[0][1];
                     // console.log("text: " + result.originalText + "\nmeaning: " + result.mainMeaning);
                     break;
                 // 单词的所有词性及对应的意思
