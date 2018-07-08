@@ -27,11 +27,20 @@ var createBlock = function (content) {
         document.documentElement.addEventListener('click', clickListener)
 
         frame.innerHTML = render(template, content);
-        // 将frame放入document中
+        // 将frame放入document
         document.documentElement.appendChild(frame);
+        addEventListener();
     } else { // frame已经在页面中，直接改变frame的值
         frame.innerHTML = render(template, content);
     }
+}
+
+/**
+ * 需要对侧边栏中的元素添加事件监听时，请在此函数中添加
+ */
+function addEventListener() {
+    // 给关闭按钮添加点击事件监听，用于关闭侧边栏
+    document.getElementsByClassName('translate-icon-close')[0].onclick = removeSlider;
 }
 
 /**
@@ -55,6 +64,11 @@ var isChildNode = function (node1, node2) {
 }
 
 /**
+ * block
+ * 事件监听的回调函数定义请在此区域中进行
+ */
+
+/**
  * 
  * 用于处理点击页面除侧边栏外的区域的回调函数 ，负责将侧边栏关闭
  * 
@@ -75,4 +89,10 @@ var removeSlider = function () {
     document.body.style.width = '100%';
     document.documentElement.removeEventListener('click', clickListener);
 }
+
+/**
+ * end block
+ */
+
+
 chrome.runtime.onMessage.addListener(display);
