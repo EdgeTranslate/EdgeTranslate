@@ -1,9 +1,9 @@
 // 用于存储一个div元素，这个元素用来在页面的右侧展示翻译结果
 var frame;
 
-var mousedown = false;
-var originX;
-var originWidth;
+var mousedown = false; // 在鼠标拖动边框时，用于标记鼠标是否已经按下
+var originX; // 鼠标开始拖动的x坐标轴初始位置
+var originWidth; // 侧边栏的初始宽度
 
 /**
  * 负责根据传入的翻译结果内容将结果显示在用户正在使用的页面中
@@ -111,6 +111,9 @@ var dragOn = function (event) {
     }
 }
 
+/**
+ * 处理释放鼠标按钮后，边框的宽度停止改变的事件
+ */
 var dragOff = function () {
     if (mousedown) {
         frame.style.transition = 'width 500ms';
@@ -119,6 +122,12 @@ var dragOff = function () {
     }
 }
 
+/**
+ * 
+ * 处理鼠标移动到侧边栏边框附近时，鼠标样式的改变功能
+ * 
+ * @param {Object} event 事件发生的全部信息
+ */
 var dragHandler = function (event) {
     var node = event.target;
     if (node.isSameNode(frame)) {
