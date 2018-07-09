@@ -33,7 +33,7 @@
 
 #translate_frame {
   height: 100%;
-  width: 15%;
+  width: 20%;
   padding: 0 2%;
   background-color: white;
   position: fixed;
@@ -43,6 +43,7 @@
   z-index: 10000;
   transition: right 300ms;
   overflow-y: scroll;
+  box-sizing: border-box;
 }
 
 .translate-content-title {

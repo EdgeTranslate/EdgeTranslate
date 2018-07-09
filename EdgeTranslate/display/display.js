@@ -1,6 +1,10 @@
 // 用于存储一个div元素，这个元素用来在页面的右侧展示翻译结果
 var frame;
 
+var mousedown = false;
+var originX;
+var originWidth;
+
 /**
  * 负责根据传入的翻译结果内容将结果显示在用户正在使用的页面中
  * 
@@ -41,6 +45,10 @@ var createBlock = function (content) {
 function addEventListener() {
     // 给关闭按钮添加点击事件监听，用于关闭侧边栏
     document.getElementsByClassName('translate-icon-close')[0].onclick = removeSlider;
+    frame.addEventListener('mousedown', dragHandler);
+    frame.addEventListener('mousemove', moveHandler);
+    document.addEventListener('mousemove', dragOn);
+    document.addEventListener('mouseup', dragOff);
 }
 
 /**
@@ -64,7 +72,7 @@ var isChildNode = function (node1, node2) {
 }
 
 /**
- * block
+ * block start
  * 事件监听的回调函数定义请在此区域中进行
  */
 
@@ -88,8 +96,57 @@ var removeSlider = function () {
     document.documentElement.removeChild(frame);
     document.body.style.width = '100%';
     document.documentElement.removeEventListener('click', clickListener);
+    document.removeEventListener('mousemove', dragOn);
+    document.removeEventListener('mouseup', dragOff);
 }
 
+/**
+ * 处理鼠标的拖动事件
+ * @param {Object} event 
+ */
+var dragOn = function (event) {
+    if (mousedown) {
+        frame.style.width = originX - event.x + originWidth + 'px';
+        document.body.style.width = window.innerWidth - originWidth - (originX - event.x) + 'px';
+    }
+}
+
+var dragOff = function () {
+    if (mousedown) {
+        frame.style.transition = 'width 500ms';
+        document.body.style.transition = 'width 500ms';
+        mousedown = false;
+    }
+}
+
+var dragHandler = function (event) {
+    var node = event.target;
+    if (node.isSameNode(frame)) {
+        if (event.x <= node.offsetLeft + 4) {
+            mousedown = true;
+            frame.style.transition = 'none';
+            document.body.style.transition = 'none';
+            originX = node.offsetLeft;
+            originWidth = node.clientWidth;
+        }
+    }
+}
+
+/**
+ * 
+ * 处理鼠标移动到侧边栏附近鼠标形状的改变特效
+ * 
+ * @param {Object} event 事件发生的所有信息
+ */
+var moveHandler = function (event) {
+    var node = event.target;
+    if (node.isSameNode(frame)) {
+        if (event.x <= node.offsetLeft + 4)
+            frame.style.cursor = 'e-resize';
+        else
+            frame.style.cursor = 'auto';
+    }
+}
 /**
  * end block
  */
