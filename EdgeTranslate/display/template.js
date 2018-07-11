@@ -14,7 +14,7 @@ var template = '<i class="translate-icon-close"></i>' +
                        '<% for (let i in this.detailedMeanings) { %>' + 
                            '<p class="translate-detailed-meanings-content">' + 
                                '<span class="translate-word-type"><% this.detailedMeanings[i].type + ": " %></span>' + 
-                               '<span class="translate-detailed-meanings-word-meaning"><% this.detailedMeanings[i].meaning %></span>' + 
+                               '<span class="translate-content"><% this.detailedMeanings[i].meaning %></span>' + 
                            '</p>' + 
                        '<% } %>' + 
                    '<% } %>' + 
@@ -25,11 +25,13 @@ var template = '<i class="translate-icon-close"></i>' +
                        '<% for (let i in this.definitions) { %>' + 
                            '<div class="translate-definitions-content">' + 
                                '<p class="translate-word-type"><% this.definitions[i].type + ": " %></p>' + 
-                               '<ul class="translate-definitions-list">' + 
+                               '<ul class="translate-list">' + 
                                    '<% for (let j in this.definitions[i].meanings) { %>' + 
                                        '<li>' + 
-                                           '<p>释义：<% this.definitions[i].meanings[j].meaning %></p>' + 
-                                           '<p>示例：<% this.definitions[i].meanings[j].example %></p>' + 
+                                           '<span class="translate-word-type" >释义：</span>'+
+                                           '<span class="translate-content"><% this.definitions[i].meanings[j].meaning %></span>' + 
+                                           '<span class="translate-word-type">示例：</span>'+
+                                           '<span class="translate-content"><% this.definitions[i].meanings[j].example %></span>' + 
                                        '</li>' + 
                                    '<% } %>' + 
                                '</ul>' + 
@@ -51,9 +53,9 @@ var template = '<i class="translate-icon-close"></i>' +
                '<div class="translate-phrases">' + 
                    '<% if (this.phrases && this.phrases.length > 0) { %>' + 
                        '<p class="translate-content-title">常用短语：</p>' + 
-                       '<ul class="translate-phrases-list">' + 
+                       '<ul class="translate-list">' + 
                            '<% for (let i in this.phrases) { %>' + 
-                               '<li><% this.phrases[i] %></li>' + 
+                               '<li class="translate-content"><% this.phrases[i] %></li>' + 
                            '<% } %>' + 
                        '</ul>' + 
                    '<% } %>' + 
@@ -61,10 +63,10 @@ var template = '<i class="translate-icon-close"></i>' +
                '<div class="translate-examples">' + 
                    '<% if (this.examples && this.examples.length > 0) { %>' + 
                        '<p class="translate-content-title">典型例句：</p>' + 
-                       '<ul class="translate-examples-list">' + 
+                       '<p>' + 
                            '<% for (let i in this.examples) { %>' + 
-                               '<li><% this.examples[i] %></li>' + 
+                               '<p class="translate-sentences"><% this.examples[i] %></p>' + 
                            '<% } %>' + 
-                       '</ul>' + 
+                       '</p>' + 
                    '<% } %>' + 
                '</div>';
