@@ -4,13 +4,12 @@
 const BASE_URL = "https://translate.google.cn/translate_a/single?client=gtx";
 
 /**
- * 菜单点击事件监听器。
  * 
- * @param {*} info 事件信息
- * @param {*} tabs 菜单栏点击位置的具体信息，是一个tab对象 
+ * 此函数负责将传入的文本翻译，并在当前页面的侧边栏中展示
+ * 
+ * @param {String} text 需要翻译的文本字符串
  */
-function onClickHandler(info, tabs) {
-    var text = info.selectionText;
+function translate(text) {
 
     // 获取翻译语言设定。
     chrome.storage.sync.get("languageSetting", function (result) {
@@ -31,7 +30,8 @@ function onClickHandler(info, tabs) {
             request.send();
             request.onreadystatechange = function () {
                 if (request.readyState === 4 && request.status === 200) {
-                    parseTranslate(JSON.parse(request.response));
+                    var result = parseTranslate(JSON.parse(request.response));
+                    showTranslate(result);
                 }
                 else if (request.status !== 200) {
                     alert('无法请求翻译，请检查网络连接');
@@ -84,6 +84,7 @@ function onClickHandler(info, tabs) {
  * </pre>
  * 
  * @param {Object} response 谷歌翻译返回的结果。
+ * @returns {Object} 按照spec中的数据结构存储的结果
  */
 function parseTranslate(response) {
     var result = new Object();
@@ -160,7 +161,7 @@ function parseTranslate(response) {
             }
         }
     }
-    showTranslate(result);
+    return result;
 }
 
 /**

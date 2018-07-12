@@ -33,3 +33,15 @@ chrome.runtime.onInstalled.addListener(function () {
 
 // 添加点击菜单后的处理事件
 chrome.contextMenus.onClicked.addListener(onClickHandler);
+
+/**
+ * 
+ * 对菜单点击事件监听的处理函数
+ * 
+ * @param {*} info 事件信息
+ * @param {*} tabs 菜单栏点击位置的具体信息，是一个tab对象 
+ */
+function onClickHandler(info, tabs) {
+    var text = info.selectionText;
+    translate(text); // 此api位于 translate.js中
+}
