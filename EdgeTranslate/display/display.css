@@ -18,9 +18,9 @@
   -moz-osx-font-smoothing: grayscale;
   color: #aaa;
   width: 5%;
-  position: relative;
-  top: 3%;
-  left: 97%;
+  position: absolute;
+  top: 2%;
+  right: 5%;
 }
 
 .translate-icon-close:hover {
@@ -70,6 +70,7 @@
   font-size: large;
   font-weight: medium;
 }
+
 .translate-main-meaning-content-small {
   font-size: medium;
   font-weight: medium;
