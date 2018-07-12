@@ -22,9 +22,9 @@
 /* 关闭页面的图标 */
 
 .translate-icon-close {
-  position: absolute;
-  top: 2%;
-  right: 5%;
+  position: relative;
+  top: 10px;
+  left: 94%;
 }
 
 .translate-icon-close:hover {
@@ -32,45 +32,22 @@
 }
 
 .translate-fix {
-  display: block;
   font-size: larger;
-  position: absolute;
-  top: 2%;
-  right: 18%;
+  position: relative;
+  top: 12px;
+  left: 90%;
 }
 
-.translate-icon-tuding-blank {
-  position: absolute;
-  top: 1.9%;
-  right: 18%;
-  z-index: 90;
-  font-size: 20px;
-}
-
-.translate-icon-tuding-fix {
-  z-index: 100;
-  opacity: 0;
-}
-
-.translate-icon-tuding-fix:hover {
-  z-index: 100;
-  opacity: 1;
+.translate-fix:hover {
+  color: #777;
 }
 
 .translate-icon-tuding-full {
   display: none;
 }
 
-.translate-icon-tuding-full:hover {
-  color: #777;
-}
-
 .translate-icon-tuding-fix::before {
   content: '\e607';
-}
-
-.translate-icon-tuding-blank::before {
-  content: "\e637";
 }
 
 .translate-icon-tuding-full::before {
@@ -109,6 +86,8 @@
 .translate-common-meanings-content {
   font-size: small;
   font-weight: lighter;
+  position: relative;
+  left: 12%;
 }
 
 .translate-main-meaning-content-larger {

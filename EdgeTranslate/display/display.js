@@ -174,7 +174,6 @@ var moveHandler = function (event) {
 var fixOn = function () {
     document.getElementsByClassName('translate-icon-tuding-full')[0].style.display = 'inline';
     document.getElementsByClassName('translate-icon-tuding-fix')[0].style.display = 'none';
-    document.getElementsByClassName('translate-icon-tuding-blank')[0].style.display = 'none';
     document.documentElement.removeEventListener('click', clickListener);
 }
 
@@ -184,7 +183,6 @@ var fixOn = function () {
 var fixOff = function () {
     document.getElementsByClassName('translate-icon-tuding-full')[0].style.display = 'none';
     document.getElementsByClassName('translate-icon-tuding-fix')[0].style.display = 'inline';
-    document.getElementsByClassName('translate-icon-tuding-blank')[0].style.display = 'inline';
     document.documentElement.addEventListener('click', clickListener);
 }
 /**
