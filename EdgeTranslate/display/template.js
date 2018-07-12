@@ -1,6 +1,17 @@
 var template = '<i class="translate-icon-close"></i>' + 
                '<div class="translate-main-meaning">' + 
-                   '<p class="translate-main-meaning-content"><% this.mainMeaning %></p>' + 
+                   '<% if (this.mainMeaning.length <= 6) { %>' + 
+                       '<p class="translate-main-meaning-content-larger"><% this.mainMeaning %></p>' + 
+                   '<% } %>' + 
+                   '<% else if (this.mainMeaning.length > 6 && this.mainMeaning.length <= 12) { %>' + 
+                       '<p class="translate-main-meaning-content-large"><% this.mainMeaning %></p>' + 
+                   '<% } %>' + 
+                   '<% else if (this.mainMeaning.length > 12 && this.mainMeaning.length <= 460) { %>' + 
+                       '<p class="translate-main-meaning-content-small"><% this.mainMeaning %></p>' + 
+                   '<% } %>' + 
+                   '<% else { %>' + 
+                       '<p class="translate-main-meaning-content-smaller"><% this.mainMeaning %></p>' + 
+                   '<% } %>' + 
                '</div>' + 
                '<div class="translate-common-meanings">' + 
                    '<% if (this.commonMeanings && this.commonMeanings.length > 0) { %>' + 
