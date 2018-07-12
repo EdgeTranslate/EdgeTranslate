@@ -40,7 +40,7 @@ var createBlock = function (content) {
         setTimeout(function () {
             frame.style.transition = 'right 300ms';
             frame.style.right = '0';
-        }, 0);
+        }, 50);
         frame.innerHTML = render(template, content); // 渲染新的内容
     }
     addEventListener();
