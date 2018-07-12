@@ -140,11 +140,12 @@ function saveOption(key, value) {
  */
 function translateSubmit() {
     var content = document.getElementById('translate_input').value;
-    if (content.replace('\s', '') !== '') {
+    if (content.replace(/\s*/, '') !== '') { // 判断值是否为空
+        document.getElementById('hint_message').style.display = 'none';
         translate(content, function () {
-            window.close();
+            window.close(); // 展示结束后关闭option页面
         });
     }
-    else
-        alert('请填写非空的内容');
+    else  // 提示输入的内容是空
+        document.getElementById('hint_message').style.display = 'inline';
 }
