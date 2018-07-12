@@ -34,7 +34,14 @@ var createBlock = function (content) {
         // 将frame放入document
         document.documentElement.appendChild(frame);
     } else { // frame已经在页面中，直接改变frame的值
-        frame.innerHTML = render(template, content);
+        frame.style.transition = 'none';
+        frame.style.right = '-' + frame.clientWidth + 'px';
+        // 这个延时的目的是使得侧边栏出现的过渡动画生效
+        setTimeout(function () {
+            frame.style.transition = 'right 300ms';
+            frame.style.right = '0';
+        }, 0);
+        frame.innerHTML = render(template, content); // 渲染新的内容
     }
     addEventListener();
 }
@@ -93,11 +100,13 @@ var clickListener = function (event) {
  * 将侧边栏元素从页面中除去，即将frame从document中删除
  */
 var removeSlider = function () {
-    document.documentElement.removeChild(frame);
-    document.body.style.width = '100%';
-    document.documentElement.removeEventListener('click', clickListener);
-    document.removeEventListener('mousemove', dragOn);
-    document.removeEventListener('mouseup', dragOff);
+    if (isChildNode(frame, document.documentElement)) {
+        document.documentElement.removeChild(frame);
+        document.body.style.width = '100%';
+        document.documentElement.removeEventListener('click', clickListener);
+        document.removeEventListener('mousemove', dragOn);
+        document.removeEventListener('mouseup', dragOff);
+    }
 }
 
 /**

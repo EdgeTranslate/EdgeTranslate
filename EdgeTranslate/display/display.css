@@ -61,7 +61,21 @@
   font-weight: lighter;
 }
 
-.translate-main-meaning-content {
+.translate-main-meaning-content-larger {
+  font-size: 30px;
+  font-weight: medium;
+}
+
+.translate-main-meaning-content-large {
+  font-size: large;
+  font-weight: medium;
+}
+.translate-main-meaning-content-small {
+  font-size: medium;
+  font-weight: medium;
+}
+
+.translate-main-meaning-content-smaller {
   font-size: medium;
   font-weight: medium;
 }
