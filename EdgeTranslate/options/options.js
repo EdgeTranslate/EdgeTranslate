@@ -140,8 +140,11 @@ function saveOption(key, value) {
  */
 function translateSubmit() {
     var content = document.getElementById('translate_input').value;
-    if (content.replace('\s', '') !== '')
-        translate(content);
+    if (content.replace('\s', '') !== '') {
+        translate(content, function () {
+            window.close();
+        });
+    }
     else
         alert('请填写非空的内容');
 }

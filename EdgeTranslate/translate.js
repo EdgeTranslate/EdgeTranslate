@@ -8,8 +8,9 @@ const BASE_URL = "https://translate.google.cn/translate_a/single?client=gtx";
  * 此函数负责将传入的文本翻译，并在当前页面的侧边栏中展示
  * 
  * @param {String} text 需要翻译的文本字符串
+ * @param {callback} callback 完成翻译及展示页面后执行的回调函数
  */
-function translate(text) {
+function translate(text, callback) {
 
     // 获取翻译语言设定。
     chrome.storage.sync.get("languageSetting", function (result) {
@@ -31,7 +32,7 @@ function translate(text) {
             request.onreadystatechange = function () {
                 if (request.readyState === 4 && request.status === 200) {
                     var result = parseTranslate(JSON.parse(request.response));
-                    showTranslate(result);
+                    showTranslate(result, callback);
                 }
                 else if (request.status !== 200) {
                     alert('无法请求翻译，请检查网络连接');
@@ -176,8 +177,9 @@ function parseTranslate(response) {
  * 展示翻译结果。
  * 
  * @param {Object} content 翻译结果。
+ * @param {callback} callback 展示完页面后执行的回调函数
  */
-var showTranslate = function (content) {
+var showTranslate = function (content, callback) {
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
         if (chrome.runtime.lastError)
             alert(content);
@@ -188,8 +190,11 @@ var showTranslate = function (content) {
                 if (chrome.runtime.lastError) {
                     alert(content);
                 } else {
-                    if (content)
+                    if (content) {
                         chrome.tabs.sendMessage(tabs[0].id, content);
+                        if (callback)
+                            callback();
+                    }
                 }
             })
         }
