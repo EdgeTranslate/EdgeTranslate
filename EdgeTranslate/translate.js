@@ -94,8 +94,14 @@ function parseTranslate(response) {
             switch (i) {
                 // 单词的基本意思
                 case 0:
-                    result.mainMeaning = items[0][0];
-                    result.originalText = items[0][1];
+                    mainMeanings = [];
+                    originalTexts = [];
+                    items.forEach(item => {
+                        mainMeanings.push(item[0]);
+                        originalTexts.push(item[1]);
+                    });
+                    result.mainMeaning = mainMeanings.join('');
+                    result.originalText = originalTexts.join('');
                     // console.log("text: " + result.originalText + "\nmeaning: " + result.mainMeaning);
                     break;
                 // 单词的所有词性及对应的意思
@@ -108,12 +114,14 @@ function parseTranslate(response) {
                     break;
                 // 单词或句子的常见意思（单词的常见意思，句子的所有可能意思）
                 case 5:
-                    let meaningArray = new Array();
-                    items[0][2].forEach(item =>
-                        meaningArray.push(item[0])
-                    );
-                    result.commonMeanings = meaningArray.join(", ");
-                    // console.log("commonMeanings: " + result.commonMeanings);
+                    if (items.length <= 1) {
+                        let meaningArray = new Array();
+                        items[0][2].forEach(item =>
+                            meaningArray.push(item[0])
+                        );
+                        result.commonMeanings = meaningArray.join(", ");
+                        // console.log("commonMeanings: " + result.commonMeanings);
+                    }
                     break;
                 // 单词的同义词，根据词性分组
                 case 11:
