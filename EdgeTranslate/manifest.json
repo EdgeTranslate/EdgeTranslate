@@ -12,8 +12,8 @@
     "background": {
         "persistent": false,
         "scripts": [
-            "init.js",
-            "translate.js"
+            "translate.js",
+            "init.js"
         ]
     },
     "browser_action": {

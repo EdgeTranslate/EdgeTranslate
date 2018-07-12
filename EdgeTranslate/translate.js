@@ -186,5 +186,3 @@ var showTranslate = function (content) {
         }
     })
 }
-
-chrome.contextMenus.onClicked.addListener(onClickHandler);

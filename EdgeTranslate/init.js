@@ -30,3 +30,6 @@ chrome.runtime.onInstalled.addListener(function () {
         }
     });
 });
+
+// 添加点击菜单后的处理事件
+chrome.contextMenus.onClicked.addListener(onClickHandler);
