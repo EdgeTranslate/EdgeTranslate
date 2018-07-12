@@ -101,6 +101,7 @@ window.onload = function () {
         else
             exchangeButton.style.color = '#4a8cf7';
     }
+    document.getElementById('translateSubmit').addEventListener('click', translateSubmit);
 };
 
 /**
@@ -133,3 +134,14 @@ function saveOption(key, value) {
     item[key] = value;
     chrome.storage.sync.set(item);
 };
+
+/**
+ * 负责在option页面中输入内容后进行翻译
+ */
+function translateSubmit() {
+    var content = document.getElementById('translate_input').value;
+    if (content.replace('\s', '') !== '')
+        translate(content);
+    else
+        alert('请填写非空的内容');
+}
