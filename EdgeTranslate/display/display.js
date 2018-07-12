@@ -11,7 +11,6 @@ var originWidth; // 侧边栏的初始宽度
  * @param {Object} content 翻译的结果
  */
 var display = function (content) {
-    console.log(content);
     createBlock(content);
     chrome.runtime.onMessage.removeListener(display);
 }
@@ -34,6 +33,7 @@ var createBlock = function (content) {
         // 将frame放入document
         document.documentElement.appendChild(frame);
     } else { // frame已经在页面中，直接改变frame的值
+        document.documentElement.addEventListener('click', clickListener);
         frame.style.transition = 'none';
         frame.style.right = '-' + frame.clientWidth + 'px';
         // 这个延时的目的是使得侧边栏出现的过渡动画生效
@@ -56,6 +56,8 @@ function addEventListener() {
     frame.addEventListener('mousemove', moveHandler);
     document.addEventListener('mousemove', dragOn);
     document.addEventListener('mouseup', dragOff);
+    document.getElementsByClassName('translate-icon-tuding-fix')[0].addEventListener('click', fixOn);
+    document.getElementsByClassName('translate-icon-tuding-full')[0].addEventListener('click', fixOff);
 }
 
 /**
@@ -164,6 +166,26 @@ var moveHandler = function (event) {
         else
             frame.style.cursor = 'auto';
     }
+}
+
+/**
+ * 负责将侧边栏固定
+ */
+var fixOn = function () {
+    document.getElementsByClassName('translate-icon-tuding-full')[0].style.display = 'inline';
+    document.getElementsByClassName('translate-icon-tuding-fix')[0].style.display = 'none';
+    document.getElementsByClassName('translate-icon-tuding-blank')[0].style.display = 'none';
+    document.documentElement.removeEventListener('click', clickListener);
+}
+
+/**
+ * 负责解除侧边栏的固定
+ */
+var fixOff = function () {
+    document.getElementsByClassName('translate-icon-tuding-full')[0].style.display = 'none';
+    document.getElementsByClassName('translate-icon-tuding-fix')[0].style.display = 'inline';
+    document.getElementsByClassName('translate-icon-tuding-blank')[0].style.display = 'inline';
+    document.documentElement.addEventListener('click', clickListener);
 }
 /**
  * end block
