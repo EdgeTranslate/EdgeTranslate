@@ -101,7 +101,9 @@ window.onload = function () {
         else
             exchangeButton.style.color = '#4a8cf7';
     }
-    document.getElementById('translateSubmit').addEventListener('click', translateSubmit);
+
+    // 统一添加事件监听
+    addEventListener();
 };
 
 /**
@@ -136,6 +138,19 @@ function saveOption(key, value) {
 };
 
 /**
+ * 需要对页面中的元素添加事件监听时，请在此函数中添加
+ */
+function addEventListener() {
+    document.getElementById('translateSubmit').addEventListener('click', translateSubmit);
+    document.getElementById('setting-switch').addEventListener('click', settingSwitch);
+}
+
+/**
+ * block start
+ * 事件监听的回调函数定义请在此区域中进行
+ */
+
+/**
  * 负责在option页面中输入内容后进行翻译
  */
 function translateSubmit() {
@@ -149,3 +164,26 @@ function translateSubmit() {
     else  // 提示输入的内容是空
         document.getElementById('hint_message').style.display = 'inline';
 }
+
+/**
+ * 负责在option中隐藏或显示设置选项
+ */
+function settingSwitch() {
+    var setting = document.getElementById('setting');
+    var arrowUp = document.getElementById('arrow-up');
+    var arrowDown = document.getElementById('arrow-down');
+    console.log(setting.style);
+    if (!setting.style.display || setting.style.display == 'none') {
+        setting.style.display = 'block';
+        arrowDown.style.display = 'none';
+        arrowUp.style.display = 'inline';
+    }
+    else {
+        setting.style.display = 'none';
+        arrowDown.style.display = 'inline';
+        arrowUp.style.display = 'none';
+    }
+}
+/**
+ * end block
+ */

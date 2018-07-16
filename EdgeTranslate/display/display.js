@@ -11,7 +11,6 @@ var originWidth; // 侧边栏的初始宽度
  * @param {Object} content 翻译的结果
  */
 var display = function (content) {
-    console.log(content);
     createBlock(content);
     chrome.runtime.onMessage.removeListener(display);
 }
@@ -28,12 +27,9 @@ var createBlock = function (content) {
         frame.id = 'translate_frame';
         document.body.style.transition = 'width 500ms';
         document.body.style.width = '85%';
-        document.documentElement.addEventListener('click', clickListener)
-
-        frame.innerHTML = render(template, content);
         // 将frame放入document
         document.documentElement.appendChild(frame);
-    } else { // frame已经在页面中，直接改变frame的值
+    } else { // frame已经在页面中，直接改变frame的渲染内容
         frame.style.transition = 'none';
         frame.style.right = '-' + frame.clientWidth + 'px';
         // 这个延时的目的是使得侧边栏出现的过渡动画生效
@@ -41,8 +37,8 @@ var createBlock = function (content) {
             frame.style.transition = 'right 300ms';
             frame.style.right = '0';
         }, 50);
-        frame.innerHTML = render(template, content); // 渲染新的内容
     }
+    frame.innerHTML = render(template, content); // 将template.js中的内容通过engine.js渲染成html元素
     addEventListener();
 }
 
@@ -52,10 +48,14 @@ var createBlock = function (content) {
 function addEventListener() {
     // 给关闭按钮添加点击事件监听，用于关闭侧边栏
     document.getElementsByClassName('translate-icon-close')[0].onclick = removeSlider;
+    // 给点击侧边栏之外区域事件添加监听，点击侧边栏之外的部分就会让侧边栏关闭
+    document.documentElement.addEventListener('mousedown', clickListener);
     frame.addEventListener('mousedown', dragHandler);
     frame.addEventListener('mousemove', moveHandler);
     document.addEventListener('mousemove', dragOn);
     document.addEventListener('mouseup', dragOff);
+    document.getElementsByClassName('translate-icon-tuding-fix')[0].addEventListener('click', fixOn);
+    document.getElementsByClassName('translate-icon-tuding-full')[0].addEventListener('click', fixOff);
 }
 
 /**
@@ -103,7 +103,7 @@ var removeSlider = function () {
     if (isChildNode(frame, document.documentElement)) {
         document.documentElement.removeChild(frame);
         document.body.style.width = '100%';
-        document.documentElement.removeEventListener('click', clickListener);
+        document.documentElement.removeEventListener('mousedown', clickListener);
         document.removeEventListener('mousemove', dragOn);
         document.removeEventListener('mouseup', dragOff);
     }
@@ -164,6 +164,24 @@ var moveHandler = function (event) {
         else
             frame.style.cursor = 'auto';
     }
+}
+
+/**
+ * 负责将侧边栏固定
+ */
+var fixOn = function () {
+    document.getElementsByClassName('translate-icon-tuding-full')[0].style.display = 'inline';
+    document.getElementsByClassName('translate-icon-tuding-fix')[0].style.display = 'none';
+    document.documentElement.removeEventListener('mousedown', clickListener);
+}
+
+/**
+ * 负责解除侧边栏的固定
+ */
+var fixOff = function () {
+    document.getElementsByClassName('translate-icon-tuding-full')[0].style.display = 'none';
+    document.getElementsByClassName('translate-icon-tuding-fix')[0].style.display = 'inline';
+    document.documentElement.addEventListener('mousedown', clickListener);
 }
 /**
  * end block

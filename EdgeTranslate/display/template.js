@@ -1,5 +1,7 @@
-var template = '<i class="translate-icon-close"></i>' + 
-               '<div class="translate-main-meaning">' + 
+var template =  '<i class="translate-icon translate-icon-tuding-fix translate-fix" title="固定侧边栏"></i>'+
+                '<i class="translate-icon translate-icon-tuding-full translate-fix" title="解除固定"></i>'+
+                '<i class="translate-icon translate-icon-close"></i>' + 
+                '<div class="translate-main-meaning">' + 
                    '<% if (this.mainMeaning.length <= 6) { %>' + 
                        '<p class="translate-main-meaning-content-larger"><% this.mainMeaning %></p>' + 
                    '<% } %>' + 
@@ -15,8 +17,10 @@ var template = '<i class="translate-icon-close"></i>' +
                '</div>' + 
                '<div class="translate-common-meanings">' + 
                    '<% if (this.commonMeanings && this.commonMeanings.length > 0) { %>' + 
-                       '<p class="translate-content-title">常见意思：</p>' + 
-                       '<p class="translate-common-meanings-content"><% this.commonMeanings %></p>' + 
+                        '<p class="translate-content-title">常见意思:</p>' + 
+                        '<ul class="translate-list">'+
+                            '<li class="translate-common-meanings-content"><% this.commonMeanings %></li>' + 
+                        '</ul>'+
                    '<% } %>' + 
                '</div>' + 
                '<div class="translate-detailed-meanings">' + 
