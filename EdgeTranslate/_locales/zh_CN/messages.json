@@ -1,0 +1,34 @@
+{
+    "CommonMeanings": {
+        "message": "常见意思",
+        "description": "单词的常见意思"
+    },
+    "DetailedMeanings": {
+        "message": "单词详解",
+        "description": "单词的详细解释"
+    },
+    "Definitions": {
+        "message": "单词定义",
+        "description": "单词的定义"
+    },
+    "DefinitionsMeaning": {
+        "message": "释义",
+        "description": "单词的意思"
+    },
+    "DefinitionsExample": {
+        "message": "示例",
+        "description": "该意思下的示例"
+    },
+    "Synonyms": {
+        "message": "近同义词",
+        "description": "单词的近义词和同义词"
+    },
+    "Phrases": {
+        "message": "常用短语",
+        "description": "单词组成的常见短语"
+    },
+    "Examples": {
+        "message": "典型例句",
+        "description": "单词的用法示例"
+    }
+}

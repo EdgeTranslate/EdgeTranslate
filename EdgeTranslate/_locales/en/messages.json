@@ -1,0 +1,34 @@
+{
+    "CommonMeanings": {
+        "message": "Common Meanings",
+        "description": "Common Meanings"
+    },
+    "DetailedMeanings": {
+        "message": "Detailed Meanings",
+        "description": "Detailed Meanings"
+    },
+    "Definitions": {
+        "message": "Definitions",
+        "description": "Definitions"
+    },
+    "DefinitionsMeaning": {
+        "message": "Meaning",
+        "description": "Definition Meaning"
+    },
+    "DefinitionsExample": {
+        "message": "Example",
+        "description": "Definition Example"
+    },
+    "Synonyms": {
+        "message": "Synonyms",
+        "description": "Synonyms"
+    },
+    "Phrases": {
+        "message": "Phrases",
+        "description": "Phrases"
+    },
+    "Examples": {
+        "message": "Examples",
+        "description": "Examples"
+    }
+}

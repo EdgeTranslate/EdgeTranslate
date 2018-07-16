@@ -2,6 +2,7 @@
     "name": "Edge Translate",
     "description": "Translate what you want.",
     "version": "0.0.1",
+    "default_locale": "zh_CN",
     "permissions": [
         "contextMenus",
         "storage",
