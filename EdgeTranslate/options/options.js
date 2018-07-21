@@ -2,6 +2,12 @@
  * 初始化设置列表。
  */
 window.onload = function () {
+    var i18nElemwnts = document.getElementsByClassName("i18n");
+    for(let i = 0; i < i18nElemwnts.length; i++) {
+        // 跟随浏览器的语言设置显示内容
+        i18nElemwnts[i].insertAdjacentText("beforeEnd", chrome.i18n.getMessage(i18nElemwnts[i].getAttribute("data-i18n-name")));
+    }
+
     // 获得用户之前选择的语言翻译选项。
     chrome.storage.sync.get("languageSetting", function (result) {
         var languageSetting = result.languageSetting;

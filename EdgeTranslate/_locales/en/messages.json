@@ -30,5 +30,25 @@
     "Examples": {
         "message": "Examples",
         "description": "Examples"
+    },
+    "Translate": {
+        "message": "Translate",
+        "description": "Translate"
+    },
+    "InputHint": {
+        "message": "Content should not be empty",
+        "description": "Input hint"
+    },
+    "AutoDetect": {
+        "message": "Auto Detect",
+        "description": "Auto Detect"
+    },
+    "SourceLanguage": {
+        "message": "Source Language",
+        "description": "Source Language"
+    },
+    "TargetLanguage": {
+        "message": "Target Language",
+        "description": "Target Language"
     }
 }

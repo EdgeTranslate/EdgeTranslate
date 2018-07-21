@@ -30,5 +30,25 @@
     "Examples": {
         "message": "典型例句",
         "description": "单词的用法示例"
+    },
+    "Translate": {
+        "message": "翻译",
+        "description": "翻译"
+    },
+    "InputHint": {
+        "message": "翻译内容不能为空",
+        "description": "输入提示"
+    },
+    "AutoDetect": {
+        "message": "自动检测",
+        "description": "自动检测"
+    },
+    "SourceLanguage": {
+        "message": "源语言",
+        "description": "源语言"
+    },
+    "TargetLanguage": {
+        "message": "目标语言",
+        "description": "目标语言"
     }
 }

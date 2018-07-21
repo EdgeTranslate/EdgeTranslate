@@ -7,23 +7,23 @@
     <div class="frame">
         <div class="row">
             <input type="text" id="translate_input" />
-            <button id="translateSubmit">翻译</button>
+            <button id="translateSubmit" class="i18n" data-i18n-name="Translate"></button>
         </div>
-        <label id="hint_message" for="translate_input">翻译内容不能为空</label>
+        <label id="hint_message" class="i18n" for="translate_input" data-i18n-name="InputHint"></label>
         <div id="setting">
             <div class="row" style="align-items: flex-end;">
                 <div class="col">
                     <div class="selection">
-                        <label id="sl_label" class="select-label" for="sl">源语言：</label>
+                        <label id="sl_label" class="select-label i18n" for="sl" data-i18n-name="SourceLanguage"></label>
                         <select id="sl">
-                            <option value="auto">自动检测</option>
+                            <option class="i18n" value="auto" data-i18n-name="AutoDetect"></option>
                         </select>
                     </div>
                 </div>
                 <i class="translate-icon translate-icon-exchange" id="exchange" title="交换两种语言"></i>
                 <div class="col">
                     <div class="selection">
-                        <label id="tl_label" class="select-label" for="tl">目标语言：</label>
+                        <label id="tl_label" class="select-label i18n" for="tl" data-i18n-name="TargetLanguage"></label>
                         <select id="tl">
                         </select>
                     </div>
@@ -33,25 +33,25 @@
                         <label style="font-size: medium;">显示内容:</label>
                     </div> -->
             <div class="row" title="设置翻译显示内容" style="margin-top:5%;">
-                <label for="at" class="checked-label">
-                    <input type="checkbox" value="at" id="at" class="checkbox" /> 常用意思
+                <label for="at" class="checked-label i18n" data-i18n-name="CommonMeanings">
+                    <input type="checkbox" value="at" id="at" class="checkbox" /> 
                 </label>
-                <label for="bd" class="checked-label">
-                    <input type="checkbox" value="bd" id="bd" class="checkbox" /> 单词详解
+                <label for="bd" class="checked-label i18n" data-i18n-name="DetailedMeanings">
+                    <input type="checkbox" value="bd" id="bd" class="checkbox" /> 
                 </label>
-                <label for="md" class="checked-label">
-                    <input type="checkbox" value="md" id="md" class="checkbox" /> 单词定义
+                <label for="md" class="checked-label i18n" data-i18n-name="Definitions">
+                    <input type="checkbox" value="md" id="md" class="checkbox" /> 
                 </label>
             </div>
             <div class="row">
-                <label for="ss" class="checked-label">
-                    <input type="checkbox" value="ss" id="ss" class="checkbox" /> 同近义词
+                <label for="ss" class="checked-label i18n" data-i18n-name="Synonyms">
+                    <input type="checkbox" value="ss" id="ss" class="checkbox" /> 
                 </label>
-                <label for="rw" class="checked-label">
-                    <input type="checkbox" value="rw" id="rw" class="checkbox" /> 常用短语
+                <label for="rw" class="checked-label i18n" data-i18n-name="Phrases">
+                    <input type="checkbox" value="rw" id="rw" class="checkbox" /> 
                 </label>
-                <label for="ex" class="checked-label">
-                    <input type="checkbox" value="ex" id="ex" class="checkbox" /> 典型例句
+                <label for="ex" class="checked-label i18n" data-i18n-name="Examples">
+                    <input type="checkbox" value="ex" id="ex" class="checkbox" /> 
                 </label>
             </div>
         </div>
