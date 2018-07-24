@@ -182,13 +182,13 @@ function parseTranslate(response) {
 var showTranslate = function (content, callback) {
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
         if (chrome.runtime.lastError)
-            alert(content);
+            alert(content.mainMeaning);
         else {
             chrome.tabs.executeScript(tabs[0].id, {
                 file: './display/display.js'
             }, function (tab) {
                 if (chrome.runtime.lastError) {
-                    alert(content);
+                    alert(content.mainMeaning);
                 } else {
                     if (content) {
                         chrome.tabs.sendMessage(tabs[0].id, content);
