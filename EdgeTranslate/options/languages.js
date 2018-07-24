@@ -4,7 +4,7 @@
 const LANGUAGES = [
     { "name": "English", "value": "en" },
     { "name": "简体中文", "value": "zh-cn" },
-    { "name": "Chinese Traditional", "value": "zh-tw" },
+    { "name": "繁體中文", "value": "zh-tw" },
     { "name": "Afrikaans", "value": "af" },
     { "name": "shqiptar", "value": "sq" },
     { "name": "አማርኛ", "value": "am" },
