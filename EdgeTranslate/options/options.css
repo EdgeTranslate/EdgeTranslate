@@ -49,7 +49,9 @@
 }
 
 html {
-    width: 330px;
+    /* max-width: 440px;
+    min-width: 350px; */
+    width: 440px;
 }
 
 .frame {
@@ -64,7 +66,7 @@ html {
 }
 
 .col {
-    flex: 1 1 50%;
+    flex: 1 0 50%;
 }
 
 .selection {
@@ -115,11 +117,10 @@ i {
 }
 
 .checked-label {
-    display: block;
     cursor: pointer;
     font-size: 12px;
-    width: 60%;
-    padding-left: 5%;
+    flex: 3 3 33%;
+    justify-content: space-between;
 }
 
 .checkbox {
