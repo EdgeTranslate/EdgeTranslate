@@ -1,4 +1,12 @@
 {
+    "AppName": {
+        "message": "側邊翻譯",
+        "description": "應用名稱" 
+    },
+    "Description" : {
+        "message": "便捷翻譯，無憂閲讀",
+        "description": "應用簡介"
+    },
     "CommonMeanings": {
         "message": "常見意思",
         "description": "單詞的常見意思"

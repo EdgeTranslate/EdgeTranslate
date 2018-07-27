@@ -1,4 +1,12 @@
 {
+    "AppName": {
+        "message": "Edge Translate",
+        "description": "App Name" 
+    },
+    "Description" : {
+        "message": "Translate what you want.",
+        "description": "App Description"
+    },
     "CommonMeanings": {
         "message": "Common Meanings",
         "description": "Common Meanings"

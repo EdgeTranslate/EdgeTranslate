@@ -1,7 +1,7 @@
 {
-    "name": "Edge Translate",
-    "description": "Translate what you want.",
-    "version": "0.0.2",
+    "name": "__MSG_AppName__",
+    "description": "__MSG_Description__",
+    "version": "0.1.0",
     "default_locale": "zh_CN",
     "permissions": [
         "contextMenus",
