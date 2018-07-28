@@ -187,8 +187,20 @@ var showTranslate = function (content, callback) {
             chrome.tabs.executeScript(tabs[0].id, {
                 file: './display/display.js'
             }, function (tab) {
-                if (chrome.runtime.lastError) {
-                    alert(content.mainMeaning);
+                if (chrome.runtime.lastError) { // content_script无法在当前窗口执行
+                    // 这里询问是否开启了访问 file:// 网址的权限
+                    chrome.extension.isAllowedFileSchemeAccess(function (isAllowedAccess) {
+                        if (isAllowedAccess) { // 如果开启了权限，则只能通过alert展示结果
+                            alert(content.mainMeaning);
+                        } else { // 未开启权限，则通过这种方式展示权限
+                            if (confirm('请在扩展程序管理页面中开启："允许访问文件网址" 的开关')) { // 打开管理页面，由用户开启权限
+                                let url = 'chrome://extensions/?id=' + chrome.runtime.id;
+                                chrome.tabs.create({ url: url })
+                            } else { // 用户拒绝开启，则直接展示翻译结果
+                                alert(content.mainMeaning);
+                            }
+                        }
+                    })
                 } else {
                     if (content) {
                         chrome.tabs.sendMessage(tabs[0].id, content);
