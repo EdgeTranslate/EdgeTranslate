@@ -1,9 +1,9 @@
 {
     "AppName": {
         "message": "Edge Translate",
-        "description": "App Name" 
+        "description": "App Name"
     },
-    "Description" : {
+    "Description": {
         "message": "Translate what you want.",
         "description": "App Description"
     },
@@ -58,5 +58,9 @@
     "TargetLanguage": {
         "message": "Target Language",
         "description": "Target Language"
+    },
+    "PermissionRemind": {
+        "message": "Please open the 'Allow access to file URLs'switch in the extension management page",
+        "description": "a hint to the user about the access to file url permission"
     }
 }

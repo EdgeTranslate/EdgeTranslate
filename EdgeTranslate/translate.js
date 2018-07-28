@@ -193,7 +193,7 @@ var showTranslate = function (content, callback) {
                         if (isAllowedAccess) { // 如果开启了权限，则只能通过alert展示结果
                             alert(content.mainMeaning);
                         } else { // 未开启权限，则通过这种方式展示权限
-                            if (confirm('请在扩展程序管理页面中开启："允许访问文件网址" 的开关')) { // 打开管理页面，由用户开启权限
+                            if (confirm(chrome.i18n.getMessage("PermissionRemind"))) { // 打开管理页面，由用户开启权限
                                 let url = 'chrome://extensions/?id=' + chrome.runtime.id;
                                 chrome.tabs.create({ url: url })
                             } else { // 用户拒绝开启，则直接展示翻译结果

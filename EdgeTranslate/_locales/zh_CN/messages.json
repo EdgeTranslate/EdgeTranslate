@@ -1,9 +1,9 @@
 {
     "AppName": {
         "message": "侧边翻译",
-        "description": "应用名称" 
+        "description": "应用名称"
     },
-    "Description" : {
+    "Description": {
         "message": "便捷翻译，无忧阅读。",
         "description": "应用简介"
     },
@@ -58,5 +58,9 @@
     "TargetLanguage": {
         "message": "目标语言",
         "description": "目标语言"
+    },
+    "PermissionRemind": {
+        "message": "请在扩展程序管理页面中开启：'允许访问文件网址' 的开关",
+        "description": "在用户的 '允许访问文件网址'的权限未打开时，给用户合理的提醒"
     }
 }
