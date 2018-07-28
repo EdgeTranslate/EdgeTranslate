@@ -14,7 +14,7 @@ const DEFAULT_DT_SETTING = ["t", "at", "bd", "ex", "md", "rw", "ss"];
 chrome.runtime.onInstalled.addListener(function () {
     chrome.contextMenus.create({
         "id": "translate",
-        "title": "翻译 '%s'",
+        "title": chrome.i18n.getMessage("Translate") + " '%s'",
         "contexts": ["selection"]
     });
 
@@ -31,17 +31,25 @@ chrome.runtime.onInstalled.addListener(function () {
     });
 });
 
-// 添加点击菜单后的处理事件
-chrome.contextMenus.onClicked.addListener(onClickHandler);
+/**
+ * 根据用户的语言设定国际化右键菜单中的 “翻译 'xxx'” 选项
+ */
+chrome.runtime.onStartup.addListener(function () {
+    // 不知为何找不到 translate 这个 menu item，导致 update 不能用。
+    // chrome.contextMenus.update("translate", {"title": chrome.i18n.getMessage("Translate") + " '%s'"});
+
+    chrome.contextMenus.removeAll();
+    chrome.contextMenus.create({
+        "id": "translate",
+        "title": chrome.i18n.getMessage("Translate") + " '%s'",
+        "contexts": ["selection"]
+    });
+});
 
 /**
- * 
- * 对菜单点击事件监听的处理函数
- * 
- * @param {*} info 事件信息
- * @param {*} tabs 菜单栏点击位置的具体信息，是一个tab对象 
+ * 添加点击菜单后的处理事件
  */
-function onClickHandler(info, tabs) {
+chrome.contextMenus.onClicked.addListener(function (info, tabs) {
     var text = info.selectionText;
     translate(text); // 此api位于 translate.js中
-}
+});
