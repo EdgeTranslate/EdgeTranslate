@@ -185,7 +185,7 @@ var showTranslate = function (content, callback) {
             alert(content.mainMeaning);
         else {
             chrome.tabs.executeScript(tabs[0].id, {
-                file: './display/display.js'
+                file: './display/template.js'
             }, function (tab) {
                 if (chrome.runtime.lastError) { // content_script无法在当前窗口执行
                     // 这里询问是否开启了访问 file:// 网址的权限
@@ -195,7 +195,10 @@ var showTranslate = function (content, callback) {
                         } else { // 未开启权限，则通过这种方式展示权限
                             if (confirm(chrome.i18n.getMessage("PermissionRemind"))) { // 打开管理页面，由用户开启权限
                                 let url = 'chrome://extensions/?id=' + chrome.runtime.id;
-                                chrome.tabs.create({ url: url })
+                                chrome.tabs.create({ // 为管理页面创建一个新的标签
+                                    url: url,
+                                    index: tabs[0].index
+                                })
                             } else { // 用户拒绝开启，则直接展示翻译结果
                                 alert(content.mainMeaning);
                             }
@@ -203,9 +206,18 @@ var showTranslate = function (content, callback) {
                     })
                 } else {
                     if (content) {
-                        chrome.tabs.sendMessage(tabs[0].id, content);
-                        if (callback)
-                            callback();
+                        // 通过嵌套添加多个content script
+                        chrome.tabs.executeScript(tab.id, {
+                            file: './display/engine.js'
+                        }, function (tab) {
+                            chrome.tabs.executeScript(tab.id, {
+                                file: './display/display.js'
+                            }, function () {
+                                chrome.tabs.sendMessage(tabs[0].id, content);
+                                if (callback) // 当翻译结果展示完后，执行此回调函数
+                                    callback();
+                            })
+                        })
                     }
                 }
             })

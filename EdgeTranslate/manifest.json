@@ -23,15 +23,11 @@
     "content_scripts": [
         {
             "matches": [
-                "file://*",
+                "file://*/*",
                 "*://*/*"
             ],
             "css": [
                 "./display/display.css"
-            ],
-            "js": [
-                "./display/template.js",
-                "./display/engine.js"
             ]
         }
     ],

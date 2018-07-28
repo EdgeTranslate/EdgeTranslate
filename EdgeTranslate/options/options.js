@@ -3,7 +3,7 @@
  */
 window.onload = function () {
     var i18nElemwnts = document.getElementsByClassName("i18n");
-    for(let i = 0; i < i18nElemwnts.length; i++) {
+    for (let i = 0; i < i18nElemwnts.length; i++) {
         // 跟随浏览器的语言设置显示内容
         i18nElemwnts[i].insertAdjacentText("beforeEnd", chrome.i18n.getMessage(i18nElemwnts[i].getAttribute("data-i18n-name")));
     }
