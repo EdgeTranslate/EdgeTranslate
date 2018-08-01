@@ -29,6 +29,9 @@ chrome.runtime.onInstalled.addListener(function () {
             chrome.storage.sync.set({ "DTSetting": DEFAULT_DT_SETTING });
         }
     });
+    chrome.tabs.create({ // 为管理页面创建一个新的标签
+        url: 'https://github.com/nickyc975/EdgeTranslate/wiki',
+    })
 });
 
 /**
