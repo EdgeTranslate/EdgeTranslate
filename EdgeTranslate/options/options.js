@@ -3,6 +3,8 @@
  */
 window.onload = function () {
     var i18nElemwnts = document.getElementsByClassName("i18n");
+    var translate_input = document.getElementById('translate_input');
+    translate_input.focus();
     for (let i = 0; i < i18nElemwnts.length; i++) {
         // 跟随浏览器的语言设置显示内容
         i18nElemwnts[i].insertAdjacentText("beforeEnd", chrome.i18n.getMessage(i18nElemwnts[i].getAttribute("data-i18n-name")));
@@ -148,6 +150,7 @@ function saveOption(key, value) {
  */
 function addEventListener() {
     document.getElementById('translateSubmit').addEventListener('click', translateSubmit);
+    document.addEventListener('keypress', translatePreSubmit);  // 对用户按下回车按键后的事件进行监听
     document.getElementById('setting-switch').addEventListener('click', settingSwitch);
 }
 
@@ -188,6 +191,16 @@ function settingSwitch() {
         setting.style.display = 'none';
         arrowDown.style.display = 'inline';
         arrowUp.style.display = 'none';
+    }
+}
+
+/**
+ * 判断如果按下的是按钮是enter键，就调用翻译的函数
+ */
+function translatePreSubmit(event) {
+    var int_keycode = event.charCode || event.keyCode;
+    if (int_keycode == '13') {
+        translateSubmit();
     }
 }
 /**
