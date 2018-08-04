@@ -134,14 +134,18 @@
   font-weight: light;
 }
 
+/* 对翻译按钮的样式 */
 #translate-button {
   padding: 0 3px;
   position: absolute;
   background-color: white;
   display: none;
   box-shadow: 0px 0px 2px 2px #ddd;
+  cursor: pointer;
+  border-radius: 1px;
+  z-index: 2147483648;
 }
 
 #translate-button:hover {
-  box-shadow: 0px 0px 2px 3px #ccc;
+  box-shadow: 0px 0px 2px 2px #ccc;
 }
