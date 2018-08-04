@@ -133,3 +133,15 @@
   display: block;
   font-weight: light;
 }
+
+#translate-button {
+  padding: 0 3px;
+  position: absolute;
+  background-color: white;
+  display: none;
+  box-shadow: 0px 0px 2px 2px #ddd;
+}
+
+#translate-button:hover {
+  box-shadow: 0px 0px 2px 3px #ccc;
+}
