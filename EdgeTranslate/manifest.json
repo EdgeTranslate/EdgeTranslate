@@ -28,6 +28,10 @@
             ],
             "css": [
                 "./display/display.css"
+            ],
+            "js": [
+                "./select.js",
+                "./translate.js"
             ]
         }
     ],

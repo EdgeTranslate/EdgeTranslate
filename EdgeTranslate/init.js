@@ -54,5 +54,7 @@ chrome.runtime.onStartup.addListener(function () {
  */
 chrome.contextMenus.onClicked.addListener(function (info, tabs) {
     var text = info.selectionText;
-    translate(text); // 此api位于 translate.js中
+    translate(text, function (result) {
+        showTranslate(result);
+    }); // 此api位于 translate.js中
 });

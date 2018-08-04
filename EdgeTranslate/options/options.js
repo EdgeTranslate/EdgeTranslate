@@ -166,8 +166,10 @@ function translateSubmit() {
     var content = document.getElementById('translate_input').value;
     if (content.replace(/\s*/, '') !== '') { // 判断值是否为
         document.getElementById('hint_message').style.display = 'none';
-        translate(content, function () {
-            window.close(); // 展示结束后关闭option页面
+        var result = translate(content, function (result) {
+            showTranslate(result, function () {
+                window.close(); // 展示结束后关闭option页面
+            });
         });
     }
     else  // 提示输入的内容是
