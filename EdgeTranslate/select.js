@@ -2,7 +2,18 @@
  * 划词翻译功能的实现
  * 需要对页面的相关事件进行监听，根据用户设定来决定是否进行监听。
  */
- chrome.storage.onChanged.addListener(function (changes, area) {
+chrome.storage.sync.get("OtherSettings", function (result) {
+    var OtherSettings = result.OtherSettings;
+    if (OtherSettings && OtherSettings["SelectTranslate"]) {
+        document.addEventListener('mouseup', showButton);
+        document.addEventListener('mousedown', dispearButton);
+    }
+});
+
+/**
+ * 当用户更改设定时添加或删除事件监听。
+ */
+chrome.storage.onChanged.addListener(function (changes, area) {
     if (area === "sync" && changes["OtherSettings"].newValue) {
         if (changes["OtherSettings"].newValue["SelectTranslate"]) {
             document.addEventListener('mouseup', showButton);
@@ -52,7 +63,7 @@ function translateSubmit() {
     // 调用tramslate.js 中的翻译api
     translate(window.getSelection().toString(), function (result) {
         display(result);
-    })
+    });
 }
 
 /**
