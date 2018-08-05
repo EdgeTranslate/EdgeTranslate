@@ -8,6 +8,8 @@ const DEFAULT_LANGUAGE_SETTING = { "sl": "auto", "tl": "zh-CN" };
  */
 const DEFAULT_DT_SETTING = ["t", "at", "bd", "ex", "md", "rw", "ss"];
 
+const DEFAULT_OTHER_SETTINGS = {"SelectTranslate": true};
+
 /**
  * 初始化插件配置。
  */
@@ -29,9 +31,14 @@ chrome.runtime.onInstalled.addListener(function () {
             chrome.storage.sync.set({ "DTSetting": DEFAULT_DT_SETTING });
         }
     });
+    chrome.storage.sync.get("OtherSettings", function (result) {
+        if (!result.OtherSettings) {
+            chrome.storage.sync.set({"OtherSettings": DEFAULT_OTHER_SETTINGS});
+        }
+    });
     chrome.tabs.create({ // 为管理页面创建一个新的标签
         url: 'https://github.com/nickyc975/EdgeTranslate/wiki',
-    })
+    });
 });
 
 /**
