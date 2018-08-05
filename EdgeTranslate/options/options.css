@@ -56,3 +56,8 @@
     flex: 3 3 50%;
     justify-content: space-between;
 }
+
+.setting-title {
+    font-size: small;
+    font-weight: bold;
+}

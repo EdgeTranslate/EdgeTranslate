@@ -62,5 +62,17 @@
     "PermissionRemind": {
         "message": "请在扩展程序管理页面中开启：'允许访问文件网址' 的开关",
         "description": "在用户的 '允许访问文件网址'的权限未打开时，给用户合理的提醒"
+    },
+    "ContentSettings": {
+        "message": "翻译结果设置",
+        "description": "选择需要在翻译结果中展示的内容。"
+    },
+    "OtherSettings": {
+        "message": "其他设置",
+        "description": "插件的其他设置。"
+    },
+    "SelectTranslate": {
+        "message": "启用划词翻译",
+        "description": "启用或禁用划词翻译。"
     }
 }

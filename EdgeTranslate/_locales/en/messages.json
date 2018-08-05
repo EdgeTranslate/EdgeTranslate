@@ -62,5 +62,17 @@
     "PermissionRemind": {
         "message": "Please open the 'Allow access to file URLs'switch in the extension management page",
         "description": "a hint to the user about the access to file url permission"
+    },
+    "ContentSettings": {
+        "message": "Content Settings",
+        "description": "Choose what to display in the translate results."
+    },
+    "OtherSettings": {
+        "message": "Other Settings",
+        "description": "Other settings of the extension."
+    },
+    "SelectTranslate": {
+        "message": "Enable Select Translate",
+        "description": "Enable or disable select translate."
     }
 }

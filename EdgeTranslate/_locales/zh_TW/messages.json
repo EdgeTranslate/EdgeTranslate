@@ -62,5 +62,17 @@
     "PermissionRemind": {
         "message": "請在擴展程序管理頁面中開啟：'允許訪問文件網址' 的開關",
         "description": "在用戶的 '允許訪問文件網址'的權限未打開時，給用戶合理的提醒"
+    },
+    "ContentSettings": {
+        "message": "翻譯結果設定",
+        "description": "選則需要在翻譯結果中展示的内容。"
+    },
+    "OtherSettings": {
+        "message": "其他設定",
+        "description": "插件的其他設定。"
+    },
+    "SelectTranslate": {
+        "message": "啓用劃詞翻譯",
+        "description": "啓用或禁用劃詞翻譯。"
     }
 }
