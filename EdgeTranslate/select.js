@@ -1,9 +1,18 @@
 /**
  * 划词翻译功能的实现
- * 需要对页面的相关事件进行监听
+ * 需要对页面的相关事件进行监听，根据用户设定来决定是否进行监听。
  */
-document.addEventListener('mouseup', showButton);
-document.addEventListener('mousedown', dispearButton);
+ chrome.storage.onChanged.addListener(function (changes, area) {
+    if (area === "sync" && changes["OtherSettings"].newValue) {
+        if (changes["OtherSettings"].newValue["SelectTranslate"]) {
+            document.addEventListener('mouseup', showButton);
+            document.addEventListener('mousedown', dispearButton);
+        } else {
+            document.removeEventListener("mouseup", showButton);
+            document.removeEventListener("mousedown", dispearButton);
+        }
+    }
+ });
 
 /**
  * 创建翻译按钮的图标元素
