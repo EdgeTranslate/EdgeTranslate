@@ -18,7 +18,7 @@
         ]
     },
     "browser_action": {
-        "default_popup": "./options/options.html"
+        "default_popup": "./popup/popup.html"
     },
     "content_scripts": [
         {
@@ -42,6 +42,10 @@
         "16": "icon/icon16.png",
         "48": "icon/icon48.png",
         "128": "icon/icon128.png"
+    },
+    "options_ui": {
+        "page": "./options/options.html",
+        "chrome_style": false
     },
     "manifest_version": 2
 }
