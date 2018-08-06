@@ -30,16 +30,19 @@ window.onload = function () {
 
         // languages是可选的源语言和目标语言的列表
         LANGUAGES.forEach(element => {
-            if (languageSetting && element.value == languageSetting.sl) {
-                sourceLanguage.options.add(new Option(element.name, element.value, true, true));
+            let value = element.value;
+            let name = chrome.i18n.getMessage(element.name);
+
+            if (languageSetting && value == languageSetting.sl) {
+                sourceLanguage.options.add(new Option(name, value, true, true));
             } else {
-                sourceLanguage.options.add(new Option(element.name, element.value));
+                sourceLanguage.options.add(new Option(name, value));
             }
 
-            if (languageSetting && element.value == languageSetting.tl) {
-                targetLanguage.options.add(new Option(element.name, element.value, true, true));
+            if (languageSetting && value == languageSetting.tl) {
+                targetLanguage.options.add(new Option(name, value, true, true));
             } else {
-                targetLanguage.options.add(new Option(element.name, element.value));
+                targetLanguage.options.add(new Option(name, value));
             }
         });
 
