@@ -48,10 +48,9 @@
     color: grey;
 }
 
-html {
-    /* max-width: 440px;
-    min-width: 350px; */
-    width: 440px;
+html, body{
+    max-width: 440px;
+    min-width: 350px;
 }
 
 .frame {
