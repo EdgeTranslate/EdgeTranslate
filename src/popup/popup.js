@@ -1,3 +1,7 @@
+import './popup.css';
+import { translate, showTranslate } from '../translate.js';
+import { LANGUAGES } from './languages.js';
+
 /**
  * 初始化设置列表
  */
@@ -144,7 +148,6 @@ function settingSwitch() {
     var setting = document.getElementById('setting');
     var arrowUp = document.getElementById('arrow-up');
     var arrowDown = document.getElementById('arrow-down');
-    console.log(setting.style);
     if (!setting.style.display || setting.style.display == 'none') {
         setting.style.display = 'block';
         arrowDown.style.display = 'none';

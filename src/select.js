@@ -1,3 +1,5 @@
+import { translate } from './translate.js';
+import display from './display/display.js';
 /**
  * 划词翻译功能的实现
  * 需要对页面的相关事件进行监听，根据用户设定来决定是否进行监听。
@@ -14,7 +16,7 @@ chrome.storage.sync.get("OtherSettings", function (result) {
  * 当用户更改设定时添加或删除事件监听。
  */
 chrome.storage.onChanged.addListener(function (changes, area) {
-    if (area === "sync" && changes["OtherSettings"].newValue) {
+    if (area === "sync" && changes["OtherSettings"]) {
         if (changes["OtherSettings"].newValue["SelectTranslate"]) {
             document.addEventListener('mouseup', showButton);
             document.addEventListener('mousedown', dispearButton);

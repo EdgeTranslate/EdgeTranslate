@@ -13,7 +13,6 @@
     "background": {
         "persistent": false,
         "scripts": [
-            "translate.js",
             "init.js"
         ]
     },
@@ -26,15 +25,8 @@
                 "file://*/*",
                 "*://*/*"
             ],
-            "css": [
-                "./display/display.css"
-            ],
             "js": [
-                "./display/engine.js",
-                "./display/template.js",
-                "./display/display.js",
-                "./select.js",
-                "./translate.js"
+                "./select.js"
             ]
         }
     ],

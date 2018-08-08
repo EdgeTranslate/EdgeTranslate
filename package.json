@@ -1,0 +1,19 @@
+{
+  "name": "edge",
+  "version": "0.2.1",
+  "description": "A translator extension.",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "css-loader": "^1.0.0",
+    "file-loader": "^1.1.11",
+    "style-loader": "^0.22.0",
+    "webpack": "^4.0.1",
+    "webpack-cli": "^2.0.9"
+  }
+}
