@@ -1,3 +1,4 @@
+dist/
+node_modules/
 publish/
 EdgeTranslate.zip
-node_modules

@@ -1,19 +1,42 @@
 {
-  "name": "edge",
-  "version": "0.2.1",
-  "description": "A translator extension.",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "MIT",
-  "devDependencies": {
-    "css-loader": "^1.0.0",
-    "file-loader": "^1.1.11",
-    "style-loader": "^0.22.0",
-    "webpack": "^4.0.1",
-    "webpack-cli": "^2.0.9"
-  }
+    "name": "edge_translate",
+    "version": "0.2.1",
+    "description": "A translator extension.",
+    "keywords": [
+        "Edge Translate",
+        "侧边翻译"
+    ],
+    "contributors": [
+        {
+            "name": "nickyc975",
+            "email": "chenjinlong2016@outlook.com",
+            "url": "https://github.com/nickyc975"
+        },
+        {
+            "name": "Mark-Fritz",
+            "email": "f18846188605@gmail.com",
+            "url": "https://github.com/Mark-Fritz"
+        }
+    ],
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/nickyc975/EdgeTranslate.git"
+    },
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "build": "gulp build",
+        "compile": "gulp compile",
+        "clean": "gulp clean"
+    },
+    "devDependencies": {
+        "css-loader": "^1.0.0",
+        "del": "^3.0.0",
+        "file-loader": "^1.1.11",
+        "gulp": "^3.9.1",
+        "style-loader": "^0.22.0",
+        "webpack": "^4.0.1",
+        "webpack-cli": "^2.0.9",
+        "webpack-stream": "^5.1.1"
+    }
 }

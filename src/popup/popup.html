@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<meta charset="utf-8"></meta>
+<html>
+<body>
+    <div class="frame">
+        <div class="row">
+            <input type="text" id="translate_input" autofocus="autofocus" />
+            <button id="translateSubmit" class="i18n" data-i18n-name="Translate"></button>
+        </div>
+        <label id="hint_message" class="i18n" for="translate_input" data-i18n-name="InputHint"></label>
+        <div id="setting">
+            <div class="row" style="align-items: flex-end;">
+                <div class="col">
+                    <div class="selection">
+                        <label id="sl_label" class="select-label i18n" for="sl" data-i18n-name="SourceLanguage"></label>
+                        <select id="sl">
+                            <option class="i18n" value="auto" data-i18n-name="AutoDetect"></option>
+                        </select>
+                    </div>
+                </div>
+                <i class="translate-icon translate-icon-exchange" id="exchange" title="交换两种语言"></i>
+                <div class="col">
+                    <div class="selection">
+                        <label id="tl_label" class="select-label i18n" for="tl" data-i18n-name="TargetLanguage"></label>
+                        <select id="tl">
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" id="setting-switch">
+            <i class="translate-icon translate-icon-arrow-up set" id="arrow-up"></i>
+            <i class="translate-icon translate-icon-arrow-down set" id="arrow-down"></i>
+        </div>
+    </div>
+
+    <footer>
+        ©2018
+        <a href="https://github.com/nickyc975/EdgeTranslate" target="blank">
+            Edge Translate
+        </a>
+    </footer>
+</body>
+
+<script src="./popup.js"></script>
+
+</html>

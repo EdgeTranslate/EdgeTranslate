@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<meta charset="utf-8"></meta>
+<html>
+
+<body>
+    <div style="margin-left:15%;">
+        <label for="content-settings" class="setting-title i18n" data-i18n-name="ContentSettings"></label>
+        <div id="content-settings">
+            <div class="row" title="设置翻译显示内容">
+                <label for="at" class="checked-label i18n" data-i18n-name="CommonMeanings">
+                    <input type="checkbox" value="at" class="checkbox dt-option" id="at"/>
+                </label>
+                <label for="bd" class="checked-label i18n" data-i18n-name="DetailedMeanings">
+                    <input type="checkbox" value="bd" class="checkbox dt-option" id="bd"/>
+                </label>
+            </div>
+            <div class="row">
+                <label for="md" class="checked-label i18n" data-i18n-name="Definitions">
+                    <input type="checkbox" value="md" class="checkbox dt-option" id="md"/>
+                </label>
+                <label for="ss" class="checked-label i18n" data-i18n-name="Synonyms">
+                    <input type="checkbox" value="ss" class="checkbox dt-option" id="ss"/>
+                </label>
+            </div>
+            <div class="row">
+                <label for="rw" class="checked-label i18n" data-i18n-name="Phrases">
+                    <input type="checkbox" value="rw" class="checkbox dt-option" id="rw"/>
+                </label>
+                <label for="ex" class="checked-label i18n" data-i18n-name="Examples">
+                    <input type="checkbox" value="ex" class="checkbox dt-option" id="ex"/>
+                </label>
+            </div>
+        </div>
+        
+        <label for="other-settings" class="setting-title i18n" data-i18n-name="OtherSettings"></label>
+        <div id="other-settings">
+            <div class="row" title="其他设置">
+                <label for="select-translate" class="checked-label i18n" data-i18n-name="SelectTranslate">
+                    <input type="checkbox" value="SelectTranslate" class="checkbox other-option" id="select-translate">
+                </label>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script src="./options.js"></script>
+
+</html>

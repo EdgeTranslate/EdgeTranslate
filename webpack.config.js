@@ -10,7 +10,7 @@ module.exports = {
     },
     output: {
         filename: '[name].js',
-        path: path.resolve(__dirname, 'dist')
+        path: path.resolve(__dirname, 'build')
     },
     devtool: 'inline-source-map', // 在开发环境下生成.map文件，便于定位到源代码的位置
     module: {

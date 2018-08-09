@@ -1,6 +1,5 @@
 import { template } from './template.js';
 import render from './engine.js';
-import './display.css';
 
 export default display;
 
