@@ -1,3 +1,4 @@
+export {template};
 var template =  '<i class="translate-icon translate-icon-tuding-fix translate-fix" title="固定侧边栏"></i>'+
                 '<i class="translate-icon translate-icon-tuding-full translate-fix" title="解除固定"></i>'+
                 '<i class="translate-icon translate-icon-close"></i>' + 

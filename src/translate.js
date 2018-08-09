@@ -1,3 +1,4 @@
+export { translate, showTranslate };
 /**
  * 翻译接口。
  */
@@ -88,14 +89,14 @@ function translate(text, callback) {
  */
 function parseTranslate(response) {
     var result = new Object();
-    for (i = 0; i < response.length; i++) {
+    for (var i = 0; i < response.length; i++) {
         if (response[i]) {
             var items = response[i];
             switch (i) {
                 // 单词的基本意思
                 case 0:
-                    mainMeanings = [];
-                    originalTexts = [];
+                    var mainMeanings = [];
+                    var originalTexts = [];
                     items.forEach(item => {
                         mainMeanings.push(item[0]);
                         originalTexts.push(item[1]);
@@ -178,13 +179,13 @@ function parseTranslate(response) {
  * @param {Object} content 翻译结果。
  * @param {Function} callback 展示完页面后执行的回调函数
  */
-var showTranslate = function (content, callback) {
+function showTranslate(content, callback) {
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
         if (chrome.runtime.lastError)
             alert(content.mainMeaning);
         else {
             chrome.tabs.executeScript(tabs[0].id, {
-                file: './display/template.js'
+                file: './display/display.js'
             }, function (tab) {
                 if (chrome.runtime.lastError) { // content_script无法在当前窗口执行
                     // 这里询问是否开启了访问 file:// 网址的权限
@@ -206,17 +207,9 @@ var showTranslate = function (content, callback) {
                 } else {
                     if (content) {
                         // 通过嵌套添加多个content script
-                        chrome.tabs.executeScript(tab.id, {
-                            file: './display/engine.js'
-                        }, function (tab) {
-                            chrome.tabs.executeScript(tab.id, {
-                                file: './display/display.js'
-                            }, function () {
-                                chrome.tabs.sendMessage(tabs[0].id, content);
-                                if (callback) // 当翻译结果展示完后，执行此回调函数
-                                    callback();
-                            })
-                        })
+                        chrome.tabs.sendMessage(tabs[0].id, content);
+                        if (callback) // 当翻译结果展示完后，执行此回调函数
+                            callback();
                     }
                 }
             })

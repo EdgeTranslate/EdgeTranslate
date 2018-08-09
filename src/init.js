@@ -1,3 +1,4 @@
+import { translate, showTranslate } from './translate.js';
 /**
  * 默认的源语言和目标语言。
  */
@@ -8,7 +9,7 @@ const DEFAULT_LANGUAGE_SETTING = { "sl": "auto", "tl": "zh-CN" };
  */
 const DEFAULT_DT_SETTING = ["t", "at", "bd", "ex", "md", "rw", "ss"];
 
-const DEFAULT_OTHER_SETTINGS = {"SelectTranslate": true};
+const DEFAULT_OTHER_SETTINGS = { "SelectTranslate": true };
 
 /**
  * 初始化插件配置。
@@ -33,7 +34,7 @@ chrome.runtime.onInstalled.addListener(function () {
     });
     chrome.storage.sync.get("OtherSettings", function (result) {
         if (!result.OtherSettings) {
-            chrome.storage.sync.set({"OtherSettings": DEFAULT_OTHER_SETTINGS});
+            chrome.storage.sync.set({ "OtherSettings": DEFAULT_OTHER_SETTINGS });
         }
     });
     chrome.tabs.create({ // 为管理页面创建一个新的标签

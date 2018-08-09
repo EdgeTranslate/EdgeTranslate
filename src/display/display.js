@@ -1,3 +1,9 @@
+import { template } from './template.js';
+import render from './engine.js';
+import './display.css';
+
+export default display;
+
 // 用于存储一个div元素，这个元素用来在页面的右侧展示翻译结果
 var frame;
 
@@ -10,7 +16,7 @@ var originWidth; // 侧边栏的初始宽度
  * 
  * @param {Object} content 翻译的结果
  */
-var display = function (content) {
+function display(content) {
     createBlock(content);
     chrome.runtime.onMessage.removeListener(display);
 }
@@ -20,7 +26,7 @@ var display = function (content) {
  * 
  * @param {Object} content 翻译的结果
  */
-var createBlock = function (content) {
+function createBlock(content) {
     // 判断frame是否已经添加到了页面中
     if (!isChildNode(frame, document.documentElement)) { // frame不在页面中，创建新的frame
         frame = document.createElement('DIV');
@@ -65,7 +71,7 @@ function addEventListener() {
  * @param {Element} node1 第一个document Element 元素,非空
  * @param {Element} node2 第二个document Element 元素，非空
  */
-var isChildNode = function (node1, node2) {
+function isChildNode(node1, node2) {
     // 判断传入的参数是否合法
     if (!(node1 && node2))
         return false;
@@ -89,7 +95,7 @@ var isChildNode = function (node1, node2) {
  * 
  * @param {object} event 点击事件的object
  */
-var clickListener = function (event) {
+function clickListener(event) {
     let node = event.target;
     if (!isChildNode(node, frame)) {
         removeSlider();
@@ -99,7 +105,7 @@ var clickListener = function (event) {
 /**
  * 将侧边栏元素从页面中除去，即将frame从document中删除
  */
-var removeSlider = function () {
+function removeSlider() {
     if (isChildNode(frame, document.documentElement)) {
         document.documentElement.removeChild(frame);
         document.body.style.width = '100%';
@@ -113,7 +119,7 @@ var removeSlider = function () {
  * 处理鼠标的拖动事件
  * @param {Object} event 
  */
-var dragOn = function (event) {
+function dragOn(event) {
     if (mousedown) {
         frame.style.width = originX - event.x + originWidth + 'px';
         document.body.style.width = window.innerWidth - originWidth - (originX - event.x) + 'px';
@@ -123,7 +129,7 @@ var dragOn = function (event) {
 /**
  * 处理释放鼠标按钮后，边框的宽度停止改变的事件
  */
-var dragOff = function () {
+function dragOff() {
     if (mousedown) {
         frame.style.transition = 'width 500ms';
         document.body.style.transition = 'width 500ms';
@@ -137,7 +143,7 @@ var dragOff = function () {
  * 
  * @param {Object} event 事件发生的全部信息
  */
-var dragHandler = function (event) {
+function dragHandler(event) {
     var node = event.target;
     if (node.isSameNode(frame)) {
         if (event.x <= node.offsetLeft + 4) {
@@ -156,7 +162,7 @@ var dragHandler = function (event) {
  * 
  * @param {Object} event 事件发生的所有信息
  */
-var moveHandler = function (event) {
+function moveHandler(event) {
     var node = event.target;
     if (node.isSameNode(frame)) {
         if (event.x <= node.offsetLeft + 4)
@@ -169,7 +175,7 @@ var moveHandler = function (event) {
 /**
  * 负责将侧边栏固定
  */
-var fixOn = function () {
+function fixOn() {
     document.getElementsByClassName('translate-icon-tuding-full')[0].style.display = 'inline';
     document.getElementsByClassName('translate-icon-tuding-fix')[0].style.display = 'none';
     document.documentElement.removeEventListener('mousedown', clickListener);
@@ -178,7 +184,7 @@ var fixOn = function () {
 /**
  * 负责解除侧边栏的固定
  */
-var fixOff = function () {
+function fixOff() {
     document.getElementsByClassName('translate-icon-tuding-full')[0].style.display = 'none';
     document.getElementsByClassName('translate-icon-tuding-fix')[0].style.display = 'inline';
     document.documentElement.addEventListener('mousedown', clickListener);
