@@ -1,3 +1,4 @@
+import "./display.css";
 import { template } from './template.js';
 import render from './engine.js';
 

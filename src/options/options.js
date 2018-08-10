@@ -1,3 +1,4 @@
+import "./options.css"
 /**
  * 初始化设置列表
  */

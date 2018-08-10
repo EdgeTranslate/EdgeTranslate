@@ -1,4 +1,6 @@
-dist/
+build/
 node_modules/
 publish/
-EdgeTranslate.zip
+*.zip
+*.crx
+*.pem

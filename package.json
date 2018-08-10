@@ -25,15 +25,19 @@
     },
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "build": "gulp build",
-        "compile": "gulp compile",
-        "clean": "gulp clean"
+        "build:chrome": "gulp build:chrome",
+        "build:firefox": "gulp build:firefox",
+        "clean": "gulp clean",
+        "pack:chrome": "gulp pack:chrome",
+        "pack:firefox": "gulp pack:firefox"
     },
     "devDependencies": {
         "css-loader": "^1.0.0",
         "del": "^3.0.0",
         "file-loader": "^1.1.11",
         "gulp": "^3.9.1",
+        "gulp-zip": "^4.2.0",
+        "lodash": "^4.17.10",
         "style-loader": "^0.22.0",
         "webpack": "^4.0.1",
         "webpack-cli": "^2.0.9",
