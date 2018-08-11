@@ -131,7 +131,7 @@ function translateSubmit() {
     var content = document.getElementById('translate_input').value;
     if (content.replace(/\s*/, '') !== '') { // 判断值是否为
         document.getElementById('hint_message').style.display = 'none';
-        var result = translate(content, function (result) {
+        translate(content, function (result) {
             showTranslate(result, function () {
                 window.close(); // 展示结束后关闭option页面
             });

@@ -206,7 +206,6 @@ function showTranslate(content, callback) {
                     })
                 } else {
                     if (content) {
-                        // 通过嵌套添加多个content script
                         chrome.tabs.sendMessage(tabs[0].id, content);
                         if (callback) // 当翻译结果展示完后，执行此回调函数
                             callback();

@@ -1,3 +1,4 @@
+'use strict'
 const path = require('path');
 
 module.exports = {
@@ -13,14 +14,20 @@ module.exports = {
         filename: '[name].js',
         path: path.resolve(__dirname, 'build')
     },
-    devtool: 'inline-source-map', // 在开发环境下生成.map文件，便于定位到源代码的位置
     module: {
         rules: [
             {
                 test: /\.css$/,
                 use: [
-                    'style-loader',
-                    'css-loader'
+                    {
+                        loader: 'style-loader',
+                        options: {
+                            insertInto: () => document.querySelector("body")
+                        }
+                    },
+                    {
+                        loader: 'css-loader'
+                    }
                 ]
             },
             {

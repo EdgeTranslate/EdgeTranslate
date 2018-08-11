@@ -1,6 +1,6 @@
-import "./display.css";
 import { template } from './template.js';
 import render from './engine.js';
+import "./display.css";
 
 export default display;
 
@@ -193,5 +193,6 @@ function fixOff() {
  * end block
  */
 
-
-chrome.runtime.onMessage.addListener(display);
+if (!chrome.runtime.onMessage.hasListeners()) { // 保证listener只被添加一次
+    chrome.runtime.onMessage.addListener(display);
+}
