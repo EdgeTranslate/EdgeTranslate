@@ -50,7 +50,7 @@ function build(browser) {
         .pipe(merge_json(manifest_patch))
         .pipe(gulp.dest(output_dir));
 
-    gulp.src("./src/**/!(manifest|manifest_chrome|manifest_firefox).!(js|css)", { base: "src" })
+    gulp.src("./src/**/*.html", { base: "src" })
         .pipe(gulp.dest(output_dir));
 
     gulp.src("./static/**/*", {base: "static"})
