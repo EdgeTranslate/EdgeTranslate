@@ -66,3 +66,13 @@ chrome.contextMenus.onClicked.addListener(function (info, tabs) {
         showTranslate(result);
     }); // 此api位于 translate.js中
 });
+
+/*
+ * 将pdf文件重定向使用内置pdf viewer打开。
+ */
+chrome.runtime.onMessage.addListener(function (message, sender, callback) {
+    if (message.url && sender.tab) {
+        chrome.tabs.update(sender.tab.id, {url: message.url})
+        callback();
+    }
+});

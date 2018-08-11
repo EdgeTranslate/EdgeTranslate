@@ -3,7 +3,8 @@ const path = require('path');
 module.exports = {
     entry: {
         init: './src/init.js',
-        select: './src/select.js',
+        '/contents/pdf': './src/contents/pdf.js',
+        '/contents/select': './src/contents/select.js',
         '/popup/popup': './src/popup/popup.js',
         '/options/options': './src/options/options.js',
         '/display/display': './src/display/display.js'
@@ -20,6 +21,12 @@ module.exports = {
                 use: [
                     'style-loader',
                     'css-loader'
+                ]
+            },
+            {
+                test: /\.html$/,
+                use: [
+                    "html-loader"
                 ]
             }
         ]

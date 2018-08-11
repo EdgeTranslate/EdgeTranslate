@@ -7,8 +7,7 @@
         "contextMenus",
         "storage",
         "tabs",
-        "file://*/*",
-        "*://*/*"
+        "<all_urls>"
     ],
     "background": {
         "scripts": [
@@ -26,11 +25,21 @@
     "content_scripts": [
         {
             "matches": [
-                "file://*/*",
-                "*://*/*"
+                "<all_urls>"
             ],
             "js": [
-                "./select.js"
+                "./contents/select.js"
+            ]
+        },
+        {
+            "matches": [
+                "file://*/*.pdf",
+                "file://*/*.PDF",
+                "ftp://*/*.pdf",
+                "ftp://*/*.PDF"
+            ],
+            "js": [
+                "./contents/pdf.js"
             ]
         }
     ],

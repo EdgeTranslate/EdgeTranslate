@@ -51,6 +51,9 @@ function build(browser) {
 
     gulp.src("./src/**/!(manifest|manifest_chrome|manifest_firefox).!(js|css)", {base: "src"})
         .pipe(gulp.dest(output_dir));
+
+    gulp.src("./static/**/*", {base: "static"})
+        .pipe(gulp.dest(output_dir));
 }
 
 function merge_json() {

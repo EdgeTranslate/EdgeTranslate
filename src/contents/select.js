@@ -1,5 +1,5 @@
-import { translate } from './translate.js';
-import display from './display/display.js';
+import { translate } from '../translate.js';
+import display from '../display/display.js';
 /**
  * 划词翻译功能的实现
  * 需要对页面的相关事件进行监听，根据用户设定来决定是否进行监听。

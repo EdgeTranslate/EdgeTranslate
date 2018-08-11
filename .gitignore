@@ -1,6 +1,6 @@
-build/
-node_modules/
-publish/
+/build/
+/node_modules/
+/publish/
 *.zip
 *.crx
 *.pem
