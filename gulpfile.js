@@ -40,16 +40,17 @@ gulp.task("pack:firefox", ["build:firefox"], function (callback) {
 function build(browser) {
     let output_dir = "./build/" + browser + "/";
     let manifest_patch = "./src/manifest_" + browser + ".json";
+    let webpack_path = "./config/webpack.dev.config.js"; // webpack 配置文件路径
 
-    gulp.src("./src/**/*.js", {base: "src"})
-        .pipe(webpack_stream(require("./webpack.config.js"), webpack))
+    gulp.src("./src/**/*.js", { base: "src" })
+        .pipe(webpack_stream(require(webpack_path), webpack))
         .pipe(gulp.dest(output_dir));
 
-    gulp.src("./src/manifest.json", {base: "src"})
+    gulp.src("./src/manifest.json", { base: "src" })
         .pipe(merge_json(manifest_patch))
         .pipe(gulp.dest(output_dir));
 
-    gulp.src("./src/**/!(manifest|manifest_chrome|manifest_firefox).!(js|css)", {base: "src"})
+    gulp.src("./src/**/!(manifest|manifest_chrome|manifest_firefox).!(js|css)", { base: "src" })
         .pipe(gulp.dest(output_dir));
 }
 

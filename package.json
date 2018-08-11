@@ -40,7 +40,7 @@
         "lodash": "^4.17.10",
         "style-loader": "^0.22.0",
         "webpack": "^4.0.1",
-        "webpack-cli": "^2.0.9",
+        "webpack-merge": "^4.1.4",
         "webpack-stream": "^5.1.1"
     }
 }
