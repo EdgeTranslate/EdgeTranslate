@@ -193,5 +193,6 @@ function fixOff() {
  * end block
  */
 
-
-chrome.runtime.onMessage.addListener(display);
+if (!chrome.runtime.onMessage.hasListeners()) { // 保证listener只被添加一次
+    chrome.runtime.onMessage.addListener(display);
+}
