@@ -191,7 +191,16 @@ function showTranslate(content, callback) {
                     // 这里询问是否开启了访问 file:// 网址的权限
                     chrome.extension.isAllowedFileSchemeAccess(function (isAllowedAccess) {
                         if (isAllowedAccess) { // 如果开启了权限，则只能通过alert展示结果
-                            alert(content.mainMeaning);
+                            var regex = /chrome-extension:\/\/.*pdf\/viewer\.html\?file=.*/
+                            if (regex.test(tabs[0].url)) {
+                                if (content) {
+                                    chrome.tabs.sendMessage(tabs[0].id, content);
+                                    if (callback) // 当翻译结果展示完后，执行此回调函数
+                                        callback();
+                                }
+                            }
+                            else
+                                alert(content.mainMeaning);
                         } else { // 未开启权限，则通过这种方式展示权限
                             if (confirm(chrome.i18n.getMessage("PermissionRemind"))) { // 打开管理页面，由用户开启权限
                                 let url = 'chrome://extensions/?id=' + chrome.runtime.id;

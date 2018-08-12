@@ -16,9 +16,9 @@ var originWidth; // 侧边栏的初始宽度
  * 
  * @param {Object} content 翻译的结果
  */
-function display(content) {
-    createBlock(content);
-    chrome.runtime.onMessage.removeListener(display);
+function display(content, sender) {
+    if (!sender || !sender.tab) // 避免从file://跳转到pdf viewer的消息传递对此的影响
+        createBlock(content);
 }
 
 /**
@@ -192,7 +192,6 @@ function fixOff() {
 /**
  * end block
  */
-
 if (!chrome.runtime.onMessage.hasListeners()) { // 保证listener只被添加一次
     chrome.runtime.onMessage.addListener(display);
 }
