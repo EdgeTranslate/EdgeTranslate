@@ -184,43 +184,58 @@ function showTranslate(content, callback) {
         if (chrome.runtime.lastError)
             alert(content.mainMeaning);
         else {
-            chrome.tabs.executeScript(tabs[0].id, {
-                file: './display/display.js'
-            }, function (tab) {
-                if (chrome.runtime.lastError) { // content_script无法在当前窗口执行
-                    // 这里询问是否开启了访问 file:// 网址的权限
-                    chrome.extension.isAllowedFileSchemeAccess(function (isAllowedAccess) {
-                        if (isAllowedAccess) { // 如果开启了权限，则只能通过alert展示结果
-                            var regex = /chrome-extension:\/\/.*pdf\/viewer\.html\?file=.*/
-                            if (regex.test(tabs[0].url)) {
-                                if (content) {
-                                    chrome.tabs.sendMessage(tabs[0].id, content);
-                                    if (callback) // 当翻译结果展示完后，执行此回调函数
-                                        callback();
+            if (navigator.userAgent.indexOf('Chrome') > -1) { // 判断浏览器的类型 chrome的情况
+                chrome.tabs.executeScript(tabs[0].id, {
+                    file: './display/display.js'
+                }, function (tab) {
+                    if (chrome.runtime.lastError) { // content_script无法在当前窗口执行
+                        // 这里询问是否开启了访问 file:// 网址的权限
+                        chrome.extension.isAllowedFileSchemeAccess(function (isAllowedAccess) {
+                            if (isAllowedAccess) { // 如果开启了权限，则只能通过alert展示结果
+                                var regex = /chrome-extension:\/\/.*pdf\/viewer\.html\?file=.*/
+                                if (regex.test(tabs[0].url)) {
+                                    if (content) {
+                                        chrome.tabs.sendMessage(tabs[0].id, content);
+                                        if (callback) // 当翻译结果展示完后，执行此回调函数
+                                            callback();
+                                    }
+                                }
+                                else
+                                    alert(content.mainMeaning);
+                            } else { // 未开启权限，则通过这种方式展示权限
+                                if (confirm(chrome.i18n.getMessage("PermissionRemind"))) { // 打开管理页面，由用户开启权限
+                                    let url = 'chrome://extensions/?id=' + chrome.runtime.id;
+                                    chrome.tabs.create({ // 为管理页面创建一个新的标签
+                                        url: url,
+                                        index: tabs[0].index
+                                    })
+                                } else { // 用户拒绝开启，则直接展示翻译结果
+                                    alert(content.mainMeaning);
                                 }
                             }
-                            else
-                                alert(content.mainMeaning);
-                        } else { // 未开启权限，则通过这种方式展示权限
-                            if (confirm(chrome.i18n.getMessage("PermissionRemind"))) { // 打开管理页面，由用户开启权限
-                                let url = 'chrome://extensions/?id=' + chrome.runtime.id;
-                                chrome.tabs.create({ // 为管理页面创建一个新的标签
-                                    url: url,
-                                    index: tabs[0].index
-                                })
-                            } else { // 用户拒绝开启，则直接展示翻译结果
-                                alert(content.mainMeaning);
-                            }
+                        })
+
+                    } else {
+                        if (content) {
+                            chrome.tabs.sendMessage(tabs[0].id, content);
+                            if (callback) // 当翻译结果展示完后，执行此回调函数
+                                callback();
                         }
-                    })
-                } else {
-                    if (content) {
-                        chrome.tabs.sendMessage(tabs[0].id, content);
+                    }
+                })
+            }
+            else { // 是firefox的情况
+                if (content) {
+                    // resultPromise是 返回的一个promise对象
+                    var resultPromise = browser.tabs.sendMessage(tabs[0].id, content);
+                    resultPromise.then(function (response) { // 成功接收信息
                         if (callback) // 当翻译结果展示完后，执行此回调函数
                             callback();
-                    }
+                    }).catch(function (error) { // 出现错误的回调
+                        alert(content.commonMeanings);
+                    })
                 }
-            })
+            }
         }
     })
 }

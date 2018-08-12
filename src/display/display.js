@@ -15,6 +15,7 @@ var originWidth; // 侧边栏的初始宽度
  * 负责根据传入的翻译结果内容将结果显示在用户正在使用的页面中
  * 
  * @param {Object} content 翻译的结果
+ * @param {Object} sender 返送消息者的具体信息 如何发送者、是content_script，会有tab属性，如果是background，则没有tab属性
  */
 function display(content, sender) {
     if (!sender || !sender.tab) // 避免从file://跳转到pdf viewer的消息传递对此的影响
@@ -192,6 +193,10 @@ function fixOff() {
 /**
  * end block
  */
-if (!chrome.runtime.onMessage.hasListeners()) { // 保证listener只被添加一次
-    chrome.runtime.onMessage.addListener(display);
+if (navigator.userAgent.indexOf('Chrome') > -1) { // 判断浏览器的类型 chrome的情况
+    if (!chrome.runtime.onMessage.hasListeners()) { // 保证listener只被添加一次
+        chrome.runtime.onMessage.addListener(display);
+    }
+} else {
+    browser.runtime.onMessage.addListener(display);
 }
