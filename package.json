@@ -25,6 +25,8 @@
     },
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
+        "clean:chrome": "gulp clean:chrome",
+        "clean:firefox": "gulp clean:firefox",
         "build:chrome": "gulp build:chrome",
         "build:firefox": "gulp build:firefox",
         "pack:chrome": "gulp pack:chrome",
