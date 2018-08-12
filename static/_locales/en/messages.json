@@ -75,6 +75,10 @@
         "message": "Enable Select Translate",
         "description": "Enable or disable select translate."
     },
+    "UsePDFjs": {
+        "message": "Use Built-in PDF Viewer",
+        "description": "Use extension's built-in pdf viewer to enable selecting translate in pdf files."
+    },
     "Afrikaans": {
         "message": "Afrikaans",
         "description": "Afrikaans"

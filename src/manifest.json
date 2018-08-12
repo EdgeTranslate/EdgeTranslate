@@ -1,7 +1,7 @@
 {
     "name": "__MSG_AppName__",
     "description": "__MSG_Description__",
-    "version": "0.2.1",
+    "version": "1.0.0",
     "default_locale": "zh_CN",
     "permissions": [
         "contextMenus",
@@ -40,7 +40,8 @@
             ],
             "js": [
                 "./contents/pdf.js"
-            ]
+            ],
+            "run_at": "document_start"
         }
     ],
     "icons": {

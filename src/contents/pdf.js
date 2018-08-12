@@ -1,8 +1,11 @@
-/*
- * 使用内置pdf viewer打开pdf文件。
+/**
+ * 根据用户设置决定是否启用内置pdf查看器。
  */
-window.onload = function () {
-    chrome.runtime.sendMessage({
-        "url": chrome.runtime.getURL("pdf/viewer.html?file=" +  window.location.href)
-    });
-}
+chrome.storage.sync.get("OtherSettings", function (result) {
+    var OtherSettings = result.OtherSettings;
+    if (OtherSettings && OtherSettings["UsePDFjs"]) {
+        chrome.runtime.sendMessage({
+            "url": chrome.runtime.getURL("pdf/viewer.html?file=" +  window.location.href)
+        });
+    }
+});

@@ -75,6 +75,10 @@
         "message": "啓用劃詞翻譯",
         "description": "啓用或禁用劃詞翻譯。"
     },
+    "UsePDFjs": {
+        "message": "使用內置的pdf查看器",
+        "description": "使用本擴展內置的pdf查看器以便在pdf文件中使用劃詞翻譯。"
+    },
     "Afrikaans": {
         "message": "南非荷蘭語",
         "description": "南非荷蘭語"

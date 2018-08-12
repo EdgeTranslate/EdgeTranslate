@@ -75,6 +75,10 @@
         "message": "启用划词翻译",
         "description": "启用或禁用划词翻译。"
     },
+    "UsePDFjs": {
+        "message": "使用内置的pdf查看器",
+        "description": "使用本扩展内置的pdf查看器以便在pdf文件中使用划词翻译。"
+    },
     "Afrikaans": {
         "message": "南非荷兰语",
         "description": "南非荷兰语"
