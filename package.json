@@ -25,8 +25,8 @@
     },
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "dev:chrome": "gulp watcher:chrome",
-        "dev:firefox": "gulp watcher:firefox",
+        "dev:chrome": "gulp dev:chrome && gulp watcher:chrome",
+        "dev:firefox": "gulp dev:firefox && gulp watcher:firefox",
         "build:chrome": "gulp clean:chrome && gulp build:chrome",
         "build:firefox": "gulp clean:firefox && gulp build:firefox",
         "pack:chrome": "gulp clean:chrome && gulp build:chrome && gulp pack:chrome",
