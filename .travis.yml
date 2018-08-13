@@ -1,6 +1,6 @@
 language: node_js
-before_install:
-  - npm i -g npm@8.9.4
+node_js:
+  - "8"
 cache:
   directories:
     - "node_modules"
