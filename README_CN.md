@@ -1,4 +1,4 @@
-# [Edge Translate](./README.md) [侧边翻译](./README_CN.md)
+# 侧边翻译
 
 [![Version](https://img.shields.io/github/release/nickyc975/EdgeTranslate.svg?label=version)](https://github.com/nickyc975/EdgeTranslate/release)
 [![Build Status](https://travis-ci.org/nickyc975/EdgeTranslate.svg?branch=master)](https://travis-ci.org/nickyc975/EdgeTranslate)
@@ -54,7 +54,7 @@
 
 ### Firefox
 
-* 在浏览器中访问    about:debugging    ；
+* 在浏览器中访问：    about:debugging    ；
 
 * 选中该页面上的“启用附加组件调试”；
 
