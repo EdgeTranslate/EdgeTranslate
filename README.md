@@ -12,9 +12,9 @@
 
 View this page in other languages:
 
-* [简体中文](./README_CN.md)
+* [简体中文](./docs/README_CN.md)
 
-* [繁體中文](./README_TW.md)
+* [繁體中文](./docs/README_TW.md)
 
 ## Downloads
 
