@@ -39,6 +39,10 @@
         "message": "典型例句",
         "description": "单词的用法示例"
     },
+    "PhoneticSymbol": {
+        "message": "单词音标",
+        "description": "单词音标"
+    },
     "Translate": {
         "message": "翻译",
         "description": "翻译"

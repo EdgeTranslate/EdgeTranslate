@@ -83,6 +83,13 @@
   font-size: smaller;
 }
 
+.translate-phonetic-symbol-content {
+    font-size: small;
+    font-weight: lighter;
+    position: relative;
+    left: 12%;
+  }
+
 .translate-common-meanings-content {
   font-size: small;
   font-weight: lighter;

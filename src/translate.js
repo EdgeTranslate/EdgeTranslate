@@ -48,6 +48,7 @@ function translate(text, callback) {
  * <pre>
  *     result = {
  *         "mainMeaning": <字符串，单词的主要意思，句子的最可能的意思>,
+ *         "phoneticSymbol": <字符串，单词的音标>,
  *         "originalText": <字符串，被翻译的单词或句子>,
  *         "detailedMeanings": [
  *             {
@@ -93,16 +94,27 @@ function parseTranslate(response) {
         if (response[i]) {
             var items = response[i];
             switch (i) {
-                // 单词的基本意思
+                // 单词的基本意思和音标
                 case 0:
                     var mainMeanings = [];
                     var originalTexts = [];
-                    items.forEach(item => {
-                        mainMeanings.push(item[0]);
-                        originalTexts.push(item[1]);
-                    });
+                    var lastIndex = items.length - 1;
+
+                    for (let i = 0; i < lastIndex; i++) {
+                        mainMeanings.push(items[i][0]);
+                        originalTexts.push(items[i][1]);
+                    }
+                    
                     result.mainMeaning = mainMeanings.join('');
                     result.originalText = originalTexts.join('');
+                    try {
+                        if (lastIndex > 0 && items[lastIndex].length > 3 && items[lastIndex][3].length > 0) {
+                            result.phoneticSymbol = items[lastIndex][3];
+                            // console.log("phonetic symbol: " + result.phoneticSymbol);
+                        }
+                    } catch (error) {
+                        console.log(error);
+                    }
                     // console.log("text: " + result.originalText + "\nmeaning: " + result.mainMeaning);
                     break;
                 // 单词的所有词性及对应的意思

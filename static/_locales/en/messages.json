@@ -39,6 +39,10 @@
         "message": "Examples",
         "description": "Examples"
     },
+    "PhoneticSymbol": {
+        "message": "Phonetic Symbol",
+        "description": "Phonetic Symbol"
+    },
     "Translate": {
         "message": "Translate",
         "description": "Translate"

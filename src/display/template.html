@@ -14,6 +14,14 @@
         <p class="translate-main-meaning-content-smaller"><% this.mainMeaning %></p>
     <% } %>
 </div>  
+<div class="translate-phonetic-symbol">
+    <% if (this.phoneticSymbol && this.phoneticSymbol.length > 0) { %>
+        <p class="translate-content-title"><% chrome.i18n.getMessage("PhoneticSymbol") %>: </p>  
+        <ul class="translate-list">
+            <li class="translate-phonetic-symbol-content">[<% this.phoneticSymbol %>]</li>  
+        </ul>
+    <% } %>
+</div>
 <div class="translate-common-meanings">  
     <% if (this.commonMeanings && this.commonMeanings.length > 0) { %>  
         <p class="translate-content-title"><% chrome.i18n.getMessage("CommonMeanings") %>: </p>  

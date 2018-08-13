@@ -7,7 +7,7 @@ const DEFAULT_LANGUAGE_SETTING = { "sl": "auto", "tl": "zh-CN" };
 /**
  * 默认的翻译参数。
  */
-const DEFAULT_DT_SETTING = ["t", "at", "bd", "ex", "md", "rw", "ss"];
+const DEFAULT_DT_SETTING = ["t", "at", "bd", "ex", "md", "rw", "ss", "rm"];
 
 const DEFAULT_OTHER_SETTINGS = { "SelectTranslate": true, "UsePDFjs": true };
 

@@ -31,7 +31,7 @@ gulp.task("clean:firefox", function (callback) {
 });
 
 /**
- * 发开环境下热更新 chrome扩展的安装包
+ * 开发环境下热更新 chrome扩展的安装包
  */
 gulp.task("watcher:chrome", function (callback) {
     watcher("chrome");
@@ -39,7 +39,7 @@ gulp.task("watcher:chrome", function (callback) {
 });
 
 /**
- * 发开环境下热更新 firefox扩展的安装包
+ * 开发环境下热更新 firefox扩展的安装包
  */
 gulp.task("watcher:firefox", function (callback) {
     watcher("firefox");
@@ -47,14 +47,14 @@ gulp.task("watcher:firefox", function (callback) {
 });
 
 /**
- * 发开环境下build chrome扩展的安装包
+ * 开发环境下build chrome扩展的安装包
  */
 gulp.task("dev:chrome", function () {
     build("chrome", "development");
 });
 
 /**
- * 发开环境下build firefox扩展的安装包
+ * 开发环境下build firefox扩展的安装包
  */
 gulp.task("dev:firefox", function () {
     build("firefox", "development");
