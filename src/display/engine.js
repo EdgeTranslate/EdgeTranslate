@@ -43,6 +43,5 @@ function render(template, contents) {
     }
 
     code.push("return result.join('');");
-    // console.log(code.join("").replace(/\n|\r/g, ""));
     return new Function(code.join("").replace(/\n|\r/g, "")).apply(contents);
 }

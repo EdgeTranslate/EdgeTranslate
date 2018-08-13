@@ -41,6 +41,7 @@
         "gulp-remember": "^1.0.1",
         "gulp-zip": "^4.2.0",
         "lodash": "^4.17.10",
+        "raw-loader": "^0.5.1",
         "style-loader": "^0.22.0",
         "webpack": "^4.0.1",
         "webpack-merge": "^4.1.4",

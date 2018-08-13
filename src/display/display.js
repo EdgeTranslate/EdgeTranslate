@@ -1,8 +1,10 @@
-import { template } from './template.js';
 import render from './engine.js';
 import "./display.css";
+import template from './template.html'
 
 export default display;
+
+var Template = template.toString().replace(/\n|\s{2,}|\r/g, ""); // 对读入的模板进行预处理
 
 // 用于存储一个div元素，这个元素用来在页面的右侧展示翻译结果
 var frame;
@@ -47,7 +49,7 @@ function createBlock(content) {
             frame.style.right = '0';
         }, 50);
     }
-    frame.innerHTML = render(template, content); // 将template.js中的内容通过engine.js渲染成html元素
+    frame.innerHTML = render(Template, content); // 将template.js中的内容通过engine.js渲染成html元素
     addEventListener();
 }
 
