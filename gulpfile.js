@@ -80,7 +80,7 @@ gulp.task("build:firefox", function (callback) {
  * 将chrome版扩展打包成zip文件以备发布
  */
 gulp.task("pack:chrome", function (callback) {
-    gulp.src("./build/chrome/*")
+    gulp.src("./build/chrome/**/*")
         .pipe(zip("edge_translate_chrome.zip"))
         .pipe(gulp.dest("./build/"));
     callback();
@@ -90,7 +90,7 @@ gulp.task("pack:chrome", function (callback) {
  * 将firefox版扩展打包成zip文件以备发布
  */
 gulp.task("pack:firefox", function (callback) {
-    gulp.src("./build/firefox/*")
+    gulp.src("./build/firefox/**/*")
         .pipe(zip("edge_translate_firefox.zip"))
         .pipe(gulp.dest("./build/"));
     callback();
