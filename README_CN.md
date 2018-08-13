@@ -1,4 +1,4 @@
-# Edge Translate
+# 侧边翻译
 
 [![Version](https://img.shields.io/github/release/nickyc975/EdgeTranslate.svg?label=version)](https://github.com/nickyc975/EdgeTranslate/release)
 [![Build Status](https://travis-ci.org/nickyc975/EdgeTranslate.svg?branch=master)](https://travis-ci.org/nickyc975/EdgeTranslate)
@@ -10,70 +10,64 @@
 [![Firefox users](https://img.shields.io/amo/users/edge_translate.svg?label=Firefox%20users)](https://addons.mozilla.org/firefox/addon/edge_translate/)
 [![Firefox stars](https://img.shields.io/amo/stars/edge_translate.svg?label=Firefoxe%20stars)](https://addons.mozilla.org/firefox/addon/edge_translate/)
 
-View this page in other languages:
+## 下载
 
-* [简体中文](./README_CN.md)
+[Chrome应用商店](https://chrome.google.com/webstore/detail/bocbaocobfecmglnmeaeppambideimao)
+/ [Firefox附加组件商店](https://addons.mozilla.org/firefox/addon/edge_translate/)
+/ [GitHub Release页面](https://github.com/nickyc975/EdgeTranslate/releases)
 
-* [繁體中文](./README_TW.md)
+## 构建扩展
 
-## Downloads
+构建本扩展需要安装[Node.js](https://nodejs.org/)。
 
-[Chrome Web Store](https://chrome.google.com/webstore/detail/bocbaocobfecmglnmeaeppambideimao)
-/ [Firefox Add-ons](https://addons.mozilla.org/firefox/addon/edge_translate/)
-/ [GitHub Release](https://github.com/nickyc975/EdgeTranslate/releases)
-
-## Build It By Yourself
-
-To build the extension, you need to have [Node.js](https://nodejs.org/) installed.
-
-Clone the repository:
+克隆仓库：
 
     git clone https://github.com/nickyc975/EdgeTranslate.git
 
-Install dependencies:
+安装依赖：
 
     npm install
 
-Build Chrome version:
+构建Chrome扩展：
 
     npm run build:chrome
 
-Build Firefox version:
+构建Firefox扩展：
 
     npm run build:firefox
 
-After building finished, you will get the unpacked extension under    ./build/chrome/    and    ./build/firefox/    .
+构建完成之后在    ./build/chrome/    和    ./build/firefox/    文件夹下可分别找到已解压的Chrome扩展和Firefox扩展。
 
-## Load Unpacked Extension In Your Browser
+## 在浏览器中加载已解压的扩展
 
 ### Chrome
 
-* Navigate to:    chrome://extensions    .
+* 在浏览器中访问：    chrome://extensions    ；
 
-* Enable "Developer mode". It should be in the upper right corner of the page.
+* 开启右上角的开发者模式；
 
-* Click "Load unpacked" in the upper left corner.
+* 点击左上角“加载已解压的扩展程序”；
 
-* Navigate to the repository you just cloned, select build/chrome.
+* 找到刚才克隆下来的仓库，打开    build    文件夹，选择其中的    chrome    文件夹；
 
-* Now you can try this extension in Chrome.
+* 现在你就可以在Chrome中体验本扩展了。
 
 ### Firefox
 
-* Navigate to:    about:debugging    .
+* 在浏览器中访问：    about:debugging    ；
 
-* Check the "Enable add-on debugging" box if it's not checked.
+* 选中该页面上的“启用附加组件调试”；
 
-* Click "Load Temporary Add-on".
+* 点击“临时载入附加组件”；
 
-* Navigate to the repository you just cloned, open build/firefox, select any file in this directory.
+* 找到刚才克隆下来的仓库， 打开    build/firefox    , 选择其中的任意一个文件；
 
-* Now you can try this extension in Firefox.
+* 现在你就可以在Firefox中体验本扩展了。
 
-## More Information
+## 了解更多
 
 [Wiki](https://github.com/nickyc975/EdgeTranslate/wiki)
 
-## Contact Us
+## 联系我们
 
-E-mails: [chenjinlong2016@outlook.com](mailto:chenjinlong2016@outlook.com), [f18846188605@gmail.com](mailto:f18846188605@gmail.com)
+电子邮件: [chenjinlong2016@outlook.com](mailto:chenjinlong2016@outlook.com), [f18846188605@gmail.com](mailto:f18846188605@gmail.com)
