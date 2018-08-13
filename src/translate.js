@@ -100,7 +100,7 @@ function parseTranslate(response) {
                     var originalTexts = [];
                     var lastIndex = items.length - 1;
 
-                    for (let i = 0; i < lastIndex; i++) {
+                    for (let i = 0; i <= lastIndex; i++) {
                         mainMeanings.push(items[i][0]);
                         originalTexts.push(items[i][1]);
                     }
