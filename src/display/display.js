@@ -10,6 +10,8 @@ var frame;
 var mousedown = false; // 在鼠标拖动边框时，用于标记鼠标是否已经按下
 var originX; // 鼠标开始拖动的x坐标轴初始位置
 var originWidth; // 侧边栏的初始宽度
+if (!fixSwitch)
+    var fixSwitch = false; // 固定侧边栏的开关 true<->switch on  false<->switch off
 
 /**
  * 负责根据传入的翻译结果内容将结果显示在用户正在使用的页面中
@@ -53,14 +55,18 @@ function createBlock(content) {
  * 需要对侧边栏中的元素添加事件监听时，请在此函数中添加
  */
 function addEventListener() {
-    // 给关闭按钮添加点击事件监听，用于关闭侧边栏
-    document.getElementsByClassName('translate-icon-close')[0].onclick = removeSlider;
     // 给点击侧边栏之外区域事件添加监听，点击侧边栏之外的部分就会让侧边栏关闭
-    document.documentElement.addEventListener('mousedown', clickListener);
+    if (!fixSwitch)
+        document.documentElement.addEventListener('mousedown', clickListener);
+    else
+        fixOn();
     frame.addEventListener('mousedown', dragHandler);
     frame.addEventListener('mousemove', moveHandler);
     document.addEventListener('mousemove', dragOn);
     document.addEventListener('mouseup', dragOff);
+    // 给关闭按钮添加点击事件监听，用于关闭侧边栏
+    document.getElementsByClassName('translate-icon-close')[0].onclick = removeSlider;
+    // 给固定侧边栏的按钮添加点击事件监听，用户侧边栏的固定与取消固定
     document.getElementsByClassName('translate-icon-tuding-fix')[0].addEventListener('click', fixOn);
     document.getElementsByClassName('translate-icon-tuding-full')[0].addEventListener('click', fixOff);
 }
@@ -107,6 +113,7 @@ function clickListener(event) {
  * 将侧边栏元素从页面中除去，即将frame从document中删除
  */
 function removeSlider() {
+    fixSwitch = false; // 点击关闭按钮后自动取消侧边栏的固定
     if (isChildNode(frame, document.documentElement)) {
         document.documentElement.removeChild(frame);
         document.body.style.width = '100%';
@@ -177,6 +184,7 @@ function moveHandler(event) {
  * 负责将侧边栏固定
  */
 function fixOn() {
+    fixSwitch = true; // 将固定开关打开
     document.getElementsByClassName('translate-icon-tuding-full')[0].style.display = 'inline';
     document.getElementsByClassName('translate-icon-tuding-fix')[0].style.display = 'none';
     document.documentElement.removeEventListener('mousedown', clickListener);
@@ -186,6 +194,7 @@ function fixOn() {
  * 负责解除侧边栏的固定
  */
 function fixOff() {
+    fixSwitch = false; // 将固定开关关闭
     document.getElementsByClassName('translate-icon-tuding-full')[0].style.display = 'none';
     document.getElementsByClassName('translate-icon-tuding-fix')[0].style.display = 'inline';
     document.documentElement.addEventListener('mousedown', clickListener);

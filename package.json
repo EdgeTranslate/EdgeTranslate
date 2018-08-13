@@ -25,12 +25,10 @@
     },
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "clean:chrome": "gulp clean:chrome",
-        "clean:firefox": "gulp clean:firefox",
-        "build:chrome": "gulp build:chrome",
-        "build:firefox": "gulp build:firefox",
-        "pack:chrome": "gulp pack:chrome",
-        "pack:firefox": "gulp pack:firefox"
+        "build:chrome": "gulp clean:chrome && gulp build:chrome",
+        "build:firefox": "gulp clean:firefox && gulp build:firefox",
+        "pack:chrome": "gulp clean:chrome && gulp build:chrome && gulp pack:chrome",
+        "pack:firefox": "gulp clean:firefox && gulp build:firefox && gulp pack:firefox"
     },
     "devDependencies": {
         "css-loader": "^1.0.0",
