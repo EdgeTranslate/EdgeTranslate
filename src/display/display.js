@@ -1,13 +1,16 @@
-import "./display.css";
 import render from './engine.js';
 import template from './template.html';
+import style from 'raw-loader!./display.txt';
+import './display.css';
 
 export default display;
 
 var Template = template.toString().replace(/\n|\s{2,}|\r/g, ""); // 对读入的模板进行预处理
 
-// 用于存储一个div元素，这个元素用来在页面的右侧展示翻译结果
+// 用于存储一个iframe元素，这个元素用来在页面的右侧展示翻译结果
 var frame;
+// iframe中的document
+var frameDocument;
 
 var mousedown = false; // 在鼠标拖动边框时，用于标记鼠标是否已经按下
 var originX; // 鼠标开始拖动的x坐标轴初始位置
@@ -49,7 +52,17 @@ function createBlock(content) {
             frame.style.right = '0';
         }, 50);
     }
-    frame.srcdoc = render(Template, content); // 将template.js中的内容通过engine.js渲染成html元素
+
+    // 往iframe中写入元素
+    frameDocument = frame.contentWindow.document;
+    frameDocument.open();
+    frameDocument.write(render(Template, content));
+    frameDocument.close();
+
+    var styleElement = document.createElement('style');
+    styleElement.innerHTML = style;
+    frame.contentWindow.document.head.appendChild(styleElement);
+    // 添加事件监听
     addEventListener();
 }
 
@@ -67,10 +80,10 @@ function addEventListener() {
     document.addEventListener('mousemove', dragOn);
     document.addEventListener('mouseup', dragOff);
     // 给关闭按钮添加点击事件监听，用于关闭侧边栏
-    document.getElementsByClassName('translate-icon-close')[0].onclick = removeSlider;
+    frameDocument.getElementsByClassName('translate-icon-close')[0].onclick = removeSlider;
     // 给固定侧边栏的按钮添加点击事件监听，用户侧边栏的固定与取消固定
-    document.getElementsByClassName('translate-icon-tuding-fix')[0].addEventListener('click', fixOn);
-    document.getElementsByClassName('translate-icon-tuding-full')[0].addEventListener('click', fixOff);
+    frameDocument.getElementsByClassName('translate-icon-tuding-fix')[0].addEventListener('click', fixOn);
+    frameDocument.getElementsByClassName('translate-icon-tuding-full')[0].addEventListener('click', fixOff);
 }
 
 /**
@@ -187,8 +200,8 @@ function moveHandler(event) {
  */
 function fixOn() {
     fixSwitch = true; // 将固定开关打开
-    document.getElementsByClassName('translate-icon-tuding-full')[0].style.display = 'inline';
-    document.getElementsByClassName('translate-icon-tuding-fix')[0].style.display = 'none';
+    frameDocument.getElementsByClassName('translate-icon-tuding-full')[0].style.display = 'inline';
+    frameDocument.getElementsByClassName('translate-icon-tuding-fix')[0].style.display = 'none';
     document.documentElement.removeEventListener('mousedown', clickListener);
 }
 
@@ -197,8 +210,8 @@ function fixOn() {
  */
 function fixOff() {
     fixSwitch = false; // 将固定开关关闭
-    document.getElementsByClassName('translate-icon-tuding-full')[0].style.display = 'none';
-    document.getElementsByClassName('translate-icon-tuding-fix')[0].style.display = 'inline';
+    frameDocument.getElementsByClassName('translate-icon-tuding-full')[0].style.display = 'none';
+    frameDocument.getElementsByClassName('translate-icon-tuding-fix')[0].style.display = 'inline';
     document.documentElement.addEventListener('mousedown', clickListener);
 }
 /**
