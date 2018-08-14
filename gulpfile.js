@@ -124,9 +124,9 @@ function build(browser, env) {
 
     gulp.src("./src/**/*.js", { base: "src" })
         .pipe(cached("build:" + browser))
-        .pipe(webpack_stream(require(webpack_path), webpack))
-        .pipe(remember("build:" + browser))
-        .pipe(gulp.dest(output_dir));
+        .pipe(webpack_stream(require(webpack_path), webpack).on('error', (error) => console.log(error)))
+            .pipe(remember("build:" + browser))
+            .pipe(gulp.dest(output_dir));
 
     gulp.src("./src/manifest.json", { base: "src" })
         .pipe(cached("build:" + browser))
