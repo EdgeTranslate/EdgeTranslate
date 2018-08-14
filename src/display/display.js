@@ -1,6 +1,6 @@
-import render from './engine.js';
 import "./display.css";
-import template from './template.html'
+import render from './engine.js';
+import template from './template.html';
 
 export default display;
 
@@ -34,7 +34,7 @@ function display(content, sender) {
 function createBlock(content) {
     // 判断frame是否已经添加到了页面中
     if (!isChildNode(frame, document.documentElement)) { // frame不在页面中，创建新的frame
-        frame = document.createElement('DIV');
+        frame = document.createElement('iframe');
         frame.id = 'translate_frame';
         document.body.style.transition = 'width 500ms';
         document.body.style.width = '85%';
@@ -49,7 +49,7 @@ function createBlock(content) {
             frame.style.right = '0';
         }, 50);
     }
-    frame.innerHTML = render(Template, content); // 将template.js中的内容通过engine.js渲染成html元素
+    frame.srcdoc = render(Template, content); // 将template.js中的内容通过engine.js渲染成html元素
     addEventListener();
 }
 

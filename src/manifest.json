@@ -29,10 +29,13 @@
             ],
             "js": [
                 "./contents/select.js"
-            ]
+            ],
+            "all_frames": true
         },
         {
             "matches": [
+                "*://*/*.pdf",
+                "*://*/*.PDF",
                 "file://*/*.pdf",
                 "file://*/*.PDF",
                 "ftp://*/*.pdf",
