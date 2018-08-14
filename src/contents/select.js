@@ -1,5 +1,5 @@
-import { translate } from '../translate.js';
-import display from '../display/display.js';
+import "./select.css"
+
 /**
  * 划词翻译功能的实现
  * 需要对页面的相关事件进行监听，根据用户设定来决定是否进行监听。
@@ -66,10 +66,11 @@ function showButton() {
  */
 function translateSubmit() {
     disable = false; // 禁止按钮显示
-    // 调用tramslate.js 中的翻译api
-    translate(window.getSelection().toString(), function (result) {
+    // 发送消息给后台进行翻译。
+    chrome.runtime.sendMessage({
+        "text": window.getSelection().toString()
+    }, function (response) {
         translateButton.style.display = 'none';
-        display(result);
     });
 }
 

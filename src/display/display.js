@@ -1,9 +1,6 @@
+import './display.css';
 import render from './engine.js';
 import template from './template.html';
-import style from 'raw-loader!./display.txt';
-import './display.css';
-
-export default display;
 
 var Template = template.toString().replace(/\n|\s{2,}|\r/g, ""); // 对读入的模板进行预处理
 
@@ -15,8 +12,9 @@ var frameDocument;
 var mousedown = false; // 在鼠标拖动边框时，用于标记鼠标是否已经按下
 var originX; // 鼠标开始拖动的x坐标轴初始位置
 var originWidth; // 侧边栏的初始宽度
-if (!fixSwitch)
+if (!fixSwitch) {
     var fixSwitch = false; // 固定侧边栏的开关 true<->switch on  false<->switch off
+}
 
 /**
  * 负责根据传入的翻译结果内容将结果显示在用户正在使用的页面中
@@ -24,10 +22,11 @@ if (!fixSwitch)
  * @param {Object} content 翻译的结果
  * @param {Object} sender 返送消息者的具体信息 如何发送者、是content_script，会有tab属性，如果是background，则没有tab属性
  */
-function display(content, sender) {
-    if (!sender || !sender.tab) // 避免从file://跳转到pdf viewer的消息传递对此的影响
+chrome.runtime.onMessage.addListener(function (content, sender) {
+    if (!sender || !sender.tab) { // 避免从file://跳转到pdf viewer的消息传递对此的影响
         createBlock(content);
-}
+    }
+});
 
 /**
  * 在页面的右侧创建一块区域，用于显示翻译的结果，创建一个frame元素，将其插入到document中
@@ -54,14 +53,11 @@ function createBlock(content) {
     }
 
     // 往iframe中写入元素
-    frameDocument = frame.contentWindow.document;
+    frameDocument = frame.contentDocument;
     frameDocument.open();
     frameDocument.write(render(Template, content));
     frameDocument.close();
 
-    var styleElement = document.createElement('style');
-    styleElement.innerHTML = style;
-    frame.contentWindow.document.head.appendChild(styleElement);
     // 添加事件监听
     addEventListener();
 }
@@ -71,10 +67,11 @@ function createBlock(content) {
  */
 function addEventListener() {
     // 给点击侧边栏之外区域事件添加监听，点击侧边栏之外的部分就会让侧边栏关闭
-    if (!fixSwitch)
+    if (!fixSwitch) {
         document.documentElement.addEventListener('mousedown', clickListener);
-    else
+    } else {
         fixOn();
+    }
     frame.addEventListener('mousedown', dragHandler);
     frame.addEventListener('mousemove', moveHandler);
     document.addEventListener('mousemove', dragOn);
@@ -217,10 +214,3 @@ function fixOff() {
 /**
  * end block
  */
-if (navigator.userAgent.indexOf('Chrome') > -1) { // 判断浏览器的类型 chrome的情况
-    if (!chrome.runtime.onMessage.hasListeners()) { // 保证listener只被添加一次
-        chrome.runtime.onMessage.addListener(display);
-    }
-} else {
-    browser.runtime.onMessage.addListener(display);
-}

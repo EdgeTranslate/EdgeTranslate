@@ -1,4 +1,5 @@
-import { translate, showTranslate } from './translate.js';
+import {translate, showTranslate} from "./translate.js"
+
 /**
  * 默认的源语言和目标语言。
  */
@@ -60,10 +61,10 @@ chrome.runtime.onStartup.addListener(function () {
 /**
  * 添加点击菜单后的处理事件
  */
-chrome.contextMenus.onClicked.addListener(function (info, tabs) {
+chrome.contextMenus.onClicked.addListener(function (info, tab) {
     var text = info.selectionText;
     translate(text, function (result) {
-        showTranslate(result);
+        showTranslate(result, tab);
     }); // 此api位于 translate.js中
 });
 
@@ -74,5 +75,10 @@ chrome.runtime.onMessage.addListener(function (message, sender, callback) {
     if (message.url && sender.tab) {
         chrome.tabs.update(sender.tab.id, {url: message.url})
         callback();
+    } else if (message.text && sender.tab) {
+        var text = message.text;
+        translate(text, function (result) {
+            showTranslate(result, sender.tab);
+        });
     }
 });

@@ -134,7 +134,7 @@ function build(browser, env) {
         .pipe(remember("build:" + browser))
         .pipe(gulp.dest(output_dir));
 
-    gulp.src("./src/**/*.html", { base: "src" })
+    gulp.src(["./src/**/!(template).html", "./src/display/template.css"], { base: "src" })
         .pipe(cached("build:" + browser))
         .pipe(remember("build:" + browser))
         .pipe(gulp.dest(output_dir));

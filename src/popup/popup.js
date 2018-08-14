@@ -1,6 +1,6 @@
 import "./popup.css"
-import { translate, showTranslate } from '../translate.js';
 import { LANGUAGES } from './languages.js';
+import {translate, showTranslate} from "../translate.js"
 
 /**
  * 初始化设置列表
@@ -132,8 +132,10 @@ function translateSubmit() {
     if (content.replace(/\s*/, '') !== '') { // 判断值是否为
         document.getElementById('hint_message').style.display = 'none';
         translate(content, function (result) {
-            showTranslate(result, function () {
-                window.close(); // 展示结束后关闭option页面
+            chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
+                showTranslate(result, tabs[0], function () {
+                    window.close(); // 展示结束后关闭option页面
+                });
             });
         });
     }
