@@ -28,9 +28,9 @@
                 "<all_urls>"
             ],
             "js": [
-                "./contents/select.js"
-            ],
-            "all_frames": true
+                "./contents/select.js",
+                "./display/display.js"
+            ]
         },
         {
             "matches": [
