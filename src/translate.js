@@ -234,40 +234,37 @@ function isChrome() {
     return navigator.userAgent.indexOf('Chrome') >= 0;
 }
 
+/**
+ * 找出应该用于展示翻译结果的tab。
+ * 
+ * @param {chrome.tabs.Tab} tab 传入给showTranslate的tab
+ * @param {Function} callback 用于展示翻译结果的函数。
+ */
 function getCurrentTabId (tab, callback) {
     if (tab && tab.id >= 0) {
         callback(tab.id);
-    } else if (tab) {
-        let PDFFileURLRegEx = /^file:\/\/.+\.(pdf|PDF)$/;
-        if (PDFFileURLRegEx.test(tab.url)) {
-            chrome.extension.isAllowedFileSchemeAccess(function (isAllowedAccess) {
-                if (isAllowedAccess) {
-                    // 查询当前的tab，在该tab上展示结果。
-                    chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
-                        callback(tabs[0].id)
-                    });
-                } else {
-                    // 打开管理页面，由用户开启权限
-                    if (confirm(chrome.i18n.getMessage("PermissionRemind"))) {
-                        let url = 'chrome://extensions/?id=' + chrome.runtime.id;
-                        // 为管理页面创建一个新的标签
-                        chrome.tabs.create({
-                            url: url,
-                            index: tab.index
-                        })
-                    // 用户拒绝开启，则直接展示翻译结果
-                    } else {
-                        console.log("Permission denied.");
+    } else if (tab) { // 检查是否拥有访问文件链接的权限。
+        chrome.extension.isAllowedFileSchemeAccess(function (isAllowedAccess) {
+            if (isAllowedAccess) { // 查询当前的tab，在该tab上展示结果。
+                chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+                    if (chrome.runtime.lastError) {
+                        console.log("Chrome runtime error: " + chrome.runtime.lastError.message);
                         callback(chrome.tabs.TAB_ID_NONE);
+                    } else {
+                        callback(tabs[0] && tabs[0].id > 0 ? tabs[0].id : chrome.tabs.TAB_ID_NONE);
                     }
+                });
+            } else { // 打开管理页面，由用户开启权限
+                if (confirm(chrome.i18n.getMessage("PermissionRemind"))) { // 为管理页面创建一个新的标签
+                    chrome.tabs.create({url: 'chrome://extensions/?id=' + chrome.runtime.id});
+                } else { // 用户拒绝开启，则直接展示翻译结果
+                    console.log("Permission denied.");
+                    callback(chrome.tabs.TAB_ID_NONE);
                 }
-            });
-        } else {
-            console.log("Unsupported page: " + tab.url);
-            callback(chrome.tabs.TAB_ID_NONE);
-        }
-    } else {
-        console.log("Can not get tab id.");
+            }
+        });
+    } else { // 没有tab，说明该页面无法访问
+        console.log("Unsupported page.");
         callback(chrome.tabs.TAB_ID_NONE);
     }
 }
