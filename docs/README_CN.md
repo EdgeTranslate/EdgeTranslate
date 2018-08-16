@@ -4,6 +4,7 @@
 [![Build Status](https://travis-ci.org/nickyc975/EdgeTranslate.svg?branch=master)](https://travis-ci.org/nickyc975/EdgeTranslate)
 [![codebeat badge](https://codebeat.co/badges/7f28bc52-26ec-4dbc-815d-343220100c72)](https://codebeat.co/projects/github-com-nickyc975-edgetranslate-master)
 [![License](https://img.shields.io/github/license/nickyc975/EdgeTranslate.svg?colorB=44cc11?maxAge=2592000)](https://github.com/nickyc975/EdgeTranslate/blob/master/LICENSE)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fnickyc975%2FEdgeTranslate.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fnickyc975%2FEdgeTranslate?ref=badge_shield)
 
 [![Chrome users](https://img.shields.io/chrome-web-store/users/bocbaocobfecmglnmeaeppambideimao.svg?label=Chrome%20users)](https://chrome.google.com/webstore/detail/bocbaocobfecmglnmeaeppambideimao)
 [![Chrome stars](https://img.shields.io/chrome-web-store/stars/bocbaocobfecmglnmeaeppambideimao.svg?label=Chrome%20stars)](https://chrome.google.com/webstore/detail/bocbaocobfecmglnmeaeppambideimao)
@@ -70,4 +71,8 @@
 
 ## 联系我们
 
-电子邮件: [chenjinlong2016@outlook.com](mailto:chenjinlong2016@outlook.com), [f18846188605@gmail.com](mailto:f18846188605@gmail.com)
+电子邮件: [nickyc975](mailto:chenjinlong2016@outlook.com), [Mark-Fritz](mailto:f18846188605@gmail.com)
+
+## 开源协议
+
+[MIT](../LICENSE)

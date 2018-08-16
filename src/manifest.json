@@ -30,7 +30,8 @@
             "js": [
                 "./contents/select.js",
                 "./display/display.js"
-            ]
+            ],
+            "all_frames": true
         },
         {
             "matches": [
