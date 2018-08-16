@@ -4,6 +4,38 @@ export { translate, showTranslate };
  */
 const BASE_URL = "https://translate.google.cn/translate_a/single?client=gtx";
 
+// 生成tk需要的密钥
+var TKK = eval('((function(){var a\x3d3034572292;var b\x3d-192068061;return 426169+\x27.\x27+(a+b)})())');
+
+/**
+ * 生成google translate api 参数tk的值
+ * 
+ * @param {*} text 翻译的内容
+ * @param {*} TKK 生成tk需要的密钥
+ */
+function generateTK(text, TKK) {
+    function compute(a, b) {
+        for (var d = 0; d < b.length - 2; d += 3) {
+            var c = b.charAt(d + 2),
+                c = "a" <= c ? c.charCodeAt(0) - 87 : Number(c),
+                c = "+" == b.charAt(d + 1) ? a >>> c : a << c;
+            a = "+" == b.charAt(d) ? a + c & 4294967295 : a ^ c
+        }
+        return a
+    }
+    for (var e = TKK.split("."), h = Number(e[0]) || 0, g = [], d = 0, f = 0; f < text.length; f++) {
+        var c = text.charCodeAt(f);
+        128 > c ? g[d++] = c : (2048 > c ? g[d++] = c >> 6 | 192 : (55296 == (c & 64512) && f + 1 < text.length && 56320 == (a.charCodeAt(f + 1) & 64512) ? (c = 65536 + ((c & 1023) << 10) + (a.charCodeAt(++f) & 1023), g[d++] = c >> 18 | 240, g[d++] = c >> 12 & 63 | 128) : g[d++] = c >> 12 | 224, g[d++] = c >> 6 & 63 | 128), g[d++] = c & 63 | 128)
+    }
+    text = h;
+    for (d = 0; d < g.length; d++)text += g[d], text = compute(text, "+-a^+6");
+    text = compute(text, "+-3^+b+-f");
+    text ^= Number(e[1]) || 0;
+    0 > text && (text = (text & 2147483647) + 2147483648);
+    text %= 1E6;
+    return text.toString() + "." + (text ^ h)
+}
+
 /**
  * 
  * 此函数负责将传入的文本翻译，并在当前页面的侧边栏中展示
@@ -16,20 +48,23 @@ function translate(text, callback) {
     // 获取翻译语言设定。
     chrome.storage.sync.get("languageSetting", function (result) {
         var languageSetting = result.languageSetting;
-        var tmpUrl = BASE_URL + "&sl=" + languageSetting.sl + "&tl=" + languageSetting.tl;
+        var postData = "sl=" + languageSetting.sl + "&tl=" + languageSetting.tl;
 
         // 获取翻译参数设定。
         chrome.storage.sync.get("DTSetting", function (result) {
-            var url = tmpUrl;
             var DTSetting = result.DTSetting;
             var request = new XMLHttpRequest();
 
             DTSetting.forEach(element => {
-                url = url + "&dt=" + element;
+                postData = postData + "&dt=" + element;
             });
 
-            request.open("GET", url + "&q=" + text, true);
-            request.send();
+            postData += "&tk=" + generateTK(text, TKK);
+            postData += "&q=" + text;
+
+            request.open("POST", BASE_URL, true);
+            request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            request.send(postData);
             request.onreadystatechange = function () {
                 if (request.readyState === 4 && request.status === 200) {
                     callback(parseTranslate(JSON.parse(request.response)));
@@ -203,7 +238,7 @@ function showTranslate(content, tab, callback) {
                 alert(content.mainMeaning);
                 return;
             }
-            
+
             if (isChrome()) { // 判断浏览器的类型 chrome的情况
                 chrome.tabs.sendMessage(tab_id, content);
                 // 当翻译结果展示完后，执行此回调函数
@@ -240,7 +275,7 @@ function isChrome() {
  * @param {chrome.tabs.Tab} tab 传入给showTranslate的tab
  * @param {Function} callback 用于展示翻译结果的函数。
  */
-function getCurrentTabId (tab, callback) {
+function getCurrentTabId(tab, callback) {
     if (tab && tab.id >= 0) {
         callback(tab.id);
     } else if (tab) { // 检查是否拥有访问文件链接的权限。
@@ -256,7 +291,7 @@ function getCurrentTabId (tab, callback) {
                 });
             } else { // 打开管理页面，由用户开启权限
                 if (confirm(chrome.i18n.getMessage("PermissionRemind"))) { // 为管理页面创建一个新的标签
-                    chrome.tabs.create({url: 'chrome://extensions/?id=' + chrome.runtime.id});
+                    chrome.tabs.create({ url: 'chrome://extensions/?id=' + chrome.runtime.id });
                 } else { // 用户拒绝开启，则直接展示翻译结果
                     console.log("Permission denied.");
                     callback(chrome.tabs.TAB_ID_NONE);
