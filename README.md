@@ -77,7 +77,8 @@ After building finished, you will get the unpacked extension under    ./build/ch
 
 ## Contact Us
 
-E-mails: [chenjinlong2016@outlook.com](mailto:chenjinlong2016@outlook.com), [f18846188605@gmail.com](mailto:f18846188605@gmail.com)
+E-mails: [nickyc975](mailto:chenjinlong2016@outlook.com), [Mark-Fritz](mailto:f18846188605@gmail.com)
 
 ## License
-[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fnickyc975%2FEdgeTranslate.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fnickyc975%2FEdgeTranslate?ref=badge_large)
+
+[MIT](./LICENSE)
