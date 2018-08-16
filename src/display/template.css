@@ -1,6 +1,9 @@
+body{
+    margin: 10%;
+}
+
 .translate-icon {
   font-family: "translateIcon" !important;
-  font-size: 16px;
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -12,8 +15,9 @@
 /* 关闭页面的图标 */
 
 .translate-icon-close {
+  font-size: large;
   position: relative;
-  top: 10px;
+  top: 10%;
   left: 94%;
 }
 
@@ -24,7 +28,7 @@
 .translate-fix {
   font-size: larger;
   position: relative;
-  top: 12px;
+  top: 10%;
   left: 90%;
 }
 
@@ -46,10 +50,6 @@
 
 .translate-icon-close::before {
   content: "\e624";
-}
-
-body{
-  margin: 0;
 }
 
 .translate-content-title {
@@ -118,20 +118,4 @@ body{
   font-size: smaller;
   display: block;
   font-weight: light;
-}
-
-/* 对翻译按钮的样式 */
-#translate-button {
-  padding: 0 3px;
-  position: absolute;
-  background-color: white;
-  display: none;
-  box-shadow: 0px 0px 2px 2px #ddd;
-  cursor: pointer;
-  border-radius: 1px;
-  z-index: 2147483648;
-}
-
-#translate-button:hover {
-  box-shadow: 0px 0px 2px 2px #ccc;
 }
