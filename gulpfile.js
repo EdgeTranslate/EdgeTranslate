@@ -7,8 +7,8 @@ const through = require("through2");
 const webpack = require("webpack");
 const webpack_stream = require("webpack-stream");
 const zip = require("gulp-zip");
-var cached = require("gulp-cached");
-var remember = require("gulp-remember");
+const cached = require("gulp-cached");
+const remember = require("gulp-remember");
 
 /**
  * 清除之前打包好的chrome的缓存
@@ -146,7 +146,7 @@ function build(browser, env) {
         .pipe(remember("build:" + browser))
         .pipe(gulp.dest(output_dir));
 
-    gulp.src("./src/**/*.styl", { base: "scr" })
+    gulp.src("./src/**/*.styl", { base: "src" })
         .pipe(cached("build:" + browser))
         .pipe(stylus())
         .pipe(minifyCss())
