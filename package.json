@@ -41,7 +41,6 @@
         "file-loader": "^1.1.11",
         "gulp": "^3.9.1",
         "gulp-cached": "^1.1.1",
-        "gulp-minify-css": "^1.2.4",
         "gulp-remember": "^1.0.1",
         "gulp-stylus": "^2.7.0",
         "gulp-zip": "^4.2.0",

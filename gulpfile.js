@@ -2,7 +2,6 @@ const _ = require("lodash");
 const del = require("del");
 const gulp = require("gulp");
 const stylus = require("gulp-stylus");
-const minifyCss = require('gulp-minify-css');
 const through = require("through2");
 const webpack = require("webpack");
 const webpack_stream = require("webpack-stream");
@@ -136,7 +135,7 @@ function build(browser, env) {
         .pipe(remember("build:" + browser))
         .pipe(gulp.dest(output_dir));
 
-    gulp.src(["./src/**/!(template).html", "./src/display/template.css"], { base: "src" })
+    gulp.src(["./src/**/!(template).html"], { base: "src" })
         .pipe(cached("build:" + browser))
         .pipe(remember("build:" + browser))
         .pipe(gulp.dest(output_dir));
@@ -146,10 +145,12 @@ function build(browser, env) {
         .pipe(remember("build:" + browser))
         .pipe(gulp.dest(output_dir));
 
-    gulp.src("./src/**/*.styl", { base: "scr" })
+    gulp.src("./src/**/*.styl", { base: "src" })
         .pipe(cached("build:" + browser))
-        .pipe(stylus())
-        .pipe(minifyCss())
+        .pipe(stylus({
+            compress: true // 需要压缩
+        }).on('error', (error) => console.log(error)))
+        .pipe(remember("build:" + browser))
         .pipe(gulp.dest(output_dir));
 }
 

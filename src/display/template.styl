@@ -1,121 +1,149 @@
-body{
-    margin: 10%;
-}
+body
+	margin: 10%;
 
-.translate-icon {
-  font-family: "translateIcon" !important;
-  font-style: normal;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: #aaa;
-  width: 5%;
-  cursor: pointer;
-}
+
+.translate-icon 
+	font-family: "translateIcon";
+	font-style: normal;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	color: #aaa;
+	width: 5%;
+	cursor: pointer; 
+
 
 /* 关闭页面的图标 */
 
-.translate-icon-close {
-  font-size: large;
-  position: relative;
-  top: 10%;
-  left: 94%;
-}
+.translate-icon-close 
+	font-size: large;
+	position: relative;
+	top: 10%;
+	left: 94%;
 
-.translate-icon-close:hover {
-  color: #777;
-}
 
-.translate-fix {
-  font-size: larger;
-  position: relative;
-  top: 10%;
-  left: 90%;
-}
+.translate-icon-close:hover 
+	color: #777;
 
-.translate-fix:hover {
-  color: #777;
-}
 
-.translate-icon-tuding-full {
-  display: none;
-}
+.translate-fix 
+	font-size: larger;
+	position: relative;
+	top: 10%;
+	left: 90%;
 
-.translate-icon-tuding-fix::before {
-  content: '\e607';
-}
 
-.translate-icon-tuding-full::before {
-  content: "\e61b";
-}
+.translate-fix:hover 
+	color: #777;
 
-.translate-icon-close::before {
-  content: "\e624";
-}
 
-.translate-content-title {
-  color: gray;
-  font-size: medium;
-}
+.translate-icon-tuding-full 
+	display: none;
 
-.translate-word-type {
-  color: gray;
-  font-size: smaller;
-}
 
-.translate-phonetic-symbol-content {
-    font-size: small;
-    font-weight: lighter;
-    position: relative;
-    left: 12%;
-  }
+.translate-icon-tuding-fix::before 
+	content: '\e607';
 
-.translate-common-meanings-content {
-  font-size: small;
-  font-weight: lighter;
-  position: relative;
-  left: 12%;
-}
 
-.translate-main-meaning-content-larger {
-  font-size: 30px;
-  font-weight: medium;
-}
+.translate-icon-tuding-full::before 
+	content: "\e61b";
 
-.translate-main-meaning-content-large {
-  font-size: large;
-  font-weight: medium;
-}
 
-.translate-main-meaning-content-small {
-  font-size: medium;
-  font-weight: medium;
-}
+.translate-icon-close::before 
+	content: "\e624";
 
-.translate-main-meaning-content-smaller {
-  font-size: medium;
-  font-weight: medium;
-}
 
-.translate-content {
-  font-size: smaller;
-  display: block;
-  margin-left: 15%;
-  font-weight: light;
-}
+.translate-content-title 
+	color: gray;
+	font-size: medium;
 
-.translate-synonyms-words {
-  font-size: smaller;
-  display: block;
-  margin-left: 15%;
-  font-weight: light;
-}
 
-.translate-list li {
-  list-style-type: none;
-}
+.translate-word-type 
+	color: gray;
+	font-size: smaller;
 
-.translate-sentences {
-  font-size: smaller;
-  display: block;
-  font-weight: light;
-}
+
+.translate-phonetic-symbol-content 
+	font-size: small;
+	font-weight: lighter;
+	position: relative;
+	left: 12%;
+	
+
+.translate-common-meanings-content 
+	font-size: small;
+	font-weight: lighter;
+	position: relative;
+	left: 12%;
+
+
+.translate-main-meaning-content-larger 
+	font-size: 30px;
+	font-weight: medium;
+
+
+.translate-main-meaning-content-large 
+	font-size: large;
+	font-weight: medium;
+
+
+.translate-main-meaning-content-small 
+	font-size: medium;
+	font-weight: medium;
+
+
+.translate-main-meaning-content-smaller 
+	font-size: medium;
+	font-weight: medium;
+
+
+.translate-content 
+	font-size: smaller;
+	display: block;
+	margin-left: 15%;
+	font-weight: light;
+
+
+.translate-synonyms-words 
+	font-size: smaller;
+	display: block;
+	margin-left: 15%;
+	font-weight: light;
+
+
+.translate-list li 
+	list-style-type: none;
+
+
+.translate-sentences 
+	font-size: smaller;
+	display: block;
+	font-weight: light;
+
+
+/*change scrollbar style*/
+::-webkit-scrollbar
+	width: 6px;
+	background: rgba(118,176,243,.3);
+	border-radius: 5px;
+
+::-webkit-scrollbar-button 
+		display: none;
+
+::-webkit-scrollbar-thumb 
+	width: 8px;
+	min-height: 15px;
+	background: rgba(0,0,0,.2);
+	border-radius: 5px;
+
+::-webkit-scrollbar-thumb:hover 
+	background: rgba(0,0,0,.6);
+
+::-webkit-scrollbar-track 
+	background-color: #fff;
+
+.main-center-index::-webkit-scrollbar-track-piece 
+	background: #fff;
+
+::-webkit-scrollbar-track-piece 
+	background: #fff;
+
