@@ -72,10 +72,12 @@ function addEventListener() {
     } else {
         fixOn();
     }
-    frame.addEventListener('mousedown', dragHandler);
+    frame.addEventListener('mousedown', dragOn);
     frame.addEventListener('mousemove', moveHandler);
-    document.addEventListener('mousemove', dragOn);
+    document.addEventListener('mousemove', drag);
+    frameDocument.addEventListener('mousemove', drag);
     document.addEventListener('mouseup', dragOff);
+    frameDocument.addEventListener('mouseup', dragOff);
     // 给关闭按钮添加点击事件监听，用于关闭侧边栏
     frameDocument.getElementsByClassName('translate-icon-close')[0].onclick = removeSlider;
     // 给固定侧边栏的按钮添加点击事件监听，用户侧边栏的固定与取消固定
@@ -126,6 +128,7 @@ function clickListener(event) {
  */
 function removeSlider() {
     fixSwitch = false; // 点击关闭按钮后自动取消侧边栏的固定
+    mousedown = false; // 如果侧边栏关闭，直接停止侧边栏宽度的调整
     if (isChildNode(frame, document.documentElement)) {
         document.documentElement.removeChild(frame);
         document.body.style.width = '100%';
@@ -136,13 +139,13 @@ function removeSlider() {
 }
 
 /**
- * 处理鼠标的拖动事件
+ * 处理鼠标的拖动事件，侧边栏的大小正在调整
  * @param {Object} event 
  */
-function dragOn(event) {
+function drag(event) {
     if (mousedown) {
-        frame.style.width = originX - event.x + originWidth + 'px';
-        document.body.style.width = window.innerWidth - originWidth - (originX - event.x) + 'px';
+        frame.style.width = originX - event.screenX + originWidth + 'px';
+        document.body.style.width = window.innerWidth - originWidth - (originX - event.screenX) + 'px';
     }
 }
 
@@ -159,11 +162,11 @@ function dragOff() {
 
 /**
  * 
- * 处理鼠标移动到侧边栏边框附近时，鼠标样式的改变功能
+ * 处理点击侧边栏边框附近，开始拖动的动作
  * 
  * @param {Object} event 事件发生的全部信息
  */
-function dragHandler(event) {
+function dragOn(event) {
     var node = event.target;
     if (node.isSameNode(frame)) {
         if (event.x <= node.offsetLeft + 4) {

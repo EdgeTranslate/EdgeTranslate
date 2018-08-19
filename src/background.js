@@ -1,4 +1,4 @@
-import {translate, showTranslate} from "./translate.js"
+import { translate, showTranslate } from "./translate.js"
 
 /**
  * 默认的源语言和目标语言。
@@ -38,9 +38,12 @@ chrome.runtime.onInstalled.addListener(function () {
             chrome.storage.sync.set({ "OtherSettings": DEFAULT_OTHER_SETTINGS });
         }
     });
-    chrome.tabs.create({ // 为管理页面创建一个新的标签
-        url: 'https://github.com/nickyc975/EdgeTranslate/wiki',
-    });
+    // 只有在开发环境下，才会展示说明页面
+    if (process.env.NODE_ENV === "production") {
+        chrome.tabs.create({ // 为管理页面创建一个新的标签
+            url: 'https://github.com/nickyc975/EdgeTranslate/wiki',
+        });
+    }
 });
 
 /**
@@ -73,7 +76,7 @@ chrome.contextMenus.onClicked.addListener(function (info, tab) {
  */
 chrome.runtime.onMessage.addListener(function (message, sender, callback) {
     if (message.url && sender.tab) {
-        chrome.tabs.update(sender.tab.id, {url: message.url})
+        chrome.tabs.update(sender.tab.id, { url: message.url })
         callback();
     } else if (message.text && sender.tab) {
         var text = message.text;

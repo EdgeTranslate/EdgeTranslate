@@ -1,6 +1,8 @@
 const _ = require("lodash");
 const del = require("del");
 const gulp = require("gulp");
+const stylus = require("gulp-stylus");
+const minifyCss = require('gulp-minify-css');
 const through = require("through2");
 const webpack = require("webpack");
 const webpack_stream = require("webpack-stream");
@@ -125,8 +127,8 @@ function build(browser, env) {
     gulp.src("./src/**/*.js", { base: "src" })
         .pipe(cached("build:" + browser))
         .pipe(webpack_stream(require(webpack_path), webpack).on('error', (error) => console.log(error)))
-            .pipe(remember("build:" + browser))
-            .pipe(gulp.dest(output_dir));
+        .pipe(remember("build:" + browser))
+        .pipe(gulp.dest(output_dir));
 
     gulp.src("./src/manifest.json", { base: "src" })
         .pipe(cached("build:" + browser))
@@ -142,6 +144,12 @@ function build(browser, env) {
     gulp.src("./static/**/*", { base: "static" })
         .pipe(cached("build:" + browser))
         .pipe(remember("build:" + browser))
+        .pipe(gulp.dest(output_dir));
+
+    gulp.src("./src/**/*.styl", { base: "scr" })
+        .pipe(cached("build:" + browser))
+        .pipe(stylus())
+        .pipe(minifyCss())
         .pipe(gulp.dest(output_dir));
 }
 
