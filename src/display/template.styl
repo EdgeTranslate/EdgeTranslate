@@ -1,5 +1,11 @@
+hover-color = #777;
+
 body
-	margin: 10%;
+	padding: 10%;
+	margin: 0 0 0 3px;
+	box-shadow: -2px 0 1px 1px #ddd;
+	border: 0;
+	box-sizing: border-box;
 
 
 .translate-icon 
@@ -10,46 +16,37 @@ body
 	color: #aaa;
 	width: 5%;
 	cursor: pointer; 
-
+	:hover
+		color: #777;
 
 /* 关闭页面的图标 */
-
-.translate-icon-close 
-	font-size: large;
-	position: relative;
-	top: 10%;
-	left: 94%;
-
-
-.translate-icon-close:hover 
-	color: #777;
-
-
-.translate-fix 
+.translate-icon
 	font-size: larger;
 	position: relative;
-	top: 10%;
+	top: 5%;
+	width: 10px;
+	height: 10px;
+	
+.translate-icon-close 
+	left: 94%;	
+	&::before 
+		content: "\e624";
+	&:hover 
+		color: hover-color;
+
+.translate-fix 
 	left: 90%;
-
-
-.translate-fix:hover 
-	color: #777;
-
+	&:hover 
+		color: hover-color;
 
 .translate-icon-tuding-full 
 	display: none;
-
-
-.translate-icon-tuding-fix::before 
-	content: '\e607';
-
-
-.translate-icon-tuding-full::before 
-	content: "\e61b";
-
-
-.translate-icon-close::before 
-	content: "\e624";
+	&::before 
+		content: "\e61b";
+		
+.translate-icon-tuding-fix
+	&::before 
+		content: '\e607';
 
 
 .translate-content-title 
@@ -109,9 +106,13 @@ body
 	margin-left: 15%;
 	font-weight: light;
 
+ul
+	.translate-list li 
+		list-style-type: none;
 
-.translate-list li 
-	list-style-type: none;
+ol
+	li
+		list-style-type: demical;
 
 
 .translate-sentences 
@@ -127,22 +128,18 @@ body
 	border-radius: 5px;
 
 ::-webkit-scrollbar-button 
-		display: none;
+	display: none;
 
 ::-webkit-scrollbar-thumb 
 	width: 8px;
 	min-height: 15px;
 	background: rgba(0,0,0,.2);
 	border-radius: 5px;
-
-::-webkit-scrollbar-thumb:hover 
-	background: rgba(0,0,0,.6);
+	:hover 
+		background: rgba(0,0,0,.6);
 
 ::-webkit-scrollbar-track 
 	background-color: #fff;
-
-.main-center-index::-webkit-scrollbar-track-piece 
-	background: #fff;
 
 ::-webkit-scrollbar-track-piece 
 	background: #fff;
