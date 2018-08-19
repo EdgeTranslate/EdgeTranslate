@@ -24,7 +24,7 @@
         "url": "https://github.com/nickyc975/EdgeTranslate.git"
     },
     "scripts": {
-        "test": "mocha",
+        "test": "mocha --recursive",
         "dev:chrome": "gulp dev:chrome && gulp watcher:chrome",
         "dev:firefox": "gulp dev:firefox && gulp watcher:firefox",
         "build:chrome": "gulp clean:chrome && gulp build:chrome",

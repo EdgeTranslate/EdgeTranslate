@@ -1,9 +1,9 @@
-const assert = require('sinon').assert;
+const assert = require("sinon").assert;
 const chrome = require("sinon-chrome");
 const fs = require("fs");
 const jsdom = require("jsdom");
 
-const background_js = fs.readFileSync("build/chrome/background.js", "utf-8");
+const background = fs.readFileSync("build/chrome/background.js", "utf-8");
 
 describe("background.js", function () {
     var dom;
@@ -21,7 +21,7 @@ describe("background.js", function () {
         );
         // 注入待测试的js文件
         let script = dom.window.document.createElement("script");
-        script.textContent = background_js;
+        script.textContent = background.toString();
         dom.window.document.documentElement.appendChild(script);
         done();
     });
@@ -38,15 +38,27 @@ describe("background.js", function () {
         assert.calledOnce(chrome.runtime.onStartup.addListener);
     });
 
-    it("Set default settings on installed.", function () {
+    it("Should set default settings on first installed.", function () {
         chrome.storage.sync.get("languageSetting", function (result) {
             assert.equals(result.languageSetting, undefined);
+        });
+        chrome.storage.sync.get("DTSetting", function (result) {
+            assert.equals(result.DTSetting, undefined);
+        });
+        chrome.storage.sync.get("OtherSettings", function (result) {
+            assert.equals(result.OtherSettings, undefined);
         });
 
         chrome.runtime.onInstalled.trigger();
 
         chrome.storage.sync.get("languageSetting", function (result) {
             assert.equals(result.languageSetting, { "sl": "auto", "tl": "zh-CN" });
+        });
+        chrome.storage.sync.get("DTSetting", function (result) {
+            assert.equals(result.DTSetting, ["t", "at", "bd", "ex", "md", "rw", "ss", "rm"]);
+        });
+        chrome.storage.sync.get("OtherSettings", function (result) {
+            assert.equals(result.OtherSettings, { "SelectTranslate": true, "UsePDFjs": true });
         });
     });
 });

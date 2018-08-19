@@ -38,7 +38,7 @@ chrome.runtime.onInstalled.addListener(function () {
             chrome.storage.sync.set({ "OtherSettings": DEFAULT_OTHER_SETTINGS });
         }
     });
-    // 只有在开发环境下，才会展示说明页面
+    // 只有在生产环境下，才会展示说明页面
     if (process.env.NODE_ENV === "production") {
         chrome.tabs.create({ // 为管理页面创建一个新的标签
             url: 'https://github.com/nickyc975/EdgeTranslate/wiki',
