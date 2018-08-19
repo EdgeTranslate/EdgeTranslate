@@ -1,6 +1,6 @@
 import "./popup.css"
 import { LANGUAGES } from './languages.js';
-import {translate, showTranslate} from "../translate.js"
+import {translate, showTranslate} from "../translate.js";
 
 /**
  * 初始化设置列表

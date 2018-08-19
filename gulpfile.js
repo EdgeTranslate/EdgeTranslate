@@ -6,8 +6,6 @@ const through = require("through2");
 const webpack = require("webpack");
 const webpack_stream = require("webpack-stream");
 const zip = require("gulp-zip");
-var cached = require("gulp-cached");
-var remember = require("gulp-remember");
 
 /**
  * 清除之前打包好的chrome的缓存
@@ -51,21 +49,21 @@ gulp.task("watcher:firefox", function (callback) {
  * 开发环境下build chrome扩展的安装包
  */
 gulp.task("dev:chrome", function () {
-    build("chrome", "development");
+    build("chrome", "development").all();
 });
 
 /**
  * 开发环境下build firefox扩展的安装包
  */
 gulp.task("dev:firefox", function () {
-    build("firefox", "development");
+    build("firefox", "development").all();
 })
 
 /**
  * 生产环境下build chrome版扩展
  */
 gulp.task("build:chrome", function (callback) {
-    build("chrome", "production");
+    build("chrome", "production").all();
     callback();
 });
 
@@ -73,7 +71,7 @@ gulp.task("build:chrome", function (callback) {
  * 生产环境下build firefox版扩展
  */
 gulp.task("build:firefox", function (callback) {
-    build("firefox", "production");
+    build("firefox", "production").all();
     callback();
 });
 
@@ -103,12 +101,20 @@ gulp.task("pack:firefox", function (callback) {
  * @param {String} browser 浏览器的名称
  */
 function watcher(browser) {
-    var watcher = gulp.watch("./src/**/*", ["dev:" + browser]); // 监视src中所有文件
-    watcher.on("change", function (event) {
-        if (event.type === "deleted") {                   // 如果一个文件被删除了，则将其忘记
-            delete cached.caches["dev:" + browser][event.path];       // gulp-cached 的删除 api
-            remember.forget("dev:" + browser, event.path);         // gulp-remember 的删除 api
-        }
+    gulp.watch("./src/**/*.js").on("change", function () {
+        build(browser, "development").js();
+    }); // 监视src中所有文件
+    gulp.watch("./src/manifest.json").on("change", function () {
+        build(browser, "development").mainfest();
+    });
+    gulp.watch("./src/**/!(template).html").on("change", function () {
+        build(browser, "development").html();
+    });
+    gulp.watch("./static/**/*").on("change", function () {
+        build(browser, "development").static();
+    });
+    gulp.watch("./src/**/*.styl").on("change", function () {
+        build(browser, "development").styl();
     });
 }
 
@@ -123,35 +129,50 @@ function build(browser, env) {
     let manifest_patch = "./src/manifest_" + browser + ".json";
     let webpack_path = (env === 'production' ? "./config/webpack.prod.config.js" : "./config/webpack.dev.config.js"); // webpack 配置文件路径
 
-    gulp.src("./src/**/*.js", { base: "src" })
-        .pipe(cached("build:" + browser))
-        .pipe(webpack_stream(require(webpack_path), webpack).on('error', (error) => console.log(error)))
-        .pipe(remember("build:" + browser))
-        .pipe(gulp.dest(output_dir));
+    var js = function () {
+        gulp.src("./src/**/*.js", { base: "src" })
+            .pipe(webpack_stream(require(webpack_path), webpack).on('error', (error) => console.log(error)))
+            .pipe(gulp.dest(output_dir));
+    }
 
-    gulp.src("./src/manifest.json", { base: "src" })
-        .pipe(cached("build:" + browser))
-        .pipe(merge_json(manifest_patch))
-        .pipe(remember("build:" + browser))
-        .pipe(gulp.dest(output_dir));
+    var mainfest = function () {
+        gulp.src("./src/manifest.json", { base: "src" })
+            .pipe(merge_json(manifest_patch))
+            .pipe(gulp.dest(output_dir));
+    }
 
-    gulp.src(["./src/**/!(template).html"], { base: "src" })
-        .pipe(cached("build:" + browser))
-        .pipe(remember("build:" + browser))
-        .pipe(gulp.dest(output_dir));
+    var html = function () {
+        gulp.src(["./src/**/!(template).html"], { base: "src" })
+            .pipe(gulp.dest(output_dir));
+    }
 
-    gulp.src("./static/**/*", { base: "static" })
-        .pipe(cached("build:" + browser))
-        .pipe(remember("build:" + browser))
-        .pipe(gulp.dest(output_dir));
+    var static = function () {
+        gulp.src("./static/**/*", { base: "static" })
+            .pipe(gulp.dest(output_dir));
+    }
 
-    gulp.src("./src/**/*.styl", { base: "src" })
-        .pipe(cached("build:" + browser))
-        .pipe(stylus({
-            compress: true // 需要压缩
-        }).on('error', (error) => console.log(error)))
-        .pipe(remember("build:" + browser))
-        .pipe(gulp.dest(output_dir));
+    var styl = function () {
+        gulp.src("./src/**/*.styl", { base: "src" })
+            .pipe(stylus({
+                compress: true // 需要压缩
+            }).on('error', (error) => console.log(error)))
+            .pipe(gulp.dest(output_dir));
+    }
+
+    return {
+        js: js,
+        mainfest: mainfest,
+        html: html,
+        static: static,
+        styl: styl,
+        all: function () {
+            js();
+            mainfest();
+            html();
+            static();
+            styl();
+        }
+    }
 }
 
 /**
