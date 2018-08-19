@@ -103,11 +103,11 @@
         <div class="translate-examples">  
             <% if (this.examples && this.examples.length > 0) { %>  
                 <p class="translate-content-title"><% chrome.i18n.getMessage("Examples") %>: </p>  
-                <p>  
+                <ol>  
                     <% for (let i in this.examples) { %>  
-                        <p class="translate-sentences"><% this.examples[i] %></p>  
+                        <li class="translate-sentences"><% this.examples[i] %></li>  
                     <% } %>  
-                </p>  
+                </ol>  
             <% } %>  
         </div>
     </body>

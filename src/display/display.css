@@ -1,6 +1,7 @@
 /*
  * 翻译结果展示页框架样式
  */
+
 #translate_frame {
     height: 100%;
     width: 20%;
@@ -8,7 +9,7 @@
     position: fixed;
     right: 0;
     top: 0;
-    box-shadow: -2px 0 1px 1px #ddd;
+    border: none;
     z-index: 10000;
     transition: right 300ms;
     overflow-y: scroll;
