@@ -5,6 +5,7 @@ chrome.storage.sync.get("OtherSettings", function (result) {
     var OtherSettings = result.OtherSettings;
     if (OtherSettings && OtherSettings["UsePDFjs"]) {
         chrome.runtime.sendMessage({
+            "type": "redirect",
             "url": chrome.runtime.getURL("pdf/viewer.html?file=" +  window.location.href)
         });
     }

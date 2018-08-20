@@ -66,6 +66,7 @@ function translateSubmit() {
     disable = false; // 禁止按钮显示
     // 发送消息给后台进行翻译。
     chrome.runtime.sendMessage({
+        "type": "translate",
         "text": window.getSelection().toString()
     }, function (response) {
         translateButton.style.display = 'none';

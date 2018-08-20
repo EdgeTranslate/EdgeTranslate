@@ -1,8 +1,10 @@
-export { translate, showTranslate };
+export { translate, showTranslate, textToSpeech, pronounce };
 /**
  * 翻译接口。
  */
-const BASE_URL = "https://translate.google.cn/translate_a/single?client=gtx";
+const BASE_URL = "https://translate.google.cn/translate_a/single?ie=UTF-8&client=gtx";
+
+const BASE_TTS_URL = "https://translate.google.cn/translate_tts?ie=UTF-8&client=gtx";
 
 // 生成tk需要的密钥
 var TKK = eval('((function(){var a\x3d3034572292;var b\x3d-192068061;return 426169+\x27.\x27+(a+b)})())');
@@ -85,6 +87,7 @@ function translate(text, callback) {
  *         "mainMeaning": <字符串，单词的主要意思，句子的最可能的意思>,
  *         "phoneticSymbol": <字符串，单词的音标>,
  *         "originalText": <字符串，被翻译的单词或句子>,
+ *         "sourceLanguage": <字符串，被翻译词句的源语言>,
  *         "detailedMeanings": [
  *             {
  *                 "type": <字符串，单词的词性>,
@@ -135,9 +138,9 @@ function parseTranslate(response) {
                     var originalTexts = [];
                     var lastIndex = items.length - 1;
 
-                    for (let i = 0; i <= lastIndex; i++) {
-                        mainMeanings.push(items[i][0]);
-                        originalTexts.push(items[i][1]);
+                    for (let j = 0; j <= lastIndex; j++) {
+                        mainMeanings.push(items[j][0]);
+                        originalTexts.push(items[j][1]);
                     }
 
                     result.mainMeaning = mainMeanings.join('');
@@ -159,6 +162,10 @@ function parseTranslate(response) {
                         result.detailedMeanings.push({ "type": item[0], "meaning": item[1].join(", ") })
                     );
                     // console.log("detailedMeanings: " + JSON.stringify(result.detailedMeanings));
+                    break;
+                case 2:
+                    result.sourceLanguage = items;
+                    // console.log(result.sourceLanguage);
                     break;
                 // 单词或句子的常见意思（单词的常见意思，句子的所有可能意思）
                 case 5:
@@ -301,5 +308,82 @@ function getCurrentTabId(tab, callback) {
     } else { // 没有tab，说明该页面无法访问
         console.log("Unsupported page.");
         callback(chrome.tabs.TAB_ID_NONE);
+    }
+}
+
+/**
+ * Text to speech.
+ * 
+ * @param {String} text The text.
+ * @param {String} language The language of the text.
+ * @param {String} speed The speed of the speech.
+ * @param {Function} callback The callback function.
+ */
+function textToSpeech(text, language, speed, callback) {
+    var speedValue;
+    switch (speed) {
+        case "fast":
+            speedValue = "0.6";
+            break;
+        case "slow":
+            speedValue = "0.4";
+            break;
+        default:
+            speedValue = "0.5";
+            break;
+    }
+
+    var url = BASE_TTS_URL + "&q=" + text + "&tl=" + language + "&ttsspeed" + speedValue + "&tk=" + generateTK(text, TKK);
+
+    var request = new XMLHttpRequest();
+    request.open("GET", url, true);
+    request.send();
+    request.onreadystatechange = function () {
+        if (request.readyState === 4 && request.status === 200) {
+            callback(request.response);
+        }
+        else if (request.status !== 200) {
+            alert('无法请求翻译，请检查网络连接');
+        }
+    }
+}
+
+/**
+ * Send text speech back to content scripts.
+ * 
+ * @param {Object} speech Speech to send.
+ * @param {chrome.tabs.Tab} tab Tab to send speech to.
+ * @param {Function} callback Callback function.
+ */
+function pronounce (speech, tab, callback) {
+    if (speech) {
+        if (chrome.runtime.lastError) {
+            console.log("Chrome runtime error: " + chrome.runtime.lastError.message);
+            callback();
+            return;
+        }
+
+        getCurrentTabId(tab, function (tab_id) {
+            if (tab_id < 0) {
+                return;
+            }
+
+            if (isChrome()) { // 判断浏览器的类型 chrome的情况
+                chrome.tabs.sendMessage(tab_id, speech);
+                if (callback) {
+                    callback();
+                }
+            } else { // 是firefox的情况
+                // resultPromise是返回的一个promise对象
+                var resultPromise = browser.tabs.sendMessage(tab_id, speech);
+                resultPromise.then(function (response) { // 成功接收信息
+                    if (callback) {
+                        callback();
+                    }
+                }).catch(function (error) { // 出现错误的回调
+                    console.log(error);
+                });
+            }
+        });
     }
 }

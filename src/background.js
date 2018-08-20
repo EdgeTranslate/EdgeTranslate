@@ -1,4 +1,4 @@
-import { translate, showTranslate } from "./translate.js"
+import { translate, showTranslate, textToSpeech, pronounce } from "./translate.js"
 
 /**
  * 默认的源语言和目标语言。
@@ -72,16 +72,28 @@ chrome.contextMenus.onClicked.addListener(function (info, tab) {
 });
 
 /*
- * 将pdf文件重定向使用内置pdf viewer打开。
+ * 处理content scripts发送的消息。
  */
 chrome.runtime.onMessage.addListener(function (message, sender, callback) {
-    if (message.url && sender.tab) {
-        chrome.tabs.update(sender.tab.id, { url: message.url })
-        callback();
-    } else if (message.text && sender.tab) {
-        var text = message.text;
-        translate(text, function (result) {
-            showTranslate(result, sender.tab);
-        });
+    if (message.type && sender.tab) {
+        switch (message.type) {
+            case "redirect":
+                chrome.tabs.update(sender.tab.id, { url: message.url })
+                callback();
+                break;
+            case "translate":
+                translate(message.text, function (result) {
+                    showTranslate(result, sender.tab, callback);
+                });
+                break;
+            case "pronounce":
+                textToSpeech(message.text, message.language, message.speed, function (result) {
+                    pronounce(result, sender.tab, callback);
+                });
+                break;
+            default:
+                console.log("Unknown message type: " + message.type);
+                callback;
+        }
     }
 });
