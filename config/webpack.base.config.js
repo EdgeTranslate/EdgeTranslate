@@ -17,20 +17,6 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /\.css$/,
-                use: [
-                    {
-                        loader: 'style-loader',
-                        options: {
-                            insertInto: () => document.querySelector("body")
-                        }
-                    },
-                    {
-                        loader: 'css-loader'
-                    }
-                ]
-            },
-            {
                 test: /\.html$/,
                 use: 'raw-loader'
             }

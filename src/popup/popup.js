@@ -1,4 +1,3 @@
-import "./popup.css"
 import { LANGUAGES } from './languages.js';
 import {translate, showTranslate} from "../translate.js";
 

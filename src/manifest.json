@@ -31,6 +31,10 @@
                 "./contents/select.js",
                 "./display/display.js"
             ],
+            "css": [
+                "./contents/select.css",
+                "./display/display.css"
+            ],
             "all_frames": true
         },
         {
