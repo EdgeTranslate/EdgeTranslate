@@ -79,10 +79,10 @@ function addEventListener() {
     document.addEventListener('mouseup', dragOff);
     frameDocument.addEventListener('mouseup', dragOff);
     // 给关闭按钮添加点击事件监听，用于关闭侧边栏
-    frameDocument.getElementsByClassName('translate-icon-close')[0].onclick = removeSlider;
+    frameDocument.getElementsByClassName('icon-close')[0].onclick = removeSlider;
     // 给固定侧边栏的按钮添加点击事件监听，用户侧边栏的固定与取消固定
-    frameDocument.getElementsByClassName('translate-icon-tuding-fix')[0].addEventListener('click', fixOn);
-    frameDocument.getElementsByClassName('translate-icon-tuding-full')[0].addEventListener('click', fixOff);
+    frameDocument.getElementsByClassName('icon-tuding-fix')[0].addEventListener('click', fixOn);
+    frameDocument.getElementsByClassName('icon-tuding-full')[0].addEventListener('click', fixOff);
 }
 
 /**
@@ -200,8 +200,8 @@ function moveHandler(event) {
  */
 function fixOn() {
     fixSwitch = true; // 将固定开关打开
-    frameDocument.getElementsByClassName('translate-icon-tuding-full')[0].style.display = 'inline';
-    frameDocument.getElementsByClassName('translate-icon-tuding-fix')[0].style.display = 'none';
+    frameDocument.getElementsByClassName('icon-tuding-full')[0].style.display = 'inline';
+    frameDocument.getElementsByClassName('icon-tuding-fix')[0].style.display = 'none';
     document.documentElement.removeEventListener('mousedown', clickListener);
 }
 
@@ -210,8 +210,8 @@ function fixOn() {
  */
 function fixOff() {
     fixSwitch = false; // 将固定开关关闭
-    frameDocument.getElementsByClassName('translate-icon-tuding-full')[0].style.display = 'none';
-    frameDocument.getElementsByClassName('translate-icon-tuding-fix')[0].style.display = 'inline';
+    frameDocument.getElementsByClassName('icon-tuding-full')[0].style.display = 'none';
+    frameDocument.getElementsByClassName('icon-tuding-fix')[0].style.display = 'inline';
     document.documentElement.addEventListener('mousedown', clickListener);
 }
 /**

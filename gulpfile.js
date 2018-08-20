@@ -103,7 +103,10 @@ gulp.task("pack:firefox", function (callback) {
 function watcher(browser) {
     gulp.watch("./src/**/*.js").on("change", function () {
         build(browser, "development").js();
-    }); // 监视src中所有文件
+    });
+    gulp.watch("./src/**/template.html").on("change", function () {
+        build(browser, "development").js();
+    });
     gulp.watch("./src/manifest.json").on("change", function () {
         build(browser, "development").mainfest();
     });
