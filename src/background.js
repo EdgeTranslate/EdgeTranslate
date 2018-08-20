@@ -1,4 +1,4 @@
-import { translate, showTranslate, textToSpeech, pronounce } from "./translate.js"
+import { translate, showTranslate, pronounce } from "./translate.js"
 
 /**
  * 默认的源语言和目标语言。
@@ -79,7 +79,9 @@ chrome.runtime.onMessage.addListener(function (message, sender, callback) {
         switch (message.type) {
             case "redirect":
                 chrome.tabs.update(sender.tab.id, { url: message.url })
-                callback();
+                if (callback) {
+                    callback();
+                }
                 break;
             case "translate":
                 translate(message.text, function (result) {
@@ -87,14 +89,13 @@ chrome.runtime.onMessage.addListener(function (message, sender, callback) {
                 });
                 break;
             case "pronounce":
-                textToSpeech(message.text, message.language, message.speed, function (result) {
-                    pronounce(result, sender.tab, callback);
-                });
+                pronounce(message.text, message.language, message.speed, callback);
                 break;
             default:
                 console.log("Unknown message type: " + message.type);
-                callback;
+                if (callback) {
+                    callback();
+                }
         }
-        return true;
     }
 });

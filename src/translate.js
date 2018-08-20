@@ -1,4 +1,4 @@
-export { translate, showTranslate, textToSpeech, pronounce };
+export { translate, showTranslate, pronounce };
 /**
  * 翻译接口。
  */
@@ -319,71 +319,25 @@ function getCurrentTabId(tab, callback) {
  * @param {String} speed The speed of the speech.
  * @param {Function} callback The callback function.
  */
-function textToSpeech(text, language, speed, callback) {
+function pronounce(text, language, speed, callback) {
     var speedValue;
     switch (speed) {
         case "fast":
-            speedValue = "0.6";
+            speedValue = "0.8";
             break;
         case "slow":
-            speedValue = "0.4";
+            speedValue = "0.2";
             break;
         default:
             speedValue = "0.5";
             break;
     }
 
-    var url = BASE_TTS_URL + "&q=" + text + "&tl=" + language + "&ttsspeed" + speedValue + "&tk=" + generateTK(text, TKK);
+    var url = BASE_TTS_URL + "&q=" + text + "&tl=" + language + "&ttsspeed=" + speedValue + "&tk=" + generateTK(text, TKK);
+    var audio = new Audio(url);
+    audio.play();
 
-    var request = new XMLHttpRequest();
-    request.open("GET", url, true);
-    request.send();
-    request.onreadystatechange = function () {
-        if (request.readyState === 4 && request.status === 200) {
-            callback(request.response);
-        }
-        else if (request.status !== 200) {
-            alert('无法请求翻译，请检查网络连接');
-        }
-    }
-}
-
-/**
- * Send text speech back to content scripts.
- * 
- * @param {Object} speech Speech to send.
- * @param {chrome.tabs.Tab} tab Tab to send speech to.
- * @param {Function} callback Callback function.
- */
-function pronounce(speech, tab, callback) {
-    if (speech) {
-        if (chrome.runtime.lastError) {
-            console.log("Chrome runtime error: " + chrome.runtime.lastError.message);
-            callback();
-            return;
-        }
-
-        getCurrentTabId(tab, function (tab_id) {
-            if (tab_id < 0) {
-                return;
-            }
-
-            if (isChrome()) { // 判断浏览器的类型 chrome的情况
-                chrome.tabs.sendMessage(tab_id, { speech: speech });
-                if (callback) {
-                    callback();
-                }
-            } else { // 是firefox的情况
-                // resultPromise是返回的一个promise对象
-                var resultPromise = browser.tabs.sendMessage(tab_id, { speech: speech });
-                resultPromise.then(function (response) { // 成功接收信息
-                    if (callback) {
-                        callback();
-                    }
-                }).catch(function (error) { // 出现错误的回调
-                    console.log(error);
-                });
-            }
-        });
+    if (callback) {
+        callback();
     }
 }

@@ -14,7 +14,7 @@ var originWidth; // 侧边栏的初始宽度
 if (!fixSwitch) {
     var fixSwitch = false; // 固定侧边栏的开关 true<->switch on  false<->switch off
 }
-var translateResult; // 保存翻译结果
+var translateResult, TTSSpeed; // 保存翻译结果
 
 /**
  * 负责根据传入的翻译结果内容将结果显示在用户正在使用的页面中
@@ -24,13 +24,9 @@ var translateResult; // 保存翻译结果
  */
 chrome.runtime.onMessage.addListener(function (content, sender) {
     if (!sender || !sender.tab) { // 避免从file://跳转到pdf viewer的消息传递对此的影响
-        if (content.translateResult) {
-            translateResult = content.translateResult;
-            createBlock(content.translateResult);
-        }
-        if (content.speech) {
-            
-        }
+        translateResult = content.translateResult;
+        TTSSpeed = "fast";
+        createBlock(content.translateResult);
     }
 });
 
@@ -222,13 +218,21 @@ function fixOff() {
     document.documentElement.addEventListener('mousedown', clickListener);
 }
 
+/**
+ * Send message to background to pronounce the translating text.
+ */
 function sourcePronounce() {
     chrome.runtime.sendMessage({
         "type": "pronounce",
         "text": translateResult.originalText,
         "language": translateResult.sourceLanguage,
-        "speed": "fast"
+        "speed": TTSSpeed
     }, function () {
+        if (TTSSpeed === "fast") {
+            TTSSpeed = "slow";
+        } else {
+            TTSSpeed = "fast";
+        }
     });
 }
 /**
