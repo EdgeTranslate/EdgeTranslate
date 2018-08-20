@@ -133,22 +133,26 @@ function build(browser, env) {
         gulp.src("./src/**/*.js", { base: "src" })
             .pipe(webpack_stream(require(webpack_path), webpack).on('error', (error) => console.log(error)))
             .pipe(gulp.dest(output_dir));
+        console.log("Finished build js files");
     }
 
     var mainfest = function () {
         gulp.src("./src/manifest.json", { base: "src" })
             .pipe(merge_json(manifest_patch))
             .pipe(gulp.dest(output_dir));
+        console.log("Finished build mainfest files");
     }
 
     var html = function () {
         gulp.src(["./src/**/!(template).html"], { base: "src" })
             .pipe(gulp.dest(output_dir));
+        console.log("Finished build html files");
     }
 
     var static = function () {
         gulp.src("./static/**/*", { base: "static" })
             .pipe(gulp.dest(output_dir));
+        console.log("Finished build static files");
     }
 
     var styl = function () {
@@ -157,6 +161,7 @@ function build(browser, env) {
                 compress: true // 需要压缩
             }).on('error', (error) => console.log(error)))
             .pipe(gulp.dest(output_dir));
+        console.log("Finished build stylus files")
     }
 
     return {
@@ -199,3 +204,7 @@ function merge_json() {
     return stream;
 }
 
+// 定义 console.log函数 ，便于输出task的执行情况
+console.log = function (d) {
+    process.stdout.write(d + '\n');
+};
