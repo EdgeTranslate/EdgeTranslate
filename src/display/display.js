@@ -14,6 +14,7 @@ var originWidth; // 侧边栏的初始宽度
 if (!fixSwitch) {
     var fixSwitch = false; // 固定侧边栏的开关 true<->switch on  false<->switch off
 }
+var translateResult; // 保存翻译结果
 
 /**
  * 负责根据传入的翻译结果内容将结果显示在用户正在使用的页面中
@@ -23,7 +24,13 @@ if (!fixSwitch) {
  */
 chrome.runtime.onMessage.addListener(function (content, sender) {
     if (!sender || !sender.tab) { // 避免从file://跳转到pdf viewer的消息传递对此的影响
-        createBlock(content);
+        if (content.translateResult) {
+            translateResult = content.translateResult;
+            createBlock(content.translateResult);
+        }
+        if (content.speech) {
+            
+        }
     }
 });
 
@@ -82,6 +89,7 @@ function addEventListener() {
     // 给固定侧边栏的按钮添加点击事件监听，用户侧边栏的固定与取消固定
     frameDocument.getElementsByClassName('icon-tuding-fix')[0].addEventListener('click', fixOn);
     frameDocument.getElementsByClassName('icon-tuding-full')[0].addEventListener('click', fixOff);
+    frameDocument.getElementsByClassName('icon-pronounce')[0].addEventListener('click', sourcePronounce);
 }
 
 /**
@@ -212,6 +220,16 @@ function fixOff() {
     frameDocument.getElementsByClassName('icon-tuding-full')[0].style.display = 'none';
     frameDocument.getElementsByClassName('icon-tuding-fix')[0].style.display = 'inline';
     document.documentElement.addEventListener('mousedown', clickListener);
+}
+
+function sourcePronounce() {
+    chrome.runtime.sendMessage({
+        "type": "pronounce",
+        "text": translateResult.originalText,
+        "language": translateResult.sourceLanguage,
+        "speed": "fast"
+    }, function () {
+    });
 }
 /**
  * end block

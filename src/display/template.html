@@ -4,14 +4,12 @@
     <head>
         <link type="text/css" rel="stylesheet" href="<% chrome.runtime.getURL("display/template.css") %>">
         <style type="text/css">
-            @font-face {
-            font-family: "translateIcon";
-            src: url("~/iconfont.eot?t=1531413692893");
-            /* IE9*/
-            src: url("~/iconfont.eot?t=1531413692893#iefix") format("embedded-opentype"), /* IE6-IE8 */
-            url("data:application/x-font-woff;charset=utf-8;base64,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") format("woff"), url("~/iconfont.ttf?t=1531413692893") format("truetype"), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
-            url("~/iconfont.svg?t=1531413692893#iconfont") format("svg");
-            /* iOS 4.1- */
+            @font-face {font-family: "translateIcon";
+            src: url("iconfont.eot?t=1534753564348"); /* IE9*/
+            src: url("iconfont.eot?t=1534753564348#iefix") format("embedded-opentype"), /* IE6-IE8 */
+            url("data:application/x-font-woff;charset=utf-8;base64,d09GRgABAAAAAAWcAAsAAAAACFAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAABHU1VCAAABCAAAADMAAABCsP6z7U9TLzIAAAE8AAAARAAAAFY8fUgwY21hcAAAAYAAAABpAAABsso9nYlnbHlmAAAB7AAAAaUAAAHwOzVjEWhlYWQAAAOUAAAALwAAADYSYHw1aGhlYQAAA8QAAAAcAAAAJAfeA4ZobXR4AAAD4AAAAA4AAAAUFAAAAGxvY2EAAAPwAAAADAAAAAwBEgFybWF4cAAAA/wAAAAfAAAAIAEVADtuYW1lAAAEHAAAAUUAAAJtPlT+fXBvc3QAAAVkAAAANgAAAEeMJvGoeJxjYGRgYOBikGPQYWB0cfMJYeBgYGGAAJAMY05meiJQDMoDyrGAaQ4gZoOIAgCKIwNPAHicY2BkYWCcwMDKwMHUyXSGgYGhH0IzvmYwYuRgYGBiYGVmwAoC0lxTGByesT+zY27438AQw9zA0AAUZgTJAQDiUgwoeJztkbsNgDAMRJ9J+AixAS0lM6AMRMXQXgMuMQVDcNGL7NPFhQP0QBK7yGAXRtUp15qfmJufKepnJjo6H331zY/7hm/9ypSLg9JJbzXLBn4t7S5vl+v2Au0JX4P6I74FLXME2APvSBcjAAAAeJxtUL9r21AQvk/PlZBtYpw86zlW/GQ5lhQaV7IVW7IptFACHbsZOiSZkr8hS6hb6NKhJGu3ZO0eOqVbaemYvyAgspRAf+wvfa7X3sF3990dx31HJtH9R/aVzahMK9SlkB5STLQ23lyBVZcQO7moW6whnCyvx6ihoRttcEcgFxYTeQK/4Rez3gAY9GaTopioYAgMAzVd73TWDfq1tXRsqMJ43sawp4pggOol27hUJ9NrKRImEyGvp+g0i2YHeK3H1SsNxZRA2tgPdkgOUQ7hpHn0FE6WIDStRk2jhzO8eFtKzdKXmdn3fpcmuHlXiipvBOz3Rvu0eADZ/2NUtp99ttH257TYeT9nL9mctjUJE2T5E+QxIl9r1socD6alU4nH0C9ItfIdDTGMn/3MWK0FESCFOhYSW0GtjsmjdLyo3EHGEne6jDG+ydWrctndjXgLaPFo1y3bV2teb2/EXfWdt1ocY5eP9mh5zwd2y47IJbIRdk0ubJhca7XhpNkospGNwq5lkNqves0qztVBVfgVXOBiwdUBzv/xT8uo9v8/R/QXtZxklwAAAHicY2BkYGAA4qbFrnPj+W2+MnCzMIDA9QVzZBD0/wYWBuYGIJeDgQkkCgAoggomAHicY2BkYGBu+N/AEMPCAAJAkpEBFbACAEcLAm54nGNhYGBgQcMAAQQAFQAAAAAAAABQAHoAwgD4eJxjYGRgYGBl0GdgYwABJiDmAkIGhv9gPgMADfIBUQB4nGWPTU7DMBCFX/oHpBKqqGCH5AViASj9EatuWFRq911036ZOmyqJI8et1ANwHo7ACTgC3IA78EgnmzaWx9+8eWNPANzgBx6O3y33kT1cMjtyDRe4F65TfxBukF+Em2jjVbhF/U3YxzOmwm10YXmD17hi9oR3YQ8dfAjXcI1P4Tr1L+EG+Vu4iTv8CrfQ8erCPuZeV7iNRy/2x1YvnF6p5UHFockikzm/gple75KFrdLqnGtbxCZTg6BfSVOdaVvdU+zXQ+ciFVmTqgmrOkmMyq3Z6tAFG+fyUa8XiR6EJuVYY/62xgKOcQWFJQ6MMUIYZIjK6Og7VWb0r7FDwl57Vj3N53RbFNT/c4UBAvTPXFO6stJ5Ok+BPV8bUnV0K27LnpQ0kV7NSRKyQl7WtlRC6gE2ZVeOEXpc0Yk/KGdI/wAJWm7IAAAAeJxjYGKAAC4G7ICVkYmRmZGFkZWRjYE1JzEp0ZA5LbOCraQ0JTMvnS29NDEvKZOBAQB1pwhIAAA=") format("woff"),
+            url("iconfont.ttf?t=1534753564348") format("truetype"), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
+            url("iconfont.svg?t=1534753564348#iconfont") format("svg"); /* iOS 4.1- */
             }
         </style>
     </head>
@@ -19,7 +17,7 @@
         <i class="icon icon-tuding-fix icon-fix" title="固定侧边栏"></i>
         <i class="icon icon-tuding-full icon-fix" title="解除固定"></i>
         <i class="icon icon-close" title="关闭结果展示页"></i>
-            <div class="translate">
+        <div class="translate">
             <div class="main-meaning">
                 <% if (this.mainMeaning.length <= 6) { %>
                     <p class="main-meaning-content-larger"><% this.mainMeaning %></p><% } %>
@@ -32,7 +30,11 @@
                 <% else { %>  
                     <p class="main-meaning-content-smaller"><% this.mainMeaning %></p>
                 <% } %>
-            </div>  
+            </div>
+            <div class="pronounce">
+                <i class="icon icon-pronounce"></i>
+                <audio id="pronounce"></audio>
+            </div>
             <div class="phonetic-symbol">
                 <% if (this.phoneticSymbol && this.phoneticSymbol.length > 0) { %>
                     <p class="content-title"><% chrome.i18n.getMessage("PhoneticSymbol") %>: </p>  

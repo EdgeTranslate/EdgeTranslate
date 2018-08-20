@@ -247,14 +247,14 @@ function showTranslate(content, tab, callback) {
             }
 
             if (isChrome()) { // 判断浏览器的类型 chrome的情况
-                chrome.tabs.sendMessage(tab_id, content);
+                chrome.tabs.sendMessage(tab_id, { translateResult: content });
                 // 当翻译结果展示完后，执行此回调函数
                 if (callback) {
                     callback();
                 }
             } else { // 是firefox的情况
                 // resultPromise是返回的一个promise对象
-                var resultPromise = browser.tabs.sendMessage(tab_id, content);
+                var resultPromise = browser.tabs.sendMessage(tab_id, { translateResult: content });
                 resultPromise.then(function (response) { // 成功接收信息
                     // 当翻译结果展示完后，执行此回调函数
                     if (callback) {
@@ -355,7 +355,7 @@ function textToSpeech(text, language, speed, callback) {
  * @param {chrome.tabs.Tab} tab Tab to send speech to.
  * @param {Function} callback Callback function.
  */
-function pronounce (speech, tab, callback) {
+function pronounce(speech, tab, callback) {
     if (speech) {
         if (chrome.runtime.lastError) {
             console.log("Chrome runtime error: " + chrome.runtime.lastError.message);
@@ -369,13 +369,13 @@ function pronounce (speech, tab, callback) {
             }
 
             if (isChrome()) { // 判断浏览器的类型 chrome的情况
-                chrome.tabs.sendMessage(tab_id, speech);
+                chrome.tabs.sendMessage(tab_id, { speech: speech });
                 if (callback) {
                     callback();
                 }
             } else { // 是firefox的情况
                 // resultPromise是返回的一个promise对象
-                var resultPromise = browser.tabs.sendMessage(tab_id, speech);
+                var resultPromise = browser.tabs.sendMessage(tab_id, { speech: speech });
                 resultPromise.then(function (response) { // 成功接收信息
                     if (callback) {
                         callback();
