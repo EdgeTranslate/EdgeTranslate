@@ -40,16 +40,21 @@ translateButton.addEventListener('mousedown', translateSubmit);
 /**
  * 当鼠标选中一段文字后，调用此函数，显示出翻译按钮
  */
-function showButton() {
+function showButton(event) {
     if (disable) {
         var selection = window.getSelection();
         setTimeout(function () {
             if (selection.toString().trim()) { // 检查页面中是否有内容被选中
-                var element = selection.getRangeAt(0).getBoundingClientRect();
+                // var element = selection.getRangeAt(0).getBoundingClientRect();
                 // 翻译按钮的纵坐标位置：选中区域高度 + y方向滚动的高度 + 选中区域位置 + 细微高度调整
-                translateButton.style.top = element.height + document.documentElement.scrollTop + element.top + 3 + 'px';
+                // translateButton.style.top = element.height + document.documentElement.scrollTop + element.top + 3 + 'px';
                 // 翻译按钮的横坐标位置：选中区域的宽度的一半(使翻译按钮居中) + x方向滚动的距离 + 选中区域的位置 - 按钮自身宽度的一半(使翻译按钮居中)
-                translateButton.style.left = element.width / 2 + document.documentElement.scrollLeft + element.left - 10 + 'px';
+                // translateButton.style.left = element.width / 2 + document.documentElement.scrollLeft + element.left - 10 + 'px';
+                
+                // 翻译按钮的纵坐标位置: 鼠标停留位置 + y方向滚动的高度 + bias
+                translateButton.style.top = event.y + document.documentElement.scrollTop - 40 + 'px';
+                // 翻译按钮的横坐标位置: 鼠标停留位置 + x方向滚动的高度 + bias
+                translateButton.style.left = event.x + document.documentElement.scrollLeft + 20 + 'px';
                 // 使翻译按钮显示出来
                 translateButton.style.display = 'inline-block';
             } else {
