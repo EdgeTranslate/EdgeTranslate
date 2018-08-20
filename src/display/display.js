@@ -1,4 +1,3 @@
-import './display.css';
 import render from './engine.js';
 import template from './template.html';
 
@@ -39,7 +38,7 @@ function createBlock(content) {
         frame = document.createElement('iframe');
         frame.id = 'translate_frame';
         document.body.style.transition = 'width 500ms';
-        document.body.style.width = '85%';
+        document.body.style.width = '80%';
         // 将frame放入document
         document.documentElement.appendChild(frame);
     } else { // frame已经在页面中，直接改变frame的渲染内容

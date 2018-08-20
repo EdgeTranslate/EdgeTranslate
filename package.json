@@ -36,9 +36,7 @@
         "babel-core": "^6.26.3",
         "babel-loader": "^7.1.5",
         "babel-preset-es2015": "^6.24.1",
-        "css-loader": "^1.0.0",
         "del": "^3.0.0",
-        "file-loader": "^1.1.11",
         "gulp": "^3.9.1",
         "gulp-stylus": "^2.7.0",
         "gulp-zip": "^4.2.0",
@@ -48,7 +46,6 @@
         "raw-loader": "^0.5.1",
         "sinon": "^6.1.5",
         "sinon-chrome": "^2.3.2",
-        "style-loader": "^0.22.0",
         "webpack": "^4.16.5",
         "webpack-merge": "^4.1.4",
         "webpack-stream": "^5.1.1"
