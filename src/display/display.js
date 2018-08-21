@@ -14,7 +14,8 @@ var originWidth; // 侧边栏的初始宽度
 if (!fixSwitch) {
     var fixSwitch = false; // 固定侧边栏的开关 true<->switch on  false<->switch off
 }
-var translateResult, TTSSpeed; // 保存翻译结果
+var translateResult; // 保存翻译结果
+var sourceTTSSpeed, targetTTSSpeed;
 
 /**
  * 负责根据传入的翻译结果内容将结果显示在用户正在使用的页面中
@@ -25,7 +26,8 @@ var translateResult, TTSSpeed; // 保存翻译结果
 chrome.runtime.onMessage.addListener(function (content, sender) {
     if (!sender || !sender.tab) { // 避免从file://跳转到pdf viewer的消息传递对此的影响
         translateResult = content.translateResult;
-        TTSSpeed = "fast";
+        sourceTTSSpeed = "fast";
+        targetTTSSpeed = "fast";
         createBlock(content.translateResult);
     }
 });
@@ -85,7 +87,8 @@ function addEventListener() {
     // 给固定侧边栏的按钮添加点击事件监听，用户侧边栏的固定与取消固定
     frameDocument.getElementsByClassName('icon-tuding-fix')[0].addEventListener('click', fixOn);
     frameDocument.getElementsByClassName('icon-tuding-full')[0].addEventListener('click', fixOff);
-    frameDocument.getElementsByClassName('icon-pronounce')[0].addEventListener('click', sourcePronounce);
+    frameDocument.getElementById('source-pronounce').addEventListener('click', sourcePronounce);
+    frameDocument.getElementById('target-pronounce').addEventListener('click', targetPronounce);
 }
 
 /**
@@ -226,12 +229,27 @@ function sourcePronounce() {
         "type": "pronounce",
         "text": translateResult.originalText,
         "language": translateResult.sourceLanguage,
-        "speed": TTSSpeed
+        "speed": sourceTTSSpeed
     }, function () {
-        if (TTSSpeed === "fast") {
-            TTSSpeed = "slow";
+        if (sourceTTSSpeed === "fast") {
+            sourceTTSSpeed = "slow";
         } else {
-            TTSSpeed = "fast";
+            sourceTTSSpeed = "fast";
+        }
+    });
+}
+
+function targetPronounce() {
+    chrome.runtime.sendMessage({
+        "type": "pronounce",
+        "text": translateResult.mainMeaning,
+        "language": translateResult.targetLanguage,
+        "speed": targetTTSSpeed
+    }, function () {
+        if (targetTTSSpeed === "fast") {
+            targetTTSSpeed = "slow";
+        } else {
+            targetTTSSpeed = "fast";
         }
     });
 }

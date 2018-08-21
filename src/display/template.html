@@ -32,7 +32,15 @@
                 <% } %>
             </div>
             <div class="pronounce">
-                <i class="icon icon-pronounce"></i>
+                <p class="content-title">
+                    <% chrome.i18n.getMessage("PronounceOriginal") %>:&nbsp;
+                    <i id="source-pronounce" class="icon icon-pronounce"></i>
+                </p>
+                
+                <p class="content-title">
+                    <% chrome.i18n.getMessage("PronounceTranslated") %>:&nbsp;
+                    <i id="target-pronounce" class="icon icon-pronounce"></i>
+                </p>
             </div>
             <div class="phonetic-symbol">
                 <% if (this.phoneticSymbol && this.phoneticSymbol.length > 0) { %>

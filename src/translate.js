@@ -69,7 +69,12 @@ function translate(text, callback) {
             request.send(postData);
             request.onreadystatechange = function () {
                 if (request.readyState === 4 && request.status === 200) {
-                    callback(parseTranslate(JSON.parse(request.response)));
+                    callback(parseTranslate(
+                        JSON.parse(request.response), 
+                        {
+                            "targetLanguage": languageSetting.tl
+                        }
+                    ));
                 }
                 else if (request.status !== 200) {
                     alert('无法请求翻译，请检查网络连接');
@@ -124,10 +129,11 @@ function translate(text, callback) {
  * </pre>
  * 
  * @param {Object} response 谷歌翻译返回的结果。
+ * @param {Object} extras 需要一同发送给content scipts的附加信息。
  * @returns {Object} 按照spec中的数据结构存储的结果
  */
-function parseTranslate(response) {
-    var result = new Object();
+function parseTranslate(response, extras) {
+    var result = extras ? extras : new Object();
     for (var i = 0; i < response.length; i++) {
         if (response[i]) {
             var items = response[i];

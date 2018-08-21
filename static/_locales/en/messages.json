@@ -43,6 +43,14 @@
         "message": "Phonetic Symbol",
         "description": "Phonetic Symbol"
     },
+    "PronounceOriginal": {
+        "message": "Read original text",
+        "description": "Read original text."
+    },
+    "PronounceTranslated": {
+        "message": "Read translated text",
+        "description": "Read translated text."
+    },
     "Translate": {
         "message": "Translate",
         "description": "Translate"

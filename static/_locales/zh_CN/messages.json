@@ -43,6 +43,14 @@
         "message": "单词音标",
         "description": "单词音标"
     },
+    "PronounceOriginal": {
+        "message": "朗读原始文本",
+        "description": "朗读原始文本"
+    },
+    "PronounceTranslated": {
+        "message": "朗读翻译结果",
+        "description": "朗读翻译结果"
+    },
     "Translate": {
         "message": "翻译",
         "description": "翻译"
