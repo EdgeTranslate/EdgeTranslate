@@ -44,8 +44,8 @@ function createBlock(content) {
         frame.id = 'translate_frame';
         document.body.style.transition = 'width 500ms';
         document.body.style.width = '80%';
-        // 将frame放入document
         document.documentElement.appendChild(frame);
+        frameDocument = frame.contentDocument;
     } else { // frame已经在页面中，直接改变frame的渲染内容
         frame.style.transition = 'none';
         frame.style.right = '-' + frame.clientWidth + 'px';
@@ -56,12 +56,18 @@ function createBlock(content) {
         }, 50);
     }
 
-    // 往iframe中写入元素
-    frameDocument = frame.contentDocument;
-    frameDocument.open();
-    frameDocument.write(render(Template, content));
-    frameDocument.close();
-
+    // Write contents into iframe. Apply different strategies based on browser type.
+    if (navigator.userAgent.indexOf('Chrome') >= 0) {
+        frameDocument.open();
+        frameDocument.write(render(Template, content));
+        frameDocument.close();
+    } else {
+        let script = frameDocument.createElement("script");
+        let text = render(Template, content).replace(/\'/g, "\\\'");
+        script.textContent = "document.open();document.write('" + text + "');document.close();";
+        frameDocument.documentElement.appendChild(script);
+    }
+    
     // 添加事件监听
     addEventListener();
 }
