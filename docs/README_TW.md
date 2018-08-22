@@ -1,6 +1,6 @@
 # 側邊翻譯
 
-[![Version](https://img.shields.io/github/release/nickyc975/EdgeTranslate.svg?label=version)](https://github.com/nickyc975/EdgeTranslate/release)
+[![Version](https://img.shields.io/github/release/nickyc975/EdgeTranslate.svg?label=version)](https://github.com/nickyc975/EdgeTranslate/releases)
 [![Build Status](https://travis-ci.org/nickyc975/EdgeTranslate.svg?branch=master)](https://travis-ci.org/nickyc975/EdgeTranslate)
 [![codebeat badge](https://codebeat.co/badges/7f28bc52-26ec-4dbc-815d-343220100c72)](https://codebeat.co/projects/github-com-nickyc975-edgetranslate-master)
 [![License](https://img.shields.io/github/license/nickyc975/EdgeTranslate.svg?colorB=44cc11?maxAge=2592000)](https://github.com/nickyc975/EdgeTranslate/blob/master/LICENSE)
