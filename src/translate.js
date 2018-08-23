@@ -70,7 +70,7 @@ function translate(text, callback) {
             request.onreadystatechange = function () {
                 if (request.readyState === 4 && request.status === 200) {
                     callback(parseTranslate(
-                        JSON.parse(request.response), 
+                        JSON.parse(request.response),
                         {
                             "targetLanguage": languageSetting.tl
                         }
@@ -253,7 +253,11 @@ function showTranslate(content, tab, callback) {
             }
 
             if (isChrome()) { // 判断浏览器的类型 chrome的情况
-                chrome.tabs.sendMessage(tab_id, { translateResult: content });
+                chrome.tabs.sendMessage(tab_id, { translateResult: content }, function () {
+                    if (chrome.runtime.lastError) { // the url is extension:// page, can't send message
+                        alert(content.mainMeaning);
+                    }
+                });
                 // 当翻译结果展示完后，执行此回调函数
                 if (callback) {
                     callback();
@@ -268,7 +272,7 @@ function showTranslate(content, tab, callback) {
                     }
                 }).catch(function (error) { // 出现错误的回调
                     console.log(error);
-                    alert(content.commonMeanings);
+                    alert(content.mainMeaning);
                 });
             }
         });
