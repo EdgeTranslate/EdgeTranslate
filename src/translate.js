@@ -255,6 +255,7 @@ function showTranslate(content, tab, callback) {
             if (isChrome()) { // 判断浏览器的类型 chrome的情况
                 chrome.tabs.sendMessage(tab_id, { translateResult: content }, function () {
                     if (chrome.runtime.lastError) { // the url is extension:// page, can't send message
+                        console.log("Chrome runtime error: " + chrome.runtime.lastError.message);
                         alert(content.mainMeaning);
                     }
                 });

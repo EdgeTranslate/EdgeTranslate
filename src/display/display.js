@@ -23,12 +23,15 @@ var sourceTTSSpeed, targetTTSSpeed;
  * @param {Object} content 翻译的结果
  * @param {Object} sender 返送消息者的具体信息 如何发送者、是content_script，会有tab属性，如果是background，则没有tab属性
  */
-chrome.runtime.onMessage.addListener(function (content, sender) {
+chrome.runtime.onMessage.addListener(function (content, sender, callback) {
     if (!sender || !sender.tab) { // 避免从file://跳转到pdf viewer的消息传递对此的影响
         translateResult = content.translateResult;
         sourceTTSSpeed = "fast";
         targetTTSSpeed = "fast";
         createBlock(content.translateResult);
+        if (callback)
+            callback();
+        return true;
     }
 });
 
@@ -67,7 +70,7 @@ function createBlock(content) {
         script.textContent = "document.open();document.write('" + text + "');document.close();";
         frameDocument.documentElement.appendChild(script);
     }
-    
+
     // 添加事件监听
     addEventListener();
 }
