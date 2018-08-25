@@ -91,6 +91,10 @@
         "message": "使用内置的pdf查看器",
         "description": "使用本扩展内置的pdf查看器以便在pdf文件中使用划词翻译。"
     },
+    "InstantTranslate": {
+        "message": "划词后立即翻译",
+        "description": "选中单词后立即展示翻译结果。" 
+    },
     "Afrikaans": {
         "message": "南非荷兰语",
         "description": "南非荷兰语"

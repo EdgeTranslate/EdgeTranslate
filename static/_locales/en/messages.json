@@ -91,6 +91,10 @@
         "message": "Use Built-in PDF Viewer",
         "description": "Use extension's built-in pdf viewer to enable selecting translate in pdf files."
     },
+    "InstantTranslate": {
+        "message": "Enable Instant Translate",
+        "description": "Instantly show translating result after texts selected." 
+    },
     "Afrikaans": {
         "message": "Afrikaans",
         "description": "Afrikaans"
