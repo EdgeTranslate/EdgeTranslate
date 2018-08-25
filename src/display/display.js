@@ -85,8 +85,10 @@ function addEventListener() {
     } else {
         fixOn();
     }
-    frame.addEventListener('mousedown', dragOn);
-    frame.addEventListener('mousemove', moveHandler);
+    frame.addEventListener('mousedown', documentDragOn);
+    frame.addEventListener('mousemove', documentDragOn);
+    frameDocument.addEventListener('mousemove', iframeDragOn);
+    frameDocument.addEventListener('mousedown', iframeDragOn);
     document.addEventListener('mousemove', drag);
     frameDocument.addEventListener('mousemove', drag);
     document.addEventListener('mouseup', dragOff);
@@ -148,7 +150,7 @@ function removeSlider() {
         document.documentElement.removeChild(frame);
         document.body.style.width = '100%';
         document.documentElement.removeEventListener('mousedown', clickListener);
-        document.removeEventListener('mousemove', dragOn);
+        document.removeEventListener('mousemove', drag);
         document.removeEventListener('mouseup', dragOff);
     }
 }
@@ -177,37 +179,49 @@ function dragOff() {
 
 /**
  * 
- * 处理点击侧边栏边框附近，开始拖动的动作
+ * 处理在原始页面 点击侧边栏边框附近，开始拖动的动作 以及处理鼠标移动到侧边栏附近鼠标形状的改变特效
  * 
  * @param {Object} event 事件发生的全部信息
  */
-function dragOn(event) {
+function documentDragOn(event) {
     var node = event.target;
     if (node.isSameNode(frame)) {
         if (event.x <= node.offsetLeft + 4) {
-            mousedown = true;
-            frame.style.transition = 'none';
-            document.body.style.transition = 'none';
-            originX = node.offsetLeft;
-            originWidth = node.clientWidth;
+            if (event.type === 'mousemove') {
+                frame.style.cursor = 'e-resize';
+            } else {
+                mousedown = true;
+                frame.style.transition = 'none';
+                document.body.style.transition = 'none';
+                originX = event.screenX;
+                originWidth = node.clientWidth;
+            }
         }
+        else
+            frame.style.cursor = 'auto';
     }
 }
 
 /**
  * 
- * 处理鼠标移动到侧边栏附近鼠标形状的改变特效
+ * 处理在iframe内 点击侧边栏边框附近，开始拖动的动作 以及处理鼠标移动到侧边栏附近鼠标形状的改变特效
  * 
- * @param {Object} event 事件发生的所有信息
+ * @param {Object} event 事件发生的全部信息
  */
-function moveHandler(event) {
-    var node = event.target;
-    if (node.isSameNode(frame)) {
-        if (event.x <= node.offsetLeft + 4)
-            frame.style.cursor = 'e-resize';
-        else
-            frame.style.cursor = 'auto';
+function iframeDragOn(event) {
+    if (event.x <= 8) {
+        if (event.type === 'mousemove') {
+            frameDocument.documentElement.style.cursor = 'e-resize';
+        } else {
+            mousedown = true;
+            frame.style.transition = 'none';
+            document.body.style.transition = 'none';
+            originX = event.screenX;
+            originWidth = frame.clientWidth;
+        }
     }
+    else
+        frameDocument.documentElement.style.cursor = 'auto';
 }
 
 /**
