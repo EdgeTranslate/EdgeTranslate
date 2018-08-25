@@ -15,7 +15,7 @@ const DEFAULT_OTHER_SETTINGS = { "SelectTranslate": true, "UsePDFjs": true };
 /**
  * 初始化插件配置。
  */
-chrome.runtime.onInstalled.addListener(function () {
+chrome.runtime.onInstalled.addListener(function (details) {
     chrome.contextMenus.create({
         "id": "translate",
         "title": chrome.i18n.getMessage("Translate") + " '%s'",
@@ -40,9 +40,17 @@ chrome.runtime.onInstalled.addListener(function () {
     });
     // 只有在生产环境下，才会展示说明页面
     if (process.env.NODE_ENV === "production") {
-        chrome.tabs.create({ // 为管理页面创建一个新的标签
-            url: 'https://github.com/nickyc975/EdgeTranslate/wiki',
-        });
+        // 首次安装，展示wiki页面
+        if (details.reason === "install") {
+            chrome.tabs.create({ // 为wiki页面创建一个新的标签
+                url: 'https://github.com/nickyc975/EdgeTranslate/wiki',
+            });
+        // 从旧版本更新，展示更新日志
+        } else if (details.reason === "update") {
+            chrome.tabs.create({ // 为releases页面创建一个新的标签
+                url: 'https://github.com/nickyc975/EdgeTranslate/releases',
+            });
+        }
     }
 });
 

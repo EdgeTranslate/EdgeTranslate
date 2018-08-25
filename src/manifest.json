@@ -34,8 +34,7 @@
             "css": [
                 "./contents/select.css",
                 "./display/display.css"
-            ],
-            "all_frames": true
+            ]
         },
         {
             "matches": [
