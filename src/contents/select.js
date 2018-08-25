@@ -7,6 +7,8 @@ chrome.storage.sync.get("OtherSettings", function (result) {
     if (OtherSettings && OtherSettings["SelectTranslate"]) {
         document.addEventListener('mouseup', MouseUpHandler);
         document.addEventListener('mousedown', dispearButton);
+    }
+    if (OtherSettings && OtherSettings["DoubleClickTranslate"]) {
         document.addEventListener('dblclick', dblClickHandler);
     }
 });
@@ -23,6 +25,11 @@ chrome.storage.onChanged.addListener(function (changes, area) {
             document.removeEventListener("mouseup", MouseUpHandler);
             document.removeEventListener("mousedown", dispearButton);
         }
+        if (changes["OtherSettings"].newValue["DoubleClickTranslate"]) {
+            document.addEventListener('dblclick', dblClickHandler);
+        } else {
+            document.removeEventListener('dblclick', dblClickHandler);
+        }
     }
 });
 
@@ -38,6 +45,9 @@ translateButton.id = 'translate-button'; // 此id对应于./display/display.css�
 document.documentElement.appendChild(translateButton);
 translateButton.addEventListener('mousedown', translateSubmit);
 
+/**
+ * Handle double click event
+ */
 function dblClickHandler() {
     var selection = window.getSelection();
     if (selection.toString().trim()) { // 检查页面中是否有内容被选中
