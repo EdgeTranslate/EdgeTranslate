@@ -93,7 +93,11 @@
     },
     "InstantTranslate": {
         "message": "Enable Instant Translate",
-        "description": "Instantly show translating result after texts selected." 
+        "description": "Instantly show translating result after texts selected."
+    },
+    "DoubleClickTranslate": {
+        "message": "Enable Double Click Translate",
+        "description": "Instantly show translating result when double click the word."
     },
     "Afrikaans": {
         "message": "Afrikaans",

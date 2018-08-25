@@ -10,7 +10,7 @@ const DEFAULT_LANGUAGE_SETTING = { "sl": "auto", "tl": "zh-CN" };
  */
 const DEFAULT_DT_SETTING = ["t", "at", "bd", "ex", "md", "rw", "ss", "rm"];
 
-const DEFAULT_OTHER_SETTINGS = { "SelectTranslate": true, "UsePDFjs": true, "InstantTranslate": false };
+const DEFAULT_OTHER_SETTINGS = { "SelectTranslate": true, "UsePDFjs": true, "InstantTranslate": false, "DoubleClickTranslate": true };
 
 /**
  * 初始化插件配置。
@@ -45,7 +45,7 @@ chrome.runtime.onInstalled.addListener(function (details) {
             chrome.tabs.create({ // 为wiki页面创建一个新的标签
                 url: 'https://github.com/nickyc975/EdgeTranslate/wiki',
             });
-        // 从旧版本更新，展示更新日志
+            // 从旧版本更新，展示更新日志
         } else if (details.reason === "update") {
             chrome.tabs.create({ // 为releases页面创建一个新的标签
                 url: 'https://github.com/nickyc975/EdgeTranslate/releases',

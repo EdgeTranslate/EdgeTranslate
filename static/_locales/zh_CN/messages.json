@@ -93,7 +93,11 @@
     },
     "InstantTranslate": {
         "message": "划词后立即翻译",
-        "description": "选中单词后立即展示翻译结果。" 
+        "description": "选中单词后立即展示翻译结果。"
+    },
+    "DoubleClickTranslate": {
+        "message": "双击单词立即翻译",
+        "description": "双击单词后立即显示翻译结果"
     },
     "Afrikaans": {
         "message": "南非荷兰语",

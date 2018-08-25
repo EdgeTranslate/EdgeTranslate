@@ -7,6 +7,7 @@ chrome.storage.sync.get("OtherSettings", function (result) {
     if (OtherSettings && OtherSettings["SelectTranslate"]) {
         document.addEventListener('mouseup', MouseUpHandler);
         document.addEventListener('mousedown', dispearButton);
+        document.addEventListener('dblclick', dblClickHandler);
     }
 });
 
@@ -37,6 +38,22 @@ translateButton.id = 'translate-button'; // 此id对应于./display/display.css�
 document.documentElement.appendChild(translateButton);
 translateButton.addEventListener('mousedown', translateSubmit);
 
+function dblClickHandler() {
+    var selection = window.getSelection();
+    if (selection.toString().trim()) { // 检查页面中是否有内容被选中
+        chrome.storage.sync.get("OtherSettings", function (result) {
+            var OtherSettings = result.OtherSettings;
+            // Show translating result instantly. 
+            if (OtherSettings && !OtherSettings["InstantTranslate"] && OtherSettings["DoubleClickTranslate"]) {
+                disable = false;
+                translateSubmit();
+            }
+        });
+    } else {
+        translateButton.style.display = 'none'; // 使翻译按钮隐藏
+    }
+}
+
 /**
  * Handle mouse up event.
  */
@@ -48,9 +65,11 @@ function MouseUpHandler(event) {
             // Show translating result instantly. 
             if (OtherSettings && OtherSettings["InstantTranslate"]) {
                 translateSubmit();
-            // Show translate button.
-            } else {
-                showButton(event);
+                // Show translate button.
+            } else if (disable) {
+                setTimeout(function () {
+                    showButton(event);
+                }, 0);
             }
         });
     } else {
@@ -78,12 +97,14 @@ function showButton(event) {
 function translateSubmit() {
     disable = false; // 禁止按钮显示
     // 发送消息给后台进行翻译。
-    chrome.runtime.sendMessage({
-        "type": "translate",
-        "text": window.getSelection().toString()
-    }, function (response) {
-        translateButton.style.display = 'none';
-    });
+    if (window.getSelection().toString()) {
+        chrome.runtime.sendMessage({
+            "type": "translate",
+            "text": window.getSelection().toString()
+        }, function (response) {
+            translateButton.style.display = 'none';
+        });
+    }
 }
 
 /**
