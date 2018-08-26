@@ -10,7 +10,7 @@ const DEFAULT_LANGUAGE_SETTING = { "sl": "auto", "tl": "zh-CN" };
  */
 const DEFAULT_DT_SETTING = ["t", "at", "bd", "ex", "md", "rw", "ss", "rm"];
 
-const DEFAULT_OTHER_SETTINGS = { "SelectTranslate": true, "UsePDFjs": true, "InstantTranslate": false, "DoubleClickTranslate": true };
+const DEFAULT_OTHER_SETTINGS = { "SelectTranslate": true, "UsePDFjs": true, "TranslateAfterSelect": false, "TranslateAfterDblClick": false };
 
 /**
  * 初始化插件配置。

@@ -5,10 +5,10 @@
 chrome.storage.sync.get("OtherSettings", function (result) {
     var OtherSettings = result.OtherSettings;
     if (OtherSettings && OtherSettings["SelectTranslate"]) {
-        document.addEventListener('mouseup', MouseUpHandler);
+        document.addEventListener('mouseup', mouseUpHandler);
         document.addEventListener('mousedown', dispearButton);
     }
-    if (OtherSettings && OtherSettings["DoubleClickTranslate"]) {
+    if (OtherSettings && OtherSettings["TranslateAfterDblClick"]) {
         document.addEventListener('dblclick', dblClickHandler);
     }
 });
@@ -19,13 +19,13 @@ chrome.storage.sync.get("OtherSettings", function (result) {
 chrome.storage.onChanged.addListener(function (changes, area) {
     if (area === "sync" && changes["OtherSettings"]) {
         if (changes["OtherSettings"].newValue["SelectTranslate"]) {
-            document.addEventListener('mouseup', MouseUpHandler);
+            document.addEventListener('mouseup', mouseUpHandler);
             document.addEventListener('mousedown', dispearButton);
         } else {
-            document.removeEventListener("mouseup", MouseUpHandler);
+            document.removeEventListener("mouseup", mouseUpHandler);
             document.removeEventListener("mousedown", dispearButton);
         }
-        if (changes["OtherSettings"].newValue["DoubleClickTranslate"]) {
+        if (changes["OtherSettings"].newValue["TranslateAfterDblClick"]) {
             document.addEventListener('dblclick', dblClickHandler);
         } else {
             document.removeEventListener('dblclick', dblClickHandler);
@@ -54,7 +54,7 @@ function dblClickHandler() {
         chrome.storage.sync.get("OtherSettings", function (result) {
             var OtherSettings = result.OtherSettings;
             // Show translating result instantly. 
-            if (OtherSettings && !OtherSettings["InstantTranslate"] && OtherSettings["DoubleClickTranslate"]) {
+            if (OtherSettings && !OtherSettings["TranslateAfterSelect"] && OtherSettings["TranslateAfterDblClick"]) {
                 disable = false;
                 translateSubmit();
             }
@@ -67,13 +67,13 @@ function dblClickHandler() {
 /**
  * Handle mouse up event.
  */
-function MouseUpHandler(event) {
+function mouseUpHandler(event) {
     var selection = window.getSelection();
     if (selection.toString().trim()) { // 检查页面中是否有内容被选中
         chrome.storage.sync.get("OtherSettings", function (result) {
             var OtherSettings = result.OtherSettings;
             // Show translating result instantly. 
-            if (OtherSettings && OtherSettings["InstantTranslate"]) {
+            if (OtherSettings && OtherSettings["TranslateAfterSelect"]) {
                 translateSubmit();
                 // Show translate button.
             } else if (disable) {

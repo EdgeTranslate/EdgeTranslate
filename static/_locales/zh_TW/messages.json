@@ -91,11 +91,11 @@
         "message": "使用內置的pdf查看器",
         "description": "使用本擴展內置的pdf查看器以便在pdf文件中使用劃詞翻譯。"
     },
-    "InstantTranslate": {
+    "TranslateAfterSelect": {
         "message": "劃詞後立即翻譯",
         "description": "選中單詞後立即展示翻譯結果。" 
     },
-    "DoubleClickTranslate": {
+    "TranslateAfterDblClick": {
         "message": "雙擊單詞立即翻譯",
         "description": "雙擊單詞後立即展示翻譯結果"
     },

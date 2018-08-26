@@ -91,13 +91,13 @@
         "message": "Use Built-in PDF Viewer",
         "description": "Use extension's built-in pdf viewer to enable selecting translate in pdf files."
     },
-    "InstantTranslate": {
-        "message": "Enable Instant Translate",
+    "TranslateAfterSelect": {
+        "message": "Translate After Select",
         "description": "Instantly show translating result after texts selected."
     },
-    "DoubleClickTranslate": {
-        "message": "Enable Double Click Translate",
-        "description": "Instantly show translating result when double click the word."
+    "TranslateAfterDblClick": {
+        "message": "Translate After Dbl Click",
+        "description": "Instantly show translating result after double-clicked texts."
     },
     "Afrikaans": {
         "message": "Afrikaans",
