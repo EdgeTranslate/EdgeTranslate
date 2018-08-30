@@ -153,8 +153,13 @@ function build(browser, env) {
     }
 
     var static = function () {
-        gulp.src("./static/**/*", { base: "static" })
-            .pipe(gulp.dest(output_dir));
+        if (browser === "chrome") {
+            gulp.src("./static/**/*", { base: "static" })
+                .pipe(gulp.dest(output_dir));
+        } else {
+            gulp.src("./static/!(pdf)/**/*", { base: "static" })
+                .pipe(gulp.dest(output_dir));
+        }
         log("Finished build static files");
     }
 
