@@ -1,5 +1,7 @@
 {
     "background": {
         "persistent": false
-    }
+    },
+    "minimum_chrome_version": "55",
+    "homepage_url": "https://chrome.google.com/webstore/detail/bocbaocobfecmglnmeaeppambideimao"
 }

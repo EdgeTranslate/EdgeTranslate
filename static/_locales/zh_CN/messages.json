@@ -55,6 +55,10 @@
         "message": "翻译",
         "description": "翻译"
     },
+    "ShortcutSetting": {
+        "message": "快捷键设置",
+        "description": "修改快捷键"
+    },
     "InputHint": {
         "message": "翻译内容不能为空",
         "description": "输入提示"

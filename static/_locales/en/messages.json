@@ -55,6 +55,10 @@
         "message": "Translate",
         "description": "Translate"
     },
+    "ShortcutSetting": {
+        "message": "Shortcut Setting",
+        "description": "Change shortcuts."
+    },
     "InputHint": {
         "message": "Content should not be empty",
         "description": "Input hint"

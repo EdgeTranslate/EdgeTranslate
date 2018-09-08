@@ -22,6 +22,12 @@ chrome.runtime.onInstalled.addListener(function (details) {
         "contexts": ["selection"]
     });
 
+    chrome.contextMenus.create({
+        "id": "shortcut",
+        "title": chrome.i18n.getMessage("ShortcutSetting"),
+        "contexts": ["browser_action"]
+    });
+
     chrome.storage.sync.get("languageSetting", function (result) {
         if (!result.languageSetting) {
             chrome.storage.sync.set({ "languageSetting": DEFAULT_LANGUAGE_SETTING });
@@ -58,8 +64,9 @@ chrome.runtime.onInstalled.addListener(function (details) {
  * 根据用户的语言设定国际化右键菜单中的 “翻译 'xxx'” 选项
  */
 chrome.runtime.onStartup.addListener(function () {
-    // 不知为何找不到 translate 这个 menu item，导致 update 不能用。
+    // 不知为何找不到这些menu item，导致 update 不能用。
     // chrome.contextMenus.update("translate", {"title": chrome.i18n.getMessage("Translate") + " '%s'"});
+    // chrome.contextMenus.update("shortcut", {"title": chrome.i18n.getMessage("ShortcutSetting")});
 
     chrome.contextMenus.removeAll();
     chrome.contextMenus.create({
@@ -67,16 +74,33 @@ chrome.runtime.onStartup.addListener(function () {
         "title": chrome.i18n.getMessage("Translate") + " '%s'",
         "contexts": ["selection"]
     });
+    
+    chrome.contextMenus.create({
+        "id": "shortcut",
+        "title": chrome.i18n.getMessage("ShortcutSetting"),
+        "contexts": ["browser_action"]
+    });
 });
 
 /**
  * 添加点击菜单后的处理事件
  */
 chrome.contextMenus.onClicked.addListener(function (info, tab) {
-    var text = info.selectionText;
-    translate(text, function (result) {
-        showTranslate(result, tab);
-    }); // 此api位于 translate.js中
+    switch (info.menuItemId) {
+        case "translate":
+            var text = info.selectionText;
+            translate(text, function (result) {
+                showTranslate(result, tab);
+            }); // 此api位于 translate.js中
+            break;
+        case "shortcut":
+            chrome.tabs.create({
+                url: 'chrome://extensions/shortcuts',
+            });
+            break;
+        default:
+            break;
+    }
 });
 
 /*

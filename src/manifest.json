@@ -1,7 +1,7 @@
 {
     "name": "__MSG_AppName__",
     "description": "__MSG_Description__",
-    "version": "1.1.1",
+    "version": "1.2.0",
     "default_locale": "zh_CN",
     "permissions": [
         "contextMenus",
@@ -51,6 +51,13 @@
             "run_at": "document_start"
         }
     ],
+    "commands": {
+        "_execute_browser_action": {
+            "suggested_key": {
+              "default": "Alt+Q"
+            }
+        }
+    },
     "web_accessible_resources": [
         "display/template.css"
     ],
