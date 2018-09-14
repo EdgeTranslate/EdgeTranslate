@@ -1,27 +1,35 @@
 ---
-name: Bug report
-about: Create a report to help us improve
+name: 问题反馈
+about: 向我们反馈你遇到的问题
 
 ---
 
-**Describe the bug**
-A clear and concise description of what the bug is.
+**描述问题**
 
-**List  websites**
-List websites where bug occurs
+_请在此详细描述你遇到的问题，例如问题的表现形式，对你造成了那些影响等_
 
-**To Reproduce**
-Steps to reproduce the behavior:
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error
+**出现问题的网址**
 
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
+_如果问题仅在某些特定的网页上出现，请在此给出网页链接_
 
- Browser [e.g. chrome, safari]
- Version [e.g. 22]
+**复现步骤**
 
-**Additional context**
-Add any other context about the problem here.
+_请在此给出问题的复现步骤_
+
+**问题截图**
+
+_可以的话，最好再给出出现问题时的截图（注意隐藏你的个人信息）_
+
+**使用环境**
+
+_在这里给出你的使用环境，例如：_
+
+_浏览器类型 [e.g. chrome, firefox]_
+
+_浏览器版本 [e.g. 22]_
+
+_插件版本 [e.g. 1.2.0]_
+
+**其他信息**
+
+_如果还有其他相关信息，请补充到这里_
