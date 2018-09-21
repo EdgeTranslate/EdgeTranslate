@@ -31,6 +31,10 @@
         "message": "Synonyms",
         "description": "Synonyms"
     },
+    "OriginalText": {
+        "message": "Orignal Text",
+        "description": "The original text to be translated."
+    },
     "Phrases": {
         "message": "Phrases",
         "description": "Phrases"

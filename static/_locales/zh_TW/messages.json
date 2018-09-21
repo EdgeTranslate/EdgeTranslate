@@ -31,6 +31,10 @@
         "message": "近同義詞",
         "description": "單詞的近義詞和同義詞"
     },
+    "OriginalText": {
+        "message": "原始文本",
+        "description": "待翻譯的原始文本"
+    },
     "Phrases": {
         "message": "常用短語",
         "description": "單詞構成的常用短語"

@@ -2,7 +2,7 @@
 <meta charset="UTF-8">
 <html>
     <head>
-        <link type="text/css" rel="stylesheet" href="<% chrome.runtime.getURL("display/template.css") %>">
+        <link type="text/css" rel="stylesheet" href="<% chrome.runtime.getURL('display/template.css') %>">
         <style type="text/css">
             @font-face {font-family: "translateIcon";
             src: url("iconfont.eot?t=1534753564348"); /* IE9*/
@@ -14,11 +14,11 @@
         </style>
     </head>
     <body>
-        <i id="icon-tuding-fix" class="icon icon-fix" title="固定侧边栏"></i>
-        <i id="icon-tuding-full" class="icon icon-fix" title="解除固定"></i>
-        <i id="icon-close" class="icon" title="关闭结果展示页"></i>
+        <i id="icon-tuding-fix" class="icon icon-fix"></i>
+        <i id="icon-tuding-full" class="icon icon-fix"></i>
+        <i id="icon-close" class="icon"></i>
         <div class="translate">
-            <div class="main-meaning">
+            <div class="main-meaning" title="<% chrome.i18n.getMessage('OriginalText') + ': \n' + this.originalText %>">
                 <% if (this.mainMeaning.length <= 6) { %>
                     <p class="main-meaning-content-larger"><% this.mainMeaning %></p><% } %>
                 <% else if (this.mainMeaning.length > 6 && this.mainMeaning.length <= 12) { %>  
