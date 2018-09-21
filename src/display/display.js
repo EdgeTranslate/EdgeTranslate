@@ -98,8 +98,16 @@ function addEventListener() {
     // 给固定侧边栏的按钮添加点击事件监听，用户侧边栏的固定与取消固定
     frameDocument.getElementById('icon-tuding-fix').addEventListener('click', fixOn);
     frameDocument.getElementById('icon-tuding-full').addEventListener('click', fixOff);
-    frameDocument.getElementById('source-pronounce').addEventListener('click', sourcePronounce);
-    frameDocument.getElementById('target-pronounce').addEventListener('click', targetPronounce);
+
+    let sourcePronounceIcon = frameDocument.getElementById('source-pronounce');
+    if (sourcePronounceIcon) {
+        sourcePronounceIcon.addEventListener('click', sourcePronounce);
+    }
+
+    let targetPronounceIcon = frameDocument.getElementById('target-pronounce');
+    if (targetPronounceIcon) {
+        targetPronounceIcon.addEventListener('click', targetPronounce);
+    }
 }
 
 /**
