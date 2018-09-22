@@ -43,20 +43,24 @@ chrome.runtime.onMessage.addListener(function (content, sender, callback) {
 function createBlock(content) {
     // 获取用户对侧边栏展示位置的设定
     chrome.storage.sync.get("LayoutSettings", function (result) {
-        // var layoutSettings = result.LayoutSettings;
-        // var popupPosition = layoutSettings["PopupPosition"]; // 保存侧边栏展示的位置
-        var popupPosition = 'right';
+        var layoutSettings = result.LayoutSettings;
+        var popupPosition = layoutSettings["PopupPosition"]; // 保存侧边栏展示的位置
+
         // 判断frame是否已经添加到了页面中
         if (!isChildNode(frame, document.documentElement)) { // frame不在页面中，创建新的frame
             frame = document.createElement('iframe');
             frame.id = 'translate_frame';
             document.body.style.transition = 'width 500ms';
             document.body.style.width = '80%';
-            if (popupPosition === 'left') {
+            if (popupPosition === 'left') { // 用户设置 在页面左侧显示侧边栏
                 document.body.style.marginLeft = '20%';
                 document.body.style.right = '0';
+                document.body.style.left = '';
                 frame.style.left = '0';
             } else {
+                document.body.style.margin = '0';
+                document.body.style.right = '';
+                document.body.style.left = '0';
                 frame.style.right = '0';
             }
             document.documentElement.appendChild(frame);
