@@ -1,4 +1,4 @@
-export { translate, showTranslate, pronounce };
+export { translate, showTranslate, sendMessageToCurrentTab, pronounce };
 /**
  * 翻译接口。
  */
@@ -39,6 +39,27 @@ function generateTK(text, TKK) {
 }
 
 /**
+ * Send a message to current tab if accessible.
+ * 
+ * @param {Object} message message to send.
+ */
+function sendMessageToCurrentTab(message) {
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+        if (chrome.runtime.lastError) {
+            console.log("Chrome runtime error: " + chrome.runtime.lastError.message);
+        } else if (!tabs[0] || tabs[0].id < 0) {
+            console.log("No tabs or tabs not accessible.");
+        } else {
+            chrome.tabs.sendMessage(tabs[0].id, message, function () {
+                if (chrome.runtime.lastError) {
+                    console.log("Chrome runtime error: " + chrome.runtime.lastError.message);
+                }
+            });
+        }
+    });
+}
+
+/**
  * 
  * 此函数负责将传入的文本翻译，并在当前页面的侧边栏中展示
  * 
@@ -64,6 +85,11 @@ function translate(text, callback) {
             postData += "&tk=" + generateTK(text, TKK);
             postData += "&q=" + text;
 
+            sendMessageToCurrentTab({
+                "type": "info",
+                "info": "start_translating"
+            });
+
             request.open("POST", BASE_URL, true);
             request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
             request.send(postData);
@@ -77,7 +103,11 @@ function translate(text, callback) {
                     ));
                 }
                 else if (request.status !== 200) {
-                    alert('无法请求翻译，请检查网络连接');
+                    sendMessageToCurrentTab({
+                        "type": "info",
+                        "info": "network_error",
+                        "detail": request.status
+                    });
                 }
             }
         });
