@@ -104,13 +104,13 @@ function watcher(browser) {
     gulp.watch("./src/**/*.js").on("change", function () {
         build(browser, "development").js();
     });
-    gulp.watch("./src/**/template.html").on("change", function () {
+    gulp.watch("./src/**/(result|loading|error).html").on("change", function () {
         build(browser, "development").js();
     });
     gulp.watch("./src/manifest.json").on("change", function () {
         build(browser, "development").mainfest();
     });
-    gulp.watch("./src/**/!(template).html").on("change", function () {
+    gulp.watch("./src/**/!(result|loading|error).html").on("change", function () {
         build(browser, "development").html();
     });
     gulp.watch("./static/**/*").on("change", function () {
@@ -147,7 +147,7 @@ function build(browser, env) {
     }
 
     var html = function () {
-        gulp.src(["./src/**/!(template).html"], { base: "src" })
+        gulp.src(["./src/**/!(result|loading|error).html"], { base: "src" })
             .pipe(gulp.dest(output_dir));
         log("Finished build html files");
     }
