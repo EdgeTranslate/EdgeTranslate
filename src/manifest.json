@@ -56,6 +56,18 @@
             "suggested_key": {
               "default": "Alt+Q"
             }
+        },
+        "translate_selected": {
+            "suggested_key": {
+                "default": "Alt+T"
+            },
+            "description": "__MSG_TranslateSelectedText__"
+        },
+        "close_result_frame": {
+            "suggested_key": {
+                "default": "Alt+C"
+            },
+            "description": "__MSG_CloseResultFrame__"
         }
     },
     "web_accessible_resources": [

@@ -7,6 +7,14 @@
         "message": "Translate what you want.",
         "description": "App Description"
     },
+    "TranslateSelectedText": {
+        "message": "Translate selected text",
+        "description": "Shortcut for translating selected text."
+    },
+    "CloseResultFrame": {
+        "message": "Close result frame",
+        "description": "Close the translating result frame."
+    },
     "CommonMeanings": {
         "message": "Common Meanings",
         "description": "Common Meanings"

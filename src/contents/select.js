@@ -107,7 +107,7 @@ function showButton(event) {
 function translateSubmit() {
     disable = false; // 禁止按钮显示
     // 发送消息给后台进行翻译。
-    if (window.getSelection().toString()) {
+    if (window.getSelection().toString().trim()) {
         chrome.runtime.sendMessage({
             "type": "translate",
             "text": window.getSelection().toString()
@@ -135,3 +135,29 @@ function dispearButton() {
         }
     }, 400);
 }
+
+/**
+ *  实现快捷键翻译
+ */
+chrome.runtime.onMessage.addListener(function (message, sender, callback) {
+    if (!sender || !sender.tab) {
+        switch (message.type) {
+            case "command":
+                switch (message.command) {
+                    case "translate_selected":
+                        translateSubmit();
+                        break;
+                    default:
+                        break;
+                }
+                break;
+            default:
+                break;
+        }
+
+        if (callback) {
+            callback();
+        }
+        return true;
+    }
+});

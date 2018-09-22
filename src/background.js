@@ -141,3 +141,25 @@ chrome.runtime.onMessage.addListener(function (message, sender, callback) {
         return true;
     }
 });
+
+/**
+ *  将快捷键消息转发给content_scripts
+ */
+chrome.commands.onCommand.addListener(function (command) {
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+        if (chrome.runtime.lastError) {
+            console.log("Chrome runtime error: " + chrome.runtime.lastError.message);
+        } else if (!tabs[0] || tabs[0].id < 0) {
+            console.log("No tabs.");
+        } else {
+            chrome.tabs.sendMessage(tabs[0].id, {
+                "type": "command",
+                "command": command
+            }, function () {
+                if (chrome.runtime.lastError) {
+                    console.log("Chrome runtime error: " + chrome.runtime.lastError.message);
+                }
+            });
+        }
+    });
+});

@@ -18,17 +18,35 @@ var translateResult; // 保存翻译结果
 var sourceTTSSpeed, targetTTSSpeed;
 
 /**
- * 负责根据传入的翻译结果内容将结果显示在用户正在使用的页面中
+ * 负责处理后台发送给页面的消息
  * 
- * @param {Object} content 翻译的结果
+ * @param {Object} message 后台发送的消息
  * @param {Object} sender 返送消息者的具体信息 如何发送者、是content_script，会有tab属性，如果是background，则没有tab属性
  */
-chrome.runtime.onMessage.addListener(function (content, sender, callback) {
+chrome.runtime.onMessage.addListener(function (message, sender, callback) {
     if (!sender || !sender.tab) { // 避免从file://跳转到pdf viewer的消息传递对此的影响
-        translateResult = content.translateResult;
-        sourceTTSSpeed = "fast";
-        targetTTSSpeed = "fast";
-        createBlock(content.translateResult);
+        switch (message.type) {
+            // 发送的是翻译结果
+            case "translateResult":
+                translateResult = message.translateResult;
+                sourceTTSSpeed = "fast";
+                targetTTSSpeed = "fast";
+                createBlock(message.translateResult);
+                break;
+            // 发送的是快捷键命令
+            case "command": 
+                switch (message.command) {
+                    case "close_result_frame":
+                        removeSlider();
+                        break;
+                    default:
+                        break;
+                }
+                break;
+            default:
+                break;
+        }
+        
         if (callback)
             callback();
         return true;
