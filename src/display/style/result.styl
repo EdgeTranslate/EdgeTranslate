@@ -1,164 +1,94 @@
-hover-color = #777;
-
-html
-	height: auto;
-	min-height: 100%;
-	box-sizing: border-box;
-	margin: 0 0 0 3px;
-	box-shadow: -2px 0 1px 1px #ddd;
-	border: 0;
-	z-index: 10000;
-
-body
-	height: 100%;
-	padding: 10%;
-	box-sizing: border-box;
-
-/**
- * start icon style
- */
-
-.icon 
-	font-family: "translateIcon";
-	font-style: normal;
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-	color: #aaa;
-	width: 5%;
-	cursor: pointer; 
-	font-size: larger;
-	position: relative;
-	top: 5%;
-	width: 10px;
-	height: 10px;
-	:hover
-		color: hover-color;
-
-/* 关闭页面的图标 */
-#icon-close 
-	left: 94%;	
-	&::before 
-		content: "\e624";
-	&:hover 
-		color: hover-color;
-
-.icon-fix 
-	left: 90%;
-	&:hover 
-		color: hover-color;
-
-// 固定住的图钉图标
-#icon-tuding-full 
-	display: none;
-	&::before 
-		content: "\e61b";
-		
-// 未固定的图钉图标
-#icon-tuding-fix 
-	&::before 
-		content: '\e607';
-
-.icon-pronounce
-	position static;
-	&:hover
-		color: orange;
-	&::before
-		content: "\e63e";
-
-
-/**
- * end icon style
- */
-
+@import 'common.styl';
 
 /**
  * start content style
  */
-
-.translate
+.translate {
 	font-weight: medium;
 	font-size: small;
-	.content-title // 标题样式
+
+	.content-title { // 标题样式
 		color: gray;
 		font-size: medium;
-	
-	ul
-	.list li 
+	}
+
+	ul, .list li {
 		list-style-type: none;
+	}
 
-	.main-meaning
-		.main-meaning-content-larger 
+	.main-meaning {
+		.main-meaning-content-larger {
 			font-size: 30px;
-		.main-meaning-content-large 
-			font-size: large;
-		.main-meaning-content-small 
-			font-size: medium;
-		.main-meaning-content-smaller 
-			font-size: small;
+		}
 
-	.phonetic-symbol
-		.phonetic-symbol-content 
+		.main-meaning-content-large {
+			font-size: large;
+		}
+
+		.main-meaning-content-small {
+			font-size: medium;
+		}
+
+		.main-meaning-content-smaller {
+			font-size: small;
+		}
+	}
+
+	.phonetic-symbol {
+		.phonetic-symbol-content {
 			font-weight: lighter;
 			position: relative;
 			left: 12%;
+		}
+	}
 
-	.common-meanings
-		.common-meanings-content
-			@extend .translate .phonetic-symbol .phonetic-symbol-content
-			
-	.detailed-meanings
-		.word-type 
+	.common-meanings {
+		.common-meanings-content {
+			@extend .translate .phonetic-symbol .phonetic-symbol-content;
+		}
+	}
+
+	.detailed-meanings {
+		.word-type {
 			color: gray;
 			margin-left: 10%;
-		.content 
+		}
+
+		.content {
 			display: block;
 			margin-left: 15%;
 			font-weight: light;
-	.definitions
-		@extend .translate .detailed-meanings
-		.definitions-content
+		}
+	}
+
+	.definitions {
+		@extend .translate .detailed-meanings;
+
+		.definitions-content {
 			display: block;
 			margin-left: 5%;
 			font-weight: light;
-	.synonyms
-		@extend .translate .detailed-meanings
-	.phrases
-		.phrases
-			@extend .translate .phonetic-symbol .phonetic-symbol-content
-	.examples
-		.sentences 
+		}
+	}
+
+	.synonyms {
+		@extend .translate .detailed-meanings;
+	}
+
+	.phrases {
+		.phrases {
+			@extend .translate .phonetic-symbol .phonetic-symbol-content;
+		}
+	}
+
+	.examples {
+		.sentences {
 			font-size: smaller;
 			font-weight: light;
+		}
+	}
+}
 
 /**
  * end content style
- */
-
-/**
- * start scrollbar style
- */
-::-webkit-scrollbar
-	width: 6px;
-	background: rgba(118,176,243,.3);
-	border-radius: 5px;
-
-::-webkit-scrollbar-button 
-	display: none;
-
-::-webkit-scrollbar-thumb 
-	width: 8px;
-	min-height: 15px;
-	background: rgba(0,0,0,.2);
-	border-radius: 5px;
-	:hover 
-		background: rgba(0,0,0,.6);
-
-::-webkit-scrollbar-track 
-	background-color: #fff;
-
-::-webkit-scrollbar-track-piece 
-	background: #fff;
-
-/**
- * end scrollbar style
  */
