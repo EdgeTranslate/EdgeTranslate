@@ -8,13 +8,15 @@ window.onload = function () {
         i18nElemwnts[i].insertAdjacentText("beforeEnd", chrome.i18n.getMessage(i18nElemwnts[i].getAttribute("data-i18n-name")));
     }
 
-    chrome.storage.sync.get(['DTSetting', "OtherSettings"], function (result) {
+    chrome.storage.sync.get(['DTSetting', "LayoutSettings", "OtherSettings"], function (result) {
         var DTSetting = result.DTSetting;
         var OtherSettings = result.OtherSettings;
+        var LayoutSettings = result.LayoutSettings;
 
         // 存储翻译选项的选择元素
         var DTOptions = document.getElementsByClassName("dt-option");
         var OtherOptions = document.getElementsByClassName("other-option");
+        var PopupPositions = document.getElementsByName("PopupPosition");
 
         // 首先将初始化的设置同步到页面
         for (let i = 0; i < DTOptions.length; i++) {
@@ -23,6 +25,10 @@ window.onload = function () {
 
         for (let i = 0; i < OtherOptions.length; i++) {
             OtherOptions[i].checked = OtherSettings[OtherOptions[i].value];
+        }
+
+        for (let i = 0; i < PopupPositions.length; i++) {
+            PopupPositions[i].checked = (PopupPositions[i].value === LayoutSettings["PopupPosition"]);
         }
 
         // 如果用户修改了选项，则添加事件监听,将修改的配置保存
@@ -34,8 +40,18 @@ window.onload = function () {
                 else // 用户取消勾选了这一选项
                     DTSetting.splice(DTSetting.indexOf(this.value), 1);
                 // 同步修改后的设定
-                updateTranslateSetting(DTSetting);
+                saveOption("DTSetting", DTSetting);
             };
+        }
+
+        // 保存布局设定
+        for (let i = 0; i < PopupPositions.length; i++) {
+            PopupPositions[i].onchange = function () {
+                if (this.checked) {
+                    LayoutSettings["PopupPosition"] = this.value;
+                    saveOption("LayoutSettings", LayoutSettings);
+                }
+            }
         }
 
         // 保存其他设置
@@ -45,20 +61,11 @@ window.onload = function () {
                 saveOption("OtherSettings", OtherSettings);
             };
         }
-    })
+    });
 
     // 统一添加事件监听
     addEventListener();
 };
-
-/**
- * 保存翻译选项设置(DTSetting)
- * 
- * @param {*object} DTSetting 需要同步的翻译选项设定
- */
-function updateTranslateSetting(DTSetting) {
-    saveOption("DTSetting", DTSetting);
-}
 
 /**
  * 保存一条设置项

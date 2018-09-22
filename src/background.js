@@ -10,6 +10,8 @@ const DEFAULT_LANGUAGE_SETTING = { "sl": "auto", "tl": "zh-CN" };
  */
 const DEFAULT_DT_SETTING = ["t", "at", "bd", "ex", "md", "rw", "ss", "rm"];
 
+const DEFAULT_LAYOUT_SETTINGS = { "PopupPosition": "right" };
+
 const DEFAULT_OTHER_SETTINGS = { "SelectTranslate": true, "UsePDFjs": true, "TranslateAfterSelect": false, "TranslateAfterDblClick": false };
 
 /**
@@ -39,6 +41,13 @@ chrome.runtime.onInstalled.addListener(function (details) {
             chrome.storage.sync.set({ "DTSetting": DEFAULT_DT_SETTING });
         }
     });
+
+    chrome.storage.sync.get("LayoutSettings", function (result) {
+        if (!result.LayoutSettings) {
+            chrome.storage.sync.set({"LayoutSettings": DEFAULT_LAYOUT_SETTINGS});
+        }
+    });
+
     chrome.storage.sync.get("OtherSettings", function (result) {
         if (!result.OtherSettings) {
             chrome.storage.sync.set({ "OtherSettings": DEFAULT_OTHER_SETTINGS });

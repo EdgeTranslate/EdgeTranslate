@@ -87,6 +87,18 @@
         "message": "翻译结果设置",
         "description": "选择需要在翻译结果中展示的内容。"
     },
+    "LayoutSettings": {
+        "message": "布局设置",
+        "description": "调整翻译结果展示框的布局"
+    },
+    "PopupFromRight": {
+        "message": "从右侧弹出",
+        "description": "从右侧弹出翻译结果展示框"
+    },
+    "PopupFromLeft": {
+        "message": "从左侧弹出",
+        "description": "从左侧弹出翻译结果展示框"
+    },
     "OtherSettings": {
         "message": "其他设置",
         "description": "插件的其他设置。"

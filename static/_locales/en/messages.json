@@ -85,7 +85,19 @@
     },
     "ContentSettings": {
         "message": "Content Settings",
-        "description": "Choose what to display in the translate results."
+        "description": "Choose what to display in the translating results."
+    },
+    "LayoutSettings": {
+        "message": "Layout Settings",
+        "description": "Choose how to display the translating results."
+    },
+    "PopupFromRight": {
+        "message": "Popup from the right",
+        "description": "Translating results popup from the right."
+    },
+    "PopupFromLeft": {
+        "message": "Popup from the left",
+        "description": "Translating results popup from the left."
     },
     "OtherSettings": {
         "message": "Other Settings",
