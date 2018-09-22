@@ -1,4 +1,4 @@
-import { translate, showTranslate, pronounce } from "./translate.js"
+import { translate, showTranslate, sendMessageToCurrentTab, pronounce } from "./translate.js"
 
 /**
  * 默认的源语言和目标语言。
@@ -146,20 +146,8 @@ chrome.runtime.onMessage.addListener(function (message, sender, callback) {
  *  将快捷键消息转发给content_scripts
  */
 chrome.commands.onCommand.addListener(function (command) {
-    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-        if (chrome.runtime.lastError) {
-            console.log("Chrome runtime error: " + chrome.runtime.lastError.message);
-        } else if (!tabs[0] || tabs[0].id < 0) {
-            console.log("No tabs.");
-        } else {
-            chrome.tabs.sendMessage(tabs[0].id, {
-                "type": "command",
-                "command": command
-            }, function () {
-                if (chrome.runtime.lastError) {
-                    console.log("Chrome runtime error: " + chrome.runtime.lastError.message);
-                }
-            });
-        }
+    sendMessageToCurrentTab({
+        "type": "command",
+        "command": command
     });
 });
