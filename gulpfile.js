@@ -104,7 +104,7 @@ function watcher(browser) {
     gulp.watch("./src/**/*.js").on("change", function () {
         build(browser, "development").js();
     });
-    gulp.watch("./src/**/(result|loading|error).html").on("change", function () {
+    gulp.watch("./src/display/templates/*.html").on("change", function () {
         build(browser, "development").js();
     });
     gulp.watch("./src/manifest.json").on("change", function () {
