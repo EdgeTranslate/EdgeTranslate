@@ -41,38 +41,43 @@ chrome.runtime.onMessage.addListener(function (content, sender, callback) {
  * @param {Object} content 翻译的结果
  */
 function createBlock(content) {
-    // 判断frame是否已经添加到了页面中
-    if (!isChildNode(frame, document.documentElement)) { // frame不在页面中，创建新的frame
-        frame = document.createElement('iframe');
-        frame.id = 'translate_frame';
-        document.body.style.transition = 'width 500ms';
-        document.body.style.width = '80%';
-        document.documentElement.appendChild(frame);
-        frameDocument = frame.contentDocument;
-    } else { // frame已经在页面中，直接改变frame的渲染内容
-        frame.style.transition = 'none';
-        frame.style.right = '-' + frame.clientWidth + 'px';
-        // 这个延时的目的是使得侧边栏出现的过渡动画生效
-        setTimeout(function () {
-            frame.style.transition = 'right 300ms';
-            frame.style.right = '0';
-        }, 50);
-    }
+    // 获取用户对侧边栏展示位置的设定
+    chrome.storage.sync.get("LayoutSettings", function (result) {
+        // var layoutSettings = result.LayoutSettings;
+        // var popupPosition = layoutSettings["PopupPosition"]; // 保存侧边栏展示的位置
+        var popupPosition = 'right';
+        // 判断frame是否已经添加到了页面中
+        if (!isChildNode(frame, document.documentElement)) { // frame不在页面中，创建新的frame
+            frame = document.createElement('iframe');
+            frame.id = 'translate_frame';
+            document.body.style.transition = 'width 500ms';
+            document.body.style.width = '80%';
+            if (popupPosition === 'left') {
+                document.body.style.marginLeft = '20%';
+                document.body.style.right = '0';
+                frame.style.left = '0';
+            } else {
+                frame.style.right = '0';
+            }
+            document.documentElement.appendChild(frame);
+            frameDocument = frame.contentDocument;
+        }
 
-    // Write contents into iframe. Apply different strategies based on browser type.
-    if (navigator.userAgent.indexOf('Chrome') >= 0) {
-        frameDocument.open();
-        frameDocument.write(render(Template, content));
-        frameDocument.close();
-    } else {
-        let script = frameDocument.createElement("script");
-        let text = render(Template, content).replace(/\'/g, "\\\'");
-        script.textContent = "document.open();document.write('" + text + "');document.close();";
-        frameDocument.documentElement.appendChild(script);
-    }
+        // Write contents into iframe. Apply different strategies based on browser type.
+        if (navigator.userAgent.indexOf('Chrome') >= 0) {
+            frameDocument.open();
+            frameDocument.write(render(Template, content));
+            frameDocument.close();
+        } else {
+            let script = frameDocument.createElement("script");
+            let text = render(Template, content).replace(/\'/g, "\\\'");
+            script.textContent = "document.open();document.write('" + text + "');document.close();";
+            frameDocument.documentElement.appendChild(script);
+        }
 
-    // 添加事件监听
-    addEventListener();
+        // 添加事件监听
+        addEventListener();
+    });
 }
 
 /**
@@ -157,6 +162,7 @@ function removeSlider() {
     if (isChildNode(frame, document.documentElement)) {
         document.documentElement.removeChild(frame);
         document.body.style.width = '100%';
+        document.body.style.margin = '0';
         document.documentElement.removeEventListener('mousedown', clickListener);
         document.removeEventListener('mousemove', drag);
         document.removeEventListener('mouseup', dragOff);
