@@ -1,7 +1,19 @@
 import render from './engine.js';
-import template from './template.html';
+/**
+ * load templates and pretreatment
+ */
+// load templates
+import result from './templates/result.html'; // template of translate result
+// import loading from './templates/loading.html'; // template of loading icon
+// import error from './templates/error.html'; // template of error message
 
-var Template = template.toString().replace(/\n|\s{2,}|\r/g, ""); // 对读入的模板进行预处理
+// pretreatment
+var Result = result.toString().replace(/\n|\s{2,}|\r/g, "");
+// var Loading = loading.toString().replace(/\n|\s{2,}|\r/g, "");
+// var Error = error.toString().replace(/\n|\s{2,}|\r/g, "");
+/**
+ * end load
+ */
 
 // 用于存储一个iframe元素，这个元素用来在页面的右侧展示翻译结果
 var frame;
@@ -33,10 +45,10 @@ chrome.runtime.onMessage.addListener(function (message, sender, callback) {
                 translateResult = message.translateResult;
                 sourceTTSSpeed = "fast";
                 targetTTSSpeed = "fast";
-                createBlock(message.translateResult);
+                createBlock(message.translateResult,Result);
                 break;
             // 发送的是快捷键命令
-            case "command": 
+            case "command":
                 switch (message.command) {
                     case "close_result_frame":
                         removeSlider();
@@ -48,7 +60,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, callback) {
             default:
                 break;
         }
-        
+
         if (callback)
             callback();
         return true;
@@ -59,8 +71,9 @@ chrome.runtime.onMessage.addListener(function (message, sender, callback) {
  * 在页面的右侧创建一块区域，用于显示翻译的结果，创建一个frame元素，将其插入到document中
  * 
  * @param {Object} content 翻译的结果
+ * @param {String} template 需要渲染的模板
  */
-function createBlock(content) {
+function createBlock(content,template) {
     // 获取用户对侧边栏展示位置的设定
     chrome.storage.sync.get("LayoutSettings", function (result) {
         var layoutSettings = result.LayoutSettings;
@@ -90,7 +103,7 @@ function createBlock(content) {
         // Write contents into iframe. Apply different strategies based on browser type.
         if (navigator.userAgent.indexOf('Chrome') >= 0) {
             frameDocument.open();
-            frameDocument.write(render(Template, content));
+            frameDocument.write(render(template, content));
             frameDocument.close();
         } else {
             let script = frameDocument.createElement("script");
