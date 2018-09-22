@@ -17,29 +17,13 @@
         <i id="icon-tuding-fix" class="icon icon-fix"></i>
         <i id="icon-tuding-full" class="icon icon-fix"></i>
         <i id="icon-close" class="icon"></i>
-        <div class="lds-css ng-scope">
-            <div style="width:100%;height:100%" class="lds-ellipsis">
-                <div>
-                    <div>
-                    </div>
-                </div>
-                <div>
-                    <div>
-                    </div>
-                </div>
-                <div>
-                    <div>
-                    </div>
-                </div>
-                <div>
-                    <div>
-                    </div>
-                </div>
-                <div>
-                    <div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <% if (this.detail === 503) { %>
+            <p class="error-message"><% chrome.i18n.getMessage("NETERR_503") %></p>
+        <% } else if (this.detail === 413) { %>
+            <p class="error-message"><% chrome.i18n.getMessage("NETERR_413") %></p>
+        <% } else { %>
+            <p class="error-message"><% chrome.i18n.getMessage("NETERR") %></p>
+            <p class="error-message-detail"><% chrome.i18n.getMessage("NETERR_CODE") %>: <% this.detail %></p>
+        <% } %>
     </body>
 </html>

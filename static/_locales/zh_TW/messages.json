@@ -542,5 +542,21 @@
     "Zulu": {
         "message": "祖魯語",
         "description": "祖魯語"
+    },
+    "NETERR": {
+        "message": "網絡錯誤！請檢查您的網絡連接。",
+        "description": "網絡錯誤信息。"
+    },
+    "NETERR_CODE": {
+        "message": "錯誤代碼",
+        "description": "網絡錯誤代碼。"
+    },
+    "NETERR_503": {
+        "message": "由於您的請求過於頻繁，Google已將您的IP暫時封鎖，請等待半小時后重試！",
+        "description": "503狀態碼錯誤信息。"
+    },
+    "NETERR_413": {
+        "message": "您請求的的翻譯文本太長，請分段翻譯！",
+        "description": "413狀態碼錯誤信息。"
     }
 }

@@ -542,5 +542,21 @@
     "Zulu": {
         "message": "Zulu",
         "description": "Zulu"
+    },
+    "NETERR": {
+        "message": "Network error! Please check your network connection.",
+        "description": "Network error message."
+    },
+    "NETERR_CODE": {
+        "message": "Error code",
+        "description": "Network error code."
+    },
+    "NETERR_503": {
+        "message": "Request too frequently! Google has blocked your IP address temporarily. Please try again in 30 minutes.",
+        "description": "Network error message for error code 503."
+    },
+    "NETERR_413": {
+        "message": "Translating text too long! Please shorten your translating text and try again.",
+        "description": "Network error message for error code 413."
     }
 }
