@@ -1,0 +1,44 @@
+@import 'common.styl';
+
+body {
+    padding: 0;
+
+    .page-icon {
+        padding: 10%;
+    }
+}
+
+.container {
+    width: 100%;
+    height: 40%;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    text-align: center;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: flex-start;
+
+    .icon {
+        text-align: center;
+        width: 150px;
+        height: 150px;
+    }
+
+    .content {
+        margin: 10% 5%;
+    }
+}
+
+#icon-failure {
+    display: block;
+    cursor: auto;
+    font-size: 150px;
+    color: #dd5145;
+
+    &::before {
+        content: '\e64f';
+    }
+}
