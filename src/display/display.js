@@ -1,16 +1,17 @@
 import render from './engine.js';
 /**
- * load templates and pretreatment
+ * load templates and do pretreatments
  */
 // load templates
 import result from './templates/result.html'; // template of translate result
-// import loading from './templates/loading.html'; // template of loading icon
-// import error from './templates/error.html'; // template of error message
+import loading from './templates/loading.html'; // template of loading icon
+import error from './templates/error.html'; // template of error message
 
 // pretreatment
-var Result = result.toString().replace(/\n|\s{2,}|\r/g, "");
-// var Loading = loading.toString().replace(/\n|\s{2,}|\r/g, "");
-// var Error = error.toString().replace(/\n|\s{2,}|\r/g, "");
+var resultTemplate = result.toString().replace(/\n|\s{2,}|\r/g, "");
+var loadingTemplate = loading.toString().replace(/\n|\s{2,}|\r/g, "");
+var errorTemplate = error.toString().replace(/\n|\s{2,}|\r/g, "");
+
 /**
  * end load
  */
@@ -45,8 +46,20 @@ chrome.runtime.onMessage.addListener(function (message, sender, callback) {
                 translateResult = message.translateResult;
                 sourceTTSSpeed = "fast";
                 targetTTSSpeed = "fast";
-                createBlock(message.translateResult,Result);
+                createBlock(message.translateResult, resultTemplate);
                 break;
+            // 发送的是翻译状态信息
+            case "info":
+                switch (message.info) {
+                    case "start_translating":
+                        createBlock(message, loadingTemplate);
+                        break;
+                    case "network_error":
+                        createBlock(message, errorTemplate);
+                        break;
+                    default:
+                        break;
+                }
             // 发送的是快捷键命令
             case "command":
                 switch (message.command) {
