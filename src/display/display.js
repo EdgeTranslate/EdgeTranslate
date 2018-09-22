@@ -16,6 +16,8 @@ if (!fixSwitch) {
 }
 var translateResult; // 保存翻译结果
 var sourceTTSSpeed, targetTTSSpeed;
+var popupPosition; // 保存侧边栏展示的位置
+const dragSensitivity = 15;  // 用来调节拖动侧边栏的灵敏度的参数
 
 /**
  * 负责根据传入的翻译结果内容将结果显示在用户正在使用的页面中
@@ -44,7 +46,7 @@ function createBlock(content) {
     // 获取用户对侧边栏展示位置的设定
     chrome.storage.sync.get("LayoutSettings", function (result) {
         var layoutSettings = result.LayoutSettings;
-        var popupPosition = layoutSettings["PopupPosition"]; // 保存侧边栏展示的位置
+        popupPosition = layoutSettings["PopupPosition"]; // 保存侧边栏展示的位置
 
         // 判断frame是否已经添加到了页面中
         if (!isChildNode(frame, document.documentElement)) { // frame不在页面中，创建新的frame
@@ -94,9 +96,9 @@ function addEventListener() {
     } else {
         fixOn();
     }
-    frame.addEventListener('mousedown', documentDragOn);
-    frame.addEventListener('mousemove', documentDragOn);
+    document.addEventListener('mousemove', documentDragOn);
     frameDocument.addEventListener('mousemove', iframeDragOn);
+    document.addEventListener('mousedown', documentDragOn);
     frameDocument.addEventListener('mousedown', iframeDragOn);
     document.addEventListener('mousemove', drag);
     frameDocument.addEventListener('mousemove', drag);
@@ -153,7 +155,10 @@ function isChildNode(node1, node2) {
 function clickListener(event) {
     let node = event.target;
     if (!isChildNode(node, frame)) {
-        removeSlider();
+        var boundary = (popupPosition === 'left') ? frame.offsetLeft + frame.clientWidth : frame.offsetLeft; // 根据侧边栏的位置确定拖拽的起点
+        if (Math.abs(event.x - boundary) > dragSensitivity) {
+            removeSlider();
+        }
     }
 }
 
@@ -179,8 +184,9 @@ function removeSlider() {
  */
 function drag(event) {
     if (mousedown) {
-        frame.style.width = originX - event.screenX + originWidth + 'px';
-        document.body.style.width = window.innerWidth - originWidth - (originX - event.screenX) + 'px';
+        var moveLength = popupPosition === 'left' ? -(originX - event.screenX) : (originX - event.screenX); // 根据侧边栏的位置确定移动距离的增减
+        frame.style.width = moveLength + originWidth + 'px';
+        document.body.style.width = window.innerWidth - originWidth - moveLength + 'px';
     }
 }
 
@@ -202,22 +208,19 @@ function dragOff() {
  * @param {Object} event 事件发生的全部信息
  */
 function documentDragOn(event) {
-    var node = event.target;
-    if (node.isSameNode(frame)) {
-        if (event.x <= node.offsetLeft + 4) {
-            if (event.type === 'mousemove') {
-                frame.style.cursor = 'e-resize';
-            } else {
-                mousedown = true;
-                frame.style.transition = 'none';
-                document.body.style.transition = 'none';
-                originX = event.screenX;
-                originWidth = node.clientWidth;
-            }
+    var boundary = (popupPosition === 'left') ? frame.offsetLeft + frame.clientWidth : frame.offsetLeft; // 根据侧边栏的位置确定拖拽的起点
+    if (Math.abs(event.x - boundary) <= dragSensitivity) {
+        if (event.type === 'mousemove') {
+            document.documentElement.style.cursor = 'e-resize';
+        } else {
+            mousedown = true;
+            frame.style.transition = 'none';
+            document.body.style.transition = 'none';
+            originX = event.screenX;
+            originWidth = frame.clientWidth;
         }
-        else
-            frame.style.cursor = 'auto';
-    }
+    } else
+        document.documentElement.style.cursor = 'auto';
 }
 
 /**
@@ -227,7 +230,8 @@ function documentDragOn(event) {
  * @param {Object} event 事件发生的全部信息
  */
 function iframeDragOn(event) {
-    if (event.x <= 8) {
+    var boundary = (popupPosition === 'left') ? frame.clientWidth : 0; // 根据侧边栏的位置确定拖拽的起点
+    if (Math.abs(event.x - boundary) <= dragSensitivity) {
         if (event.type === 'mousemove') {
             frameDocument.documentElement.style.cursor = 'e-resize';
         } else {
