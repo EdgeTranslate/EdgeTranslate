@@ -7,6 +7,14 @@
         "message": "便捷翻译，无忧阅读。",
         "description": "应用简介"
     },
+    "TranslateSelectedText": {
+        "message": "翻译选中的文本",
+        "description": "使用快捷键翻译选中的文本"
+    },
+    "CloseResultFrame": {
+        "message": "关闭翻译结果展示框",
+        "description": "关闭翻译结果展示框"
+    },
     "CommonMeanings": {
         "message": "常见意思",
         "description": "单词的常见意思"
