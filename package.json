@@ -1,6 +1,10 @@
 {
     "name": "edge_translate",
-    "version": "1.2.0",
+<<<<<<< HEAD
+    "version": "1.3.0rc",
+=======
+    "version": "1.3.0",
+>>>>>>> a7bbf92... Merge branch develop.
     "description": "A translator extension.",
     "keywords": [
         "Edge Translate",
