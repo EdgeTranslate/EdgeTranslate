@@ -88,6 +88,19 @@ window.onload = function () {
 };
 
 /**
+ * 监听展开语言设置的快捷键
+ */
+chrome.commands.onCommand.addListener(function (command) {
+    switch (command) {
+        case "change_language_setting":
+            settingSwitch();
+            break;
+        default:
+            break;
+    }
+});
+
+/**
  * 保存翻译语言设定
  * 
  * @param {*} sourceLanguage 源语言

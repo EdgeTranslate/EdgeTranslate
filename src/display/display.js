@@ -63,6 +63,9 @@ chrome.runtime.onMessage.addListener(function (message, sender, callback) {
             // 发送的是快捷键命令
             case "command":
                 switch (message.command) {
+                    case "fix_result_frame":
+                        fixOn();
+                        break;
                     case "close_result_frame":
                         removeSlider();
                         break;
