@@ -66,7 +66,11 @@ chrome.runtime.onMessage.addListener(function (message, sender, callback) {
             case "command":
                 switch (message.command) {
                     case "fix_result_frame":
-                        fixOn();
+                        if (fixSwitch) {
+                            fixOff();
+                        } else {
+                            fixOn();
+                        }
                         break;
                     case "close_result_frame":
                         removeSlider();
