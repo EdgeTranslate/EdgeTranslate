@@ -24,13 +24,15 @@ var frameDocument;
 var mousedown = false; // 在鼠标拖动边框时，用于标记鼠标是否已经按下
 var originX; // 鼠标开始拖动的x坐标轴初始位置
 var originWidth; // 侧边栏的初始宽度
+var originOriginWidth; // 存储网页body的原始宽度
 if (!fixSwitch) {
     var fixSwitch = false; // 固定侧边栏的开关 true<->switch on  false<->switch off
 }
 var translateResult; // 保存翻译结果
 var sourceTTSSpeed, targetTTSSpeed;
 var popupPosition; // 保存侧边栏展示的位置
-const dragSensitivity = 15;  // 用来调节拖动侧边栏的灵敏度的参数
+const dragSensitivity = 15;  // 用来调节拖动侧边栏的灵敏度的参数 单位:px
+const transitionDuration = 500; // 侧边栏出现动画的持续事件 单位:ms
 
 /**
  * 负责处理后台发送给页面的消息
@@ -63,6 +65,9 @@ chrome.runtime.onMessage.addListener(function (message, sender, callback) {
             // 发送的是快捷键命令
             case "command":
                 switch (message.command) {
+                    case "fix_result_frame":
+                        fixOn();
+                        break;
                     case "close_result_frame":
                         removeSlider();
                         break;
@@ -86,7 +91,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, callback) {
  * @param {Object} content 翻译的结果
  * @param {String} template 需要渲染的模板
  */
-function createBlock(content,template) {
+function createBlock(content, template) {
     // 获取用户对侧边栏展示位置的设定
     chrome.storage.sync.get("LayoutSettings", function (result) {
         var layoutSettings = result.LayoutSettings;
@@ -96,10 +101,12 @@ function createBlock(content,template) {
         if (!isChildNode(frame, document.documentElement)) { // frame不在页面中，创建新的frame
             frame = document.createElement('iframe');
             frame.id = 'translate_frame';
-            document.body.style.transition = 'width 500ms';
-            document.body.style.width = '80%';
+            document.body.style.transition = 'width ' + transitionDuration + 'ms';
+            originOriginWidth = document.body.clientWidth;
+            document.body.style.width = 0.8 * originOriginWidth + 'px';
             if (popupPosition === 'left') { // 用户设置 在页面左侧显示侧边栏
-                document.body.style.marginLeft = '20%';
+                document.body.style.position = 'absolute';
+                document.body.style.marginLeft = 0.2 * originOriginWidth + 'px';
                 document.body.style.right = '0';
                 document.body.style.left = '';
                 frame.style.left = '0';
@@ -214,34 +221,16 @@ function removeSlider() {
     mousedown = false; // 如果侧边栏关闭，直接停止侧边栏宽度的调整
     if (isChildNode(frame, document.documentElement)) {
         document.documentElement.removeChild(frame);
-        document.body.style.width = '100%';
-        document.body.style.margin = '0';
+        document.body.style.width = originOriginWidth + 'px';
+        setTimeout(function () {
+            document.body.style.marginLeft = 'auto';
+            document.body.style.position = 'static';
+            document.body.style.right = '';
+            document.body.style.left = '';
+        }, transitionDuration);
         document.documentElement.removeEventListener('mousedown', clickListener);
         document.removeEventListener('mousemove', drag);
         document.removeEventListener('mouseup', dragOff);
-    }
-}
-
-/**
- * 处理鼠标的拖动事件，侧边栏的大小正在调整
- * @param {Object} event 
- */
-function drag(event) {
-    if (mousedown) {
-        var moveLength = popupPosition === 'left' ? -(originX - event.screenX) : (originX - event.screenX); // 根据侧边栏的位置确定移动距离的增减
-        frame.style.width = moveLength + originWidth + 'px';
-        document.body.style.width = window.innerWidth - originWidth - moveLength + 'px';
-    }
-}
-
-/**
- * 处理释放鼠标按钮后，边框的宽度停止改变的事件
- */
-function dragOff() {
-    if (mousedown) {
-        frame.style.transition = 'width 500ms';
-        document.body.style.transition = 'width 500ms';
-        mousedown = false;
     }
 }
 
@@ -288,6 +277,29 @@ function iframeDragOn(event) {
     }
     else
         frameDocument.documentElement.style.cursor = 'auto';
+}
+
+/**
+ * 处理鼠标的拖动事件，侧边栏的大小正在调整
+ * @param {Object} event 
+ */
+function drag(event) {
+    if (mousedown) {
+        var moveLength = popupPosition === 'left' ? -(originX - event.screenX) : (originX - event.screenX); // 根据侧边栏的位置确定移动距离的增减
+        frame.style.width = moveLength + originWidth + 'px';
+        document.body.style.width = originOriginWidth - originWidth - moveLength + 'px';
+    }
+}
+
+/**
+ * 处理释放鼠标按钮后，边框的宽度停止改变的事件
+ */
+function dragOff() {
+    if (mousedown) {
+        frame.style.transition = 'width ' + transitionDuration + 'ms';
+        document.body.style.transition = 'width ' + transitionDuration + 'ms';
+        mousedown = false;
+    }
 }
 
 /**
