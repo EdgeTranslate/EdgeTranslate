@@ -1,5 +1,5 @@
 import { LANGUAGES } from './languages.js';
-import {translate, showTranslate} from "../translate.js";
+import { translate, showTranslate } from "../translate.js";
 
 /**
  * 初始化设置列表
@@ -131,7 +131,7 @@ function translateSubmit() {
     if (content.replace(/\s*/, '') !== '') { // 判断值是否为
         document.getElementById('hint_message').style.display = 'none';
         translate(content, function (result) {
-            chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
+            chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
                 showTranslate(result, tabs[0], function () {
                     window.close(); // 展示结束后关闭option页面
                 });
@@ -153,11 +153,13 @@ function settingSwitch() {
         setting.style.display = 'block';
         arrowDown.style.display = 'none';
         arrowUp.style.display = 'inline';
+        document.getElementById("tl").focus(); // after show settings block, the language element <select> will be auto focused
     }
     else {
         setting.style.display = 'none';
         arrowDown.style.display = 'inline';
         arrowUp.style.display = 'none';
+        document.getElementById('translate_input').focus();  // after settings block dispear, the translation element <input> will be auto focused
     }
 }
 
