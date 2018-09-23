@@ -7,12 +7,20 @@
         "message": "Translate what you want.",
         "description": "App Description"
     },
+    "ChangeLanguageSetting": {
+        "message": "Change language settings",
+        "description": "Change language setting"
+    },
     "TranslateSelectedText": {
         "message": "Translate selected text",
         "description": "Shortcut for translating selected text."
     },
+    "FixResultFrame": {
+        "message": "Fix the result frame",
+        "description": "Fix the translating result frame."
+    },
     "CloseResultFrame": {
-        "message": "Close result frame",
+        "message": "Close the result frame",
         "description": "Close the translating result frame."
     },
     "CommonMeanings": {

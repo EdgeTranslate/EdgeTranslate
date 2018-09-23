@@ -7,9 +7,17 @@
         "message": "便捷翻译，无忧阅读。",
         "description": "应用简介"
     },
+    "ChangeLanguageSetting": {
+        "message": "修改翻译语言设定",
+        "description": "修改翻译语言设定"
+    },
     "TranslateSelectedText": {
         "message": "翻译选中的文本",
         "description": "使用快捷键翻译选中的文本"
+    },
+    "FixResultFrame": {
+        "message": "固定翻译结果展示栏框",
+        "description": "固定翻译结果展示框"
     },
     "CloseResultFrame": {
         "message": "关闭翻译结果展示框",
