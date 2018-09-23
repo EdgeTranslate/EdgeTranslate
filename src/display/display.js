@@ -31,7 +31,8 @@ if (!fixSwitch) {
 var translateResult; // 保存翻译结果
 var sourceTTSSpeed, targetTTSSpeed;
 var popupPosition; // 保存侧边栏展示的位置
-const dragSensitivity = 15;  // 用来调节拖动侧边栏的灵敏度的参数
+const dragSensitivity = 15;  // 用来调节拖动侧边栏的灵敏度的参数 单位:px
+const transitionDuration = 500; // 侧边栏出现动画的持续事件 单位:ms
 
 /**
  * 负责处理后台发送给页面的消息
@@ -100,7 +101,7 @@ function createBlock(content, template) {
         if (!isChildNode(frame, document.documentElement)) { // frame不在页面中，创建新的frame
             frame = document.createElement('iframe');
             frame.id = 'translate_frame';
-            document.body.style.transition = 'width 500ms';
+            document.body.style.transition = 'width ' + transitionDuration + 'ms';
             originOriginWidth = document.body.clientWidth;
             document.body.style.width = 0.8 * originOriginWidth + 'px';
             if (popupPosition === 'left') { // 用户设置 在页面左侧显示侧边栏
@@ -221,10 +222,12 @@ function removeSlider() {
     if (isChildNode(frame, document.documentElement)) {
         document.documentElement.removeChild(frame);
         document.body.style.width = originOriginWidth + 'px';
-        document.body.style.margin = 'auto';
-        document.body.style.position = 'static';
-        document.body.style.right = '';
-        document.body.style.left = '';
+        setTimeout(function () {
+            document.body.style.marginLeft = 'auto';
+            document.body.style.position = 'static';
+            document.body.style.right = '';
+            document.body.style.left = '';
+        }, transitionDuration);
         document.documentElement.removeEventListener('mousedown', clickListener);
         document.removeEventListener('mousemove', drag);
         document.removeEventListener('mouseup', dragOff);
@@ -293,8 +296,8 @@ function drag(event) {
  */
 function dragOff() {
     if (mousedown) {
-        frame.style.transition = 'width 500ms';
-        document.body.style.transition = 'width 500ms';
+        frame.style.transition = 'width ' + transitionDuration + 'ms';
+        document.body.style.transition = 'width ' + transitionDuration + 'ms';
         mousedown = false;
     }
 }
