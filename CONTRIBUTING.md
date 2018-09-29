@@ -5,8 +5,8 @@
 ## How to get started
 
 - Fork the repository and run `npm install`.
-- Read project structure in [wiki](../../wiki/document)
-- Read [project](../../projects/1)
+- Read project document in [wiki](../../wiki/document)
+- Read [project](../../projects/1), select a target in 'next version todo'
 - Start a pull request to EdgeTranslate
 
 ## develop build
