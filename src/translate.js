@@ -94,20 +94,24 @@ function translate(text, callback) {
             request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
             request.send(postData);
             request.onreadystatechange = function () {
-                if (request.readyState === 4 && request.status === 200) {
-                    callback(parseTranslate(
-                        JSON.parse(request.response),
-                        {
-                            "targetLanguage": languageSetting.tl
-                        }
-                    ));
-                }
-                else if (request.status !== 200) {
-                    sendMessageToCurrentTab({
-                        "type": "info",
-                        "info": "network_error",
-                        "detail": request.status
-                    });
+                if (request.readyState === 4) {
+                    // HTTPS request sucessfully
+                    if (request.status === 200) {
+                        callback(parseTranslate(
+                            JSON.parse(request.response),
+                            {
+                                "targetLanguage": languageSetting.tl
+                            }
+                        ));
+                    }
+                    // HTTPS request fail
+                    else {
+                        sendMessageToCurrentTab({
+                            "type": "info",
+                            "info": "network_error",
+                            "detail": request.status
+                        });
+                    }
                 }
             }
         });
