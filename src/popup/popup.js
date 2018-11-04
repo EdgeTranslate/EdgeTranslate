@@ -146,7 +146,9 @@ function translateSubmit() {
         translate(content, function (result) {
             chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
                 showTranslate(result, tabs[0], function () {
-                    window.close(); // 展示结束后关闭option页面
+                    setTimeout(function () {
+                        window.close(); // 展示结束后关闭option页面
+                    }, 0);
                 });
             });
         });
