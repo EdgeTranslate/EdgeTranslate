@@ -1,13 +1,13 @@
 import render from './engine.js';
 /**
- * load templates and do pretreatments
+ * load templates and process the template in advance
  */
 // load templates
 import result from './templates/result.html'; // template of translate result
 import loading from './templates/loading.html'; // template of loading icon
 import error from './templates/error.html'; // template of error message
 
-// pretreatment
+// process in advance
 var resultTemplate = result.toString().replace(/\n|\s{2,}|\r/g, "");
 var loadingTemplate = loading.toString().replace(/\n|\s{2,}|\r/g, "");
 var errorTemplate = error.toString().replace(/\n|\s{2,}|\r/g, "");
@@ -18,7 +18,7 @@ var errorTemplate = error.toString().replace(/\n|\s{2,}|\r/g, "");
 
 // 用于存储一个iframe元素，这个元素用来在页面的右侧展示翻译结果
 var frame;
-// iframe中的document
+// iframe中的 document
 var frameDocument;
 
 var mousedown = false; // 在鼠标拖动边框时，用于标记鼠标是否已经按下
@@ -48,16 +48,16 @@ chrome.runtime.onMessage.addListener(function (message, sender, callback) {
                 translateResult = message.translateResult;
                 sourceTTSSpeed = "fast";
                 targetTTSSpeed = "fast";
-                createBlock(message.translateResult, resultTemplate);
+                createBlock(message.translateResult, result);
                 break;
             // 发送的是翻译状态信息
             case "info":
                 switch (message.info) {
                     case "start_translating":
-                        createBlock(message, loadingTemplate);
+                        createBlock(message, loading);
                         break;
                     case "network_error":
-                        createBlock(message, errorTemplate);
+                        createBlock(message, error);
                         break;
                     default:
                         break;
