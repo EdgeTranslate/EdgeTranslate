@@ -20,16 +20,14 @@ window.onload = function () {
     // 添加交换按钮对点击事件的监听
     exchangeButton.onclick = exchangeLanguage;
 
-    // 如何源语言是自动判断语言类型(值是auto),则按钮显示灰色，避免用户点击
-    judgeValue(exchangeButton, sourceLanguage);
-
     sourceLanguage.onchange = function () {
-        // 如何源语言是自动判断语言类型(值是auto),则按钮显示灰色，避免用户点击,如果不是，则显示蓝色，可以点击
+        // 如果源语言是自动判断语言类型(值是auto),则按钮显示灰色，避免用户点击,如果不是，则显示蓝色，可以点击
         judgeValue(exchangeButton, sourceLanguage);
         updateLanguageSetting(
             sourceLanguage.options[sourceLanguage.selectedIndex].value,
             targetLanguage.options[targetLanguage.selectedIndex].value
         );
+        showSourceTarget(); // update source language and target language in input placeholder
     };
 
     targetLanguage.onchange = function () {
@@ -37,6 +35,7 @@ window.onload = function () {
             sourceLanguage.options[sourceLanguage.selectedIndex].value,
             targetLanguage.options[targetLanguage.selectedIndex].value
         );
+        showSourceTarget(); // update source language and target language in input placeholder
     };
 
     // 获得用户之前选择的语言翻译选项
@@ -60,8 +59,9 @@ window.onload = function () {
                 targetLanguage.options.add(new Option(name, value));
             }
         });
-    });
 
+        showSourceTarget(); // show source language and target language in input placeholder
+    });
     // 统一添加事件监听
     addEventListener();
 };
@@ -162,6 +162,7 @@ function exchangeLanguage() {
         targetLanguage.value = sourceLanguage.value;
         sourceLanguage.value = tempValue;
         updateLanguageSetting(sourceLanguage.value, targetLanguage.value);
+        showSourceTarget(); // update source language and target language in input placeholder
     }
 }
 
@@ -177,12 +178,13 @@ function settingSwitch() {
         arrowDown.style.display = 'none';
         arrowUp.style.display = 'inline';
         document.getElementById("tl").focus(); // after show settings block, the language element <select> will be auto focused
+        judgeValue(exchangeButton, sourceLanguage);
     }
     else {
         setting.style.display = 'none';
         arrowDown.style.display = 'inline';
         arrowUp.style.display = 'none';
-        document.getElementById('translate_input').focus();  // after settings block dispear, the translation element <input> will be auto focused
+        document.getElementById('translate_input').focus();  // after settings block disappear, the translation element <input> will be auto focused
     }
 }
 
@@ -195,6 +197,17 @@ function translatePreSubmit(event) {
         translateSubmit();
     }
 }
+
+/**
+ * show source language and target language hint in placeholder of input element
+ */
+function showSourceTarget() {
+    var inputElement = document.getElementById('translate_input');
+    var sourceLanguageString = sourceLanguage.options[sourceLanguage.selectedIndex].text;
+    var targetLanguageString = targetLanguage.options[targetLanguage.selectedIndex].text;
+    inputElement.placeholder = sourceLanguageString + ' => ' + targetLanguageString;
+}
+
 /**
  * end block
  */

@@ -1,16 +1,11 @@
 import render from './engine.js';
 /**
- * load templates and process the template in advance
+ * load templates
  */
 // load templates
 import result from './templates/result.html'; // template of translate result
 import loading from './templates/loading.html'; // template of loading icon
 import error from './templates/error.html'; // template of error message
-
-// process in advance
-var resultTemplate = result.toString().replace(/\n|\s{2,}|\r/g, "");
-var loadingTemplate = loading.toString().replace(/\n|\s{2,}|\r/g, "");
-var errorTemplate = error.toString().replace(/\n|\s{2,}|\r/g, "");
 
 /**
  * end load
@@ -225,7 +220,7 @@ function removeSlider() {
     mousedown = false; // 如果侧边栏关闭，直接停止侧边栏宽度的调整
     if (isChildNode(frame, document.documentElement)) {
         document.documentElement.removeChild(frame);
-        document.body.style.width = 100 + '%';
+        document.body.style.width = 100+'%';
         setTimeout(function () {
             document.body.style.marginLeft = 'auto';
             document.body.style.position = 'static';
