@@ -225,7 +225,7 @@ function removeSlider() {
     mousedown = false; // 如果侧边栏关闭，直接停止侧边栏宽度的调整
     if (isChildNode(frame, document.documentElement)) {
         document.documentElement.removeChild(frame);
-        document.body.style.width = originOriginWidth + 'px';
+        document.body.style.width = 100 + '%';
         setTimeout(function () {
             document.body.style.marginLeft = 'auto';
             document.body.style.position = 'static';
