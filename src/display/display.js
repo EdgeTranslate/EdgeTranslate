@@ -102,7 +102,7 @@ function createBlock(content, template) {
             frame.id = 'translate_frame';
             document.body.style.transition = 'width ' + transitionDuration + 'ms';
             originOriginWidth = document.body.clientWidth;
-            document.body.style.width = 0.8 * originOriginWidth + 'px';
+            document.body.style.width = 80 + '%';
             if (popupPosition === 'left') { // 用户设置 在页面左侧显示侧边栏
                 document.body.style.position = 'absolute';
                 document.body.style.marginLeft = 0.2 * originOriginWidth + 'px';
@@ -220,7 +220,7 @@ function removeSlider() {
     mousedown = false; // 如果侧边栏关闭，直接停止侧边栏宽度的调整
     if (isChildNode(frame, document.documentElement)) {
         document.documentElement.removeChild(frame);
-        document.body.style.width = 100+'%';
+        document.body.style.width = 100 + '%';
         setTimeout(function () {
             document.body.style.marginLeft = 'auto';
             document.body.style.position = 'static';
