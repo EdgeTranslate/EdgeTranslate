@@ -64,8 +64,8 @@
         "description": "單詞的用法示例"
     },
     "PhoneticSymbol": {
-        "message": "單詞音標",
-        "description": "單詞音標"
+        "message": "音標",
+        "description": "音標"
     },
     "PronounceOriginal": {
         "message": "朗讀原始文本",
