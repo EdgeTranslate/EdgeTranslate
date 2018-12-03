@@ -6,6 +6,7 @@ const through = require("through2");
 const webpack = require("webpack");
 const webpack_stream = require("webpack-stream");
 const zip = require("gulp-zip");
+const uglify = require("gulp-uglify");
 
 /**
  * 清除之前打包好的chrome的缓存
@@ -154,7 +155,10 @@ function build(browser, env) {
 
     var static = function () {
         if (browser === "chrome") {
-            gulp.src("./static/**/*", { base: "static" })
+            gulp.src("./static/**/*.js", { base: "static" })
+                .pipe(uglify())
+                .pipe(gulp.dest(output_dir));
+            gulp.src("./static/**/!(*.js)", { base: "static" })
                 .pipe(gulp.dest(output_dir));
         } else {
             gulp.src("./static/!(pdf)/**/*", { base: "static" })
