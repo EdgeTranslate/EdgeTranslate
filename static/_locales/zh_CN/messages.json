@@ -23,6 +23,10 @@
         "message": "关闭翻译结果展示框",
         "description": "关闭翻译结果展示框"
     },
+    "ExchangeSourceAndTargetLanguage": {
+        "message": "交换源语言和目标语言",
+        "description": "交换源语言和目标语言"
+    },
     "CommonMeanings": {
         "message": "常见意思",
         "description": "单词的常见意思"

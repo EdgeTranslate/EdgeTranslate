@@ -1,6 +1,12 @@
 import { LANGUAGES } from './languages.js';
 import { translate, showTranslate } from "../translate.js";
 
+// 获取下拉列表元素
+var sourceLanguage = document.getElementById("sl");
+var targetLanguage = document.getElementById("tl");
+// 获取交换按钮
+var exchangeButton = document.getElementById("exchange");
+
 /**
  * 初始化设置列表
  */
@@ -11,25 +17,30 @@ window.onload = function () {
         i18nElemwnts[i].insertAdjacentText("beforeEnd", chrome.i18n.getMessage(i18nElemwnts[i].getAttribute("data-i18n-name")));
     }
 
+    // 添加交换按钮对点击事件的监听
+    exchangeButton.onclick = exchangeLanguage;
+
+    sourceLanguage.onchange = function () {
+        // 如果源语言是自动判断语言类型(值是auto),则按钮显示灰色，避免用户点击,如果不是，则显示蓝色，可以点击
+        judgeValue(exchangeButton, sourceLanguage);
+        updateLanguageSetting(
+            sourceLanguage.options[sourceLanguage.selectedIndex].value,
+            targetLanguage.options[targetLanguage.selectedIndex].value
+        );
+        showSourceTarget(); // update source language and target language in input placeholder
+    };
+
+    targetLanguage.onchange = function () {
+        updateLanguageSetting(
+            sourceLanguage.options[sourceLanguage.selectedIndex].value,
+            targetLanguage.options[targetLanguage.selectedIndex].value
+        );
+        showSourceTarget(); // update source language and target language in input placeholder
+    };
+
     // 获得用户之前选择的语言翻译选项
     chrome.storage.sync.get("languageSetting", function (result) {
         var languageSetting = result.languageSetting;
-
-        // 获取下拉列表元素
-        var sourceLanguage = document.getElementById("sl");
-        var targetLanguage = document.getElementById("tl");
-        // 获取交换按钮
-        var exchangeButton = document.getElementById("exchange");
-
-        // 添加交换按钮对点击事件的监听
-        exchangeButton.onclick = function () {
-            if (sourceLanguage.value !== 'auto') {
-                let tempValue = targetLanguage.value;
-                targetLanguage.value = sourceLanguage.value;
-                sourceLanguage.value = tempValue;
-                updateLanguageSetting(sourceLanguage.value, targetLanguage.value);
-            }
-        }
 
         // languages是可选的源语言和目标语言的列表
         LANGUAGES.forEach(element => {
@@ -49,40 +60,8 @@ window.onload = function () {
             }
         });
 
-        // 如何源语言是自动判断语言类型(值是auto),则按钮显示灰色，避免用户点击
-        judgeValue(exchangeButton, sourceLanguage);
-
-        sourceLanguage.onchange = function () {
-            // 如何源语言是自动判断语言类型(值是auto),则按钮显示灰色，避免用户点击,如果不是，则显示蓝色，可以点击
-            judgeValue(exchangeButton, sourceLanguage);
-            updateLanguageSetting(
-                sourceLanguage.options[sourceLanguage.selectedIndex].value,
-                targetLanguage.options[targetLanguage.selectedIndex].value
-            );
-        };
-
-        targetLanguage.onchange = function () {
-            updateLanguageSetting(
-                sourceLanguage.options[sourceLanguage.selectedIndex].value,
-                targetLanguage.options[targetLanguage.selectedIndex].value
-            );
-        };
+        showSourceTarget(); // show source language and target language in input placeholder
     });
-
-    /**
-     * 
-     * 如果源语言是自动判断语言类型(值是auto),则按钮显示灰色，避免用户点击
-     * 
-     * @param {*HTMLElement} exchangeButton 特定的一个element,是一个交换按钮图
-     * @param {*HTMLElement} sourceLanguage 特定的一个element,源语言的选项
-     */
-    var judgeValue = function (exchangeButton, sourceLanguage) {
-        if (sourceLanguage.value === 'auto')
-            exchangeButton.style.color = 'gray';
-        else
-            exchangeButton.style.color = '#4a8cf7';
-    }
-
     // 统一添加事件监听
     addEventListener();
 };
@@ -94,6 +73,9 @@ chrome.commands.onCommand.addListener(function (command) {
     switch (command) {
         case "change_language_setting":
             settingSwitch();
+            break;
+        case "exchange_source_target_lang":
+            exchangeLanguage();
             break;
         default:
             break;
@@ -146,13 +128,42 @@ function translateSubmit() {
         translate(content, function (result) {
             chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
                 showTranslate(result, tabs[0], function () {
-                    window.close(); // 展示结束后关闭option页面
+                    setTimeout(function () {
+                        window.close(); // 展示结束后关闭option页面
+                    }, 0);
                 });
             });
         });
     }
     else  // 提示输入的内容是
         document.getElementById('hint_message').style.display = 'inline';
+}
+
+/**
+ * 
+ * 如果源语言是自动判断语言类型(值是auto),则按钮显示灰色，避免用户点击
+ * 
+ * @param {*HTMLElement} exchangeButton 特定的一个element,是一个交换按钮图
+ * @param {*HTMLElement} sourceLanguage 特定的一个element,源语言的选项
+ */
+var judgeValue = function (exchangeButton, sourceLanguage) {
+    if (sourceLanguage.value === 'auto')
+        exchangeButton.style.color = 'gray';
+    else
+        exchangeButton.style.color = '#4a8cf7';
+}
+
+/**
+ * 交换源语言和目标语言
+ */
+function exchangeLanguage() {
+    if (sourceLanguage.value !== 'auto') {
+        let tempValue = targetLanguage.value;
+        targetLanguage.value = sourceLanguage.value;
+        sourceLanguage.value = tempValue;
+        updateLanguageSetting(sourceLanguage.value, targetLanguage.value);
+        showSourceTarget(); // update source language and target language in input placeholder
+    }
 }
 
 /**
@@ -167,12 +178,13 @@ function settingSwitch() {
         arrowDown.style.display = 'none';
         arrowUp.style.display = 'inline';
         document.getElementById("tl").focus(); // after show settings block, the language element <select> will be auto focused
+        judgeValue(exchangeButton, sourceLanguage);
     }
     else {
         setting.style.display = 'none';
         arrowDown.style.display = 'inline';
         arrowUp.style.display = 'none';
-        document.getElementById('translate_input').focus();  // after settings block dispear, the translation element <input> will be auto focused
+        document.getElementById('translate_input').focus();  // after settings block disappear, the translation element <input> will be auto focused
     }
 }
 
@@ -185,6 +197,17 @@ function translatePreSubmit(event) {
         translateSubmit();
     }
 }
+
+/**
+ * show source language and target language hint in placeholder of input element
+ */
+function showSourceTarget() {
+    var inputElement = document.getElementById('translate_input');
+    var sourceLanguageString = sourceLanguage.options[sourceLanguage.selectedIndex].text;
+    var targetLanguageString = targetLanguage.options[targetLanguage.selectedIndex].text;
+    inputElement.placeholder = sourceLanguageString + ' => ' + targetLanguageString;
+}
+
 /**
  * end block
  */

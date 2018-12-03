@@ -7,6 +7,8 @@ export default render;
  * @returns 渲染完成的HTML文本。
  */
 function render(template, contents) {
+    // process the template in advance
+    template = template.toString().replace(/\n|\s{2,}|\r/g, "");
     // 匹配模板中的待填充部分
     const CONTENT_REGEX = /<%\s*(.*?)\s*%>/g;
 

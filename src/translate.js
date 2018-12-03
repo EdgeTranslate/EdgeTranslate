@@ -94,20 +94,24 @@ function translate(text, callback) {
             request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
             request.send(postData);
             request.onreadystatechange = function () {
-                if (request.readyState === 4 && request.status === 200) {
-                    callback(parseTranslate(
-                        JSON.parse(request.response),
-                        {
-                            "targetLanguage": languageSetting.tl
-                        }
-                    ));
-                }
-                else if (request.status !== 200) {
-                    sendMessageToCurrentTab({
-                        "type": "info",
-                        "info": "network_error",
-                        "detail": request.status
-                    });
+                if (request.readyState === 4) {
+                    // HTTPS request sucessfully
+                    if (request.status === 200) {
+                        callback(parseTranslate(
+                            JSON.parse(request.response),
+                            {
+                                "targetLanguage": languageSetting.tl
+                            }
+                        ));
+                    }
+                    // HTTPS request fail
+                    else {
+                        sendMessageToCurrentTab({
+                            "type": "info",
+                            "info": "network_error",
+                            "detail": request.status
+                        });
+                    }
                 }
             }
         });
@@ -284,9 +288,21 @@ function showTranslate(content, tab, callback) {
 
             if (isChrome()) { // 判断浏览器的类型 chrome的情况
                 chrome.tabs.sendMessage(tab_id, { "type": "translateResult", "translateResult": content }, function () {
-                    if (chrome.runtime.lastError) { // the url is extension:// page, can't send message
-                        console.log("Chrome runtime error: " + chrome.runtime.lastError.message);
-                        alert(content.mainMeaning);
+                    if (chrome.runtime.lastError) { // the url is extension:// page, can't send message or using the popup page to translate
+                        chrome.extension.isAllowedFileSchemeAccess(function (isAllowedAccess) {
+                            if (isAllowedAccess) { // 查询当前的tab，在该tab上展示结果。
+                                // maybe the user have just set the permission but don't refresh the page
+                                alert(content.mainMeaning);
+                            } else { // 打开管理页面，由用户开启权限
+                                if (confirm(chrome.i18n.getMessage("PermissionRemind"))) { // 为管理页面创建一个新的标签
+                                    chrome.tabs.create({ url: 'chrome://extensions/?id=' + chrome.runtime.id });
+                                } else { // 用户拒绝开启，则直接展示翻译结果
+                                    console.log("Permission denied.");
+                                    alert(content.mainMeaning);
+                                    callback();
+                                }
+                            }
+                        });
                     }
                 });
                 // 当翻译结果展示完后，执行此回调函数

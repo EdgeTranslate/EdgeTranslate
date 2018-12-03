@@ -23,6 +23,10 @@
         "message": "Close the result frame",
         "description": "Close the translating result frame."
     },
+    "ExchangeSourceAndTargetLanguage": {
+        "message": "Exchange source and target language",
+        "description": "Exchange source and target language."
+    },
     "CommonMeanings": {
         "message": "Common Meanings",
         "description": "Common Meanings"
