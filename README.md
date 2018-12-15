@@ -1,10 +1,10 @@
 # Edge Translate
 
-[![Version](https://img.shields.io/github/release/nickyc975/EdgeTranslate.svg?label=version)](https://github.com/nickyc975/EdgeTranslate/releases)
-[![Build Status](https://travis-ci.org/nickyc975/EdgeTranslate.svg?branch=master)](https://travis-ci.org/nickyc975/EdgeTranslate)
-[![codebeat badge](https://codebeat.co/badges/7f28bc52-26ec-4dbc-815d-343220100c72)](https://codebeat.co/projects/github-com-nickyc975-edgetranslate-master)
-[![License](https://img.shields.io/github/license/nickyc975/EdgeTranslate.svg?colorB=44cc11?maxAge=2592000)](https://github.com/nickyc975/EdgeTranslate/blob/master/LICENSE)
-[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fnickyc975%2FEdgeTranslate.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fnickyc975%2FEdgeTranslate?ref=badge_shield)
+[![Version](https://img.shields.io/github/release/EdgeTranslate/EdgeTranslate.svg?label=version)](https://github.com/EdgeTranslate/EdgeTranslate/releases)
+[![Build Status](https://travis-ci.org/EdgeTranslate/EdgeTranslate.svg?branch=master)](https://travis-ci.org/EdgeTranslate/EdgeTranslate)
+[![codebeat badge](https://codebeat.co/badges/901b9567-d213-48cc-a4f3-200339c59705)](https://codebeat.co/projects/github-com-edgetranslate-edgetranslate-master)
+[![License](https://img.shields.io/github/license/EdgeTranslate/EdgeTranslate.svg?colorB=44cc11?maxAge=2592000)](https://github.com/EdgeTranslate/EdgeTranslate/blob/master/LICENSE)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FEdgeTranslate%2FEdgeTranslate.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FEdgeTranslate%2FEdgeTranslate?ref=badge_shield)
 
 [![Chrome users](https://img.shields.io/chrome-web-store/users/bocbaocobfecmglnmeaeppambideimao.svg?label=Chrome%20users)](https://chrome.google.com/webstore/detail/bocbaocobfecmglnmeaeppambideimao)
 [![Chrome stars](https://img.shields.io/chrome-web-store/stars/bocbaocobfecmglnmeaeppambideimao.svg?label=Chrome%20stars)](https://chrome.google.com/webstore/detail/bocbaocobfecmglnmeaeppambideimao)
@@ -21,7 +21,7 @@ View this page in other languages:
 
 [Chrome Web Store](https://chrome.google.com/webstore/detail/bocbaocobfecmglnmeaeppambideimao)
 / [Firefox Add-ons](https://addons.mozilla.org/firefox/addon/edge_translate/)
-/ [GitHub Release](https://github.com/nickyc975/EdgeTranslate/releases)
+/ [GitHub Release](https://github.com/EdgeTranslate/EdgeTranslate/releases)
 
 ## Build It By Yourself
 
@@ -29,7 +29,7 @@ To build the extension, you need to have [Node.js](https://nodejs.org/) installe
 
 Clone the repository:
 
-    git clone https://github.com/nickyc975/EdgeTranslate.git
+    git clone https://github.com/EdgeTranslate/EdgeTranslate.git
 
 Install dependencies:
 
@@ -43,37 +43,37 @@ Build Firefox version:
 
     npm run build:firefox
 
-After building finished, you will get the unpacked extension under    ./build/chrome/    and    ./build/firefox/    .
+After building finished, you will get the unpacked extension under `./build/chrome/` and `./build/firefox/`.
 
 ## Load Unpacked Extension In Your Browser
 
 ### Chrome
 
-* Navigate to:    chrome://extensions    .
+* Navigate to: `chrome://extensions`.
 
-* Enable "Developer mode". It should be in the upper right corner of the page.
+* Enable `Developer mode`. It should be in the upper right corner of the page.
 
-* Click "Load unpacked" in the upper left corner.
+* Click `Load unpacked` in the upper left corner.
 
-* Navigate to the repository you just cloned, select build/chrome.
+* Navigate to the repository you just cloned, select `build/chrome`.
 
 * Now you can try this extension in Chrome.
 
 ### Firefox
 
-* Navigate to:    about:debugging    .
+* Navigate to: `about:debugging`.
 
-* Check the "Enable add-on debugging" box if it's not checked.
+* Check the `Enable add-on debugging` box if it's not checked.
 
-* Click "Load Temporary Add-on".
+* Click `Load Temporary Add-on`.
 
-* Navigate to the repository you just cloned, open build/firefox, select any file in this directory.
+* Navigate to the repository you just cloned, open `build/firefox`, select any file in this directory.
 
 * Now you can try this extension in Firefox.
 
 ## More Information
 
-[Wiki](https://github.com/nickyc975/EdgeTranslate/wiki)
+[Wiki](https://github.com/EdgeTranslate/EdgeTranslate/wiki)
 
 ## Contact Us
 
