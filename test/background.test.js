@@ -45,17 +45,23 @@ describe("background.js", function () {
         chrome.storage.sync.get("DTSetting", function (result) {
             assert.equals(result.DTSetting, undefined);
         });
+        chrome.storage.sync.get("LayoutSettings", function (result) {
+            assert.equals(result.LayoutSettings, undefined);
+        });
         chrome.storage.sync.get("OtherSettings", function (result) {
             assert.equals(result.OtherSettings, undefined);
         });
 
-        chrome.runtime.onInstalled.trigger();
+        chrome.runtime.onInstalled.trigger({"reason": "install"});
 
         chrome.storage.sync.get("languageSetting", function (result) {
             assert.equals(result.languageSetting, { "sl": "auto", "tl": "zh-CN" });
         });
         chrome.storage.sync.get("DTSetting", function (result) {
             assert.equals(result.DTSetting, ["t", "at", "bd", "ex", "md", "rw", "ss", "rm"]);
+        });
+        chrome.storage.sync.get("LayoutSettings", function (result) {
+            assert.equals(result.LayoutSettings, { "PopupPosition": "right" });
         });
         chrome.storage.sync.get("OtherSettings", function (result) {
             assert.equals(result.OtherSettings, { "SelectTranslate": true, "UsePDFjs": true });
