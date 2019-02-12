@@ -4,3 +4,4 @@
 *.zip
 *.crx
 *.pem
+package-lock.json
