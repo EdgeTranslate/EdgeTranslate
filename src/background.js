@@ -58,12 +58,12 @@ chrome.runtime.onInstalled.addListener(function (details) {
         // 首次安装，展示wiki页面
         if (details.reason === "install") {
             chrome.tabs.create({ // 为wiki页面创建一个新的标签
-                url: 'https://github.com/nickyc975/EdgeTranslate/wiki',
+                url: 'https://github.com/EdgeTranslate/EdgeTranslate/wiki/Manual',
             });
             // 从旧版本更新，展示更新日志
         } else if (details.reason === "update") {
             chrome.tabs.create({ // 为releases页面创建一个新的标签
-                url: 'https://github.com/nickyc975/EdgeTranslate/releases',
+                url: 'https://github.com/EdgeTranslate/EdgeTranslate/releases',
             });
         }
     }
