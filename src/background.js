@@ -135,7 +135,7 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
 function updateBLackListMenu(url) {
     chrome.storage.sync.get("blacklist", function (result) {
         if (result.blacklist) {
-            if (contains(result.blacklist.domins, getDomin(url))) {
+            if (contains(result.blacklist.domains, getdomain(url))) {
                 chrome.contextMenus.remove("add_url_blacklist", function() {
                     if (chrome.runtime.lastError) {
 
@@ -146,19 +146,19 @@ function updateBLackListMenu(url) {
                         
                     }
                 });
-                chrome.contextMenus.remove("add_domin_blacklist", function() {
+                chrome.contextMenus.remove("add_domain_blacklist", function() {
                     if (chrome.runtime.lastError) {
                         
                     }
                 });
-                chrome.contextMenus.remove("remove_domin_blacklist", function() {
+                chrome.contextMenus.remove("remove_domain_blacklist", function() {
                     if (chrome.runtime.lastError) {
                         
                     }
                 });
                 chrome.contextMenus.create({
-                    "id": "remove_domin_blacklist",
-                    "title": "remove_domin_blacklist",
+                    "id": "remove_domain_blacklist",
+                    "title": "remove_domain_blacklist",
                     "contexts": ["browser_action"]
                 }, function() {
                     if (chrome.runtime.lastError) {
@@ -176,12 +176,12 @@ function updateBLackListMenu(url) {
                         
                     }
                 });
-                chrome.contextMenus.remove("add_domin_blacklist", function() {
+                chrome.contextMenus.remove("add_domain_blacklist", function() {
                     if (chrome.runtime.lastError) {
                         
                     }
                 });
-                chrome.contextMenus.remove("remove_domin_blacklist", function() {
+                chrome.contextMenus.remove("remove_domain_blacklist", function() {
                     if (chrome.runtime.lastError) {
                         
                     }
@@ -206,12 +206,12 @@ function updateBLackListMenu(url) {
                         
                     }
                 });
-                chrome.contextMenus.remove("add_domin_blacklist", function() {
+                chrome.contextMenus.remove("add_domain_blacklist", function() {
                     if (chrome.runtime.lastError) {
                         
                     }
                 });
-                chrome.contextMenus.remove("remove_domin_blacklist", function() {
+                chrome.contextMenus.remove("remove_domain_blacklist", function() {
                     if (chrome.runtime.lastError) {
                         
                     }
@@ -226,8 +226,8 @@ function updateBLackListMenu(url) {
                     }
                 });
                 chrome.contextMenus.create({
-                    "id": "add_domin_blacklist",
-                    "title": "add_domin_blacklist",
+                    "id": "add_domain_blacklist",
+                    "title": "add_domain_blacklist",
                     "contexts": ["browser_action"]
                 }, function() {
                     if (chrome.runtime.lastError) {
@@ -239,14 +239,14 @@ function updateBLackListMenu(url) {
             chrome.storage.sync.set({
                 "blacklist": {
                     "urls": [], 
-                    "domins": []
+                    "domains": []
                 }
             });
         }
     });
 }
 
-function getDomin(url) {
+function getdomain(url) {
     return url;
 }
 
