@@ -115,6 +115,151 @@ chrome.contextMenus.onClicked.addListener(function (info, tab) {
     }
 });
 
+
+chrome.tabs.onActivated.addListener(function (activeInfo) {
+    chrome.tabs.get(activeInfo.tabId, function (tab) {
+        if (tab.url && tab.url.length > 0) {
+            updateBLackListMenu(tab.url);
+        }
+    });
+});
+
+
+chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
+    if (tab.active && tab.url && tab.url.length > 0) {
+        updateBLackListMenu(tab.url);
+    }
+});
+
+
+function updateBLackListMenu(url) {
+    chrome.storage.sync.get("blacklist", function (result) {
+        if (result.blacklist) {
+            if (contains(result.blacklist.domins, getDomin(url))) {
+                chrome.contextMenus.remove("add_url_blacklist", function() {
+                    if (chrome.runtime.lastError) {
+
+                    }
+                });
+                chrome.contextMenus.remove("remove_url_blacklist", function() {
+                    if (chrome.runtime.lastError) {
+                        
+                    }
+                });
+                chrome.contextMenus.remove("add_domin_blacklist", function() {
+                    if (chrome.runtime.lastError) {
+                        
+                    }
+                });
+                chrome.contextMenus.remove("remove_domin_blacklist", function() {
+                    if (chrome.runtime.lastError) {
+                        
+                    }
+                });
+                chrome.contextMenus.create({
+                    "id": "remove_domin_blacklist",
+                    "title": "remove_domin_blacklist",
+                    "contexts": ["browser_action"]
+                }, function() {
+                    if (chrome.runtime.lastError) {
+                        
+                    }
+                });
+            } else if (contains(result.blacklist.urls, url)) {
+                chrome.contextMenus.remove("add_url_blacklist", function() {
+                    if (chrome.runtime.lastError) {
+                        
+                    }
+                });
+                chrome.contextMenus.remove("remove_url_blacklist", function() {
+                    if (chrome.runtime.lastError) {
+                        
+                    }
+                });
+                chrome.contextMenus.remove("add_domin_blacklist", function() {
+                    if (chrome.runtime.lastError) {
+                        
+                    }
+                });
+                chrome.contextMenus.remove("remove_domin_blacklist", function() {
+                    if (chrome.runtime.lastError) {
+                        
+                    }
+                });
+                chrome.contextMenus.create({
+                    "id": "remove_url_blacklist",
+                    "title": "remove_url_blacklist",
+                    "contexts": ["browser_action"]
+                }, function() {
+                    if (chrome.runtime.lastError) {
+                        
+                    }
+                });
+            } else {
+                chrome.contextMenus.remove("add_url_blacklist", function() {
+                    if (chrome.runtime.lastError) {
+                        
+                    }
+                });
+                chrome.contextMenus.remove("remove_url_blacklist", function() {
+                    if (chrome.runtime.lastError) {
+                        
+                    }
+                });
+                chrome.contextMenus.remove("add_domin_blacklist", function() {
+                    if (chrome.runtime.lastError) {
+                        
+                    }
+                });
+                chrome.contextMenus.remove("remove_domin_blacklist", function() {
+                    if (chrome.runtime.lastError) {
+                        
+                    }
+                });
+                chrome.contextMenus.create({
+                    "id": "add_url_blacklist",
+                    "title": "add_url_blacklist",
+                    "contexts": ["browser_action"]
+                }, function() {
+                    if (chrome.runtime.lastError) {
+                        
+                    }
+                });
+                chrome.contextMenus.create({
+                    "id": "add_domin_blacklist",
+                    "title": "add_domin_blacklist",
+                    "contexts": ["browser_action"]
+                }, function() {
+                    if (chrome.runtime.lastError) {
+                        
+                    }
+                });
+            }
+        } else {
+            chrome.storage.sync.set({
+                "blacklist": {
+                    "urls": [], 
+                    "domins": []
+                }
+            });
+        }
+    });
+}
+
+function getDomin(url) {
+    return url;
+}
+
+function contains(array, item) {
+    for (var i = 0; i < array.length; i++) {
+        if (array[i] === item) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 /*
  * 处理content scripts发送的消息。
  */
