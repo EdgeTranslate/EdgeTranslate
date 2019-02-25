@@ -58,7 +58,7 @@ chrome.runtime.onInstalled.addListener(function (details) {
         // 首次安装，展示wiki页面
         if (details.reason === "install") {
             chrome.tabs.create({ // 为wiki页面创建一个新的标签
-                url: 'https://github.com/EdgeTranslate/EdgeTranslate/wiki/Manual',
+                url: 'https://github.com/EdgeTranslate/EdgeTranslate/wiki',
             });
             // 从旧版本更新，展示更新日志
         } else if (details.reason === "update") {
@@ -67,6 +67,9 @@ chrome.runtime.onInstalled.addListener(function (details) {
             });
         }
     }
+
+    // 卸载原因调查
+    chrome.runtime.setUninstallURL("https://wj.qq.com/s2/3265930/8f07/");
 });
 
 /**
