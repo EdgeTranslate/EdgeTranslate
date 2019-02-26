@@ -12,7 +12,7 @@ export {
  * 将当前页面的url添加到黑名单
  */
 function addUrlBlacklist() {
-    addBlacklist("urls", function() {
+    addBlacklist("urls", function(url) {
         disableItems([
             "add_url_blacklist",
             "add_domain_blacklist",
@@ -28,7 +28,7 @@ function addUrlBlacklist() {
  * 将当前页面的url移出黑名单
  */
 function removeUrlBlacklist() {
-    removeBlacklist("urls", function() {
+    removeBlacklist("urls", function(url) {
         disableItems(["remove_url_blacklist", "remove_domain_blacklist"]);
 
         enableItems(["add_url_blacklist", "add_domain_blacklist"]);
@@ -40,7 +40,7 @@ function removeUrlBlacklist() {
  * 将当前页面的域名添加到黑名单
  */
 function addDomainBlacklist() {
-    addBlacklist("domains", function() {
+    addBlacklist("domains", function(url) {
         disableItems([
             "add_url_blacklist",
             "add_domain_blacklist",
@@ -56,10 +56,12 @@ function addDomainBlacklist() {
  * 将当前页面的域名移出黑名单
  */
 function removeDomainBlacklist() {
-    removeBlacklist("domains", function() {
+    removeBlacklist("domains", function(url) {
         disableItems(["remove_url_blacklist", "remove_domain_blacklist"]);
 
         enableItems(["add_url_blacklist", "add_domain_blacklist"]);
+
+        updateBLackListMenu(url);
     });
     chrome.browserAction.setIcon({ path: "./icon/icon16.png" }); // change the icon when remove domain from blacklist
 }
@@ -78,7 +80,7 @@ function addBlacklist(field, callback) {
                     field === "urls" ? tabs[0].url : getDomain(tabs[0].url);
                 blacklist.blacklist[field].push(value);
                 chrome.storage.sync.set(blacklist, function() {
-                    callback();
+                    callback(tabs[0].url);
                 });
             });
         }
@@ -105,7 +107,7 @@ function removeBlacklist(field, callback) {
                 });
                 blacklist.blacklist[field] = values;
                 chrome.storage.sync.set(blacklist, function() {
-                    callback();
+                    callback(tabs[0].url);
                 });
             });
         }
@@ -179,9 +181,11 @@ function enableItems(items) {
                 visible: true
             },
             function() {
-                console.log(
-                    "Chrome runtime error: " + chrome.runtime.lastError
-                );
+                if (chrome.runtime.lastError) {
+                    console.log(
+                        "Chrome runtime error: " + chrome.runtime.lastError
+                    );
+                }
             }
         );
     });
@@ -201,9 +205,11 @@ function disableItems(items) {
                 visible: false
             },
             function() {
-                console.log(
-                    "Chrome runtime error: " + chrome.runtime.lastError
-                );
+                if (chrome.runtime.lastError) {
+                    console.log(
+                        "Chrome runtime error: " + chrome.runtime.lastError
+                    );
+                }
             }
         );
     });
