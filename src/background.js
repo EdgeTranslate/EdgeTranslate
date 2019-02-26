@@ -1,5 +1,5 @@
-import { translate, showTranslate, sendMessageToCurrentTab, pronounce } from "./translate.js"
-import { addUrlBlacklist, addDomainBlacklist, removeUrlBlacklist, removeDomainBlacklist, updateBLackListMenu } from "./blacklist.js"
+import { translate, showTranslate, sendMessageToCurrentTab, pronounce } from "./lib/translate.js"
+import { addUrlBlacklist, addDomainBlacklist, removeUrlBlacklist, removeDomainBlacklist, updateBLackListMenu } from "./lib/blacklist.js"
 
 /**
  * 默认的源语言和目标语言。
@@ -86,6 +86,18 @@ chrome.runtime.onInstalled.addListener(function (details) {
             chrome.storage.sync.set({ "OtherSettings": DEFAULT_OTHER_SETTINGS });
         }
     });
+
+    chrome.storage.sync.get("blacklist", function (result) {
+        if (result.blacklist) {
+            chrome.storage.sync.set({
+                "blacklist": {
+                    "urls": [],
+                    "domains": []
+                }
+            });
+        }
+    });
+
     // 只有在生产环境下，才会展示说明页面
     if (process.env.NODE_ENV === "production") {
         // 首次安装，展示wiki页面

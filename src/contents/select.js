@@ -1,3 +1,5 @@
+import { getDomain, contains } from "../lib/common.js"
+
 /**
  * 划词翻译功能的实现
  * 需要对页面的相关事件进行监听，根据用户设定来决定是否进行监听。
@@ -49,42 +51,46 @@ translateButton.addEventListener('mousedown', translateSubmit);
  * Handle double click event
  */
 function dblClickHandler() {
-    var selection = window.getSelection();
-    if (selection.toString().trim()) { // 检查页面中是否有内容被选中
-        chrome.storage.sync.get("OtherSettings", function (result) {
-            var OtherSettings = result.OtherSettings;
-            // Show translating result instantly. 
-            if (OtherSettings && !OtherSettings["TranslateAfterSelect"] && OtherSettings["TranslateAfterDblClick"]) {
-                disable = false;
-                translateSubmit();
-            }
-        });
-    } else {
-        translateButton.style.display = 'none'; // 使翻译按钮隐藏
-    }
+    executeIfNotInBlacklist(function () {
+        var selection = window.getSelection();
+        if (selection.toString().trim()) { // 检查页面中是否有内容被选中
+            chrome.storage.sync.get("OtherSettings", function (result) {
+                var OtherSettings = result.OtherSettings;
+                // Show translating result instantly. 
+                if (OtherSettings && !OtherSettings["TranslateAfterSelect"] && OtherSettings["TranslateAfterDblClick"]) {
+                    disable = false;
+                    translateSubmit();
+                }
+            });
+        } else {
+            translateButton.style.display = 'none'; // 使翻译按钮隐藏
+        }
+    });
 }
 
 /**
  * Handle mouse up event.
  */
 function mouseUpHandler(event) {
-    var selection = window.getSelection();
-    if (selection.toString().trim()) { // 检查页面中是否有内容被选中
-        chrome.storage.sync.get("OtherSettings", function (result) {
-            var OtherSettings = result.OtherSettings;
-            // Show translating result instantly. 
-            if (OtherSettings && OtherSettings["TranslateAfterSelect"]) {
-                translateSubmit();
-                // Show translate button.
-            } else if (disable) {
-                setTimeout(function () {
-                    showButton(event);
-                }, 0);
-            }
-        });
-    } else {
-        translateButton.style.display = 'none'; // 使翻译按钮隐藏
-    }
+    executeIfNotInBlacklist(function () {
+        var selection = window.getSelection();
+        if (selection.toString().trim()) { // 检查页面中是否有内容被选中
+            chrome.storage.sync.get("OtherSettings", function (result) {
+                var OtherSettings = result.OtherSettings;
+                // Show translating result instantly. 
+                if (OtherSettings && OtherSettings["TranslateAfterSelect"]) {
+                    translateSubmit();
+                    // Show translate button.
+                } else if (disable) {
+                    setTimeout(function () {
+                        showButton(event);
+                    }, 0);
+                }
+            });
+        } else {
+            translateButton.style.display = 'none'; // 使翻译按钮隐藏
+        }
+    });
 }
 
 /**
@@ -134,6 +140,22 @@ function dispearButton() {
             disable = true; // 回复按钮显示
         }
     }, 400);
+}
+
+/**
+ * 如果当前页面不在黑名单中则执行给定的回调函数。
+ * 
+ * @param {Function} callback 回调
+ */
+function executeIfNotInBlacklist (callback) {
+    chrome.storage.sync.get("blacklist", function (result) {
+        var url = window.location.href;
+        var blacklist = result.blacklist;
+        if (!blacklist ||
+                (!contains(blacklist.domains, getDomain(url)) && !contains(blacklist.urls, url))) {
+            callback();
+        }
+    });
 }
 
 /**

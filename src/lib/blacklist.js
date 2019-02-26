@@ -1,4 +1,12 @@
-export { addUrlBlacklist, addDomainBlacklist, removeUrlBlacklist, removeDomainBlacklist, updateBLackListMenu }
+import { getDomain, contains } from "./common.js"
+
+export { 
+    addUrlBlacklist, 
+    addDomainBlacklist, 
+    removeUrlBlacklist, 
+    removeDomainBlacklist, 
+    updateBLackListMenu
+}
 
 /**
  * 将当前页面的url添加到黑名单
@@ -175,7 +183,7 @@ function enableItems(items) {
             "enabled": true,
             "visible": true
         }, function () {
-            console.log(chrome.runtime.lastError);
+            console.log("Chrome runtime error: " + chrome.runtime.lastError);
         });
     });
 }
@@ -191,33 +199,7 @@ function disableItems(items) {
             "enabled": false,
             "visible": false
         }, function () {
-            console.log(chrome.runtime.lastError);
+            console.log("Chrome runtime error: " + chrome.runtime.lastError);
         });
     });
-}
-
-/**
- * 提取给定的url的域名
- * 
- * @param {String} url 
- */
-function getDomain(url) {
-    var URL_PATTERN = /.+:\/\/([\w\.\-]+).*/;
-    var groups = url.match(URL_PATTERN);
-    return groups[1];
-}
-
-/**
- * 判断一个数组是否包含给定的元素
- * 
- * @param {Array} array 
- * @param {any} item 
- */
-function contains(array, item) {
-    for (var i = 0; i < array.length; i++) {
-        if (array[i] === item) {
-            return true;
-        }
-    }
-    return false;
 }
