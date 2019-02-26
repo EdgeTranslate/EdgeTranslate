@@ -1,4 +1,5 @@
 import { translate, showTranslate, sendMessageToCurrentTab, pronounce } from "./translate.js"
+import { addUrlBlacklist, addDomainBlacklist, removeUrlBlacklist, removeDomainBlacklist, updateBLackListMenu } from "./blacklist.js"
 
 /**
  * 默认的源语言和目标语言。
@@ -28,6 +29,38 @@ chrome.runtime.onInstalled.addListener(function (details) {
         "id": "shortcut",
         "title": chrome.i18n.getMessage("ShortcutSetting"),
         "contexts": ["browser_action"]
+    });
+
+    chrome.contextMenus.create({
+        "id": "add_url_blacklist",
+        "title": chrome.i18n.getMessage("AddUrlBlacklist"),
+        "contexts": ["browser_action"],
+        "enabled": false,
+        "visible": false
+    });
+
+    chrome.contextMenus.create({
+        "id": "add_domain_blacklist",
+        "title": chrome.i18n.getMessage("AddDomainBlacklist"),
+        "contexts": ["browser_action"],
+        "enabled": false,
+        "visible": false
+    });
+
+    chrome.contextMenus.create({
+        "id": "remove_url_blacklist",
+        "title": chrome.i18n.getMessage("RemoveUrlBlacklist"),
+        "contexts": ["browser_action"],
+        "enabled": false,
+        "visible": false
+    });
+
+    chrome.contextMenus.create({
+        "id": "remove_domain_blacklist",
+        "title": chrome.i18n.getMessage("RemoveDomainBlacklist"),
+        "contexts": ["browser_action"],
+        "enabled": false,
+        "visible": false
     });
 
     chrome.storage.sync.get("languageSetting", function (result) {
@@ -92,6 +125,38 @@ chrome.runtime.onStartup.addListener(function () {
         "title": chrome.i18n.getMessage("ShortcutSetting"),
         "contexts": ["browser_action"]
     });
+
+    chrome.contextMenus.create({
+        "id": "add_url_blacklist",
+        "title": chrome.i18n.getMessage("AddUrlBlacklist"),
+        "contexts": ["browser_action"],
+        "enabled": false,
+        "visible": false
+    });
+
+    chrome.contextMenus.create({
+        "id": "add_domain_blacklist",
+        "title": chrome.i18n.getMessage("AddDomainBlacklist"),
+        "contexts": ["browser_action"],
+        "enabled": false,
+        "visible": false
+    });
+
+    chrome.contextMenus.create({
+        "id": "remove_url_blacklist",
+        "title": chrome.i18n.getMessage("RemoveUrlBlacklist"),
+        "contexts": ["browser_action"],
+        "enabled": false,
+        "visible": false
+    });
+
+    chrome.contextMenus.create({
+        "id": "remove_domain_blacklist",
+        "title": chrome.i18n.getMessage("RemoveDomainBlacklist"),
+        "contexts": ["browser_action"],
+        "enabled": false,
+        "visible": false
+    });
 });
 
 /**
@@ -110,12 +175,26 @@ chrome.contextMenus.onClicked.addListener(function (info, tab) {
                 url: 'chrome://extensions/shortcuts',
             });
             break;
+        case "add_url_blacklist":
+            addUrlBlacklist();
+            break;
+        case "remove_url_blacklist":
+            removeUrlBlacklist();
+            break;
+        case "add_domain_blacklist":
+            addDomainBlacklist();
+            break;
+        case "remove_domain_blacklist":
+            removeDomainBlacklist();
+            break;
         default:
             break;
     }
 });
 
-
+/**
+ * 添加tab切换事件监听，用于更新黑名单信息
+ */
 chrome.tabs.onActivated.addListener(function (activeInfo) {
     chrome.tabs.get(activeInfo.tabId, function (tab) {
         if (tab.url && tab.url.length > 0) {
@@ -124,141 +203,15 @@ chrome.tabs.onActivated.addListener(function (activeInfo) {
     });
 });
 
-
+/**
+ * 添加tab刷新事件监听，用于更新黑名单信息
+ */
 chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
     if (tab.active && tab.url && tab.url.length > 0) {
         updateBLackListMenu(tab.url);
     }
 });
 
-
-function updateBLackListMenu(url) {
-    chrome.storage.sync.get("blacklist", function (result) {
-        if (result.blacklist) {
-            if (contains(result.blacklist.domains, getdomain(url))) {
-                chrome.contextMenus.remove("add_url_blacklist", function() {
-                    if (chrome.runtime.lastError) {
-
-                    }
-                });
-                chrome.contextMenus.remove("remove_url_blacklist", function() {
-                    if (chrome.runtime.lastError) {
-                        
-                    }
-                });
-                chrome.contextMenus.remove("add_domain_blacklist", function() {
-                    if (chrome.runtime.lastError) {
-                        
-                    }
-                });
-                chrome.contextMenus.remove("remove_domain_blacklist", function() {
-                    if (chrome.runtime.lastError) {
-                        
-                    }
-                });
-                chrome.contextMenus.create({
-                    "id": "remove_domain_blacklist",
-                    "title": "remove_domain_blacklist",
-                    "contexts": ["browser_action"]
-                }, function() {
-                    if (chrome.runtime.lastError) {
-                        
-                    }
-                });
-            } else if (contains(result.blacklist.urls, url)) {
-                chrome.contextMenus.remove("add_url_blacklist", function() {
-                    if (chrome.runtime.lastError) {
-                        
-                    }
-                });
-                chrome.contextMenus.remove("remove_url_blacklist", function() {
-                    if (chrome.runtime.lastError) {
-                        
-                    }
-                });
-                chrome.contextMenus.remove("add_domain_blacklist", function() {
-                    if (chrome.runtime.lastError) {
-                        
-                    }
-                });
-                chrome.contextMenus.remove("remove_domain_blacklist", function() {
-                    if (chrome.runtime.lastError) {
-                        
-                    }
-                });
-                chrome.contextMenus.create({
-                    "id": "remove_url_blacklist",
-                    "title": "remove_url_blacklist",
-                    "contexts": ["browser_action"]
-                }, function() {
-                    if (chrome.runtime.lastError) {
-                        
-                    }
-                });
-            } else {
-                chrome.contextMenus.remove("add_url_blacklist", function() {
-                    if (chrome.runtime.lastError) {
-                        
-                    }
-                });
-                chrome.contextMenus.remove("remove_url_blacklist", function() {
-                    if (chrome.runtime.lastError) {
-                        
-                    }
-                });
-                chrome.contextMenus.remove("add_domain_blacklist", function() {
-                    if (chrome.runtime.lastError) {
-                        
-                    }
-                });
-                chrome.contextMenus.remove("remove_domain_blacklist", function() {
-                    if (chrome.runtime.lastError) {
-                        
-                    }
-                });
-                chrome.contextMenus.create({
-                    "id": "add_url_blacklist",
-                    "title": "add_url_blacklist",
-                    "contexts": ["browser_action"]
-                }, function() {
-                    if (chrome.runtime.lastError) {
-                        
-                    }
-                });
-                chrome.contextMenus.create({
-                    "id": "add_domain_blacklist",
-                    "title": "add_domain_blacklist",
-                    "contexts": ["browser_action"]
-                }, function() {
-                    if (chrome.runtime.lastError) {
-                        
-                    }
-                });
-            }
-        } else {
-            chrome.storage.sync.set({
-                "blacklist": {
-                    "urls": [], 
-                    "domains": []
-                }
-            });
-        }
-    });
-}
-
-function getdomain(url) {
-    return url;
-}
-
-function contains(array, item) {
-    for (var i = 0; i < array.length; i++) {
-        if (array[i] === item) {
-            return true;
-        }
-    }
-
-    return false;
-}
 
 /*
  * 处理content scripts发送的消息。

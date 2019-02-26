@@ -83,6 +83,22 @@
         "message": "快捷键设置",
         "description": "修改快捷键"
     },
+    "AddUrlBlacklist": {
+        "message": "将当前页面添加到黑名单",
+        "description": "将当前页面添加到黑名单。"
+    },
+    "RemoveUrlBlacklist": {
+        "message": "将当前页面移出黑名单",
+        "description": "将当前页面移出黑名单。"
+    },
+    "AddDomainBlacklist": {
+        "message": "将当前域名添加到黑名单",
+        "description": "将当前域名添加到黑名单。"
+    },
+    "RemoveDomainBlacklist": {
+        "message": "将当前域名移出黑名单",
+        "description": "将当前域名移出黑名单。"
+    },
     "InputHint": {
         "message": "翻译内容不能为空",
         "description": "输入提示"

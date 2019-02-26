@@ -83,6 +83,22 @@
         "message": "Shortcut Setting",
         "description": "Change shortcuts."
     },
+    "AddUrlBlacklist": {
+        "message": "Add this site to blacklist",
+        "description": "Add currently browsering site to blacklist."
+    },
+    "RemoveUrlBlacklist": {
+        "message": "Remove this site from blacklist",
+        "description": "Remove currently browsering site from blacklist."
+    },
+    "AddDomainBlacklist": {
+        "message": "Add this domain to blacklist",
+        "description": "Add the domain of currently browsering site to blacklist."
+    },
+    "RemoveDomainBlacklist": {
+        "message": "Remove this domin from blacklist",
+        "description": "Remove the domain of currently browsering site from blacklist."
+    },
     "InputHint": {
         "message": "Content should not be empty",
         "description": "Input hint"
