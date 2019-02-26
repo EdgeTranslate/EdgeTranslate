@@ -2,6 +2,37 @@
     "background": {
         "persistent": false
     },
+    "commands": {
+        "_execute_browser_action": {
+            "suggested_key": {
+              "default": "Alt+Q"
+            }
+        },
+        "change_language_setting": {
+            "description": "__MSG_ChangeLanguageSetting__"
+        },
+        "translate_selected": {
+            "description": "__MSG_TranslateSelectedText__"
+        },
+        "fix_result_frame": {
+            "suggested_key": {
+                "default": "Alt+X"
+            },
+            "description": "__MSG_FixResultFrame__"
+        },
+        "close_result_frame": {
+            "suggested_key": {
+                "default": "Alt+C"
+            },
+            "description": "__MSG_CloseResultFrame__"
+        },
+        "exchange_source_target_lang": {
+            "suggested_key": {
+                "default": "Alt+S"
+            },
+            "description": "__MSG_ExchangeSourceAndTargetLanguage__"
+        }
+    },
     "minimum_chrome_version": "55",
     "homepage_url": "https://chrome.google.com/webstore/detail/bocbaocobfecmglnmeaeppambideimao"
 }
