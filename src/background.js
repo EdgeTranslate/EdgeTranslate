@@ -91,8 +91,8 @@ chrome.runtime.onInstalled.addListener(function (details) {
         if (result.blacklist) {
             chrome.storage.sync.set({
                 "blacklist": {
-                    "urls": [],
-                    "domains": []
+                    "urls": {},
+                    "domains": {}
                 }
             });
         }

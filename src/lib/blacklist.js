@@ -1,4 +1,4 @@
-import { getDomain, contains } from "./common.js";
+import { getDomain } from "./common.js";
 
 export {
     addUrlBlacklist,
@@ -12,7 +12,7 @@ export {
  * 将当前页面的url添加到黑名单
  */
 function addUrlBlacklist() {
-    addBlacklist("urls", function(url) {
+    addBlacklist("urls", function(blacklist, url) {
         disableItems([
             "add_url_blacklist",
             "add_domain_blacklist",
@@ -28,7 +28,7 @@ function addUrlBlacklist() {
  * 将当前页面的url移出黑名单
  */
 function removeUrlBlacklist() {
-    removeBlacklist("urls", function(url) {
+    removeBlacklist("urls", function(blacklist, url) {
         disableItems(["remove_url_blacklist", "remove_domain_blacklist"]);
 
         enableItems(["add_url_blacklist", "add_domain_blacklist"]);
@@ -40,7 +40,7 @@ function removeUrlBlacklist() {
  * 将当前页面的域名添加到黑名单
  */
 function addDomainBlacklist() {
-    addBlacklist("domains", function(url) {
+    addBlacklist("domains", function(blacklist, url) {
         disableItems([
             "add_url_blacklist",
             "add_domain_blacklist",
@@ -56,14 +56,24 @@ function addDomainBlacklist() {
  * 将当前页面的域名移出黑名单
  */
 function removeDomainBlacklist() {
-    removeBlacklist("domains", function(url) {
-        disableItems(["remove_url_blacklist", "remove_domain_blacklist"]);
+    removeBlacklist("domains", function(blacklist, url) {
+        // 如果该url还在url黑名单中
+        if (blacklist.urls[url]) {
+            disableItems([
+                "add_url_blacklist",
+                "add_domain_blacklist",
+                "remove_domain_blacklist"
+            ]);
+    
+            enableItems(["remove_url_blacklist"]);
+        } else {
+            disableItems(["remove_url_blacklist", "remove_domain_blacklist"]);
 
-        enableItems(["add_url_blacklist", "add_domain_blacklist"]);
+            enableItems(["add_url_blacklist", "add_domain_blacklist"]);
 
-        updateBLackListMenu(url);
+            chrome.browserAction.setIcon({ path: "./icon/icon16.png" }); // change the icon when remove domain from blacklist
+        }
     });
-    chrome.browserAction.setIcon({ path: "./icon/icon16.png" }); // change the icon when remove domain from blacklist
 }
 
 /**
@@ -75,12 +85,13 @@ function removeDomainBlacklist() {
 function addBlacklist(field, callback) {
     chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
         if (tabs && tabs[0]) {
-            chrome.storage.sync.get("blacklist", function(blacklist) {
+            chrome.storage.sync.get("blacklist", function(result) {
+                var blacklist = result.blacklist;
                 var value =
                     field === "urls" ? tabs[0].url : getDomain(tabs[0].url);
-                blacklist.blacklist[field].push(value);
-                chrome.storage.sync.set(blacklist, function() {
-                    callback(tabs[0].url);
+                blacklist[field][value] = true;
+                chrome.storage.sync.set({"blacklist": blacklist}, function() {
+                    callback(blacklist, tabs[0].url);
                 });
             });
         }
@@ -96,18 +107,15 @@ function addBlacklist(field, callback) {
 function removeBlacklist(field, callback) {
     chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
         if (tabs && tabs[0]) {
-            chrome.storage.sync.get("blacklist", function(blacklist) {
-                var values = [];
+            chrome.storage.sync.get("blacklist", function(result) {
+                var blacklist = result.blacklist;
                 var value =
                     field === "urls" ? tabs[0].url : getDomain(tabs[0].url);
-                blacklist.blacklist[field].forEach(item => {
-                    if (item !== value) {
-                        values.push(item);
-                    }
-                });
-                blacklist.blacklist[field] = values;
-                chrome.storage.sync.set(blacklist, function() {
-                    callback(tabs[0].url);
+                if (blacklist[field][value]) {
+                    delete blacklist[field][value];
+                }
+                chrome.storage.sync.set({"blacklist": blacklist}, function() {
+                    callback(blacklist, tabs[0].url);
                 });
             });
         }
@@ -122,7 +130,7 @@ function removeBlacklist(field, callback) {
 function updateBLackListMenu(url) {
     chrome.storage.sync.get("blacklist", function(result) {
         if (result.blacklist) {
-            if (contains(result.blacklist.domains, getDomain(url))) {
+            if (result.blacklist.domains[getDomain(url)]) {
                 disableItems([
                     "add_url_blacklist",
                     "remove_url_blacklist",
@@ -134,7 +142,7 @@ function updateBLackListMenu(url) {
                 chrome.browserAction.setIcon({
                     path: "./icon/icon16forbid.png"
                 }); // the domain is in the blacklist and update the forbid icon
-            } else if (contains(result.blacklist.urls, url)) {
+            } else if (result.blacklist.urls[url]) {
                 disableItems([
                     "add_url_blacklist",
                     "add_domain_blacklist",
@@ -159,8 +167,8 @@ function updateBLackListMenu(url) {
         } else {
             chrome.storage.sync.set({
                 blacklist: {
-                    urls: [],
-                    domains: []
+                    urls: {},
+                    domains: {}
                 }
             });
         }

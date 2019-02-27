@@ -1,4 +1,4 @@
-import { getDomain, contains } from "../lib/common.js"
+import { getDomain } from "../lib/common.js"
 
 /**
  * 划词翻译功能的实现
@@ -152,7 +152,7 @@ function executeIfNotInBlacklist (callback) {
         var url = window.location.href;
         var blacklist = result.blacklist;
         if (!blacklist ||
-                (!contains(blacklist.domains, getDomain(url)) && !contains(blacklist.urls, url))) {
+                (!blacklist.domains[getDomain(url)] && !blacklist.urls[url])) {
             callback();
         }
     });
