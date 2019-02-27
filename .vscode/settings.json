@@ -1,0 +1,13 @@
+{
+    "spellright.language": [],
+    "spellright.documentTypes": [
+        "markdown",
+        "latex",
+        "plaintext"
+    ],
+    "spellright.parserByClass": {
+        "stylus": {
+            "parser": "plain"
+        }
+    }
+}

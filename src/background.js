@@ -1,4 +1,5 @@
-import { translate, showTranslate, sendMessageToCurrentTab, pronounce } from "./translate.js"
+import { translate, showTranslate, sendMessageToCurrentTab, pronounce } from "./lib/translate.js"
+import { addUrlBlacklist, addDomainBlacklist, removeUrlBlacklist, removeDomainBlacklist, updateBLackListMenu } from "./lib/blacklist.js"
 
 /**
  * 默认的源语言和目标语言。
@@ -30,6 +31,38 @@ chrome.runtime.onInstalled.addListener(function (details) {
         "contexts": ["browser_action"]
     });
 
+    chrome.contextMenus.create({
+        "id": "add_url_blacklist",
+        "title": chrome.i18n.getMessage("AddUrlBlacklist"),
+        "contexts": ["browser_action"],
+        "enabled": false,
+        "visible": false
+    });
+
+    chrome.contextMenus.create({
+        "id": "add_domain_blacklist",
+        "title": chrome.i18n.getMessage("AddDomainBlacklist"),
+        "contexts": ["browser_action"],
+        "enabled": false,
+        "visible": false
+    });
+
+    chrome.contextMenus.create({
+        "id": "remove_url_blacklist",
+        "title": chrome.i18n.getMessage("RemoveUrlBlacklist"),
+        "contexts": ["browser_action"],
+        "enabled": false,
+        "visible": false
+    });
+
+    chrome.contextMenus.create({
+        "id": "remove_domain_blacklist",
+        "title": chrome.i18n.getMessage("RemoveDomainBlacklist"),
+        "contexts": ["browser_action"],
+        "enabled": false,
+        "visible": false
+    });
+
     chrome.storage.sync.get("languageSetting", function (result) {
         if (!result.languageSetting) {
             chrome.storage.sync.set({ "languageSetting": DEFAULT_LANGUAGE_SETTING });
@@ -53,20 +86,35 @@ chrome.runtime.onInstalled.addListener(function (details) {
             chrome.storage.sync.set({ "OtherSettings": DEFAULT_OTHER_SETTINGS });
         }
     });
+
+    chrome.storage.sync.get("blacklist", function (result) {
+        if (result.blacklist) {
+            chrome.storage.sync.set({
+                "blacklist": {
+                    "urls": {},
+                    "domains": {}
+                }
+            });
+        }
+    });
+
     // 只有在生产环境下，才会展示说明页面
     if (process.env.NODE_ENV === "production") {
         // 首次安装，展示wiki页面
         if (details.reason === "install") {
             chrome.tabs.create({ // 为wiki页面创建一个新的标签
-                url: 'https://github.com/nickyc975/EdgeTranslate/wiki',
+                url: 'https://github.com/EdgeTranslate/EdgeTranslate/wiki',
             });
             // 从旧版本更新，展示更新日志
         } else if (details.reason === "update") {
             chrome.tabs.create({ // 为releases页面创建一个新的标签
-                url: 'https://github.com/nickyc975/EdgeTranslate/releases',
+                url: 'https://github.com/EdgeTranslate/EdgeTranslate/releases',
             });
         }
     }
+
+    // 卸载原因调查
+    chrome.runtime.setUninstallURL("https://wj.qq.com/s2/3265930/8f07/");
 });
 
 /**
@@ -89,6 +137,38 @@ chrome.runtime.onStartup.addListener(function () {
         "title": chrome.i18n.getMessage("ShortcutSetting"),
         "contexts": ["browser_action"]
     });
+
+    chrome.contextMenus.create({
+        "id": "add_url_blacklist",
+        "title": chrome.i18n.getMessage("AddUrlBlacklist"),
+        "contexts": ["browser_action"],
+        "enabled": false,
+        "visible": false
+    });
+
+    chrome.contextMenus.create({
+        "id": "add_domain_blacklist",
+        "title": chrome.i18n.getMessage("AddDomainBlacklist"),
+        "contexts": ["browser_action"],
+        "enabled": false,
+        "visible": false
+    });
+
+    chrome.contextMenus.create({
+        "id": "remove_url_blacklist",
+        "title": chrome.i18n.getMessage("RemoveUrlBlacklist"),
+        "contexts": ["browser_action"],
+        "enabled": false,
+        "visible": false
+    });
+
+    chrome.contextMenus.create({
+        "id": "remove_domain_blacklist",
+        "title": chrome.i18n.getMessage("RemoveDomainBlacklist"),
+        "contexts": ["browser_action"],
+        "enabled": false,
+        "visible": false
+    });
 });
 
 /**
@@ -107,10 +187,43 @@ chrome.contextMenus.onClicked.addListener(function (info, tab) {
                 url: 'chrome://extensions/shortcuts',
             });
             break;
+        case "add_url_blacklist":
+            addUrlBlacklist();
+            break;
+        case "remove_url_blacklist":
+            removeUrlBlacklist();
+            break;
+        case "add_domain_blacklist":
+            addDomainBlacklist();
+            break;
+        case "remove_domain_blacklist":
+            removeDomainBlacklist();
+            break;
         default:
             break;
     }
 });
+
+/**
+ * 添加tab切换事件监听，用于更新黑名单信息
+ */
+chrome.tabs.onActivated.addListener(function (activeInfo) {
+    chrome.tabs.get(activeInfo.tabId, function (tab) {
+        if (tab.url && tab.url.length > 0) {
+            updateBLackListMenu(tab.url);
+        }
+    });
+});
+
+/**
+ * 添加tab刷新事件监听，用于更新黑名单信息
+ */
+chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
+    if (tab.active && tab.url && tab.url.length > 0) {
+        updateBLackListMenu(tab.url);
+    }
+});
+
 
 /*
  * 处理content scripts发送的消息。
