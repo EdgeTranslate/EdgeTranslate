@@ -8,7 +8,7 @@ chrome.storage.sync.get("OtherSettings", function (result) {
     var OtherSettings = result.OtherSettings;
     if (OtherSettings && OtherSettings["SelectTranslate"]) {
         document.addEventListener('mouseup', mouseUpHandler);
-        document.addEventListener('mousedown', dispearButton);
+        document.addEventListener('mousedown', disappearButton);
     }
     if (OtherSettings && OtherSettings["TranslateAfterDblClick"]) {
         document.addEventListener('dblclick', dblClickHandler);
@@ -22,10 +22,10 @@ chrome.storage.onChanged.addListener(function (changes, area) {
     if (area === "sync" && changes["OtherSettings"]) {
         if (changes["OtherSettings"].newValue["SelectTranslate"]) {
             document.addEventListener('mouseup', mouseUpHandler);
-            document.addEventListener('mousedown', dispearButton);
+            document.addEventListener('mousedown', disappearButton);
         } else {
             document.removeEventListener("mouseup", mouseUpHandler);
-            document.removeEventListener("mousedown", dispearButton);
+            document.removeEventListener("mousedown", disappearButton);
         }
         if (changes["OtherSettings"].newValue["TranslateAfterDblClick"]) {
             document.addEventListener('dblclick', dblClickHandler);
@@ -126,7 +126,7 @@ function translateSubmit() {
 /**
  * 如果页面中没有鼠标选中的区域，调用此函数去掉翻译按钮
  */
-function dispearButton() {
+function disappearButton() {
     var selection = window.getSelection();
     setTimeout(function () {
         if (!selection.toString().trim()) {
