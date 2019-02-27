@@ -1,24 +1,24 @@
-'use strict'
-const path = require('path');
+"use strict";
+const path = require("path");
 
 module.exports = {
     entry: {
-        background: './src/background.js',
-        '/contents/pdf': './src/contents/pdf.js',
-        '/contents/select': './src/contents/select.js',
-        '/popup/popup': './src/popup/popup.js',
-        '/options/options': './src/options/options.js',
-        '/display/display': './src/display/display.js'
+        background: "./src/background.js",
+        "/contents/pdf": "./src/contents/pdf.js",
+        "/contents/select": "./src/contents/select.js",
+        "/popup/popup": "./src/popup/popup.js",
+        "/options/options": "./src/options/options.js",
+        "/display/display": "./src/display/display.js"
     },
     output: {
-        filename: '[name].js',
-        path: path.resolve(__dirname, 'build')
+        filename: "[name].js",
+        path: path.resolve(__dirname, "build")
     },
     module: {
         rules: [
             {
                 test: /\.html$/,
-                use: 'raw-loader'
+                use: "raw-loader"
             }
         ]
     }
