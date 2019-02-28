@@ -25,7 +25,7 @@
   },
   "scripts": {
     "test": "mocha --recursive",
-    "format": "eslint src/**/*.js config/**/*.js --fix",
+    "format": "eslint 'src/**/*.js' 'config/**/*.js' --fix",
     "dev:chrome": "gulp dev:chrome && gulp watcher:chrome",
     "dev:firefox": "gulp dev:firefox && gulp watcher:firefox",
     "build:chrome": "gulp clean:chrome && gulp build:chrome",

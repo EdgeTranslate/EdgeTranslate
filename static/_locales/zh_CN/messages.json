@@ -99,6 +99,14 @@
         "message": "将当前域名移出黑名单",
         "description": "将当前域名移出黑名单。"
     },
+    "ExtensionInstalled": {
+        "message": "侧边翻译安装成功！点此阅读使用说明",
+        "description": "通知用户侧边翻译已安装。"
+    },
+    "ExtensionUpdated": {
+        "message": "侧边翻译更新成功！点此阅读更新日志",
+        "description": "通知用户侧边翻译已更新。"
+    },
     "InputHint": {
         "message": "翻译内容不能为空",
         "description": "输入提示"

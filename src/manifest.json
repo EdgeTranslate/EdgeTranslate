@@ -4,6 +4,7 @@
     "version": "1.4.1",
     "default_locale": "zh_CN",
     "permissions": [
+        "notifications",
         "contextMenus",
         "storage",
         "tabs",
