@@ -99,6 +99,14 @@
         "message": "Remove this domin from blacklist",
         "description": "Remove the domain of currently browsering site from blacklist."
     },
+    "ExtensionInstalled": {
+        "message": "Edge Translate installed successfully! Click to read the wiki!",
+        "description": "Inform user that the extension has been installed."
+    },
+    "ExtensionUpdated": {
+        "message": "Edge Translate updated successfully! Click to find what's new!.",
+        "description": "Inform user that the extension has been updated."
+    },
     "InputHint": {
         "message": "Content should not be empty",
         "description": "Input hint"

@@ -20,7 +20,7 @@ module.exports = {
 	plugins: ["html", "prettier"],
 	// add your custom rules here
 	rules: {
-		indent: [2, "tab", { SwitchCase: 1 }],
+		indent: ["error", 4, { SwitchCase: 1 }],
 		quotes: ["error", "double"],
 		// 空行最多不能超过100行
 		"no-multiple-empty-lines": [0, { max: 100 }]

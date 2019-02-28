@@ -99,6 +99,14 @@
         "message": "將當前域名移出黑名單",
         "description": "將當前域名移出黑名單。"
     },
+    "ExtensionInstalled": {
+        "message": "側邊翻譯安裝成功！點此閱讀使用說明",
+        "description": "通知用戶側邊翻譯已安裝。"
+    },
+    "ExtensionUpdated": {
+        "message": "側邊翻譯更新成功！點此閱讀更新日誌",
+        "description": "通知用戶側邊翻譯已更新。"
+    },
     "InputHint": {
         "message": "翻譯内容不能為空",
         "description": "輸入提示"
