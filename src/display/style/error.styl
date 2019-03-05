@@ -35,10 +35,12 @@ body {
 #icon-failure {
     display: block;
     cursor: auto;
-    font-size: 150px;
-    color: #dd5145;
-
-    &::before {
-        content: '\e64f';
+    svg {
+        fill: #dd5145;
+        width: 150px;
+        height: 150px;
+        :hover{
+            fill: #dd5145;
+        }
     }
 }
