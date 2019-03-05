@@ -2146,9 +2146,43 @@ if (!J || !J.bind) {
             }
             this.movePage(g.barHeight);
             this.frame.body.innerHTML =
-                '                <div id="wrapper">                    <a href="https://fanyi.youdao.com/web2/?keyfrom=headerLogo" target="_blank">                        <h1 id="headerLogo" class="logo"></h1>                    </a>                    <div id="sliderLabel">翻译级别</div>                    <div id="sliderWrapper" class="slider-wrapper">                        <div id="levelLabel">                            <label id="level-3" rel="0"><a>专&nbsp;&nbsp;&nbsp;家</a></label>                            <label id="level-2" rel="1"><a>进&nbsp;&nbsp;&nbsp;阶</a></label>                            <label id="level-1" rel="2"><a>入&nbsp;&nbsp;&nbsp;门</a></label>                            <label id="level-0" rel="3"><a>全文翻译</a></label>                        </div>                        <div id="sliderContainer" class="slider-container">                            <div id="sliderBackground"><div class="slider-background"></div></div>                            <a id="slider" href="javascript:void(0);" class="slider"></a>                        </div>                    </div>                    <div id="status"></div>                    <div id="feedback">                        <a href="https://feedback.youdao.com/quality_report.jsp?q=jtr&prodtype=fanyi&cmt=' +
-                encodeURIComponent("我在网站 " + h + " 使用有道网页翻译2.0时，遇到了以下问题：") +
-                '" target="_blank">意见与反馈</a>                        &nbsp;<a id="fb" href="https://survey2.163.com/html/fanyiweb2s201103/paper.html" target="_blank">参加问卷调查</a>                    </div>                    <div id="switchWrapper"><a id="switch" href="javascript:void(0);"></a></div>                </div>                <a id="OUTFOX_JTR_BAR_CLOSE" href="javascript:void(0);" class="OUTFOX_JTR_BAR_CLOSE"></a>                <div id="OUTFOX_JTR_BAR_UPDATE_SHADE"></div>                <div id="OUTFOX_JTR_BAR_CLOSE_UPDATE_TIP">                    <div id="OUTFOX_JTR_BAR_CLOSE_UPDATE_TIP_CONTENT"></div>                </div>';
+                '<div id="wrapper">' + 
+                    '<a href="https://fanyi.youdao.com/web2/?keyfrom=headerLogo" target="_blank">' + 
+                        '<h1 id="headerLogo" class="logo"></h1>' + 
+                    '</a>' + 
+                    '<div id="sliderLabel">翻译级别</div>' + 
+                    '<div id="sliderWrapper" class="slider-wrapper">' + 
+                        '<div id="levelLabel">' + 
+                            '<label id="level-3" rel="0">' + 
+                                '<a>专&nbsp;&nbsp;&nbsp;家</a>' + 
+                            '</label>' + 
+                            '<label id="level-2" rel="1">' + 
+                                '<a>进&nbsp;&nbsp;&nbsp;阶</a>' + 
+                            '</label>' + 
+                            '<label id="level-1" rel="2">' + 
+                                '<a>入&nbsp;&nbsp;&nbsp;门</a>' + 
+                            '</label>' + 
+                            '<label id="level-0" rel="3">' + 
+                                '<a>全文翻译</a>' + 
+                            '</label>' + 
+                        '</div>' + 
+                        '<div id="sliderContainer" class="slider-container">' + 
+                            '<div id="sliderBackground">' + 
+                                '<div class="slider-background"></div>' + 
+                            '</div>' + 
+                            '<a id="slider" href="javascript:void(0);" class="slider"></a>' + 
+                        '</div>' + 
+                    '</div>' + 
+                    '<div id="status"></div>' + 
+                    '<div id="switchWrapper">' + 
+                        '<a id="switch" href="javascript:void(0);"></a>' + 
+                    '</div>' + 
+                '</div>' + 
+                '<a id="OUTFOX_JTR_BAR_CLOSE" href="javascript:void(0);" class="OUTFOX_JTR_BAR_CLOSE"></a>' + 
+                '<div id="OUTFOX_JTR_BAR_UPDATE_SHADE"></div>' + 
+                '<div id="OUTFOX_JTR_BAR_CLOSE_UPDATE_TIP">' + 
+                    '<div id="OUTFOX_JTR_BAR_CLOSE_UPDATE_TIP_CONTENT"></div>' + 
+                '</div>';
             this.initTipContent();
             this.initBarClose();
             this.initSwitch();
