@@ -287,6 +287,9 @@ chrome.runtime.onMessage.addListener(function(message, sender, callback) {
             case "pronounce":
                 pronounce(message.text, message.language, message.speed, callback);
                 break;
+            case "youdao_translate":
+                youdaoTranslateAjax(message.request, callback);
+                break;
             default:
                 // eslint-disable-next-line no-console
                 console.log("Unknown message type: " + message.type);
@@ -297,6 +300,32 @@ chrome.runtime.onMessage.addListener(function(message, sender, callback) {
         return true;
     }
 });
+
+/**
+ * 有道翻译接口
+ * @param {Any} request request
+ * @param {Any} callback callback
+ */
+function youdaoTranslateAjax(request, callback) {
+    const xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4) {
+            const data = xhr.status === 200 ? xhr.responseText : null;
+            callback({
+                response: data,
+                index: request.index
+            });
+        }
+    };
+    xhr.open(request.type, request.url, true);
+
+    if (request.type === "POST") {
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xhr.send(request.data);
+    } else {
+        xhr.send(null);
+    }
+}
 
 /**
  *  将快捷键消息转发给content_scripts

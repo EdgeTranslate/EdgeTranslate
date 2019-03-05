@@ -30,7 +30,8 @@
             ],
             "js": [
                 "./contents/select.js",
-                "./display/display.js"
+                "./display/display.js",
+                "./youdao/main.js"
             ],
             "css": [
                 "./contents/select.css",
@@ -55,7 +56,8 @@
     "web_accessible_resources": [
         "display/style/result.css",
         "display/style/loading.css",
-        "display/style/error.css"
+        "display/style/error.css",
+        "youdao/*"
     ],
     "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
     "icons": {
