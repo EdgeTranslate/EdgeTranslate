@@ -30,8 +30,7 @@
             ],
             "js": [
                 "./contents/select.js",
-                "./display/display.js",
-                "./youdao/main.js"
+                "./display/display.js"
             ],
             "css": [
                 "./contents/select.css",

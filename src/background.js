@@ -43,6 +43,12 @@ chrome.runtime.onInstalled.addListener(function(details) {
     });
 
     chrome.contextMenus.create({
+        id: "translate_page",
+        title: chrome.i18n.getMessage("TranslatePage"),
+        contexts: ["page"]
+    });
+
+    chrome.contextMenus.create({
         id: "shortcut",
         title: chrome.i18n.getMessage("ShortcutSetting"),
         contexts: ["browser_action"]
@@ -182,6 +188,12 @@ chrome.runtime.onStartup.addListener(function() {
     });
 
     chrome.contextMenus.create({
+        id: "translate_page",
+        title: chrome.i18n.getMessage("TranslatePage"),
+        contexts: ["page"]
+    });
+
+    chrome.contextMenus.create({
         id: "shortcut",
         title: chrome.i18n.getMessage("ShortcutSetting"),
         contexts: ["browser_action"]
@@ -230,6 +242,16 @@ chrome.contextMenus.onClicked.addListener(function(info, tab) {
             translate(text, function(result) {
                 showTranslate(result, tab);
             }); // 此api位于 translate.js中
+            break;
+        case "translate_page":
+            chrome.tabs.executeScript({ file: "./youdao/main.js" }, function(result) {
+                if (chrome.runtime.lastError) {
+                    // eslint-disable-next-line no-console
+                    console.log("Chrome runtime error: " + chrome.runtime.lastError);
+                    // eslint-disable-next-line no-console
+                    console.log("Detail: " + result);
+                }
+            });
             break;
         case "shortcut":
             chrome.tabs.create({
@@ -293,7 +315,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, callback) {
             case "pronounce":
                 pronounce(message.text, message.language, message.speed, callback);
                 break;
-            case "youdao_translate":
+            case "youdao_page_translate":
                 youdaoPageTranslate(message.request, callback);
                 break;
             default:

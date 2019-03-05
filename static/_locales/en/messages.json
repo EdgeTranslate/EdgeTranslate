@@ -163,6 +163,10 @@
         "message": "Translate After Dbl Click",
         "description": "Instantly show translating result after double-clicked texts."
     },
+    "TranslatePage": {
+        "message": "Translate this page",
+        "description": "Translate current page."
+    },
     "Afrikaans": {
         "message": "Afrikaans",
         "description": "Afrikaans"

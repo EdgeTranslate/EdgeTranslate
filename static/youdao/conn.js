@@ -369,7 +369,7 @@ window.onload = function() {
              * @param request 请求数据
              */
             translate: function(request) {
-                chrome.runtime.sendMessage({ type: "youdao_translate", request: request }, function(
+                chrome.runtime.sendMessage({ type: "youdao_page_translate", request: request }, function(
                     response
                 ) {
                     Response.sendMessage({

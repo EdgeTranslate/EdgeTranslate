@@ -163,6 +163,10 @@
         "message": "雙擊單詞立即翻譯",
         "description": "雙擊單詞後立即展示翻譯結果"
     },
+    "TranslatePage": {
+        "message": "翻譯此頁面",
+        "description": "翻譯當前頁面。"
+    },
     "Afrikaans": {
         "message": "南非荷蘭語",
         "description": "南非荷蘭語"
