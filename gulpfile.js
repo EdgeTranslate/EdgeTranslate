@@ -174,7 +174,10 @@ function build(browser, env) {
                 .pipe(gulp.dest(output_dir));
             gulp.src("./static/**/!(*.js)", { base: "static" }).pipe(gulp.dest(output_dir));
         } else {
-            gulp.src("./static/!(pdf)/**/*", { base: "static" }).pipe(gulp.dest(output_dir));
+            gulp.src("./static/!(pdf)/**/*.js", { base: "static" })
+                .pipe(uglify())
+                .pipe(gulp.dest(output_dir));
+            gulp.src("./static/!(pdf)/**/!(*.js)", { base: "static" }).pipe(gulp.dest(output_dir));
         }
         log("Finished build static files");
     };
