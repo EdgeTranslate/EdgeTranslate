@@ -118,31 +118,16 @@ function createBlock(content, template) {
                 frame.style.right = "0";
             }
             document.documentElement.appendChild(frame);
+        }
+
+        // Write contents into iframe.
+        frame.srcdoc = render(template, content);
+        const timeDelay = 200;
+        setTimeout(function() {
             frameDocument = frame.contentDocument;
-        }
-
-        // Write contents into iframe. Apply different strategies based on browser type.
-        if (navigator.userAgent.indexOf("Chrome") >= 0) {
-            // Chrome type
-            frameDocument.open();
-            frameDocument.write(render(template, content));
-            frameDocument.close();
-        } else {
-            // Firefox type
-            let script = frameDocument.createElement("script");
-
-            // warning: There are lots of bugs here. Firefox web render can only identify \\ , while chrome web render can only use \. So we must transfer \* to \\*.
-            let text = render(template, content)
-                // eslint-disable-next-line no-useless-escape
-                .replace(/\'/g, "\\'")
-                .replace(/\n/g, "\\n");
-
-            script.textContent = "document.open();document.write('" + text + "');document.close();";
-            frameDocument.documentElement.appendChild(script);
-        }
-
-        // 添加事件监听
-        addEventListener();
+            // 添加事件监听
+            addEventListener();
+        }, timeDelay);
     });
 }
 
@@ -165,7 +150,7 @@ function addEventListener() {
     document.addEventListener("mouseup", dragOff);
     frameDocument.addEventListener("mouseup", dragOff);
     // 给关闭按钮添加点击事件监听，用于关闭侧边栏
-    frameDocument.getElementById("icon-close").onclick = removeSlider;
+    frameDocument.getElementById("icon-close").addEventListener("click", removeSlider);
     // 给固定侧边栏的按钮添加点击事件监听，用户侧边栏的固定与取消固定
     frameDocument.getElementById("icon-tuding-fix").addEventListener("click", fixOn);
     frameDocument.getElementById("icon-tuding-full").addEventListener("click", fixOff);
