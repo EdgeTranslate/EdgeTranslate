@@ -163,9 +163,13 @@
         "message": "Translate After Dbl Click",
         "description": "Instantly show translating result after double-clicked texts."
     },
-    "TranslatePage": {
-        "message": "Translate this page",
-        "description": "Translate current page."
+    "TranslatePageYouDao": {
+        "message": "Translate this page with YouDao",
+        "description": "Translate current page with YouDao translate api."
+    },
+    "TranslatePageGoogle": {
+        "message": "Translate this page with Google",
+        "description": "Translate current page with Google translate api."
     },
     "Afrikaans": {
         "message": "Afrikaans",

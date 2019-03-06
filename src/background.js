@@ -43,8 +43,14 @@ chrome.runtime.onInstalled.addListener(function(details) {
     });
 
     chrome.contextMenus.create({
-        id: "translate_page",
-        title: chrome.i18n.getMessage("TranslatePage"),
+        id: "translate_page_youdao",
+        title: chrome.i18n.getMessage("TranslatePageYouDao"),
+        contexts: ["page"]
+    });
+
+    chrome.contextMenus.create({
+        id: "translate_page_google",
+        title: chrome.i18n.getMessage("TranslatePageGoogle"),
         contexts: ["page"]
     });
 
@@ -188,8 +194,14 @@ chrome.runtime.onStartup.addListener(function() {
     });
 
     chrome.contextMenus.create({
-        id: "translate_page",
-        title: chrome.i18n.getMessage("TranslatePage"),
+        id: "translate_page_youdao",
+        title: chrome.i18n.getMessage("TranslatePageYouDao"),
+        contexts: ["page"]
+    });
+
+    chrome.contextMenus.create({
+        id: "translate_page_google",
+        title: chrome.i18n.getMessage("TranslatePageGoogle"),
         contexts: ["page"]
     });
 
@@ -243,8 +255,18 @@ chrome.contextMenus.onClicked.addListener(function(info, tab) {
                 showTranslate(result, tab);
             }); // 此api位于 translate.js中
             break;
-        case "translate_page":
+        case "translate_page_youdao":
             chrome.tabs.executeScript({ file: "./youdao/main.js" }, function(result) {
+                if (chrome.runtime.lastError) {
+                    // eslint-disable-next-line no-console
+                    console.log("Chrome runtime error: " + chrome.runtime.lastError);
+                    // eslint-disable-next-line no-console
+                    console.log("Detail: " + result);
+                }
+            });
+            break;
+        case "translate_page_google":
+            chrome.tabs.executeScript({ file: "./google/injection.js" }, function(result) {
                 if (chrome.runtime.lastError) {
                     // eslint-disable-next-line no-console
                     console.log("Chrome runtime error: " + chrome.runtime.lastError);

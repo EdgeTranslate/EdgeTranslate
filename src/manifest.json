@@ -56,7 +56,8 @@
         "display/style/result.css",
         "display/style/loading.css",
         "display/style/error.css",
-        "youdao/*"
+        "youdao/*",
+        "google/*"
     ],
     "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
     "icons": {
