@@ -256,24 +256,10 @@ chrome.contextMenus.onClicked.addListener(function(info, tab) {
             }); // 此api位于 translate.js中
             break;
         case "translate_page_youdao":
-            chrome.tabs.executeScript({ file: "./youdao/main.js" }, function(result) {
-                if (chrome.runtime.lastError) {
-                    // eslint-disable-next-line no-console
-                    console.log("Chrome runtime error: " + chrome.runtime.lastError);
-                    // eslint-disable-next-line no-console
-                    console.log("Detail: " + result);
-                }
-            });
+            executeYouDaoScript();
             break;
         case "translate_page_google":
-            chrome.tabs.executeScript({ file: "./google/injection.js" }, function(result) {
-                if (chrome.runtime.lastError) {
-                    // eslint-disable-next-line no-console
-                    console.log("Chrome runtime error: " + chrome.runtime.lastError);
-                    // eslint-disable-next-line no-console
-                    console.log("Detail: " + result);
-                }
-            });
+            executeGoogleScript();
             break;
         case "shortcut":
             chrome.tabs.create({
@@ -296,6 +282,51 @@ chrome.contextMenus.onClicked.addListener(function(info, tab) {
             break;
     }
 });
+
+/**
+ * 执行有道网页翻译相关脚本
+ */
+function executeYouDaoScript() {
+    chrome.tabs.executeScript({ file: "./youdao/main.js" }, function(result) {
+        if (chrome.runtime.lastError) {
+            // eslint-disable-next-line no-console
+            console.log("Chrome runtime error: " + chrome.runtime.lastError);
+            // eslint-disable-next-line no-console
+            console.log("Detail: " + result);
+        }
+    });
+}
+
+/**
+ * 执行谷歌网页翻译相关脚本。
+ */
+function executeGoogleScript() {
+    chrome.tabs.executeScript(
+        {
+            code:
+                "var edge_translate_url = document.createElement('div');" +
+                "edge_translate_url.id = 'edge_translate_url';" +
+                "edge_translate_url.setAttribute('data', chrome.runtime.getURL(''));" +
+                "document.documentElement.appendChild(edge_translate_url);"
+        },
+        function(result) {
+            if (chrome.runtime.lastError) {
+                // eslint-disable-next-line no-console
+                console.log("Chrome runtime error: " + chrome.runtime.lastError);
+                // eslint-disable-next-line no-console
+                console.log("Detail: " + result);
+            }
+        }
+    );
+    chrome.tabs.executeScript({ file: "./google/injection.js" }, function(result) {
+        if (chrome.runtime.lastError) {
+            // eslint-disable-next-line no-console
+            console.log("Chrome runtime error: " + chrome.runtime.lastError);
+            // eslint-disable-next-line no-console
+            console.log("Detail: " + result);
+        }
+    });
+}
 
 /**
  * 添加tab切换事件监听，用于更新黑名单信息

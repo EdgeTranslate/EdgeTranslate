@@ -8,6 +8,10 @@ function injection() {
     var teId = "TE_" + uid;
     var cbId = "TECB_" + uid;
 
+    var edge_translate_url = document.getElementById("edge_translate_url");
+    this.EDGE_TRANSLATE_URL = edge_translate_url.getAttribute("data");
+    document.documentElement.removeChild(edge_translate_url);
+
     function show() {
         window.setTimeout(function() {
             window[teId].showBanner(true);
@@ -37,11 +41,7 @@ function injection() {
                 };
             }
             var s = document.createElement("script");
-            s.src =
-                "https://translate.googleapis.com/translate_a/element.js?cb=" +
-                encodeURIComponent(cbId) +
-                "&client=tee&hl=" +
-                userLang;
+            s.src = EDGE_TRANSLATE_URL + "google/element.js";
             document.getElementsByTagName("head")[0].appendChild(s);
         }
     }
