@@ -1,4 +1,4 @@
-export { translate, showTranslate, sendMessageToCurrentTab, pronounce };
+export { translate, showTranslate, sendMessageToCurrentTab, pronounce, youdaoPageTranslate };
 /**
  * 翻译接口。
  */
@@ -19,43 +19,43 @@ var TKK = eval(
  */
 function generateTK(text, TKK) {
     /* eslint-disable */
-	function compute(a, b) {
-		for (var d = 0; d < b.length - 2; d += 3) {
-			var c = b.charAt(d + 2),
-				c = "a" <= c ? c.charCodeAt(0) - 87 : Number(c),
-				c = "+" == b.charAt(d + 1) ? a >>> c : a << c;
-			a = "+" == b.charAt(d) ? (a + c) & 4294967295 : a ^ c;
-		}
-		return a;
-	}
-	for (
-		var e = TKK.split("."), h = Number(e[0]) || 0, g = [], d = 0, f = 0;
-		f < text.length;
-		f++
-	) {
-		var c = text.charCodeAt(f);
-		128 > c
-			? (g[d++] = c)
-			: (2048 > c
-					? (g[d++] = (c >> 6) | 192)
-					: (55296 == (c & 64512) &&
-					  f + 1 < text.length &&
-					  56320 == (a.charCodeAt(f + 1) & 64512)
-							? ((c = 65536 + ((c & 1023) << 10) + (a.charCodeAt(++f) & 1023)),
-							  (g[d++] = (c >> 18) | 240),
-							  (g[d++] = ((c >> 12) & 63) | 128))
-							: (g[d++] = (c >> 12) | 224),
-					  (g[d++] = ((c >> 6) & 63) | 128)),
-			  (g[d++] = (c & 63) | 128));
-	}
-	text = h;
-	for (d = 0; d < g.length; d++) (text += g[d]), (text = compute(text, "+-a^+6"));
-	text = compute(text, "+-3^+b+-f");
-	text ^= Number(e[1]) || 0;
-	0 > text && (text = (text & 2147483647) + 2147483648);
-	text %= 1e6;
-	return text.toString() + "." + (text ^ h);
-	/* eslint-enable */
+    function compute(a, b) {
+        for (var d = 0; d < b.length - 2; d += 3) {
+            var c = b.charAt(d + 2),
+                c = "a" <= c ? c.charCodeAt(0) - 87 : Number(c),
+                c = "+" == b.charAt(d + 1) ? a >>> c : a << c;
+            a = "+" == b.charAt(d) ? (a + c) & 4294967295 : a ^ c;
+        }
+        return a;
+    }
+    for (
+        var e = TKK.split("."), h = Number(e[0]) || 0, g = [], d = 0, f = 0;
+        f < text.length;
+        f++
+    ) {
+        var c = text.charCodeAt(f);
+        128 > c
+            ? (g[d++] = c)
+            : (2048 > c
+                  ? (g[d++] = (c >> 6) | 192)
+                  : (55296 == (c & 64512) &&
+                    f + 1 < text.length &&
+                    56320 == (a.charCodeAt(f + 1) & 64512)
+                        ? ((c = 65536 + ((c & 1023) << 10) + (a.charCodeAt(++f) & 1023)),
+                          (g[d++] = (c >> 18) | 240),
+                          (g[d++] = ((c >> 12) & 63) | 128))
+                        : (g[d++] = (c >> 12) | 224),
+                    (g[d++] = ((c >> 6) & 63) | 128)),
+              (g[d++] = (c & 63) | 128));
+    }
+    text = h;
+    for (d = 0; d < g.length; d++) (text += g[d]), (text = compute(text, "+-a^+6"));
+    text = compute(text, "+-3^+b+-f");
+    text ^= Number(e[1]) || 0;
+    0 > text && (text = (text & 2147483647) + 2147483648);
+    text %= 1e6;
+    return text.toString() + "." + (text ^ h);
+    /* eslint-enable */
 }
 
 /**
@@ -459,5 +459,31 @@ function pronounce(text, language, speed, callback) {
 
     if (callback) {
         callback();
+    }
+}
+
+/**
+ * 有道翻译接口
+ * @param {Any} request request
+ * @param {Any} callback callback
+ */
+function youdaoPageTranslate(request, callback) {
+    const xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4) {
+            const data = xhr.status === 200 ? xhr.responseText : null;
+            callback({
+                response: data,
+                index: request.index
+            });
+        }
+    };
+    xhr.open(request.type, request.url, true);
+
+    if (request.type === "POST") {
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xhr.send(request.data);
+    } else {
+        xhr.send(null);
     }
 }

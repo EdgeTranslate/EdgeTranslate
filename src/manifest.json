@@ -1,7 +1,7 @@
 {
     "name": "__MSG_AppName__",
     "description": "__MSG_Description__",
-    "version": "1.4.1",
+    "version": "1.5.0",
     "default_locale": "zh_CN",
     "permissions": [
         "notifications",
@@ -55,7 +55,9 @@
     "web_accessible_resources": [
         "display/style/result.css",
         "display/style/loading.css",
-        "display/style/error.css"
+        "display/style/error.css",
+        "youdao/*",
+        "google/*"
     ],
     "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
     "icons": {

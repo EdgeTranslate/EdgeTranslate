@@ -1,4 +1,4 @@
-hover-color = #777;
+icon-size = 25px;
 
 html {
     height: auto;
@@ -20,11 +20,10 @@ body {
  * start icon style
  */
 .icon {
-    font-family: 'translateIcon';
     font-style: normal;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    color: #aaa;
+    fill: #aaa;
     width: 5%;
     cursor: pointer;
     font-size: larger;
@@ -33,57 +32,36 @@ body {
     width: 10px;
     height: 10px;
 
+    svg {
+        width: icon-size;
+        height: icon-size;
+        vertical-align: bottom;
+    }
+
     :hover {
-        color: hover-color;
+        fill:  #777;
     }
 }
 
 /* 关闭页面的图标 */
 #icon-close {
     left: 94%;
-
-    &::before {
-        content: '\e624';
-    }
-
-    &:hover {
-        color: hover-color;
-    }
 }
 
 .icon-fix {
     left: 90%;
-
-    &:hover {
-        color: hover-color;
-    }
-}
-
-// 固定住的图钉图标
-#icon-tuding-full {
     display: none;
-
-    &::before {
-        content: '\e61b';
-    }
-}
-
-// 未固定的图钉图标
-#icon-tuding-fix {
-    &::before {
-        content: '\e607';
-    }
 }
 
 .icon-pronounce {
     position: static;
 
-    &:hover {
-        color: orange;
+    svg{
+        padding-bottom: 1%; 
     }
 
-    &::before {
-        content: '\e63e';
+    :hover {
+        fill: orange !important;
     }
 }
 

@@ -19,12 +19,11 @@ var mousedown = false; // 在鼠标拖动边框时，用于标记鼠标是否已
 var originX; // 鼠标开始拖动的x坐标轴初始位置
 var originWidth; // 侧边栏的初始宽度
 var originOriginWidth; // 存储网页body的原始宽度
-if (!fixSwitch) {
-    var fixSwitch = false; // 固定侧边栏的开关 true<->switch on  false<->switch off
-}
 var translateResult; // 保存翻译结果
 var sourceTTSSpeed, targetTTSSpeed;
 var popupPosition; // 保存侧边栏展示的位置
+const FIX_ON = true; // 侧边栏固定的值
+const FIX_OFF = false; // 侧边栏不固定的值
 const dragSensitivity = 15; // 用来调节拖动侧边栏的灵敏度的参数 单位:px
 const transitionDuration = 500; // 侧边栏出现动画的持续事件 单位:ms
 
@@ -62,11 +61,13 @@ chrome.runtime.onMessage.addListener(function(message, sender, callback) {
             case "command":
                 switch (message.command) {
                     case "fix_result_frame":
-                        if (fixSwitch) {
-                            fixOff();
-                        } else {
-                            fixOn();
-                        }
+                        chrome.storage.sync.get("fixSetting", function(result) {
+                            if (!result.fixSetting) {
+                                fixOn();
+                            } else {
+                                fixOff();
+                            }
+                        });
                         break;
                     case "close_result_frame":
                         removeSlider();
@@ -118,31 +119,17 @@ function createBlock(content, template) {
                 frame.style.right = "0";
             }
             document.documentElement.appendChild(frame);
+        }
+
+        // Write contents into iframe.
+        frame.srcdoc = render(template, content);
+
+        // iframe 一加载完成添加事件监听
+        frame.onload = function() {
             frameDocument = frame.contentDocument;
-        }
-
-        // Write contents into iframe. Apply different strategies based on browser type.
-        if (navigator.userAgent.indexOf("Chrome") >= 0) {
-            // Chrome type
-            frameDocument.open();
-            frameDocument.write(render(template, content));
-            frameDocument.close();
-        } else {
-            // Firefox type
-            let script = frameDocument.createElement("script");
-
-            // warning: There are lots of bugs here. Firefox web render can only identify \\ , while chrome web render can only use \. So we must transfer \* to \\*.
-            let text = render(template, content)
-                // eslint-disable-next-line no-useless-escape
-                .replace(/\'/g, "\\'")
-                .replace(/\n/g, "\\n");
-
-            script.textContent = "document.open();document.write('" + text + "');document.close();";
-            frameDocument.documentElement.appendChild(script);
-        }
-
-        // 添加事件监听
-        addEventListener();
+            // 添加事件监听
+            addEventListener();
+        };
     });
 }
 
@@ -150,12 +137,32 @@ function createBlock(content, template) {
  * 需要对侧边栏中的元素添加事件监听时，请在此函数中添加
  */
 function addEventListener() {
-    // 给点击侧边栏之外区域事件添加监听，点击侧边栏之外的部分就会让侧边栏关闭
-    if (!fixSwitch) {
-        document.documentElement.addEventListener("mousedown", clickListener);
-    } else {
-        fixOn();
+    // 如果渲染的是result.html，则有icon-tuding-full 图标， 可以添加事件
+    if (frameDocument.getElementById("icon-tuding-full")) {
+        // 给固定侧边栏的按钮添加点击事件监听，用户侧边栏的固定与取消固定
+        frameDocument.getElementById("icon-tuding-fix").addEventListener("click", fixOn);
+        frameDocument.getElementById("icon-tuding-full").addEventListener("click", fixOff);
+
+        let sourcePronounceIcon = frameDocument.getElementById("source-pronounce");
+        if (sourcePronounceIcon) {
+            sourcePronounceIcon.addEventListener("click", sourcePronounce);
+        }
+
+        let targetPronounceIcon = frameDocument.getElementById("target-pronounce");
+        if (targetPronounceIcon) {
+            targetPronounceIcon.addEventListener("click", targetPronounce);
+        }
     }
+    // 给点击侧边栏之外区域事件添加监听，点击侧边栏之外的部分就会让侧边栏关闭
+    chrome.storage.sync.get("fixSetting", function(result) {
+        if (!result.fixSetting) {
+            fixOff();
+        } else {
+            fixOn();
+        }
+    });
+    // 给关闭按钮添加点击事件监听，用于关闭侧边栏
+    frameDocument.getElementById("icon-close").addEventListener("click", removeSlider);
     document.addEventListener("mousemove", documentDragOn);
     frameDocument.addEventListener("mousemove", iframeDragOn);
     document.addEventListener("mousedown", documentDragOn);
@@ -164,21 +171,6 @@ function addEventListener() {
     frameDocument.addEventListener("mousemove", drag);
     document.addEventListener("mouseup", dragOff);
     frameDocument.addEventListener("mouseup", dragOff);
-    // 给关闭按钮添加点击事件监听，用于关闭侧边栏
-    frameDocument.getElementById("icon-close").onclick = removeSlider;
-    // 给固定侧边栏的按钮添加点击事件监听，用户侧边栏的固定与取消固定
-    frameDocument.getElementById("icon-tuding-fix").addEventListener("click", fixOn);
-    frameDocument.getElementById("icon-tuding-full").addEventListener("click", fixOff);
-
-    let sourcePronounceIcon = frameDocument.getElementById("source-pronounce");
-    if (sourcePronounceIcon) {
-        sourcePronounceIcon.addEventListener("click", sourcePronounce);
-    }
-
-    let targetPronounceIcon = frameDocument.getElementById("target-pronounce");
-    if (targetPronounceIcon) {
-        targetPronounceIcon.addEventListener("click", targetPronounce);
-    }
 }
 
 /**
@@ -224,13 +216,12 @@ function clickListener(event) {
  * 将侧边栏元素从页面中除去，即将frame从document中删除
  */
 function removeSlider() {
-    fixSwitch = false; // 点击关闭按钮后自动取消侧边栏的固定
     mousedown = false; // 如果侧边栏关闭，直接停止侧边栏宽度的调整
     if (isChildNode(frame, document.documentElement)) {
         document.documentElement.removeChild(frame);
         document.body.style.width = 100 + "%";
         setTimeout(function() {
-            document.body.style.marginLeft = "auto";
+            document.body.style.margin = "auto";
             document.body.style.position = "static";
             document.body.style.right = "";
             document.body.style.left = "";
@@ -312,9 +303,13 @@ function dragOff() {
  * 负责将侧边栏固定
  */
 function fixOn() {
-    fixSwitch = true; // 将固定开关打开
-    frameDocument.getElementById("icon-tuding-full").style.display = "inline";
-    frameDocument.getElementById("icon-tuding-fix").style.display = "none";
+    chrome.storage.sync.set({
+        fixSetting: FIX_ON
+    });
+    if (frameDocument.getElementById("icon-tuding-full")) {
+        frameDocument.getElementById("icon-tuding-full").style.display = "inline";
+        frameDocument.getElementById("icon-tuding-fix").style.display = "none";
+    }
     document.documentElement.removeEventListener("mousedown", clickListener);
 }
 
@@ -322,9 +317,13 @@ function fixOn() {
  * 负责解除侧边栏的固定
  */
 function fixOff() {
-    fixSwitch = false; // 将固定开关关闭
-    frameDocument.getElementById("icon-tuding-full").style.display = "none";
-    frameDocument.getElementById("icon-tuding-fix").style.display = "inline";
+    chrome.storage.sync.set({
+        fixSetting: FIX_OFF
+    });
+    if (frameDocument.getElementById("icon-tuding-full")) {
+        frameDocument.getElementById("icon-tuding-full").style.display = "none";
+        frameDocument.getElementById("icon-tuding-fix").style.display = "inline";
+    }
     document.documentElement.addEventListener("mousedown", clickListener);
 }
 

@@ -163,6 +163,14 @@
         "message": "双击单词立即翻译",
         "description": "双击单词后立即显示翻译结果"
     },
+    "TranslatePageYouDao": {
+        "message": "使用有道翻译此页",
+        "description": "使用有道翻译的api翻译当前页面。"
+    },
+    "TranslatePageGoogle": {
+        "message": "使用谷歌翻译此页",
+        "description": "使用谷歌翻译的api翻译当前页面。"
+    },
     "Afrikaans": {
         "message": "南非荷兰语",
         "description": "南非荷兰语"

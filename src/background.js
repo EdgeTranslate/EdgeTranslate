@@ -1,4 +1,10 @@
-import { translate, showTranslate, sendMessageToCurrentTab, pronounce } from "./lib/translate.js";
+import {
+    translate,
+    showTranslate,
+    sendMessageToCurrentTab,
+    pronounce,
+    youdaoPageTranslate
+} from "./lib/translate.js";
 import {
     addUrlBlacklist,
     addDomainBlacklist,
@@ -34,6 +40,18 @@ chrome.runtime.onInstalled.addListener(function(details) {
         id: "translate",
         title: chrome.i18n.getMessage("Translate") + " '%s'",
         contexts: ["selection"]
+    });
+
+    chrome.contextMenus.create({
+        id: "translate_page_youdao",
+        title: chrome.i18n.getMessage("TranslatePageYouDao"),
+        contexts: ["page"]
+    });
+
+    chrome.contextMenus.create({
+        id: "translate_page_google",
+        title: chrome.i18n.getMessage("TranslatePageGoogle"),
+        contexts: ["page"]
     });
 
     chrome.contextMenus.create({
@@ -176,6 +194,18 @@ chrome.runtime.onStartup.addListener(function() {
     });
 
     chrome.contextMenus.create({
+        id: "translate_page_youdao",
+        title: chrome.i18n.getMessage("TranslatePageYouDao"),
+        contexts: ["page"]
+    });
+
+    chrome.contextMenus.create({
+        id: "translate_page_google",
+        title: chrome.i18n.getMessage("TranslatePageGoogle"),
+        contexts: ["page"]
+    });
+
+    chrome.contextMenus.create({
         id: "shortcut",
         title: chrome.i18n.getMessage("ShortcutSetting"),
         contexts: ["browser_action"]
@@ -225,6 +255,12 @@ chrome.contextMenus.onClicked.addListener(function(info, tab) {
                 showTranslate(result, tab);
             }); // 此api位于 translate.js中
             break;
+        case "translate_page_youdao":
+            executeYouDaoScript();
+            break;
+        case "translate_page_google":
+            executeGoogleScript();
+            break;
         case "shortcut":
             chrome.tabs.create({
                 url: "chrome://extensions/shortcuts"
@@ -246,6 +282,34 @@ chrome.contextMenus.onClicked.addListener(function(info, tab) {
             break;
     }
 });
+
+/**
+ * 执行有道网页翻译相关脚本
+ */
+function executeYouDaoScript() {
+    chrome.tabs.executeScript({ file: "./youdao/main.js" }, function(result) {
+        if (chrome.runtime.lastError) {
+            // eslint-disable-next-line no-console
+            console.log("Chrome runtime error: " + chrome.runtime.lastError);
+            // eslint-disable-next-line no-console
+            console.log("Detail: " + result);
+        }
+    });
+}
+
+/**
+ * 执行谷歌网页翻译相关脚本。
+ */
+function executeGoogleScript() {
+    chrome.tabs.executeScript({ file: "./google/injection.js" }, function(result) {
+        if (chrome.runtime.lastError) {
+            // eslint-disable-next-line no-console
+            console.log("Chrome runtime error: " + chrome.runtime.lastError);
+            // eslint-disable-next-line no-console
+            console.log("Detail: " + result);
+        }
+    });
+}
 
 /**
  * 添加tab切换事件监听，用于更新黑名单信息
@@ -286,6 +350,12 @@ chrome.runtime.onMessage.addListener(function(message, sender, callback) {
                 break;
             case "pronounce":
                 pronounce(message.text, message.language, message.speed, callback);
+                break;
+            case "youdao_page_translate":
+                youdaoPageTranslate(message.request, callback);
+                break;
+            case "get_lang":
+                callback({ lang: chrome.i18n.getUILanguage() });
                 break;
             default:
                 // eslint-disable-next-line no-console
