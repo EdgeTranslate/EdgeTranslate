@@ -51,12 +51,13 @@
         var c = _setupNS("google.translate._const");
         c._cest = gtConstEvalStartTime;
         gtConstEvalStartTime = undefined;
-        c._cl = "zh-CN";
+        c._cl = this.USER_LANG;
         c._cuc = "TECB_1E07F158C6FA4460B352973E9693B329";
         c._cac = "tee";
         c._cam = "";
         c._ctkk = "431080.3943598877";
         var h = "translate.googleapis.com";
+        // eslint-disable-next-line no-constant-condition
         var s = (true ? "https" : window.location.protocol == "https:" ? "https" : "http") + "://";
         var b = s + h;
         c._pah = h;
@@ -69,6 +70,6 @@
         c._ps = this.EDGE_TRANSLATE_URL + "google/translateelement.css";
         c._puh = "translate.google.com";
         _loadCss(c._ps);
-        _loadJs(b + "/translate_static/js/element/main_zh-CN.js");
+        _loadJs(b + "/translate_static/js/element/main_" + this.USER_LANG + ".js");
     })();
 })();

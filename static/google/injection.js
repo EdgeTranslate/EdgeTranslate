@@ -1,14 +1,28 @@
 // Copyright 2010 Google Inc. All Rights Reserved.
 
-function injection() {
-    var pageLang = "en";
-    var userLang = "zh-CN";
+/**
+ * 检测用户语言，并设定翻译组件的语言。
+ */
+chrome.runtime.sendMessage({ type: "get_lang" }, function(response) {
+    var s = document.createElement("script");
+    var user_lang = response && response.lang ? response.lang : "zh-CN";
 
+    s.id = "google-translate-injection";
+    s.setAttribute("user-lang", user_lang);
+    s.setAttribute("edge-translate-url", chrome.runtime.getURL(""));
+    s.innerHTML = "(function(){(" + injection.toString() + ")();})();";
+    document.getElementsByTagName("head")[0].appendChild(s);
+    return true;
+});
+
+function injection() {
     var uid = "1E07F158C6FA4460B352973E9693B329";
     var teId = "TE_" + uid;
     var cbId = "TECB_" + uid;
 
     var injection_ele = document.getElementById("google-translate-injection");
+    this.USER_LANG = injection_ele.getAttribute("user-lang");
+    injection_ele.removeAttribute("user-lang");
     this.EDGE_TRANSLATE_URL = injection_ele.getAttribute("edge-translate-url");
     injection_ele.removeAttribute("edge-translate-url");
 
@@ -24,7 +38,7 @@ function injection() {
             autoDisplay: false,
             floatPosition: 0,
             multilanguagePage: true,
-            pageLanguage: pageLang
+            pageLanguage: "auto"
         });
         return elem;
     }
@@ -46,9 +60,3 @@ function injection() {
         }
     }
 }
-
-var s = document.createElement("script");
-s.id = "google-translate-injection";
-s.setAttribute("edge-translate-url", chrome.runtime.getURL(""));
-s.innerHTML = "(function(){(" + injection.toString() + ")();})();";
-document.getElementsByTagName("head")[0].appendChild(s);

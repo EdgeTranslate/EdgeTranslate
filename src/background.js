@@ -354,6 +354,9 @@ chrome.runtime.onMessage.addListener(function(message, sender, callback) {
             case "youdao_page_translate":
                 youdaoPageTranslate(message.request, callback);
                 break;
+            case "get_lang":
+                callback({ lang: chrome.i18n.getUILanguage() });
+                break;
             default:
                 // eslint-disable-next-line no-console
                 console.log("Unknown message type: " + message.type);
