@@ -66,8 +66,7 @@
         c._pli = b + "/translate_static/img/loading.gif";
         c._plla = h + "/translate_a/l";
         c._pmi = b + "/translate_static/img/mini_google.png";
-        // eslint-disable-next-line no-undef
-        c._ps = EDGE_TRANSLATE_URL + "google/translateelement.css";
+        c._ps = this.EDGE_TRANSLATE_URL + "google/translateelement.css";
         c._puh = "translate.google.com";
         _loadCss(c._ps);
         _loadJs(b + "/translate_static/js/element/main_zh-CN.js");

@@ -301,23 +301,6 @@ function executeYouDaoScript() {
  * 执行谷歌网页翻译相关脚本。
  */
 function executeGoogleScript() {
-    chrome.tabs.executeScript(
-        {
-            code:
-                "var edge_translate_url = document.createElement('div');" +
-                "edge_translate_url.id = 'edge_translate_url';" +
-                "edge_translate_url.setAttribute('data', chrome.runtime.getURL(''));" +
-                "document.documentElement.appendChild(edge_translate_url);"
-        },
-        function(result) {
-            if (chrome.runtime.lastError) {
-                // eslint-disable-next-line no-console
-                console.log("Chrome runtime error: " + chrome.runtime.lastError);
-                // eslint-disable-next-line no-console
-                console.log("Detail: " + result);
-            }
-        }
-    );
     chrome.tabs.executeScript({ file: "./google/injection.js" }, function(result) {
         if (chrome.runtime.lastError) {
             // eslint-disable-next-line no-console

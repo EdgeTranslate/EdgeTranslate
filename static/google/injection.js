@@ -8,9 +8,9 @@ function injection() {
     var teId = "TE_" + uid;
     var cbId = "TECB_" + uid;
 
-    var edge_translate_url = document.getElementById("edge_translate_url");
-    this.EDGE_TRANSLATE_URL = edge_translate_url.getAttribute("data");
-    document.documentElement.removeChild(edge_translate_url);
+    var injection_ele = document.getElementById("google-translate-injection");
+    this.EDGE_TRANSLATE_URL = injection_ele.getAttribute("edge-translate-url");
+    injection_ele.removeAttribute("edge-translate-url");
 
     function show() {
         window.setTimeout(function() {
@@ -41,12 +41,14 @@ function injection() {
                 };
             }
             var s = document.createElement("script");
-            s.src = EDGE_TRANSLATE_URL + "google/element.js";
+            s.src = this.EDGE_TRANSLATE_URL + "google/element.js";
             document.getElementsByTagName("head")[0].appendChild(s);
         }
     }
 }
 
 var s = document.createElement("script");
+s.id = "google-translate-injection";
+s.setAttribute("edge-translate-url", chrome.runtime.getURL(""));
 s.innerHTML = "(function(){(" + injection.toString() + ")();})();";
 document.getElementsByTagName("head")[0].appendChild(s);
