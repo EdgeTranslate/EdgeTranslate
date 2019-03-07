@@ -323,23 +323,23 @@ if (this.JSON && this.JSON.stringify.toString().indexOf("[native code]") !== -1)
             return document.characterSet || document.charset;
         },
         log: function() {
-            if (!!window.console && !!window.console.log) {
-                var c = a.makeArray(arguments);
-                c.unshift("[J]");
-                try {
-                    window.console.log.apply(window.console, c);
-                } catch (d) {
-                    if (arguments.length === 3) {
-                        window.console.log(arguments[0], arguments[1], arguments[2]);
-                    } else {
-                        if (arguments.length === 2) {
-                            window.console.log(arguments[0], arguments[1]);
-                        } else {
-                            window.console.log(arguments[0]);
-                        }
-                    }
-                }
-            }
+            // if (!!window.console && !!window.console.log) {
+            //     var c = a.makeArray(arguments);
+            //     c.unshift("[J]");
+            //     try {
+            //         window.console.log.apply(window.console, c);
+            //     } catch (d) {
+            //         if (arguments.length === 3) {
+            //             window.console.log(arguments[0], arguments[1], arguments[2]);
+            //         } else {
+            //             if (arguments.length === 2) {
+            //                 window.console.log(arguments[0], arguments[1]);
+            //             } else {
+            //                 window.console.log(arguments[0]);
+            //             }
+            //         }
+            //     }
+            // }
         },
         css: (function() {
             var c = function(h, d) {
@@ -2420,9 +2420,18 @@ if (!J || !J.bind) {
                 d.disable();
                 d.movePage(-d.barHeight);
                 d.context.removeChild(d.wrapper);
-                d.context.removeChild(a.query("#OUTFOX_JTR_CDA"));
-                d.context.removeChild(a.query("#yddWrapper"));
-                d.context.removeChild(a.query("#outfox_seed_js"));
+                var tmp = a.query("#OUTFOX_JTR_CDA");
+                if (tmp) {
+                    d.context.removeChild(tmp);
+                }
+                tmp = a.query("#yddWrapper");
+                if (tmp) {
+                    d.context.removeChild(tmp);
+                }
+                tmp = a.query("#outfox_seed_js");
+                if (tmp) {
+                    d.context.removeChild(tmp);
+                }
             });
         },
         initTipContent: function() {
