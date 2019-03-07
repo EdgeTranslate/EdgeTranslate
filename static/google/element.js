@@ -73,3 +73,29 @@
         _loadJs(b + "/translate_static/js/element/main_" + this.USER_LANG + ".js");
     })();
 })();
+
+/**
+ * 自动替换无法访问的资源链接。
+ */
+(function() {
+    var count = 0;
+    var intervalId = setInterval(changeSrc, 1000);
+
+    function changeSrc() {
+        var frame = document.getElementById(":0.container");
+        if (frame && count < 30) {
+            var images = frame.contentDocument.getElementsByTagName("img");
+            if (images) {
+                for (var i = 0; i < images.length; i++) {
+                    if (images[i].src.indexOf("cleardot.gif") !== -1) {
+                        images[i].src = this.EDGE_TRANSLATE_URL + "google/cleardot.gif";
+                    }
+                }
+                clearInterval(intervalId);
+            }
+        } else {
+            clearInterval(intervalId);
+        }
+        count++;
+    }
+})();
