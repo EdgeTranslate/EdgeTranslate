@@ -221,7 +221,7 @@ function removeSlider() {
         document.documentElement.removeChild(frame);
         document.body.style.width = 100 + "%";
         setTimeout(function() {
-            document.body.style.marginLeft = "auto";
+            document.body.style.margin = "auto";
             document.body.style.position = "static";
             document.body.style.right = "";
             document.body.style.left = "";
