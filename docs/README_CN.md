@@ -67,7 +67,7 @@
 
 ## 了解更多
 
-[Wiki](https://github.com/EdgeTranslate/EdgeTranslate/wiki)
+[Wiki](./wiki/zh_CN/插件介绍.md)
 
 ## 联系我们
 

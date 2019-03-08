@@ -67,7 +67,7 @@
 
 ## 瞭解更多
 
-[Wiki](https://github.com/EdgeTranslate/EdgeTranslate/wiki)
+[Wiki](./wiki/zh_TW/插件介紹.md)
 
 ## 聯係我們
 

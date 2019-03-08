@@ -73,7 +73,7 @@ After building finished, you will get the unpacked extension under `./build/chro
 
 ## More Information
 
-[Wiki](https://github.com/EdgeTranslate/EdgeTranslate/wiki)
+[Wiki](./docs/wiki/en/Introduction.md)
 
 ## Contact Us
 
