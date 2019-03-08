@@ -96,7 +96,7 @@
         "description": "Add the domain of currently browsering site to blacklist."
     },
     "RemoveDomainBlacklist": {
-        "message": "Remove this domin from blacklist",
+        "message": "Remove this domain from blacklist",
         "description": "Remove the domain of currently browsering site from blacklist."
     },
     "ExtensionInstalled": {
