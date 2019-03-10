@@ -42,12 +42,14 @@ We are also grateful to users who have used Edge Translate since 0.2.0 and provi
 
 ## Questions and Feedback
 
-Edge Translate were developed by us ( [nickyc975](https://github.com/nickyc975) and [Mark-Fritz](https://github.com/Mark-Fritz) ) in our spare time, and there are inevitably some problems. If you have any comments or suggestions, please feel free to give us feedback at the first time and help us to make it better.
+Edge Translate were developed by us ( [nickyc975](https://github.com/nickyc975) and [Mark Fenng](https://github.com/Mark-Fenng) ) in our spare time, and there are inevitably some problems. If you have any comments or suggestions, please feel free to give us feedback at the first time and help us to make it better.
 
-Email: [nickyc975](mailto:chenjinlong2016@outlook.com), [Mark-Fritz](mailto:f18846188605@gmail.com)
+* Feedback link：[Edge Translate issue](https://github.com/EdgeTranslate/EdgeTranslate/issues/new/choose)
 
-Chrome App Store: [Edge Translate](https://chrome.google.com/webstore/detail/%E4%BE%A7%E8%BE%B9%E7%BF%BB%E8%AF%91/bocbaocobfecmglnmeaeppambideimao/reviews)
+* Email: [nickyc975](mailto:chenjinlong2016@outlook.com), [Mark Fenng](mailto:f18846188605@gmail.com)
 
-Firefox Add-ons Store: [Edge Translate](https://addons.mozilla.org/en-US/firefox/addon/edge_translate/reviews)
+* Chrome App Store: [Edge Translate](https://chrome.google.com/webstore/detail/%E4%BE%A7%E8%BE%B9%E7%BF%BB%E8%AF%91/bocbaocobfecmglnmeaeppambideimao/reviews)
+
+* Firefox Add-ons Store: [Edge Translate](https://addons.mozilla.org/en-US/firefox/addon/edge_translate/reviews)
 
 In addition, developers are welcome to give us issues and pull requests. If you like this project, welcome to fork & star.
