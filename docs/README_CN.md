@@ -15,7 +15,7 @@
 
 [Chrome应用商店](https://chrome.google.com/webstore/detail/bocbaocobfecmglnmeaeppambideimao)
 / [Firefox附加组件商店](https://addons.mozilla.org/firefox/addon/edge_translate/)
-/ [QQ浏览器应用商店](qqbrowser://extensions/search/detail?key=edgetranslate&id=bocbaocobfecmglnmeaeppambideimao%20&title=edgetranslate)
+/ [QQ浏览器应用商店](https://appcenter.browser.qq.com/search/detail?key=edgetranslate&id=bocbaocobfecmglnmeaeppambideimao%20&title=edgetranslate)
 / [360浏览器应用商店](https://ext.se.360.cn/webstore/detail/aajldohlagodeegngemjjgmabejbejli)
 
 ## 手动安装

@@ -21,7 +21,7 @@ View this page in other languages:
 
 [Chrome Web Store](https://chrome.google.com/webstore/detail/bocbaocobfecmglnmeaeppambideimao)
 / [Firefox Add-ons](https://addons.mozilla.org/firefox/addon/edge_translate/)
-/ [QQBrowser Web Store](qqbrowser://extensions/search/detail?key=edgetranslate&id=bocbaocobfecmglnmeaeppambideimao%20&title=edgetranslate)
+/ [QQBrowser Web Store](https://appcenter.browser.qq.com/search/detail?key=edgetranslate&id=bocbaocobfecmglnmeaeppambideimao%20&title=edgetranslate)
 / [360Browser Web Store](https://ext.se.360.cn/webstore/detail/aajldohlagodeegngemjjgmabejbejli)
 
 ## Manually Install
