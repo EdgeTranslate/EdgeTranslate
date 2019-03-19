@@ -15,7 +15,39 @@
 
 [Chrome应用商店](https://chrome.google.com/webstore/detail/bocbaocobfecmglnmeaeppambideimao)
 / [Firefox附加组件商店](https://addons.mozilla.org/firefox/addon/edge_translate/)
-/ [GitHub Release](https://github.com/EdgeTranslate/EdgeTranslate/releases)
+/ [QQ浏览器应用商店](qqbrowser://extensions/search/detail?key=edgetranslate&id=bocbaocobfecmglnmeaeppambideimao%20&title=edgetranslate)
+/ [360浏览器应用商店](https://ext.se.360.cn/webstore/detail/aajldohlagodeegngemjjgmabejbejli)
+
+## 手动安装
+
+从 [GitHub Release](https://github.com/EdgeTranslate/EdgeTranslate/releases) 下载安装包
+
+推荐下载与浏览器类型对应的最新版本 (Chrome与QQ浏览器使用相同的安装包)
+
+### Chrome
+
+* 在浏览器中访问： `chrome://extensions` ；
+
+* 开启右上角的`开发者模式`；
+
+* 将下载好的安装包用鼠标拖进页面；
+
+### QQ浏览器
+
+* 在浏览器中访问: `qqbrowser://extensions/manage`.
+
+* 开启右上角的`开发者模式`；
+
+* 将下载好的安装包用鼠标拖进页面；
+
+### Firefox
+
+* 当下载完成后自动安装
+
+### 360浏览器
+
+* 使用360浏览器打开安装包，即可自动安装
+
 
 ## 构建扩展
 
