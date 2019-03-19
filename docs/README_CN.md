@@ -103,7 +103,7 @@
 
 ## 联系我们
 
-电子邮件: [nickyc975](mailto:chenjinlong2016@outlook.com), [Mark-Fritz](mailto:f18846188605@gmail.com)
+电子邮件: [nickyc975](mailto:chenjinlong2016@outlook.com), [Mark Fenng](mailto:f18846188605@gmail.com)
 
 ## 开源协议
 

@@ -109,7 +109,7 @@ After building finished, you will get the unpacked extension under `./build/chro
 
 ## Contact Us
 
-E-mails: [nickyc975](mailto:chenjinlong2016@outlook.com), [Mark-Fritz](mailto:f18846188605@gmail.com)
+E-mails: [nickyc975](mailto:chenjinlong2016@outlook.com), [Mark Fenng](mailto:f18846188605@gmail.com)
 
 ## License
 
