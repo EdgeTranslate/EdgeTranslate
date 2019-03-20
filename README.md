@@ -21,7 +21,38 @@ View this page in other languages:
 
 [Chrome Web Store](https://chrome.google.com/webstore/detail/bocbaocobfecmglnmeaeppambideimao)
 / [Firefox Add-ons](https://addons.mozilla.org/firefox/addon/edge_translate/)
-/ [GitHub Release](https://github.com/EdgeTranslate/EdgeTranslate/releases)
+/ [QQ Browser Web Store](https://appcenter.browser.qq.com/search/detail?key=edgetranslate&id=bocbaocobfecmglnmeaeppambideimao%20&title=edgetranslate)
+/ [360 Browser Web Store](https://ext.se.360.cn/webstore/detail/aajldohlagodeegngemjjgmabejbejli)
+
+## Manually Install
+
+Firstly you need to download the extension package from [GitHub Release](https://github.com/EdgeTranslate/EdgeTranslate/releases).
+
+It is recommended to download the latest version for your browser (Chrome and QQ Browser use the same package).
+
+### Chrome
+
+* Navigate to: `chrome://extensions`.
+
+* Enable `Developer mode`. It should be in the upper right corner of the page.
+
+* Drag the extension package into the page and you will see the notification asking you to grant permissions.
+
+### QQ Browser
+
+* Navigate to: `qqbrowser://extensions/manage`.
+
+* Enable `Developer mode`. It should be in the upper right corner of the page.
+
+* Drag the Installation package into the page and you will see the notification asking you to grant permissions.
+
+### Firefox
+
+* Installation will start automatically after the .xapi package is downloaded through Firefox browser.
+
+### 360 Browser
+
+* Right click on the package file and choose "Use 360 Browser to open", then it will be installed automatically.
 
 ## Build It By Yourself
 
@@ -29,19 +60,27 @@ To build the extension, you need to have [Node.js](https://nodejs.org/) installe
 
 Clone the repository:
 
+```shell
     git clone https://github.com/EdgeTranslate/EdgeTranslate.git
+```
 
 Install dependencies:
 
+```shell
     npm install
+```
 
 Build Chrome version:
 
+```shell
     npm run build:chrome
+```
 
 Build Firefox version:
 
+```shell
     npm run build:firefox
+```
 
 After building finished, you will get the unpacked extension under `./build/chrome/` and `./build/firefox/`.
 
@@ -77,7 +116,7 @@ After building finished, you will get the unpacked extension under `./build/chro
 
 ## Contact Us
 
-E-mails: [nickyc975](mailto:chenjinlong2016@outlook.com), [Mark-Fritz](mailto:f18846188605@gmail.com)
+E-mails: [nickyc975](mailto:chenjinlong2016@outlook.com), [Mark Fenng](mailto:f18846188605@gmail.com)
 
 ## License
 
