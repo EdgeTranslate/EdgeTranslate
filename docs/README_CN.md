@@ -20,9 +20,9 @@
 
 ## 手动安装
 
-从 [GitHub Release](https://github.com/EdgeTranslate/EdgeTranslate/releases) 下载安装包。
+从 [GitHub Releases](https://github.com/EdgeTranslate/EdgeTranslate/releases) 下载浏览器对应的安装包 (Chrome与QQ浏览器使用相同的安装包) 。
 
-推荐下载与浏览器对应的最新版本 (Chrome与QQ浏览器使用相同的安装包)。
+推荐下载最新版本。
 
 ### Chrome
 
@@ -42,7 +42,7 @@
 
 ### Firefox
 
-* 使用Firefox下载.xapi文件，下载完成后会自动安装；
+* 使用Firefox下载`.xapi`文件，下载完成后会自动安装；
 
 ### 360浏览器
 
@@ -55,25 +55,25 @@
 克隆仓库：
 
 ```shell
-    git clone https://github.com/EdgeTranslate/EdgeTranslate.git
+git clone https://github.com/EdgeTranslate/EdgeTranslate.git
 ```
 
 安装依赖：
 
 ```shell
-    npm install
+npm install
 ```
 
 构建Chrome扩展：
 
 ```shell
-    npm run build:chrome
+npm run build:chrome
 ```
 
 构建Firefox扩展：
 
 ```shell
-    npm run build:firefox
+npm run build:firefox
 ```
 
 构建完成之后在 `./build/chrome/` 和 `./build/firefox/` 文件夹下可分别找到已解压的Chrome扩展和Firefox扩展。
