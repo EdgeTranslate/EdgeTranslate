@@ -26,9 +26,9 @@ View this page in other languages:
 
 ## Manually Install
 
-Firstly you need to download the extension package from [GitHub Release](https://github.com/EdgeTranslate/EdgeTranslate/releases).
+Firstly you need to download the extension package for your browser (Chrome and QQ Browser use the same package) from [GitHub Releases](https://github.com/EdgeTranslate/EdgeTranslate/releases).
 
-It is recommended to download the latest version for your browser (Chrome and QQ Browser use the same package).
+It is always recommended to download the latest version.
 
 ### Chrome
 
@@ -48,7 +48,7 @@ It is recommended to download the latest version for your browser (Chrome and QQ
 
 ### Firefox
 
-* Installation will start automatically after the .xapi package is downloaded through Firefox browser.
+* Installation will start automatically after the `.xapi` package is downloaded through Firefox browser.
 
 ### 360 Browser
 
@@ -61,25 +61,25 @@ To build the extension, you need to have [Node.js](https://nodejs.org/) installe
 Clone the repository:
 
 ```shell
-    git clone https://github.com/EdgeTranslate/EdgeTranslate.git
+git clone https://github.com/EdgeTranslate/EdgeTranslate.git
 ```
 
 Install dependencies:
 
 ```shell
-    npm install
+npm install
 ```
 
 Build Chrome version:
 
 ```shell
-    npm run build:chrome
+npm run build:chrome
 ```
 
 Build Firefox version:
 
 ```shell
-    npm run build:firefox
+npm run build:firefox
 ```
 
 After building finished, you will get the unpacked extension under `./build/chrome/` and `./build/firefox/`.
