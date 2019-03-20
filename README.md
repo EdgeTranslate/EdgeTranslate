@@ -21,14 +21,14 @@ View this page in other languages:
 
 [Chrome Web Store](https://chrome.google.com/webstore/detail/bocbaocobfecmglnmeaeppambideimao)
 / [Firefox Add-ons](https://addons.mozilla.org/firefox/addon/edge_translate/)
-/ [QQBrowser Web Store](https://appcenter.browser.qq.com/search/detail?key=edgetranslate&id=bocbaocobfecmglnmeaeppambideimao%20&title=edgetranslate)
-/ [360Browser Web Store](https://ext.se.360.cn/webstore/detail/aajldohlagodeegngemjjgmabejbejli)
+/ [QQ Browser Web Store](https://appcenter.browser.qq.com/search/detail?key=edgetranslate&id=bocbaocobfecmglnmeaeppambideimao%20&title=edgetranslate)
+/ [360 Browser Web Store](https://ext.se.360.cn/webstore/detail/aajldohlagodeegngemjjgmabejbejli)
 
 ## Manually Install
 
-Download installation package from [GitHub Release](https://github.com/EdgeTranslate/EdgeTranslate/releases)
+Firstly you need to download the extension package from [GitHub Release](https://github.com/EdgeTranslate/EdgeTranslate/releases).
 
-Recommend you to download the latest version corresponding to your browser type (Chrome and QQBrowser use the same package).
+It is recommended to download the latest version for your browser (Chrome and QQ Browser use the same package).
 
 ### Chrome
 
@@ -36,24 +36,23 @@ Recommend you to download the latest version corresponding to your browser type 
 
 * Enable `Developer mode`. It should be in the upper right corner of the page.
 
-* Drag the Installation package into the page.
+* Drag the extension package into the page and you will see the notification asking you to grant permissions.
 
-### QQBrowser
+### QQ Browser
 
 * Navigate to: `qqbrowser://extensions/manage`.
 
 * Enable `Developer mode`. It should be in the upper right corner of the page.
 
-* Drag the Installation package into the page.
+* Drag the Installation package into the page and you will see the notification asking you to grant permissions.
 
 ### Firefox
 
-* Install automatically when the package is ready.
+* Installation will start automatically after the .xapi package is downloaded through Firefox browser.
 
-### 360Browser
+### 360 Browser
 
-* Use 360Browser to open the installation package, then it will be installed automatically
-
+* Right click on the package file and choose "Use 360 Browser to open", then it will be installed automatically.
 
 ## Build It By Yourself
 
@@ -61,19 +60,27 @@ To build the extension, you need to have [Node.js](https://nodejs.org/) installe
 
 Clone the repository:
 
+```shell
     git clone https://github.com/EdgeTranslate/EdgeTranslate.git
+```
 
 Install dependencies:
 
+```shell
     npm install
+```
 
 Build Chrome version:
 
+```shell
     npm run build:chrome
+```
 
 Build Firefox version:
 
+```shell
     npm run build:firefox
+```
 
 After building finished, you will get the unpacked extension under `./build/chrome/` and `./build/firefox/`.
 
