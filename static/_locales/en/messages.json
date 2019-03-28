@@ -143,6 +143,10 @@
         "message": "Popup from the left",
         "description": "Translating results popup from the left."
     },
+    "ResizeSetting": {
+        "message": "Resize page",
+        "description": "Resize page to avoid occlude original content"
+    },
     "OtherSettings": {
         "message": "Other Settings",
         "description": "Other settings of the extension."

@@ -143,6 +143,10 @@
         "message": "從左側彈出",
         "description": "從左側彈出翻譯結果展示框"
     },
+    "ResizeSetting": {
+        "message": "收縮頁面",
+        "description": "Resize page to avoid occlude original content"
+    },
     "OtherSettings": {
         "message": "其他設定",
         "description": "插件的其他設定。"

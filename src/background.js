@@ -23,7 +23,9 @@ const DEFAULT_LANGUAGE_SETTING = { sl: "auto", tl: "zh-CN" };
  */
 const DEFAULT_DT_SETTING = ["t", "at", "bd", "ex", "md", "rw", "ss", "rm"];
 
-const DEFAULT_LAYOUT_SETTINGS = { PopupPosition: "right" };
+// PopupPosition: determine the location of translation block
+// Resize value determine whether the web page will resize when showing translation result
+const DEFAULT_LAYOUT_SETTINGS = { PopupPosition: "right", Resize: false };
 
 const DEFAULT_OTHER_SETTINGS = {
     SelectTranslate: true,

@@ -20,6 +20,7 @@ window.onload = function() {
         var DTOptions = document.getElementsByClassName("dt-option");
         var OtherOptions = document.getElementsByClassName("other-option");
         var PopupPositions = document.getElementsByName("PopupPosition");
+        var ResizeOption = document.getElementById("Resize");
 
         // 首先将初始化的设置同步到页面
         for (let i = 0; i < DTOptions.length; i++) {
@@ -33,6 +34,7 @@ window.onload = function() {
         for (let i = 0; i < PopupPositions.length; i++) {
             PopupPositions[i].checked = PopupPositions[i].value === LayoutSettings["PopupPosition"];
         }
+        ResizeOption.checked = LayoutSettings["Resize"];
 
         // 如果用户修改了选项，则添加事件监听,将修改的配置保存
         for (let i = 0; i < DTOptions.length; i++) {
@@ -57,6 +59,11 @@ window.onload = function() {
                 }
             };
         }
+
+        ResizeOption.onchange = function() {
+            LayoutSettings["Resize"] = this.checked;
+            saveOption("LayoutSettings", LayoutSettings);
+        };
 
         // 保存其他设置
         for (let i = 0; i < OtherOptions.length; i++) {
