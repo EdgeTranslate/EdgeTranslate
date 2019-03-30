@@ -137,46 +137,20 @@ chrome.runtime.onInstalled.addListener(function(details) {
     if (process.env.NODE_ENV === "production") {
         if (details.reason === "install") {
             // 首次安装，引导用户查看wiki
-            chrome.notifications.create("install_notification", {
-                type: "basic",
-                iconUrl: "./icon/icon128.png",
-                title: chrome.i18n.getMessage("AppName"),
-                message: chrome.i18n.getMessage("ExtensionInstalled")
+            chrome.tabs.create({
+                // 为wiki页面创建一个新的标签页
+                url: "https://github.com/EdgeTranslate/EdgeTranslate/wiki"
             });
         } else if (details.reason === "update") {
             // 从旧版本更新，引导用户查看更新日志
-            chrome.notifications.create("update_notification", {
-                type: "basic",
-                iconUrl: "./icon/icon128.png",
-                title: chrome.i18n.getMessage("AppName"),
-                message: chrome.i18n.getMessage("ExtensionUpdated")
+            chrome.tabs.create({
+                // 为releases页面创建一个新的标签页
+                url: "https://github.com/EdgeTranslate/EdgeTranslate/releases"
             });
         }
 
         // 卸载原因调查
         chrome.runtime.setUninstallURL("https://wj.qq.com/s2/3265930/8f07/");
-    }
-});
-
-/**
- * 监听用户点击通知事件
- */
-chrome.notifications.onClicked.addListener(function(notificationId) {
-    switch (notificationId) {
-        case "install_notification":
-            chrome.tabs.create({
-                // 为wiki页面创建一个新的标签页
-                url: "https://github.com/EdgeTranslate/EdgeTranslate/wiki"
-            });
-            break;
-        case "update_notification":
-            chrome.tabs.create({
-                // 为releases页面创建一个新的标签页
-                url: "https://github.com/EdgeTranslate/EdgeTranslate/releases"
-            });
-            break;
-        default:
-            break;
     }
 });
 
