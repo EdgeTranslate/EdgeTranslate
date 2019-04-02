@@ -102,22 +102,7 @@ function createBlock(content, template) {
             // frame不在页面中，创建新的frame
             frame = document.createElement("iframe");
             frame.id = "translate_frame";
-            document.body.style.transition = "width " + transitionDuration + "ms";
-            originOriginWidth = document.body.clientWidth;
-            document.body.style.width = 80 + "%";
-            if (popupPosition === "left") {
-                // 用户设置 在页面左侧显示侧边栏
-                document.body.style.position = "absolute";
-                document.body.style.marginLeft = 0.2 * originOriginWidth + "px";
-                document.body.style.right = "0";
-                document.body.style.left = "";
-                frame.style.left = "0";
-            } else {
-                document.body.style.margin = "0";
-                document.body.style.right = "";
-                document.body.style.left = "0";
-                frame.style.right = "0";
-            }
+            startSlider(layoutSettings);
             document.documentElement.appendChild(frame);
         }
 
@@ -188,6 +173,39 @@ function isChildNode(node1, node2) {
         else node1 = node1.parentNode;
     }
     return false;
+}
+
+/**
+ * change CSS style of body element and the frame element
+ * the body size will be contracted
+ */
+function startSlider(layoutSettings) {
+    var resizeFlag = layoutSettings["Resize"]; // 保存侧边栏展示的位置
+    originOriginWidth = document.body.clientWidth;
+    if (resizeFlag) {
+        // 用户设置 收缩页面
+        document.body.style.transition = "width " + transitionDuration + "ms";
+        document.body.style.width = 80 + "%";
+    }
+    if (popupPosition === "left") {
+        // 用户设置 在页面左侧显示侧边栏
+        if (resizeFlag) {
+            // 用户设置 收缩页面
+            document.body.style.position = "absolute";
+            document.body.style.marginLeft = 0.2 * originOriginWidth + "px";
+            document.body.style.right = "0";
+            document.body.style.left = "";
+        }
+        frame.style.left = "0";
+    } else {
+        if (resizeFlag) {
+            // 用户设置 收缩页面
+            document.body.style.margin = "0";
+            document.body.style.right = "";
+            document.body.style.left = "0";
+        }
+        frame.style.right = "0";
+    }
 }
 
 /**
