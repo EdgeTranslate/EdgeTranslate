@@ -1,7 +1,7 @@
 # 侧边翻译
 
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/EdgeTranslate/EdgeTranslate/blob/master/LICENSE.MIT)
-[![License](https://img.shields.io/badge/license-Anti%20996-blue.svg)](https://github.com/EdgeTranslate/EdgeTranslate/blob/master/LICENSE.NPL)
+[![License](https://img.shields.io/badge/License-NPL%20(The%20996%20Prohibited%20License)-blue.svg)](https://github.com/EdgeTranslate/EdgeTranslate/blob/master/LICENSE.NPL)
 
 [![Version](https://img.shields.io/github/release/EdgeTranslate/EdgeTranslate.svg?label=version)](https://github.com/EdgeTranslate/EdgeTranslate/releases)
 [![Build Status](https://travis-ci.org/EdgeTranslate/EdgeTranslate.svg?branch=develop)](https://travis-ci.org/EdgeTranslate/EdgeTranslate)
