@@ -1,6 +1,6 @@
 # 側邊翻譯
 
-[![License](https://img.shields.io/github/license/EdgeTranslate/EdgeTranslate.svg?colorB=44cc11?maxAge=2592000)](https://github.com/EdgeTranslate/EdgeTranslate/blob/master/LICENSE)
+[![License](https://img.shields.io/github/license/EdgeTranslate/EdgeTranslate.svg?colorB=44cc11?maxAge=2592000)](https://github.com/EdgeTranslate/EdgeTranslate/blob/master/LICENSE.MIT)
 [![LICENSE](https://img.shields.io/badge/license-Anti%20996-blue.svg)](https://github.com/996icu/996.ICU/blob/master/LICENSE)
 
 [![Version](https://img.shields.io/github/release/EdgeTranslate/EdgeTranslate.svg?label=version)](https://github.com/EdgeTranslate/EdgeTranslate/releases)
