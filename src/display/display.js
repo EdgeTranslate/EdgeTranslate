@@ -250,6 +250,35 @@ function removeSlider() {
     }
 }
 
+function dragFunction(element, location) {
+    var properties = {
+        range: 5
+    };
+    switch (location) {
+        case "left":
+            properties.boundary = element.offsetLeft;
+            break;
+        default:
+    }
+    document.addEventListener(
+        "mousemove",
+        function(event) {
+            dragHover(event, this.element, this.location, this.properties);
+        }.bind(this)
+    );
+    return 0;
+}
+
+function dragHover(event, element, location, properties) {
+    if (element) {
+        if (Math.abs(event.x - properties.boundary) <= properties.range) {
+            element.style.cursor = "e-resize";
+        } else {
+            element.style.cursor = "auto";
+        }
+    }
+}
+
 /**
  *
  * 处理在原始页面 点击侧边栏边框附近，开始拖动的动作 以及处理鼠标移动到侧边栏附近鼠标形状的改变特效
