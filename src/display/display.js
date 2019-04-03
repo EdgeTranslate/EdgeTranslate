@@ -148,14 +148,16 @@ function addEventListener() {
     });
     // 给关闭按钮添加点击事件监听，用于关闭侧边栏
     frameDocument.getElementById("icon-close").addEventListener("click", removeSlider);
-    document.addEventListener("mousemove", documentDragOn);
-    frameDocument.addEventListener("mousemove", iframeDragOn);
-    document.addEventListener("mousedown", documentDragOn);
-    frameDocument.addEventListener("mousedown", iframeDragOn);
-    document.addEventListener("mousemove", drag);
-    frameDocument.addEventListener("mousemove", drag);
-    document.addEventListener("mouseup", dragOff);
-    frameDocument.addEventListener("mouseup", dragOff);
+    // document.addEventListener("mousemove", documentDragOn);
+    // frameDocument.addEventListener("mousemove", iframeDragOn);
+    // document.addEventListener("mousedown", documentDragOn);
+    // frameDocument.addEventListener("mousedown", iframeDragOn);
+    // document.addEventListener("mousemove", drag);
+    // frameDocument.addEventListener("mousemove", drag);
+    // document.addEventListener("mouseup", dragOff);
+    // frameDocument.addEventListener("mouseup", dragOff);
+    dragFunction(document, document.body, "right");
+    dragFunction(frameDocument, frameDocument.documentElement, "left");
 }
 
 /**
@@ -250,31 +252,98 @@ function removeSlider() {
     }
 }
 
-function dragFunction(element, location) {
+function dragFunction(parentElement, element, location) {
     var properties = {
-        range: 5
+        range: 5,
+        mouseDown: false,
+        originBase: 0,
+        originLength: 0
     };
-    switch (location) {
-        case "left":
-            properties.boundary = element.offsetLeft;
-            break;
-        default:
-    }
-    document.addEventListener(
+    var scope = {};
+    scope.properties = properties;
+    scope.element = element;
+    scope.location = location;
+    parentElement.addEventListener(
         "mousemove",
         function(event) {
             dragHover(event, this.element, this.location, this.properties);
-        }.bind(this)
+        }.bind(scope)
     );
-    return 0;
 }
 
 function dragHover(event, element, location, properties) {
     if (element) {
-        if (Math.abs(event.x - properties.boundary) <= properties.range) {
+        let boundary;
+        switch (location) {
+            case "up":
+                boundary = element.offsetUp;
+                break;
+            case "right":
+                boundary = element.offsetLeft + element.clientWidth;
+                break;
+            case "down":
+                boundary = element.offsetUp + element.clientHeight;
+                break;
+            case "left":
+                boundary = element.offsetLeft;
+                break;
+            default:
+        }
+        if (Math.abs(event.x - boundary) <= properties.range) {
             element.style.cursor = "e-resize";
         } else {
             element.style.cursor = "auto";
+        }
+    }
+}
+
+function dragStart(event, element, location, properties) {
+    if (element) {
+        let boundary;
+        switch (location) {
+            case "up":
+                boundary = element.offsetUp;
+                properties.originBase = screen.screenY;
+                properties.originLength = element.clientHeight;
+                break;
+            case "right":
+                boundary = element.offsetLeft + element.clientWidth;
+                properties.originBase = screen.screenX;
+                properties.originLength = element.clientWidth;
+                break;
+            case "down":
+                boundary = element.offsetUp + element.clientHeight;
+                properties.originBase = screen.screenY;
+                properties.originLength = element.clientHeight;
+                break;
+            case "left":
+                boundary = element.offsetLeft;
+                properties.originBase = screen.screenX;
+                properties.originLength = element.clientWidth;
+                break;
+            default:
+        }
+        if (Math.abs(event.x - boundary) <= properties.range) {
+            properties.mouseDown = true;
+        }
+    }
+}
+
+function dragging(event, element, location, properties) {
+    if (properties.mouseDown) {
+        var moveLength;
+        switch (location) {
+            case "up":
+                break;
+            case "right":
+                moveLength = properties.originBase - event.screenX;
+                break;
+            case "down":
+                break;
+            case "left":
+                moveLength = -(properties.originBase - event.screenX);
+                break;
+            default:
         }
     }
 }
