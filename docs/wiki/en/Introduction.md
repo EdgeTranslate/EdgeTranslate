@@ -10,23 +10,41 @@ Welcome to Edge Translate!
 
 Edge Translate is a simple and practical translation plugin that supports mainstream browsers such as [Chrome](https://chrome.google.com/webstore/detail/bocbaocobfecmglnmeaeppambideimao), [Firefox](https://addons.mozilla.org/en-US/firefox/addon/edge_translate), and [360 Secure Browser](https://ext.se.360.cn/webstore/detail/aajldohlagodeegngemjjgmabejbejli) . The main purpose of our plugin is to assist users in reading foreign literature. To this end, we have followed the principle of the user's reading experience first, and made the following efforts:
 
-* We use the API provided by Google Translate to translate words and sentences, which guarantees the accuracy of translation results to a certain extent;
+* __Google Translate API__ 
 
-* We support the translation of wording in PDF files, which breaks the dyslexia of many users when reading PDF documents (due to the Firefox browser's bug, this feature is temporarily unavailable on Firefox browser);
+  We use the API provided by Google Translate to translate words and sentences, which guarantees the accuracy of translation results to a certain extent;
 
-* We chose the friendly side pop-up to show the translation results. The pop-up display bar will push the user reading content to avoid blocking the content from affecting the reading;
+* __PDF File Supported__ 
 
-* We designed a simple and clear translation result display column, highlighting important content, and ensuring that the user's attention is focused on the content displayed rather than the insignificant things such as the display box;
+  We support the translation of wording in PDF files, which breaks the dyslexia of many users when reading PDF documents (due to the Firefox browser's bug, this feature is temporarily unavailable on Firefox browser);
 
-* If the frequency of the your translation is relatively high, you can choose to fix the display bar to avoid frequent pop-ups affecting reading.
+* __Reading Friendly Result Displaying__ 
 
-* We allow users to decide for themselves which content in the translation results they need to display. For example, if you just want to know the meaning of the word, you can choose to view only the common meaning of the word. If you also want to learn the specific usage of a word, we also provide the pronunciation, definition, detailed explanation, example sentence, etc. of the word in more detail. Content for you to view;
+  We chose the friendly side pop-up to show the translation results. The pop-up display bar will push the user reading content to avoid blocking the content from affecting the reading;
 
-* We have provided a wealth of shortcut keys to make the operation efficiency greatly improved. Now you only need to use the keyboard to complete the translation of selected words, expand the search panel, fix and unpin the translation results;
+* __Simple and Clear Look__
 
-* We provide a useful blacklist feature that allows you to easily add a page you are browsing to a blacklist to disable wording translations and double-click translations on the page, or to remove the page being viewed from the blacklist to re-enable word translation and double click translation on this page.
+  We designed a simple and clear translation result display column, highlighting important content, and ensuring that the user's attention is focused on the content displayed rather than the insignificant things such as the display box;
 
-* We support web page translation and can translate the entire web page directly into the language you need. And you are free to choose YouDao web page translation or Google web page translation to fully meet your translation needs.
+* __Fix The Result Frame__ 
+
+  If the frequency of the your translation is relatively high, you can choose to fix the display bar to avoid frequent pop-ups affecting reading.
+
+* __Fully Customizable__ 
+
+  We allow users to decide for themselves which content in the translation results they need to display. For example, if you just want to know the meaning of the word, you can choose to view only the common meaning of the word. If you also want to learn the specific usage of a word, we also provide the pronunciation, definition, detailed explanation, example sentence, etc. of the word in more detail. Content for you to view;
+
+* __Efficient Shortcuts__ 
+
+  We have provided a wealth of shortcut keys to make the operation efficiency greatly improved. Now you only need to use the keyboard to complete the translation of selected words, expand the search panel, fix and unpin the translation results;
+
+* __Website Blacklist__ 
+
+  We provide a useful blacklist feature that allows you to easily add a page you are browsing to a blacklist to disable wording translations and double-click translations on the page, or to remove the page being viewed from the blacklist to re-enable word translation and double click translation on this page.
+
+* __Whole Page Translating__ 
+
+  We support web page translation and can translate the entire web page directly into the language you need. And you are free to choose YouDao web page translation or Google web page translation to fully meet your translation needs.
 
 The birth of Edge Translate is inseparable from the open source community. In the development process of Edge Translate, we used [Mozilla](https://github.com/mozilla)'s [pdf.js](https://github.com/mozilla/pdf.js) as a built-in PDF reader to support word translation in PDF files. We refered to [crimx](https://github.com/crimx)'s [saladict](https://github.com/crimx/ext-saladict) for solutions of some problems. We also used [gulp](https://github.com/gulpjs/gulp), [webpack](https://github.com/webpack/webpack) and other excellent open source tools to assist in development. And we would like to express our gratitude.
 
