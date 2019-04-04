@@ -137,11 +137,9 @@ chrome.runtime.onInstalled.addListener(function(details) {
     if (process.env.NODE_ENV === "production") {
         if (details.reason === "install") {
             // 首次安装，引导用户查看wiki
-            chrome.notifications.create("install_notification", {
-                type: "basic",
-                iconUrl: "./icon/icon128.png",
-                title: chrome.i18n.getMessage("AppName"),
-                message: chrome.i18n.getMessage("ExtensionInstalled")
+            chrome.tabs.create({
+                // 为wiki页面创建一个新的标签页
+                url: "https://github.com/EdgeTranslate/EdgeTranslate/wiki"
             });
         } else if (details.reason === "update") {
             // 从旧版本更新，引导用户查看更新日志
@@ -163,12 +161,6 @@ chrome.runtime.onInstalled.addListener(function(details) {
  */
 chrome.notifications.onClicked.addListener(function(notificationId) {
     switch (notificationId) {
-        case "install_notification":
-            chrome.tabs.create({
-                // 为wiki页面创建一个新的标签页
-                url: "https://github.com/EdgeTranslate/EdgeTranslate/wiki"
-            });
-            break;
         case "update_notification":
             chrome.tabs.create({
                 // 为releases页面创建一个新的标签页
