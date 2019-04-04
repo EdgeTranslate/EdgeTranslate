@@ -10,6 +10,8 @@ import error from "./templates/error.html"; // template of error message
  * end load
  */
 
+// 用于存储div, div 中包含一个 iframe元素，这个iframe元素用来在页面的右侧展示翻译结果
+var divFrame;
 // 用于存储一个iframe元素，这个元素用来在页面的右侧展示翻译结果
 var frame;
 // iframe中的 document
@@ -98,12 +100,15 @@ function createBlock(content, template) {
         popupPosition = layoutSettings["PopupPosition"]; // 保存侧边栏展示的位置
 
         // 判断frame是否已经添加到了页面中
-        if (!isChildNode(frame, document.documentElement)) {
+        if (!isChildNode(divFrame, document.documentElement)) {
             // frame不在页面中，创建新的frame
+            divFrame = document.createElement("div");
+            divFrame.id = "translate_div";
             frame = document.createElement("iframe");
             frame.id = "translate_frame";
             startSlider(layoutSettings);
-            document.documentElement.appendChild(frame);
+            divFrame.appendChild(frame);
+            document.documentElement.appendChild(divFrame);
         }
 
         // Write contents into iframe.
@@ -206,7 +211,8 @@ function startSlider(layoutSettings) {
             document.body.style.right = "0";
             document.body.style.left = "";
         }
-        frame.style.left = "0";
+        divFrame.style.left = "0";
+        divFrame.style["padding-right"] = "10px";
     } else {
         if (resizeFlag) {
             // 用户设置 收缩页面
@@ -214,7 +220,8 @@ function startSlider(layoutSettings) {
             document.body.style.right = "";
             document.body.style.left = "0";
         }
-        frame.style.right = "0";
+        divFrame.style.right = "0";
+        divFrame.style["padding-left"] = "10px";
     }
 }
 
@@ -231,7 +238,7 @@ function startSlider(layoutSettings) {
  */
 function clickListener(event) {
     let node = event.target;
-    if (!isChildNode(node, frame)) {
+    if (!isChildNode(node, divFrame)) {
         var boundary =
             popupPosition === "left" ? frame.offsetLeft + frame.clientWidth : frame.offsetLeft; // 根据侧边栏的位置确定拖拽的起点
         if (Math.abs(event.x - boundary) > dragSensitivity) {
@@ -245,8 +252,8 @@ function clickListener(event) {
  */
 function removeSlider() {
     mousedown = false; // 如果侧边栏关闭，直接停止侧边栏宽度的调整
-    if (isChildNode(frame, document.documentElement)) {
-        document.documentElement.removeChild(frame);
+    if (isChildNode(divFrame, document.documentElement)) {
+        document.documentElement.removeChild(divFrame);
         document.body.style.width = 100 + "%";
         setTimeout(function() {
             document.body.style.margin = "auto";
