@@ -45,21 +45,21 @@ chrome.runtime.onInstalled.addListener(function(details) {
     });
 
     chrome.contextMenus.create({
+        id: "shortcut",
+        title: chrome.i18n.getMessage("ShortcutSetting"),
+        contexts: ["browser_action"]
+    });
+
+    chrome.contextMenus.create({
         id: "translate_page_youdao",
         title: chrome.i18n.getMessage("TranslatePageYouDao"),
-        contexts: ["page"]
+        contexts: ["page", "browser_action"]
     });
 
     chrome.contextMenus.create({
         id: "translate_page_google",
         title: chrome.i18n.getMessage("TranslatePageGoogle"),
-        contexts: ["page"]
-    });
-
-    chrome.contextMenus.create({
-        id: "shortcut",
-        title: chrome.i18n.getMessage("ShortcutSetting"),
-        contexts: ["browser_action"]
+        contexts: ["page", "browser_action"]
     });
 
     chrome.contextMenus.create({
@@ -170,21 +170,21 @@ chrome.runtime.onStartup.addListener(function() {
     });
 
     chrome.contextMenus.create({
+        id: "shortcut",
+        title: chrome.i18n.getMessage("ShortcutSetting"),
+        contexts: ["browser_action"]
+    });
+
+    chrome.contextMenus.create({
         id: "translate_page_youdao",
         title: chrome.i18n.getMessage("TranslatePageYouDao"),
-        contexts: ["page"]
+        contexts: ["page", "browser_action"]
     });
 
     chrome.contextMenus.create({
         id: "translate_page_google",
         title: chrome.i18n.getMessage("TranslatePageGoogle"),
-        contexts: ["page"]
-    });
-
-    chrome.contextMenus.create({
-        id: "shortcut",
-        title: chrome.i18n.getMessage("ShortcutSetting"),
-        contexts: ["browser_action"]
+        contexts: ["page", "browser_action"]
     });
 
     chrome.contextMenus.create({
