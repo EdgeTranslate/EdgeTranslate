@@ -6,6 +6,7 @@ import render from "./engine.js";
 import result from "./templates/result.html"; // template of translate result
 import loading from "./templates/loading.html"; // template of loading icon
 import error from "./templates/error.html"; // template of error message
+import resizeFunction from "../lib/resize";
 /**
  * end load
  */
@@ -16,6 +17,9 @@ var divFrame;
 var frame;
 // iframe中的 document
 var frameDocument;
+
+var resizeBody;
+var resizeDivFrame;
 
 var originOriginWidth; // 存储网页body的原始宽度
 var translateResult; // 保存翻译结果
@@ -151,8 +155,8 @@ function addEventListener() {
     // 给关闭按钮添加点击事件监听，用于关闭侧边栏
     frameDocument.getElementById("icon-close").addEventListener("click", removeSlider);
 
-    if (popupPosition == "right") {
-        dragFunction(document.body, "right", {
+    if (popupPosition == "left") {
+        resizeBody = resizeFunction(document.body, "left", {
             parentElement: document.documentElement,
             preFunction: function(element) {
                 element.style.transition = "none";
@@ -161,11 +165,11 @@ function addEventListener() {
                 element.style.transition = "width " + transitionDuration + "ms";
             }
         });
-        dragFunction(divFrame, "left", {
+        resizeDivFrame = resizeFunction(divFrame, "right", {
             parentElement: document.documentElement
         });
     } else {
-        dragFunction(document.body, "left", {
+        resizeBody = resizeFunction(document.body, "right", {
             parentElement: document.documentElement,
             preFunction: function(element) {
                 element.style.transition = "none";
@@ -174,7 +178,7 @@ function addEventListener() {
                 element.style.transition = "width " + transitionDuration + "ms";
             }
         });
-        dragFunction(divFrame, "right", {
+        resizeDivFrame = resizeFunction(divFrame, "left", {
             parentElement: document.documentElement
         });
     }
@@ -270,141 +274,8 @@ function removeSlider() {
             document.body.style.left = "";
         }, transitionDuration);
         document.documentElement.removeEventListener("mousedown", clickListener);
-    }
-}
-
-function dragFunction(element, location, parameter) {
-    if (!parameter.parentElement) {
-        parameter.parentElement = document.documentElement;
-    }
-    var properties = {
-        range: dragSensitivity,
-        mouseDown: false,
-        originBase: 0,
-        originLength: 0,
-        parameter: parameter
-    };
-    var scope = {};
-    scope.properties = properties;
-    scope.element = element;
-    scope.location = location;
-    parameter.parentElement.addEventListener(
-        "mousemove",
-        function(event) {
-            dragHover(event, this.element, this.location, this.properties);
-        }.bind(scope)
-    );
-    parameter.parentElement.addEventListener(
-        "mousedown",
-        function(event) {
-            dragStart(event, this.element, this.location, this.properties);
-        }.bind(scope)
-    );
-    parameter.parentElement.addEventListener(
-        "mousemove",
-        function(event) {
-            dragging(event, this.element, this.location, this.properties);
-        }.bind(scope)
-    );
-    parameter.parentElement.addEventListener(
-        "mouseup",
-        function(event) {
-            dragStop(event, this.element, this.location, this.properties);
-        }.bind(scope)
-    );
-}
-
-function dragHover(event, element, location, properties) {
-    if (element && !properties.mouseDown) {
-        let boundary;
-        switch (location) {
-            case "up":
-                boundary = element.offsetUp;
-                break;
-            case "right":
-                boundary = element.offsetLeft + element.clientWidth;
-                break;
-            case "down":
-                boundary = element.offsetUp + element.clientHeight;
-                break;
-            case "left":
-                boundary = element.offsetLeft;
-                break;
-            default:
-        }
-        if (Math.abs(event.x - boundary) <= properties.range) {
-            properties.parameter.parentElement.style.cursor = "e-resize";
-        } else {
-            properties.parameter.parentElement.style.cursor = "auto";
-        }
-    }
-}
-
-function dragStart(event, element, location, properties) {
-    if (element) {
-        let boundary;
-        switch (location) {
-            case "up":
-                boundary = element.offsetUp;
-                properties.originBase = event.screenY;
-                properties.originLength = element.clientHeight;
-                break;
-            case "right":
-                boundary = element.offsetLeft + element.clientWidth;
-                properties.originBase = event.screenX;
-                properties.originLength = element.clientWidth;
-                break;
-            case "down":
-                boundary = element.offsetUp + element.clientHeight;
-                properties.originBase = event.screenY;
-                properties.originLength = element.clientHeight;
-                break;
-            case "left":
-                boundary = element.offsetLeft;
-                properties.originBase = event.screenX;
-                properties.originLength = element.clientWidth;
-                break;
-            default:
-        }
-        if (Math.abs(event.x - boundary) <= properties.range) {
-            properties.mouseDown = true;
-            if (properties.parameter.preFunction) {
-                properties.parameter.preFunction(element);
-            }
-        }
-    }
-}
-
-function dragging(event, element, location, properties) {
-    if (properties.mouseDown) {
-        properties.parameter.parentElement.style.cursor = "e-resize";
-        event.preventDefault();
-        switch (location) {
-            case "up":
-                break;
-            case "right":
-                element.style.width =
-                    properties.originLength - (properties.originBase - event.screenX) + "px";
-                break;
-            case "down":
-                break;
-            case "left":
-                element.style.width =
-                    properties.originLength + properties.originBase - event.screenX + "px";
-                break;
-            default:
-        }
-        return false; // to prevent default action for other Browser
-    }
-}
-
-function dragStop(event, element, location, properties) {
-    if (properties.mouseDown) {
-        properties.parameter.parentElement.style.cursor = "auto";
-        properties.mouseDown = false;
-        if (properties.parameter.callback) {
-            properties.parameter.callback(element);
-        }
+        resizeBody.cancelResize().bind(resizeBody);
+        resizeDivFrame.cancelResize();
     }
 }
 
