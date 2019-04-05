@@ -1,7 +1,6 @@
 export default function(element, location, parameter) {
     var properties = {
         callback: parameter.callback,
-        cancelResize: cancelResize,
         element: element,
         location: location,
         mouseDown: false,
@@ -13,7 +12,11 @@ export default function(element, location, parameter) {
     };
 
     function dragHover(event) {
-        if (properties.element && !properties.mouseDown) {
+        if (
+            properties.element &&
+            !properties.mouseDown &&
+            properties.element.getClientRects().length > 0
+        ) {
             let boundary;
             switch (properties.location) {
                 case "up":
@@ -45,7 +48,7 @@ export default function(element, location, parameter) {
     }
 
     function dragStart(event) {
-        if (properties.element) {
+        if (properties.element && properties.element.getClientRects().length > 0) {
             let boundary;
             switch (properties.location) {
                 case "up":
@@ -114,13 +117,6 @@ export default function(element, location, parameter) {
                 properties.callback(properties.element);
             }
         }
-    }
-
-    function cancelResize() {
-        properties.parentElement.removeEventListener("mousemove", dragHover);
-        properties.parentElement.removeEventListener("mousedown", dragStart);
-        properties.parentElement.removeEventListener("mousemove", dragging);
-        properties.parentElement.removeEventListener("mouseup", dragStop);
     }
 
     if (!properties.parentElement) {

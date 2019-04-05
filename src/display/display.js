@@ -18,9 +18,6 @@ var frame;
 // iframe中的 document
 var frameDocument;
 
-var resizeBody;
-var resizeDivFrame;
-
 var originOriginWidth; // 存储网页body的原始宽度
 var translateResult; // 保存翻译结果
 var sourceTTSSpeed, targetTTSSpeed;
@@ -156,7 +153,7 @@ function addEventListener() {
     frameDocument.getElementById("icon-close").addEventListener("click", removeSlider);
 
     if (popupPosition == "left") {
-        resizeBody = resizeFunction(document.body, "left", {
+        resizeFunction(document.body, "left", {
             parentElement: document.documentElement,
             preFunction: function(element) {
                 element.style.transition = "none";
@@ -165,11 +162,11 @@ function addEventListener() {
                 element.style.transition = "width " + transitionDuration + "ms";
             }
         });
-        resizeDivFrame = resizeFunction(divFrame, "right", {
+        resizeFunction(divFrame, "right", {
             parentElement: document.documentElement
         });
     } else {
-        resizeBody = resizeFunction(document.body, "right", {
+        resizeFunction(document.body, "right", {
             parentElement: document.documentElement,
             preFunction: function(element) {
                 element.style.transition = "none";
@@ -178,7 +175,7 @@ function addEventListener() {
                 element.style.transition = "width " + transitionDuration + "ms";
             }
         });
-        resizeDivFrame = resizeFunction(divFrame, "left", {
+        resizeFunction(divFrame, "left", {
             parentElement: document.documentElement
         });
     }
@@ -274,8 +271,6 @@ function removeSlider() {
             document.body.style.left = "";
         }, transitionDuration);
         document.documentElement.removeEventListener("mousedown", clickListener);
-        resizeBody.cancelResize().bind(resizeBody);
-        resizeDivFrame.cancelResize();
     }
 }
 
