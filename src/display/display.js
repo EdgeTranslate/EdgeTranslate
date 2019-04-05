@@ -232,7 +232,9 @@ function clickListener(event) {
     let node = event.target;
     if (!isChildNode(node, divFrame)) {
         var boundary =
-            popupPosition === "left" ? frame.offsetLeft + frame.clientWidth : frame.offsetLeft; // 根据侧边栏的位置确定拖拽的起点
+            popupPosition === "left"
+                ? divFrame.offsetLeft + divFrame.clientWidth
+                : divFrame.offsetLeft; // 根据侧边栏的位置确定拖拽的起点
         if (Math.abs(event.x - boundary) > dragSensitivity) {
             removeSlider();
         }
@@ -243,7 +245,6 @@ function clickListener(event) {
  * 将侧边栏元素从页面中除去，即将frame从document中删除
  */
 function removeSlider() {
-    mousedown = false; // 如果侧边栏关闭，直接停止侧边栏宽度的调整
     if (isChildNode(divFrame, document.documentElement)) {
         document.documentElement.removeChild(divFrame);
         document.body.style.width = 100 + "%";
