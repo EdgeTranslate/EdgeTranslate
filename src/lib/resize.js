@@ -1,5 +1,6 @@
 export default function(element, location, parameter) {
     var properties = {
+        change: false,
         callback: parameter.callback,
         element: element,
         location: location,
@@ -17,91 +18,201 @@ export default function(element, location, parameter) {
             !properties.mouseDown &&
             properties.element.getClientRects().length > 0
         ) {
-            let boundary;
+            let boundary_up, boundary_right, boundary_down, boundary_left;
+            boundary_up = properties.element.getClientRects()[0].top;
+            boundary_right =
+                properties.element.getClientRects()[0].left + properties.element.clientWidth;
+            boundary_down =
+                properties.element.getClientRects()[0].top + properties.element.clientHeight;
+            boundary_left = properties.element.getClientRects()[0].left;
             switch (properties.location) {
                 case "up":
-                    boundary = properties.element.getClientRects()[0].top;
+                    if (
+                        Math.abs(event.y - boundary_up) <= properties.range &&
+                        event.x > boundary_left &&
+                        event.x < boundary_right
+                    ) {
+                        properties.change = true;
+                        properties.element.style.cursor = "s-resize";
+                        properties.parentElement.style.cursor = "s-resize";
+                    } else {
+                        if (
+                            properties.element.style.cursor === "s-resize" &&
+                            properties.change === true
+                        ) {
+                            properties.change = false;
+                            properties.element.style.cursor = "auto";
+                            properties.parentElement.style.cursor = "auto";
+                        }
+                    }
                     break;
                 case "right":
-                    boundary =
-                        properties.element.getClientRects()[0].left +
-                        properties.element.clientWidth;
-                    // console.log(boundary);
+                    if (
+                        Math.abs(event.x - boundary_right) <= properties.range &&
+                        event.y > boundary_up &&
+                        event.y < boundary_down
+                    ) {
+                        properties.change = true;
+                        properties.element.style.cursor = "e-resize";
+                        properties.parentElement.style.cursor = "e-resize";
+                    } else {
+                        if (
+                            properties.element.style.cursor === "e-resize" &&
+                            properties.change === true
+                        ) {
+                            properties.change = false;
+                            properties.element.style.cursor = "auto";
+                            properties.parentElement.style.cursor = "auto";
+                        }
+                    }
                     break;
                 case "down":
-                    boundary =
-                        properties.element.getClientRects()[0].top +
-                        properties.element.clientHeight;
+                    if (
+                        Math.abs(event.y - boundary_down) <= properties.range &&
+                        event.x > boundary_left &&
+                        event.x < boundary_right
+                    ) {
+                        properties.change = true;
+                        properties.element.style.cursor = "s-resize";
+                        properties.parentElement.style.cursor = "s-resize";
+                    } else {
+                        if (
+                            properties.element.style.cursor === "s-resize" &&
+                            properties.change === true
+                        ) {
+                            properties.change = false;
+                            properties.element.style.cursor = "auto";
+                            properties.parentElement.style.cursor = "auto";
+                        }
+                    }
                     break;
                 case "left":
-                    boundary = properties.element.getClientRects()[0].left;
-                    // console.log(boundary);
+                    if (
+                        Math.abs(event.x - boundary_left) <= properties.range &&
+                        event.y > boundary_up &&
+                        event.y < boundary_down
+                    ) {
+                        properties.change = true;
+                        properties.element.style.cursor = "e-resize";
+                        properties.parentElement.style.cursor = "e-resize";
+                    } else {
+                        if (
+                            properties.element.style.cursor === "e-resize" &&
+                            properties.change === true
+                        ) {
+                            properties.change = false;
+                            properties.element.style.cursor = "auto";
+                            properties.parentElement.style.cursor = "auto";
+                        }
+                    }
                     break;
                 default:
-            }
-            if (Math.abs(event.x - boundary) <= properties.range) {
-                properties.parentElement.style.cursor = "e-resize";
-            } else {
-                properties.parentElement.style.cursor = "auto";
             }
         }
     }
 
     function dragStart(event) {
         if (properties.element && properties.element.getClientRects().length > 0) {
-            let boundary;
+            let boundary_up, boundary_right, boundary_down, boundary_left;
+            boundary_up = properties.element.getClientRects()[0].top;
+            boundary_right =
+                properties.element.getClientRects()[0].left + properties.element.clientWidth;
+            boundary_down =
+                properties.element.getClientRects()[0].top + properties.element.clientHeight;
+            boundary_left = properties.element.getClientRects()[0].left;
             switch (properties.location) {
                 case "up":
-                    boundary = properties.element.getClientRects()[0].top;
                     properties.originBase = event.screenY;
                     properties.originLength = properties.element.clientHeight;
+                    if (
+                        Math.abs(event.y - boundary_up) <= properties.range &&
+                        event.x > boundary_left &&
+                        event.x < boundary_right
+                    ) {
+                        properties.mouseDown = true;
+                        properties.element.style.position = "relative";
+                        if (properties.preFunction) {
+                            properties.preFunction(properties.element);
+                        }
+                    }
                     break;
                 case "right":
-                    boundary =
-                        properties.element.getClientRects()[0].left +
-                        properties.element.clientWidth;
                     properties.originBase = event.screenX;
                     properties.originLength = properties.element.clientWidth;
+                    if (
+                        Math.abs(event.x - boundary_right) <= properties.range &&
+                        event.y > boundary_up &&
+                        event.y < boundary_down
+                    ) {
+                        properties.mouseDown = true;
+                        if (properties.preFunction) {
+                            properties.preFunction(properties.element);
+                        }
+                    }
                     break;
                 case "down":
-                    boundary =
-                        properties.element.getClientRects()[0].top +
-                        properties.element.clientHeight;
                     properties.originBase = event.screenY;
                     properties.originLength = properties.element.clientHeight;
+                    if (
+                        Math.abs(event.y - boundary_down) <= properties.range &&
+                        event.x > boundary_left &&
+                        event.x < boundary_right
+                    ) {
+                        properties.mouseDown = true;
+                        if (properties.preFunction) {
+                            properties.preFunction(properties.element);
+                        }
+                    }
                     break;
                 case "left":
-                    boundary = properties.element.getClientRects()[0].left;
                     properties.originBase = event.screenX;
                     properties.originLength = properties.element.clientWidth;
+                    if (
+                        Math.abs(event.x - boundary_left) <= properties.range &&
+                        event.y > boundary_up &&
+                        event.y < boundary_down
+                    ) {
+                        properties.element.style.position = "relative";
+                        properties.mouseDown = true;
+                        if (properties.preFunction) {
+                            properties.preFunction(properties.element);
+                        }
+                    }
                     break;
                 default:
-            }
-            if (Math.abs(event.x - boundary) <= properties.range) {
-                properties.mouseDown = true;
-                if (properties.preFunction) {
-                    properties.preFunction(properties.element);
-                }
             }
         }
     }
 
     function dragging(event) {
         if (properties.mouseDown) {
-            properties.parentElement.style.cursor = "e-resize";
             event.preventDefault();
             switch (properties.location) {
                 case "up":
+                    properties.element.style.cursor = "s-resize";
+                    properties.parentElement.style.cursor = "s-resize";
+                    properties.element.style.height =
+                        properties.originLength + (properties.originBase - event.screenY) + "px";
+                    // properties.element.style.top = -(properties.originBase - event.screenY) + "px";
                     break;
                 case "right":
+                    properties.element.style.cursor = "e-resize";
+                    properties.parentElement.style.cursor = "e-resize";
                     properties.element.style.width =
                         properties.originLength - (properties.originBase - event.screenX) + "px";
                     break;
                 case "down":
+                    properties.element.style.cursor = "s-resize";
+                    properties.parentElement.style.cursor = "s-resize";
+                    properties.element.style.height =
+                        properties.originLength - (properties.originBase - event.screenY) + "px";
                     break;
                 case "left":
+                    properties.element.style.cursor = "e-resize";
+                    properties.parentElement.style.cursor = "e-resize";
                     properties.element.style.width =
                         properties.originLength + properties.originBase - event.screenX + "px";
+                    properties.element.style.right = properties.originBase - event.screenX + "px";
                     break;
                 default:
             }
