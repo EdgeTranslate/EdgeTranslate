@@ -23,7 +23,7 @@ var sourceTTSSpeed, targetTTSSpeed;
 var popupPosition; // 保存侧边栏展示的位置
 const FIX_ON = true; // 侧边栏固定的值
 const FIX_OFF = false; // 侧边栏不固定的值
-const dragSensitivity = 15; // 用来调节拖动侧边栏的灵敏度的参数 单位:px
+const dragSensitivity = 6; // 用来调节拖动侧边栏的灵敏度的参数 单位:px
 const transitionDuration = 500; // 侧边栏出现动画的持续事件 单位:ms
 
 /**
@@ -151,18 +151,33 @@ function addEventListener() {
     // 给关闭按钮添加点击事件监听，用于关闭侧边栏
     frameDocument.getElementById("icon-close").addEventListener("click", removeSlider);
 
-    dragFunction(document.body, "right", {
-        parentElement: document.documentElement,
-        preFunction: function(element) {
-            element.style.transition = "none";
-        },
-        callback(element) {
-            element.style.transition = "width " + transitionDuration + "ms";
-        }
-    });
-    dragFunction(divFrame, "left", {
-        parentElement: document.documentElement
-    });
+    if (popupPosition == "right") {
+        dragFunction(document.body, "right", {
+            parentElement: document.documentElement,
+            preFunction: function(element) {
+                element.style.transition = "none";
+            },
+            callback(element) {
+                element.style.transition = "width " + transitionDuration + "ms";
+            }
+        });
+        dragFunction(divFrame, "left", {
+            parentElement: document.documentElement
+        });
+    } else {
+        dragFunction(document.body, "left", {
+            parentElement: document.documentElement,
+            preFunction: function(element) {
+                element.style.transition = "none";
+            },
+            callback(element) {
+                element.style.transition = "width " + transitionDuration + "ms";
+            }
+        });
+        dragFunction(divFrame, "right", {
+            parentElement: document.documentElement
+        });
+    }
 }
 
 /**
@@ -204,7 +219,7 @@ function startSlider(layoutSettings) {
             document.body.style.left = "";
         }
         divFrame.style.left = "0";
-        divFrame.style["padding-right"] = "20px";
+        divFrame.style["padding-right"] = dragSensitivity + "px";
     } else {
         if (resizeFlag) {
             // 用户设置 收缩页面
@@ -213,7 +228,7 @@ function startSlider(layoutSettings) {
             document.body.style.left = "0";
         }
         divFrame.style.right = "0";
-        divFrame.style["padding-left"] = "20px";
+        divFrame.style["padding-left"] = dragSensitivity + "px";
     }
 }
 
@@ -263,7 +278,7 @@ function dragFunction(element, location, parameter) {
         parameter.parentElement = document.documentElement;
     }
     var properties = {
-        range: 5,
+        range: dragSensitivity,
         mouseDown: false,
         originBase: 0,
         originLength: 0,
