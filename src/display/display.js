@@ -6,7 +6,8 @@ import render from "./engine.js";
 import result from "./templates/result.html"; // template of translate result
 import loading from "./templates/loading.html"; // template of loading icon
 import error from "./templates/error.html"; // template of error message
-import resizeFunction from "../lib/resize";
+import Resizable from "../lib/resize";
+
 /**
  * end load
  */
@@ -156,7 +157,7 @@ function addEventListener() {
     frameDocument.getElementById("icon-close").addEventListener("click", removeSlider);
 
     if (popupPosition == "left") {
-        resizeBody = resizeFunction(document.body, "left", {
+        resizeBody = new Resizable(document.body, "left", {
             parentElement: document.documentElement,
             preFunction: function(element) {
                 element.style.transition = "none";
@@ -165,11 +166,13 @@ function addEventListener() {
                 element.style.transition = "width " + transitionDuration + "ms";
             }
         });
-        resizeDivFrame = resizeFunction(divFrame, "right", {
+        resizeBody.enableResize();
+        resizeDivFrame = new Resizable(divFrame, "right", {
             parentElement: document.documentElement
         });
+        resizeDivFrame.enableResize();
     } else {
-        resizeBody = resizeFunction(document.body, "right", {
+        resizeBody = new Resizable(document.body, "right", {
             parentElement: document.documentElement,
             preFunction: function(element) {
                 element.style.transition = "none";
@@ -178,9 +181,11 @@ function addEventListener() {
                 element.style.transition = "width " + transitionDuration + "ms";
             }
         });
-        resizeDivFrame = resizeFunction(divFrame, "left", {
+        resizeBody.enableResize();
+        resizeDivFrame = new Resizable(divFrame, "left", {
             parentElement: document.documentElement
         });
+        resizeDivFrame.enableResize();
     }
 }
 
@@ -274,8 +279,8 @@ function removeSlider() {
             document.body.style.left = "";
         }, transitionDuration);
         document.documentElement.removeEventListener("mousedown", clickListener);
-        resizeBody.cancelResize().bind(resizeBody);
-        resizeDivFrame.cancelResize();
+        resizeBody.disableResize();
+        resizeDivFrame.disableResize();
     }
 }
 

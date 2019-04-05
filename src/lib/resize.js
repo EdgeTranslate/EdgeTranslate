@@ -1,18 +1,40 @@
 export default function(element, location, parameter) {
-    var properties = {
+    this.parentElement = parameter.parentElement
+        ? parameter.parentElement
+        : document.documentElement;
+
+    this.parentElement.dragProperties = {
         callback: parameter.callback,
-        cancelResize: cancelResize,
         element: element,
         location: location,
         mouseDown: false,
         originBase: 0,
         originLength: 0,
-        parentElement: parameter.parentElement,
         preFunction: parameter.preFunction,
-        range: parameter.dragSensitivity
+        range: parameter.dragSensitivity ? parameter.dragSensitivity : 6
     };
 
-    function dragHover(event) {
+    this.enableResize = function() {
+        console.log(this);
+        this.parentElement.addEventListener("mousemove", dragHover);
+        this.parentElement.addEventListener("mousedown", dragStart);
+        this.parentElement.addEventListener("mousemove", dragging);
+        this.parentElement.addEventListener("mouseup", dragStop);
+    };
+
+    this.disableResize = function() {
+        console.log(this);
+        this.parentElement.removeEventListener("mousemove", dragHover);
+        this.parentElement.removeEventListener("mousedown", dragStart);
+        this.parentElement.removeEventListener("mousemove", dragging);
+        this.parentElement.removeEventListener("mouseup", dragStop);
+    };
+}
+
+function dragHover(event) {
+    if (event.target.dragProperties) {
+        let properties = event.target.dragProperties;
+        console.log(properties);
         if (properties.element && !properties.mouseDown) {
             let boundary;
             switch (properties.location) {
@@ -37,14 +59,18 @@ export default function(element, location, parameter) {
                 default:
             }
             if (Math.abs(event.x - boundary) <= properties.range) {
-                properties.parentElement.style.cursor = "e-resize";
+                event.target.style.cursor = "e-resize";
             } else {
-                properties.parentElement.style.cursor = "auto";
+                event.target.style.cursor = "auto";
             }
         }
     }
+}
 
-    function dragStart(event) {
+function dragStart(event) {
+    if (event.target.dragProperties) {
+        let properties = event.target.dragProperties;
+        console.log(properties);
         if (properties.element) {
             let boundary;
             switch (properties.location) {
@@ -82,10 +108,14 @@ export default function(element, location, parameter) {
             }
         }
     }
+}
 
-    function dragging(event) {
+function dragging(event) {
+    if (event.target.dragProperties) {
+        let properties = event.target.dragProperties;
+        console.log(properties);
         if (properties.mouseDown) {
-            properties.parentElement.style.cursor = "e-resize";
+            event.target.style.cursor = "e-resize";
             event.preventDefault();
             switch (properties.location) {
                 case "up":
@@ -105,34 +135,18 @@ export default function(element, location, parameter) {
             return false; // to prevent default action for other Browser
         }
     }
+}
 
-    function dragStop() {
+function dragStop() {
+    if (event.target.dragProperties) {
+        let properties = event.target.dragProperties;
+        console.log(properties);
         if (properties.mouseDown) {
-            properties.parentElement.style.cursor = "auto";
+            event.target.style.cursor = "auto";
             properties.mouseDown = false;
             if (properties.callback) {
                 properties.callback(properties.element);
             }
         }
     }
-
-    function cancelResize() {
-        properties.parentElement.removeEventListener("mousemove", dragHover);
-        properties.parentElement.removeEventListener("mousedown", dragStart);
-        properties.parentElement.removeEventListener("mousemove", dragging);
-        properties.parentElement.removeEventListener("mouseup", dragStop);
-    }
-
-    if (!properties.parentElement) {
-        properties.parentElement = document.documentElement;
-    }
-    if (!properties.range) {
-        properties.range = 6;
-    }
-    properties.parentElement.addEventListener("mousemove", dragHover);
-    properties.parentElement.addEventListener("mousedown", dragStart);
-    properties.parentElement.addEventListener("mousemove", dragging);
-    properties.parentElement.addEventListener("mouseup", dragStop);
-
-    return properties;
 }
