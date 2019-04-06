@@ -1,4 +1,6 @@
-import render from "./engine.js";
+import render from "../lib/render.js";
+import Resizable from "../lib/Resizable.js";
+
 /**
  * load templates
  */
@@ -6,7 +8,6 @@ import render from "./engine.js";
 import result from "./templates/result.html"; // template of translate result
 import loading from "./templates/loading.html"; // template of loading icon
 import error from "./templates/error.html"; // template of error message
-import Resizable from "../lib/resize";
 
 /**
  * end load
