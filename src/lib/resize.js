@@ -15,6 +15,10 @@ export default (function() {
             range: parameter.dragSensitivity ? parameter.dragSensitivity : 6
         };
 
+        this.setLocation = function(location) {
+            this.parentElement.location = location;
+        };
+
         this.enableResize = function() {
             this.parentElement.addEventListener("mousemove", this.dragHover);
             this.parentElement.addEventListener("mousedown", this.dragStart);
@@ -30,15 +34,17 @@ export default (function() {
         };
     }
 
-    function findDragProperties(element) {
+    function findResizable(element) {
         while (!element.dragProperties && element.parentElement) {
             element = element.parentElement;
         }
-        return element.dragProperties;
+        return element;
     }
 
     Resizable.prototype.dragHover = function dragHover(event) {
-        let properties = findDragProperties(event.target);
+        let resizable = findResizable(event.target);
+        let properties = resizable.dragProperties;
+
         if (properties) {
             if (properties.element && !properties.mouseDown) {
                 let boundary;
@@ -64,16 +70,18 @@ export default (function() {
                     default:
                 }
                 if (Math.abs(event.x - boundary) <= properties.range) {
-                    event.target.style.cursor = "e-resize";
+                    resizable.style.cursor = "e-resize";
                 } else {
-                    event.target.style.cursor = "auto";
+                    resizable.style.cursor = "auto";
                 }
             }
         }
     };
 
     Resizable.prototype.dragStart = function dragStart(event) {
-        let properties = findDragProperties(event.target);
+        let resizable = findResizable(event.target);
+        let properties = resizable.dragProperties;
+
         if (properties) {
             if (properties.element) {
                 let boundary;
@@ -115,10 +123,12 @@ export default (function() {
     };
 
     Resizable.prototype.dragging = function dragging(event) {
-        let properties = findDragProperties(event.target);
+        let resizable = findResizable(event.target);
+        let properties = resizable.dragProperties;
+
         if (properties) {
             if (properties.mouseDown) {
-                event.target.style.cursor = "e-resize";
+                resizable.style.cursor = "e-resize";
                 event.preventDefault();
                 switch (properties.location) {
                     case "up":
@@ -143,11 +153,13 @@ export default (function() {
     };
 
     Resizable.prototype.dragStop = function dragStop(event) {
-        let properties = findDragProperties(event.target);
+        let resizable = findResizable(event.target);
+        let properties = resizable.dragProperties;
+
         if (properties) {
             if (properties.mouseDown) {
                 properties.mouseDown = false;
-                event.target.style.cursor = "auto";
+                resizable.style.cursor = "auto";
                 if (properties.callback) {
                     properties.callback(properties.element);
                 }
