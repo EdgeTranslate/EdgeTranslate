@@ -1,4 +1,6 @@
-import render from "./engine.js";
+import render from "../lib/render.js";
+import Resizable from "../lib/Resizable.js";
+
 /**
  * load templates
  */
@@ -6,7 +8,7 @@ import render from "./engine.js";
 import result from "./templates/result.html"; // template of translate result
 import loading from "./templates/loading.html"; // template of loading icon
 import error from "./templates/error.html"; // template of error message
-import resizeFunction from "../lib/resize";
+
 /**
  * end load
  */
@@ -17,6 +19,10 @@ var divFrame;
 var frame;
 // iframe中的 document
 var frameDocument;
+
+var resizeBody;
+
+var resizeDivFrame;
 
 var translateResult; // 保存翻译结果
 var sourceTTSSpeed, targetTTSSpeed;
@@ -152,8 +158,9 @@ function addEventListener() {
     frameDocument.getElementById("icon-close").addEventListener("click", removeSlider);
 
     if (popupPosition == "left") {
-        resizeFunction(document.body, "left", {
+        resizeBody = new Resizable(document.body, "left", {
             parentElement: document.documentElement,
+            dragSensitivity: dragSensitivity,
             preFunction: function(element) {
                 element.style.transition = "none";
             },
@@ -161,12 +168,16 @@ function addEventListener() {
                 element.style.transition = "width " + transitionDuration + "ms";
             }
         });
-        resizeFunction(divFrame, "right", {
-            parentElement: document.documentElement
+        resizeBody.enableResize();
+        resizeDivFrame = new Resizable(divFrame, "right", {
+            parentElement: document.documentElement,
+            dragSensitivity: dragSensitivity
         });
+        resizeDivFrame.enableResize();
     } else {
-        resizeFunction(document.body, "right", {
+        resizeBody = new Resizable(document.body, "right", {
             parentElement: document.documentElement,
+            dragSensitivity: dragSensitivity,
             preFunction: function(element) {
                 element.style.transition = "none";
             },
@@ -174,12 +185,15 @@ function addEventListener() {
                 element.style.transition = "width " + transitionDuration + "ms";
             }
         });
-        resizeFunction(divFrame, "left", {
+        resizeBody.enableResize();
+        resizeDivFrame = new Resizable(divFrame, "left", {
             parentElement: document.documentElement,
+            dragSensitivity: dragSensitivity,
             callback(element) {
                 element.style.position = "fixed";
             }
         });
+        resizeDivFrame.enableResize();
     }
 }
 
@@ -272,6 +286,8 @@ function removeSlider() {
             document.body.style.left = "";
         }, transitionDuration);
         document.documentElement.removeEventListener("mousedown", clickListener);
+        resizeBody.disableResize();
+        resizeDivFrame.disableResize();
     }
 }
 
