@@ -177,7 +177,7 @@ function dragStart(event) {
                     event.y > boundary_up &&
                     event.y < boundary_down
                 ) {
-                    this.element.style.position = "absolute";
+                    this.element.style.position = "fixed";
                     this.element.style.top = "";
                     this.element.style.left = boundary_left;
                     this.mouseDown = true;
