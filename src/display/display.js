@@ -159,6 +159,7 @@ function addEventListener() {
     if (popupPosition == "left") {
         resizeBody = new Resizable(document.body, "left", {
             parentElement: document.documentElement,
+            dragSensitivity: dragSensitivity,
             preFunction: function(element) {
                 element.style.transition = "none";
             },
@@ -168,12 +169,14 @@ function addEventListener() {
         });
         resizeBody.enableResize();
         resizeDivFrame = new Resizable(divFrame, "right", {
-            parentElement: document.documentElement
+            parentElement: document.documentElement,
+            dragSensitivity: dragSensitivity
         });
         resizeDivFrame.enableResize();
     } else {
         resizeBody = new Resizable(document.body, "right", {
             parentElement: document.documentElement,
+            dragSensitivity: dragSensitivity,
             preFunction: function(element) {
                 element.style.transition = "none";
             },
@@ -183,7 +186,8 @@ function addEventListener() {
         });
         resizeBody.enableResize();
         resizeDivFrame = new Resizable(divFrame, "left", {
-            parentElement: document.documentElement
+            parentElement: document.documentElement,
+            dragSensitivity: dragSensitivity
         });
         resizeDivFrame.enableResize();
     }
