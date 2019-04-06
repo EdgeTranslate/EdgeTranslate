@@ -18,7 +18,6 @@ var frame;
 // iframe中的 document
 var frameDocument;
 
-var originOriginWidth; // 存储网页body的原始宽度
 var translateResult; // 保存翻译结果
 var sourceTTSSpeed, targetTTSSpeed;
 var popupPosition; // 保存侧边栏展示的位置
@@ -176,7 +175,10 @@ function addEventListener() {
             }
         });
         resizeFunction(divFrame, "left", {
-            parentElement: document.documentElement
+            parentElement: document.documentElement,
+            callback(element) {
+                element.style.position = "fixed";
+            }
         });
     }
 }
@@ -204,7 +206,6 @@ function isChildNode(node1, node2) {
  */
 function startSlider(layoutSettings) {
     var resizeFlag = layoutSettings["Resize"]; // 保存侧边栏展示的位置
-    originOriginWidth = document.body.clientWidth;
     if (resizeFlag) {
         // 用户设置 收缩页面
         document.body.style.transition = "width " + transitionDuration + "ms";
@@ -215,7 +216,7 @@ function startSlider(layoutSettings) {
         if (resizeFlag) {
             // 用户设置 收缩页面
             document.body.style.position = "absolute";
-            document.body.style.marginLeft = 0.2 * originOriginWidth + "px";
+            // document.body.style.marginLeft = 0.2 * originOriginWidth + "px";
             document.body.style.right = "0";
             document.body.style.left = "";
         }

@@ -130,7 +130,8 @@ export default function(element, location, parameter) {
                         event.x < boundary_right
                     ) {
                         properties.mouseDown = true;
-                        properties.element.style.position = "relative";
+                        properties.element.style.position = "sticky";
+                        properties.element.style.top = boundary_up + "px";
                         if (properties.preFunction) {
                             properties.preFunction(properties.element);
                         }
@@ -172,7 +173,9 @@ export default function(element, location, parameter) {
                         event.y > boundary_up &&
                         event.y < boundary_down
                     ) {
-                        properties.element.style.position = "relative";
+                        properties.element.style.position = "absolute";
+                        properties.element.style.top = "";
+                        properties.element.style.left = boundary_left;
                         properties.mouseDown = true;
                         if (properties.preFunction) {
                             properties.preFunction(properties.element);
@@ -193,7 +196,8 @@ export default function(element, location, parameter) {
                     properties.parentElement.style.cursor = "s-resize";
                     properties.element.style.height =
                         properties.originLength + (properties.originBase - event.screenY) + "px";
-                    // properties.element.style.top = -(properties.originBase - event.screenY) + "px";
+                    // properties.element.style.bottom = properties.originBase - event.screenY + "px";
+                    properties.element.style.top = event.screenY + "px";
                     break;
                 case "right":
                     properties.element.style.cursor = "e-resize";
@@ -212,7 +216,8 @@ export default function(element, location, parameter) {
                     properties.parentElement.style.cursor = "e-resize";
                     properties.element.style.width =
                         properties.originLength + properties.originBase - event.screenX + "px";
-                    properties.element.style.left = -(properties.originBase - event.screenX) + "px";
+                    // properties.element.style.left = -(properties.originBase - event.screenX) + "px";
+                    properties.element.style.left = event.screenX + "px";
                     break;
                 default:
             }
@@ -224,6 +229,10 @@ export default function(element, location, parameter) {
         if (properties.mouseDown) {
             properties.parentElement.style.cursor = "auto";
             properties.mouseDown = false;
+            // if (properties.position === "up") {
+            //     properties.element.style.position = "static";
+            // }
+
             if (properties.callback) {
                 properties.callback(properties.element);
             }
