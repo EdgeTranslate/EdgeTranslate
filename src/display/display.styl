@@ -1,17 +1,23 @@
 /*
  * 翻译结果展示页框架样式
  */
-#translate_frame {
+#translate_div {
     height: 100%;
     width: 20%;
     background-color: white;
     position: fixed;
     top: 0;
     border: none;
+    box-sizing: border-box;
+    box-shadow: 0px 0px 50px rgb(200,200,200,0.5);
     z-index: 10000;
     transition: left 300ms;
     transition: right 300ms;
+}
+
+#translate_frame {
+    height: 100%;
+    width: 100%;
+    border: none;
     overflow-y: scroll;
-    box-sizing: border-box;
-    box-shadow: 2px 0 1px 1px #ddd;
 }
