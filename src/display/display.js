@@ -112,6 +112,45 @@ function createBlock(content, template) {
             startSlider(layoutSettings);
             divFrame.appendChild(frame);
             document.documentElement.appendChild(divFrame);
+
+            if (popupPosition == "left") {
+                resizeBody = new Resizable(document.body, "left", {
+                    parentElement: document.documentElement,
+                    dragSensitivity: dragSensitivity,
+                    preFunction: function(element) {
+                        element.style.transition = "none";
+                    },
+                    callback(element) {
+                        element.style.transition = "width " + transitionDuration + "ms";
+                    }
+                });
+                resizeBody.enableResize();
+                resizeDivFrame = new Resizable(divFrame, "right", {
+                    parentElement: document.documentElement,
+                    dragSensitivity: dragSensitivity
+                });
+                resizeDivFrame.enableResize();
+            } else {
+                resizeBody = new Resizable(document.body, "right", {
+                    parentElement: document.documentElement,
+                    dragSensitivity: dragSensitivity,
+                    preFunction: function(element) {
+                        element.style.transition = "none";
+                    },
+                    callback(element) {
+                        element.style.transition = "width " + transitionDuration + "ms";
+                    }
+                });
+                resizeBody.enableResize();
+                resizeDivFrame = new Resizable(divFrame, "left", {
+                    parentElement: document.documentElement,
+                    dragSensitivity: dragSensitivity,
+                    callback(element) {
+                        element.style.position = "fixed";
+                    }
+                });
+                resizeDivFrame.enableResize();
+            }
         }
 
         // Write contents into iframe.
@@ -156,45 +195,6 @@ function addEventListener() {
     });
     // 给关闭按钮添加点击事件监听，用于关闭侧边栏
     frameDocument.getElementById("icon-close").addEventListener("click", removeSlider);
-
-    if (popupPosition == "left") {
-        resizeBody = new Resizable(document.body, "left", {
-            parentElement: document.documentElement,
-            dragSensitivity: dragSensitivity,
-            preFunction: function(element) {
-                element.style.transition = "none";
-            },
-            callback(element) {
-                element.style.transition = "width " + transitionDuration + "ms";
-            }
-        });
-        resizeBody.enableResize();
-        resizeDivFrame = new Resizable(divFrame, "right", {
-            parentElement: document.documentElement,
-            dragSensitivity: dragSensitivity
-        });
-        resizeDivFrame.enableResize();
-    } else {
-        resizeBody = new Resizable(document.body, "right", {
-            parentElement: document.documentElement,
-            dragSensitivity: dragSensitivity,
-            preFunction: function(element) {
-                element.style.transition = "none";
-            },
-            callback(element) {
-                element.style.transition = "width " + transitionDuration + "ms";
-            }
-        });
-        resizeBody.enableResize();
-        resizeDivFrame = new Resizable(divFrame, "left", {
-            parentElement: document.documentElement,
-            dragSensitivity: dragSensitivity,
-            callback(element) {
-                element.style.position = "fixed";
-            }
-        });
-        resizeDivFrame.enableResize();
-    }
 }
 
 /**

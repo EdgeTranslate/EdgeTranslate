@@ -1,141 +1,114 @@
 export default function(element, location, parameter) {
+    this.callback = parameter.callback;
+    this.cursorChange = false;
+    this.element = element;
+    this.location = location;
+    this.mouseDown = false;
+    this.originBase = 0;
+    this.originLength = 0;
+    this.preFunction = parameter.preFunction;
+    this.range = parameter.dragSensitivity ? parameter.dragSensitivity : 6;
     this.parentElement = parameter.parentElement
         ? parameter.parentElement
         : document.documentElement;
 
-    this.parentElement.dragProperties = {
-        callback: parameter.callback,
-        cursorChange: false,
-        element: element,
-        location: location,
-        mouseDown: false,
-        originBase: 0,
-        originLength: 0,
-        preFunction: parameter.preFunction,
-        range: parameter.dragSensitivity ? parameter.dragSensitivity : 6
-    };
+    this.dragHover = dragHover.bind(this);
+    this.dragStart = dragStart.bind(this);
+    this.dragging = dragging.bind(this);
+    this.dragStop = dragStop.bind(this);
 
     this.setLocation = function(location) {
-        this.parentElement.location = location;
+        this.location = location;
     };
 
     this.enableResize = function() {
-        this.parentElement.addEventListener("mousemove", dragHover);
-        this.parentElement.addEventListener("mousedown", dragStart);
-        this.parentElement.addEventListener("mousemove", dragging);
-        this.parentElement.addEventListener("mouseup", dragStop);
+        this.parentElement.addEventListener("mousemove", this.dragHover);
+        this.parentElement.addEventListener("mousedown", this.dragStart);
+        this.parentElement.addEventListener("mousemove", this.dragging);
+        this.parentElement.addEventListener("mouseup", this.dragStop);
     };
 
     this.disableResize = function() {
-        this.parentElement.removeEventListener("mousemove", dragHover);
-        this.parentElement.removeEventListener("mousedown", dragStart);
-        this.parentElement.removeEventListener("mousemove", dragging);
-        this.parentElement.removeEventListener("mouseup", dragStop);
+        this.parentElement.removeEventListener("mousemove", this.dragHover);
+        this.parentElement.removeEventListener("mousedown", this.dragStart);
+        this.parentElement.removeEventListener("mousemove", this.dragging);
+        this.parentElement.removeEventListener("mouseup", this.dragStop);
     };
 }
 
-function findTargetElement(element) {
-    while (!element.dragProperties && element.parentElement) {
-        element = element.parentElement;
-    }
-    return element;
-}
-
 function dragHover(event) {
-    let targetElement = findTargetElement(event.target);
-    let properties = targetElement.dragProperties;
-
-    if (
-        properties &&
-        properties.element &&
-        !properties.mouseDown &&
-        properties.element.getClientRects().length > 0
-    ) {
+    if (this.element && !this.mouseDown && this.element.getClientRects().length > 0) {
         let boundary_up, boundary_right, boundary_down, boundary_left;
-        boundary_up = properties.element.getClientRects()[0].top;
-        boundary_right =
-            properties.element.getClientRects()[0].left + properties.element.clientWidth;
-        boundary_down =
-            properties.element.getClientRects()[0].top + properties.element.clientHeight;
-        boundary_left = properties.element.getClientRects()[0].left;
-        switch (properties.location) {
+        boundary_up = this.element.getClientRects()[0].top;
+        boundary_right = this.element.getClientRects()[0].left + this.element.clientWidth;
+        boundary_down = this.element.getClientRects()[0].top + this.element.clientHeight;
+        boundary_left = this.element.getClientRects()[0].left;
+        switch (this.location) {
             case "up":
                 if (
-                    Math.abs(event.y - boundary_up) <= properties.range &&
+                    Math.abs(event.y - boundary_up) <= this.range &&
                     event.x > boundary_left &&
                     event.x < boundary_right
                 ) {
-                    properties.cursorChange = true;
-                    properties.element.style.cursor = "s-resize";
-                    targetElement.style.cursor = "s-resize";
+                    this.cursorChange = true;
+                    this.element.style.cursor = "s-resize";
+                    this.parentElement.style.cursor = "s-resize";
                 } else {
-                    if (
-                        properties.element.style.cursor === "s-resize" &&
-                        properties.cursorChange === true
-                    ) {
-                        properties.cursorChange = false;
-                        properties.element.style.cursor = "auto";
-                        targetElement.style.cursor = "auto";
+                    if (this.element.style.cursor === "s-resize" && this.cursorChange === true) {
+                        this.cursorChange = false;
+                        this.element.style.cursor = "auto";
+                        this.parentElement.style.cursor = "auto";
                     }
                 }
                 break;
             case "right":
                 if (
-                    Math.abs(event.x - boundary_right) <= properties.range &&
+                    Math.abs(event.x - boundary_right) <= this.range &&
                     event.y > boundary_up &&
                     event.y < boundary_down
                 ) {
-                    properties.cursorChange = true;
-                    properties.element.style.cursor = "e-resize";
-                    targetElement.style.cursor = "e-resize";
+                    this.cursorChange = true;
+                    this.element.style.cursor = "e-resize";
+                    this.parentElement.style.cursor = "e-resize";
                 } else {
-                    if (
-                        properties.element.style.cursor === "e-resize" &&
-                        properties.cursorChange === true
-                    ) {
-                        properties.cursorChange = false;
-                        properties.element.style.cursor = "auto";
-                        targetElement.style.cursor = "auto";
+                    if (this.element.style.cursor === "e-resize" && this.cursorChange === true) {
+                        this.cursorChange = false;
+                        this.element.style.cursor = "auto";
+                        this.parentElement.style.cursor = "auto";
                     }
                 }
                 break;
             case "down":
                 if (
-                    Math.abs(event.y - boundary_down) <= properties.range &&
+                    Math.abs(event.y - boundary_down) <= this.range &&
                     event.x > boundary_left &&
                     event.x < boundary_right
                 ) {
-                    properties.cursorChange = true;
-                    properties.element.style.cursor = "s-resize";
-                    targetElement.style.cursor = "s-resize";
+                    this.cursorChange = true;
+                    this.element.style.cursor = "s-resize";
+                    this.parentElement.style.cursor = "s-resize";
                 } else {
-                    if (
-                        properties.element.style.cursor === "s-resize" &&
-                        properties.cursorChange === true
-                    ) {
-                        properties.cursorChange = false;
-                        properties.element.style.cursor = "auto";
-                        targetElement.style.cursor = "auto";
+                    if (this.element.style.cursor === "s-resize" && this.cursorChange === true) {
+                        this.cursorChange = false;
+                        this.element.style.cursor = "auto";
+                        this.parentElement.style.cursor = "auto";
                     }
                 }
                 break;
             case "left":
                 if (
-                    Math.abs(event.x - boundary_left) <= properties.range &&
+                    Math.abs(event.x - boundary_left) <= this.range &&
                     event.y > boundary_up &&
                     event.y < boundary_down
                 ) {
-                    properties.cursorChange = true;
-                    properties.element.style.cursor = "e-resize";
-                    targetElement.style.cursor = "e-resize";
+                    this.cursorChange = true;
+                    this.element.style.cursor = "e-resize";
+                    this.parentElement.style.cursor = "e-resize";
                 } else {
-                    if (
-                        properties.element.style.cursor === "e-resize" &&
-                        properties.cursorChange === true
-                    ) {
-                        properties.cursorChange = false;
-                        properties.element.style.cursor = "auto";
-                        targetElement.style.cursor = "auto";
+                    if (this.element.style.cursor === "e-resize" && this.cursorChange === true) {
+                        this.cursorChange = false;
+                        this.element.style.cursor = "auto";
+                        this.parentElement.style.cursor = "auto";
                     }
                 }
                 break;
@@ -145,76 +118,71 @@ function dragHover(event) {
 }
 
 function dragStart(event) {
-    let targetElement = findTargetElement(event.target);
-    let properties = targetElement.dragProperties;
-
-    if (properties && properties.element && properties.element.getClientRects().length > 0) {
+    if (this.element && this.element.getClientRects().length > 0) {
         let boundary_up, boundary_right, boundary_down, boundary_left;
-        boundary_up = properties.element.getClientRects()[0].top;
-        boundary_right =
-            properties.element.getClientRects()[0].left + properties.element.clientWidth;
-        boundary_down =
-            properties.element.getClientRects()[0].top + properties.element.clientHeight;
-        boundary_left = properties.element.getClientRects()[0].left;
-        switch (properties.location) {
+        boundary_up = this.element.getClientRects()[0].top;
+        boundary_right = this.element.getClientRects()[0].left + this.element.clientWidth;
+        boundary_down = this.element.getClientRects()[0].top + this.element.clientHeight;
+        boundary_left = this.element.getClientRects()[0].left;
+        switch (this.location) {
             case "up":
-                properties.originBase = event.screenY;
-                properties.originLength = properties.element.clientHeight;
+                this.originBase = event.screenY;
+                this.originLength = this.element.clientHeight;
                 if (
-                    Math.abs(event.y - boundary_up) <= properties.range &&
+                    Math.abs(event.y - boundary_up) <= this.range &&
                     event.x > boundary_left &&
                     event.x < boundary_right
                 ) {
-                    properties.mouseDown = true;
-                    properties.element.style.position = "sticky";
-                    properties.element.style.top = boundary_up + "px";
-                    if (properties.preFunction) {
-                        properties.preFunction(properties.element);
+                    this.mouseDown = true;
+                    this.element.style.position = "sticky";
+                    this.element.style.top = boundary_up + "px";
+                    if (this.preFunction) {
+                        this.preFunction(this.element);
                     }
                 }
                 break;
             case "right":
-                properties.originBase = event.screenX;
-                properties.originLength = properties.element.clientWidth;
+                this.originBase = event.screenX;
+                this.originLength = this.element.clientWidth;
                 if (
-                    Math.abs(event.x - boundary_right) <= properties.range &&
+                    Math.abs(event.x - boundary_right) <= this.range &&
                     event.y > boundary_up &&
                     event.y < boundary_down
                 ) {
-                    properties.mouseDown = true;
-                    if (properties.preFunction) {
-                        properties.preFunction(properties.element);
+                    this.mouseDown = true;
+                    if (this.preFunction) {
+                        this.preFunction(this.element);
                     }
                 }
                 break;
             case "down":
-                properties.originBase = event.screenY;
-                properties.originLength = properties.element.clientHeight;
+                this.originBase = event.screenY;
+                this.originLength = this.element.clientHeight;
                 if (
-                    Math.abs(event.y - boundary_down) <= properties.range &&
+                    Math.abs(event.y - boundary_down) <= this.range &&
                     event.x > boundary_left &&
                     event.x < boundary_right
                 ) {
-                    properties.mouseDown = true;
-                    if (properties.preFunction) {
-                        properties.preFunction(properties.element);
+                    this.mouseDown = true;
+                    if (this.preFunction) {
+                        this.preFunction(this.element);
                     }
                 }
                 break;
             case "left":
-                properties.originBase = event.screenX;
-                properties.originLength = properties.element.clientWidth;
+                this.originBase = event.screenX;
+                this.originLength = this.element.clientWidth;
                 if (
-                    Math.abs(event.x - boundary_left) <= properties.range &&
+                    Math.abs(event.x - boundary_left) <= this.range &&
                     event.y > boundary_up &&
                     event.y < boundary_down
                 ) {
-                    properties.element.style.position = "absolute";
-                    properties.element.style.top = "";
-                    properties.element.style.left = boundary_left;
-                    properties.mouseDown = true;
-                    if (properties.preFunction) {
-                        properties.preFunction(properties.element);
+                    this.element.style.position = "absolute";
+                    this.element.style.top = "";
+                    this.element.style.left = boundary_left;
+                    this.mouseDown = true;
+                    if (this.preFunction) {
+                        this.preFunction(this.element);
                     }
                 }
                 break;
@@ -224,37 +192,34 @@ function dragStart(event) {
 }
 
 function dragging(event) {
-    let targetElement = findTargetElement(event.target);
-    let properties = targetElement.dragProperties;
-
-    if (properties && properties.mouseDown) {
+    if (this.mouseDown) {
         event.preventDefault();
-        switch (properties.location) {
+        switch (this.location) {
             case "up":
-                properties.element.style.cursor = "s-resize";
-                targetElement.style.cursor = "s-resize";
-                properties.element.style.height =
-                    properties.originLength + (properties.originBase - event.screenY) + "px";
-                properties.element.style.top = event.screenY + "px";
+                this.element.style.cursor = "s-resize";
+                this.parentElement.style.cursor = "s-resize";
+                this.element.style.height =
+                    this.originLength + (this.originBase - event.screenY) + "px";
+                this.element.style.top = event.screenY + "px";
                 break;
             case "right":
-                properties.element.style.cursor = "e-resize";
-                targetElement.style.cursor = "e-resize";
-                properties.element.style.width =
-                    properties.originLength - (properties.originBase - event.screenX) + "px";
+                this.element.style.cursor = "e-resize";
+                this.parentElement.style.cursor = "e-resize";
+                this.element.style.width =
+                    this.originLength - (this.originBase - event.screenX) + "px";
                 break;
             case "down":
-                properties.element.style.cursor = "s-resize";
-                targetElement.style.cursor = "s-resize";
-                properties.element.style.height =
-                    properties.originLength - (properties.originBase - event.screenY) + "px";
+                this.element.style.cursor = "s-resize";
+                this.parentElement.style.cursor = "s-resize";
+                this.element.style.height =
+                    this.originLength - (this.originBase - event.screenY) + "px";
                 break;
             case "left":
-                properties.element.style.cursor = "e-resize";
-                targetElement.style.cursor = "e-resize";
-                properties.element.style.width =
-                    properties.originLength + properties.originBase - event.screenX + "px";
-                properties.element.style.left = event.screenX + "px";
+                this.element.style.cursor = "e-resize";
+                this.parentElement.style.cursor = "e-resize";
+                this.element.style.width =
+                    this.originLength + this.originBase - event.screenX + "px";
+                this.element.style.left = event.screenX + "px";
                 break;
             default:
         }
@@ -262,15 +227,12 @@ function dragging(event) {
     }
 }
 
-function dragStop(event) {
-    let targetElement = findTargetElement(event.target);
-    let properties = targetElement.dragProperties;
+function dragStop() {
+    if (this.mouseDown) {
+        this.mouseDown = false;
 
-    if (properties && properties.mouseDown) {
-        properties.mouseDown = false;
-
-        if (properties.callback) {
-            properties.callback(properties.element);
+        if (this.callback) {
+            this.callback(this.element);
         }
     }
 }
