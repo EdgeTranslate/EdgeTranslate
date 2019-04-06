@@ -195,6 +195,17 @@ function addEventListener() {
     });
     // 给关闭按钮添加点击事件监听，用于关闭侧边栏
     frameDocument.getElementById("icon-close").addEventListener("click", removeSlider);
+
+    // 将iframe内部的事件转发到document里，以实现更好的拖动效果。
+    frameDocument.addEventListener("mousemove", function(event) {
+        let new_event = new event.constructor(event.type, event);
+        document.documentElement.dispatchEvent(new_event);
+    });
+
+    frameDocument.addEventListener("mouseup", function(event) {
+        let new_event = new event.constructor(event.type, event);
+        document.documentElement.dispatchEvent(new_event);
+    });
 }
 
 /**
