@@ -1,6 +1,6 @@
 export default function(element, location, parameter) {
     var properties = {
-        change: false,
+        cursorChange: false,
         callback: parameter.callback,
         element: element,
         location: location,
@@ -32,15 +32,15 @@ export default function(element, location, parameter) {
                         event.x > boundary_left &&
                         event.x < boundary_right
                     ) {
-                        properties.change = true;
+                        properties.cursorChange = true;
                         properties.element.style.cursor = "s-resize";
                         properties.parentElement.style.cursor = "s-resize";
                     } else {
                         if (
                             properties.element.style.cursor === "s-resize" &&
-                            properties.change === true
+                            properties.cursorChange === true
                         ) {
-                            properties.change = false;
+                            properties.cursorChange = false;
                             properties.element.style.cursor = "auto";
                             properties.parentElement.style.cursor = "auto";
                         }
@@ -52,15 +52,15 @@ export default function(element, location, parameter) {
                         event.y > boundary_up &&
                         event.y < boundary_down
                     ) {
-                        properties.change = true;
+                        properties.cursorChange = true;
                         properties.element.style.cursor = "e-resize";
                         properties.parentElement.style.cursor = "e-resize";
                     } else {
                         if (
                             properties.element.style.cursor === "e-resize" &&
-                            properties.change === true
+                            properties.cursorChange === true
                         ) {
-                            properties.change = false;
+                            properties.cursorChange = false;
                             properties.element.style.cursor = "auto";
                             properties.parentElement.style.cursor = "auto";
                         }
@@ -72,15 +72,15 @@ export default function(element, location, parameter) {
                         event.x > boundary_left &&
                         event.x < boundary_right
                     ) {
-                        properties.change = true;
+                        properties.cursorChange = true;
                         properties.element.style.cursor = "s-resize";
                         properties.parentElement.style.cursor = "s-resize";
                     } else {
                         if (
                             properties.element.style.cursor === "s-resize" &&
-                            properties.change === true
+                            properties.cursorChange === true
                         ) {
-                            properties.change = false;
+                            properties.cursorChange = false;
                             properties.element.style.cursor = "auto";
                             properties.parentElement.style.cursor = "auto";
                         }
@@ -92,15 +92,15 @@ export default function(element, location, parameter) {
                         event.y > boundary_up &&
                         event.y < boundary_down
                     ) {
-                        properties.change = true;
+                        properties.cursorChange = true;
                         properties.element.style.cursor = "e-resize";
                         properties.parentElement.style.cursor = "e-resize";
                     } else {
                         if (
                             properties.element.style.cursor === "e-resize" &&
-                            properties.change === true
+                            properties.cursorChange === true
                         ) {
-                            properties.change = false;
+                            properties.cursorChange = false;
                             properties.element.style.cursor = "auto";
                             properties.parentElement.style.cursor = "auto";
                         }
@@ -212,7 +212,7 @@ export default function(element, location, parameter) {
                     properties.parentElement.style.cursor = "e-resize";
                     properties.element.style.width =
                         properties.originLength + properties.originBase - event.screenX + "px";
-                    properties.element.style.right = properties.originBase - event.screenX + "px";
+                    properties.element.style.left = -(properties.originBase - event.screenX) + "px";
                     break;
                 default:
             }
