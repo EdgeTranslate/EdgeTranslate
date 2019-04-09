@@ -19,7 +19,7 @@ develop build for firefox: `npm run dev:firefox`
 
 production build for chrome: `npm run build:chrome`
 
-production build for firefox: `npm run build: chrome`
+production build for firefox: `npm run build:firefox`
 
 ## pack to .zip file
 
