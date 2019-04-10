@@ -200,7 +200,7 @@ function dragging(event) {
                 this.parentElement.style.cursor = "s-resize";
                 this.element.style.height =
                     this.originLength + (this.originBase - event.screenY) + "px";
-                this.element.style.top = event.screenY + "px";
+                // this.element.style.top = event.screenY + "px";
                 break;
             case "right":
                 this.element.style.cursor = "e-resize";
@@ -219,7 +219,7 @@ function dragging(event) {
                 this.parentElement.style.cursor = "e-resize";
                 this.element.style.width =
                     this.originLength + this.originBase - event.screenX + "px";
-                this.element.style.left = event.screenX + "px";
+                // this.element.style.left = event.screenX + "px";
                 break;
             default:
         }
