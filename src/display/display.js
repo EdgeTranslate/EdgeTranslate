@@ -77,6 +77,12 @@ chrome.runtime.onMessage.addListener(function(message, sender, callback) {
                     case "close_result_frame":
                         removeSlider();
                         break;
+                    case "pronounce_original":
+                        sourcePronounce();
+                        break;
+                    case "pronounce_translated":
+                        targetPronounce();
+                        break;
                     default:
                         break;
                 }
