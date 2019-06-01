@@ -1,4 +1,8 @@
 export { translate, showTranslate, sendMessageToCurrentTab, pronounce, youdaoPageTranslate };
+
+// Audio 单例对象.
+const AUDIO = new Audio();
+
 /**
  * 翻译接口。
  */
@@ -444,7 +448,8 @@ function pronounce(text, language, speed, callback) {
             break;
     }
 
-    var url =
+    AUDIO.pause();
+    AUDIO.src =
         BASE_TTS_URL +
         "&q=" +
         text +
@@ -454,8 +459,7 @@ function pronounce(text, language, speed, callback) {
         speedValue +
         "&tk=" +
         generateTK(text, TKK);
-    var audio = new Audio(url);
-    audio.play();
+    AUDIO.play();
 
     if (callback) {
         callback();

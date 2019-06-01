@@ -9,5 +9,8 @@
         "stylus": {
             "parser": "plain"
         }
-    }
+    },
+    "line-counter.includes": [
+        "**/src/**"
+    ]
 }
