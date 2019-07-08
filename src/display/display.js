@@ -109,6 +109,7 @@ function createBlock(content, template) {
             divFrame.id = "translate_div";
             frame = document.createElement("iframe");
             frame.id = "translate_frame";
+            frame.sandbox = "allow-same-origin allow-scripts";
             startSlider(layoutSettings);
             divFrame.appendChild(frame);
             document.documentElement.appendChild(divFrame);
