@@ -167,6 +167,14 @@
         "message": "雙擊單詞立即翻譯",
         "description": "雙擊單詞後立即展示翻譯結果"
     },
+    "YouDaoPageTranslate": {
+        "message": "有道網頁翻譯",
+        "description": "使用有道翻譯的api翻譯當前頁面。"
+    },
+    "GooglePageTranslate": {
+        "message": "谷歌網頁翻譯",
+        "description": "使用谷歌翻譯的api翻譯當前頁面。"
+    },
     "TranslatePageYouDao": {
         "message": "使用有道翻譯此頁",
         "description": "使用有道翻譯的api翻譯當前頁面。"

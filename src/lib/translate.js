@@ -1,4 +1,12 @@
-export { translate, showTranslate, sendMessageToCurrentTab, pronounce, youdaoPageTranslate };
+export {
+    translate,
+    showTranslate,
+    sendMessageToCurrentTab,
+    pronounce,
+    youdaoPageTranslate,
+    executeYouDaoScript,
+    executeGoogleScript
+};
 
 // Audio 单例对象.
 const AUDIO = new Audio();
@@ -6,14 +14,15 @@ const AUDIO = new Audio();
 /**
  * 翻译接口。
  */
-const BASE_URL = "https://translate.google.cn/translate_a/single?ie=UTF-8&client=gtx";
+const BASE_URL = "https://translate.google.cn/translate_a/single?ie=UTF-8&client=webapp";
 
-const BASE_TTS_URL = "https://translate.google.cn/translate_tts?ie=UTF-8&client=gtx";
+const BASE_TTS_URL = "https://translate.google.cn/translate_tts?ie=UTF-8&client=webapp";
 
 // 生成tk需要的密钥
-var TKK = eval(
-    "((function(){var a\x3d3034572292;var b\x3d-192068061;return 426169+\x27.\x27+(a+b)})())"
-);
+// var TKK = eval(
+//     "((function(){var a\x3d3034572292;var b\x3d-192068061;return 426169+\x27.\x27+(a+b)})())"
+// );
+var TKK = "434217.1534559001";
 
 /**
  * 生成google translate api 参数tk的值
@@ -490,4 +499,32 @@ function youdaoPageTranslate(request, callback) {
     } else {
         xhr.send(null);
     }
+}
+
+/**
+ * 执行有道网页翻译相关脚本
+ */
+function executeYouDaoScript() {
+    chrome.tabs.executeScript({ file: "/youdao/main.js" }, function(result) {
+        if (chrome.runtime.lastError) {
+            // eslint-disable-next-line no-console
+            console.log("Chrome runtime error: " + chrome.runtime.lastError);
+            // eslint-disable-next-line no-console
+            console.log("Detail: " + result);
+        }
+    });
+}
+
+/**
+ * 执行谷歌网页翻译相关脚本。
+ */
+function executeGoogleScript() {
+    chrome.tabs.executeScript({ file: "/google/injection.js" }, function(result) {
+        if (chrome.runtime.lastError) {
+            // eslint-disable-next-line no-console
+            console.log("Chrome runtime error: " + chrome.runtime.lastError);
+            // eslint-disable-next-line no-console
+            console.log("Detail: " + result);
+        }
+    });
 }

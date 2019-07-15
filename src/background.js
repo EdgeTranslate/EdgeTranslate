@@ -3,7 +3,9 @@ import {
     showTranslate,
     sendMessageToCurrentTab,
     pronounce,
-    youdaoPageTranslate
+    youdaoPageTranslate,
+    executeYouDaoScript,
+    executeGoogleScript
 } from "./lib/translate.js";
 import {
     addUrlBlacklist,
@@ -276,34 +278,6 @@ chrome.contextMenus.onClicked.addListener(function(info, tab) {
             break;
     }
 });
-
-/**
- * 执行有道网页翻译相关脚本
- */
-function executeYouDaoScript() {
-    chrome.tabs.executeScript({ file: "./youdao/main.js" }, function(result) {
-        if (chrome.runtime.lastError) {
-            // eslint-disable-next-line no-console
-            console.log("Chrome runtime error: " + chrome.runtime.lastError);
-            // eslint-disable-next-line no-console
-            console.log("Detail: " + result);
-        }
-    });
-}
-
-/**
- * 执行谷歌网页翻译相关脚本。
- */
-function executeGoogleScript() {
-    chrome.tabs.executeScript({ file: "./google/injection.js" }, function(result) {
-        if (chrome.runtime.lastError) {
-            // eslint-disable-next-line no-console
-            console.log("Chrome runtime error: " + chrome.runtime.lastError);
-            // eslint-disable-next-line no-console
-            console.log("Detail: " + result);
-        }
-    });
-}
 
 /**
  * 添加tab切换事件监听，用于更新黑名单信息

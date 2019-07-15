@@ -167,6 +167,14 @@
         "message": "双击单词立即翻译",
         "description": "双击单词后立即显示翻译结果"
     },
+    "YouDaoPageTranslate": {
+        "message": "有道网页翻译",
+        "description": "使用有道翻译的api翻译当前页面。"
+    },
+    "GooglePageTranslate": {
+        "message": "谷歌网页翻译",
+        "description": "使用谷歌翻译的api翻译当前页面。"
+    },
     "TranslatePageYouDao": {
         "message": "使用有道翻译此页",
         "description": "使用有道翻译的api翻译当前页面。"

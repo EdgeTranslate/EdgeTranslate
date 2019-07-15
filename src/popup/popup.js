@@ -1,5 +1,10 @@
 import { LANGUAGES } from "./languages.js";
-import { translate, showTranslate } from "../lib/translate.js";
+import {
+    translate,
+    showTranslate,
+    executeGoogleScript,
+    executeYouDaoScript
+} from "../lib/translate.js";
 
 // 获取下拉列表元素
 var sourceLanguage = document.getElementById("sl");
@@ -113,6 +118,8 @@ function addEventListener() {
     document.getElementById("translateSubmit").addEventListener("click", translateSubmit);
     document.addEventListener("keypress", translatePreSubmit); // 对用户按下回车按键后的事件进行监听
     document.getElementById("setting-switch").addEventListener("click", settingSwitch);
+    document.getElementById("google-page-translate").addEventListener("click", executeGoogleScript);
+    document.getElementById("youdao-page-translate").addEventListener("click", executeYouDaoScript);
 }
 
 /**

@@ -1,52 +1,76 @@
 <!DOCTYPE html>
-<meta charset="utf-8">
+<meta charset="utf-8" />
 <html>
+    <head>
+        <link type="text/css" rel="stylesheet" href="./popup.css" />
+    </head>
 
-<head>
-    <link type="text/css" rel="stylesheet" href="./popup.css">
-</head>
-
-<body>
-    <div class="frame">
-        <div class="row">
-            <input type="text" id="translate_input" autofocus="autofocus" />
-            <button id="translateSubmit" class="i18n" data-i18n-name="Translate"></button>
-        </div>
-        <label id="hint_message" class="i18n" for="translate_input" data-i18n-name="InputHint"></label>
-        <div id="setting">
-            <div class="row" style="align-items: flex-end;">
-                <div class="col">
-                    <div class="selection">
-                        <label id="sl_label" class="select-label i18n" for="sl" data-i18n-name="SourceLanguage"></label>
-                        <select id="sl">
-                            <option class="i18n" value="auto" data-i18n-name="AutoDetect"></option>
-                        </select>
+    <body>
+        <div class="frame">
+            <div class="row">
+                <input type="text" id="translate_input" autofocus="autofocus" />
+                <button id="translateSubmit" class="i18n" data-i18n-name="Translate"></button>
+            </div>
+            <label
+                id="hint_message"
+                class="i18n"
+                for="translate_input"
+                data-i18n-name="InputHint"
+            ></label>
+            <div class="row" id="page-translate">
+                <a id="google-page-translate" class="i18n" data-i18n-name="GooglePageTranslate"></a>
+                <a id="youdao-page-translate" class="i18n" data-i18n-name="YouDaoPageTranslate"></a>
+            </div>
+            <div id="setting">
+                <div class="row" style="align-items: flex-end;">
+                    <div class="col">
+                        <div class="selection">
+                            <label
+                                id="sl_label"
+                                class="select-label i18n"
+                                for="sl"
+                                data-i18n-name="SourceLanguage"
+                            ></label>
+                            <select id="sl">
+                                <option
+                                    class="i18n"
+                                    value="auto"
+                                    data-i18n-name="AutoDetect"
+                                ></option>
+                            </select>
+                        </div>
                     </div>
-                </div>
-                <i class="translate-icon translate-icon-exchange" id="exchange" title="交换两种语言"></i>
-                <div class="col">
-                    <div class="selection">
-                        <label id="tl_label" class="select-label i18n" for="tl" data-i18n-name="TargetLanguage"></label>
-                        <select id="tl">
-                        </select>
+                    <i
+                        class="translate-icon translate-icon-exchange"
+                        id="exchange"
+                        title="交换两种语言"
+                    ></i>
+                    <div class="col">
+                        <div class="selection">
+                            <label
+                                id="tl_label"
+                                class="select-label i18n"
+                                for="tl"
+                                data-i18n-name="TargetLanguage"
+                            ></label>
+                            <select id="tl"> </select>
+                        </div>
                     </div>
                 </div>
             </div>
+            <div class="row" id="setting-switch">
+                <i class="translate-icon translate-icon-arrow-up set" id="arrow-up"></i>
+                <i class="translate-icon translate-icon-arrow-down set" id="arrow-down"></i>
+            </div>
         </div>
-        <div class="row" id="setting-switch">
-            <i class="translate-icon translate-icon-arrow-up set" id="arrow-up"></i>
-            <i class="translate-icon translate-icon-arrow-down set" id="arrow-down"></i>
-        </div>
-    </div>
 
-    <footer>
-        ©2019
-        <a href="https://github.com/EdgeTranslate/EdgeTranslate" target="blank">
-            Edge Translate
-        </a>
-    </footer>
-</body>
+        <footer>
+            ©2019
+            <a href="https://github.com/EdgeTranslate/EdgeTranslate" target="blank">
+                Edge Translate
+            </a>
+        </footer>
+    </body>
 
-<script src="./popup.js"></script>
-
+    <script src="./popup.js"></script>
 </html>
