@@ -1,4 +1,12 @@
-export { translate, showTranslate, sendMessageToCurrentTab, pronounce, youdaoPageTranslate };
+export {
+    translate,
+    showTranslate,
+    sendMessageToCurrentTab,
+    pronounce,
+    youdaoPageTranslate,
+    executeYouDaoScript,
+    executeGoogleScript
+};
 
 // Audio 单例对象.
 const AUDIO = new Audio();
@@ -491,4 +499,32 @@ function youdaoPageTranslate(request, callback) {
     } else {
         xhr.send(null);
     }
+}
+
+/**
+ * 执行有道网页翻译相关脚本
+ */
+function executeYouDaoScript() {
+    chrome.tabs.executeScript({ file: "/youdao/main.js" }, function(result) {
+        if (chrome.runtime.lastError) {
+            // eslint-disable-next-line no-console
+            console.log("Chrome runtime error: " + chrome.runtime.lastError);
+            // eslint-disable-next-line no-console
+            console.log("Detail: " + result);
+        }
+    });
+}
+
+/**
+ * 执行谷歌网页翻译相关脚本。
+ */
+function executeGoogleScript() {
+    chrome.tabs.executeScript({ file: "/google/injection.js" }, function(result) {
+        if (chrome.runtime.lastError) {
+            // eslint-disable-next-line no-console
+            console.log("Chrome runtime error: " + chrome.runtime.lastError);
+            // eslint-disable-next-line no-console
+            console.log("Detail: " + result);
+        }
+    });
 }
