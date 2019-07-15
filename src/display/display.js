@@ -113,6 +113,8 @@ function createBlock(content, template) {
             // frame不在页面中，创建新的frame
             divFrame = document.createElement("div");
             divFrame.id = "translate_div";
+            divFrame.style.backgroundColor = "white"; // 动态设置样式以兼容Dark Reader
+            divFrame.style.boxShadow = "0px 0px 50px rgb(200,200,200,0.5)"; // 动态设置样式以兼容Dark Reader
             frame = document.createElement("iframe");
             frame.id = "translate_frame";
             startSlider(layoutSettings);
