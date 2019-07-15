@@ -52,7 +52,7 @@
         "description": "Synonyms"
     },
     "OriginalText": {
-        "message": "Orignal Text",
+        "message": "Original Text",
         "description": "The original text to be translated."
     },
     "Phrases": {
@@ -85,19 +85,19 @@
     },
     "AddUrlBlacklist": {
         "message": "Add this site to blacklist",
-        "description": "Add currently browsering site to blacklist."
+        "description": "Add currently browsing site to blacklist."
     },
     "RemoveUrlBlacklist": {
         "message": "Remove this site from blacklist",
-        "description": "Remove currently browsering site from blacklist."
+        "description": "Remove currently browsing site from blacklist."
     },
     "AddDomainBlacklist": {
         "message": "Add this domain to blacklist",
-        "description": "Add the domain of currently browsering site to blacklist."
+        "description": "Add the domain of currently browsing site to blacklist."
     },
     "RemoveDomainBlacklist": {
         "message": "Remove this domain from blacklist",
-        "description": "Remove the domain of currently browsering site from blacklist."
+        "description": "Remove the domain of currently browsing site from blacklist."
     },
     "ExtensionInstalled": {
         "message": "Edge Translate installed successfully! Click to read the wiki!",
@@ -124,7 +124,7 @@
         "description": "Target Language"
     },
     "PermissionRemind": {
-        "message": "Please open the 'Allow access to file URLs'switch in the extension management page",
+        "message": "Please open the 'Allow access to file URLs' switch in the extension management page",
         "description": "a hint to the user about the access to file url permission"
     },
     "ContentSettings": {
@@ -168,11 +168,11 @@
         "description": "Instantly show translating result after double-clicked texts."
     },
     "YouDaoPageTranslate": {
-        "message": "YouDao Page Translate",
+        "message": "YouDao Page Trans.",
         "description": "Translate current page with YouDao translate api."
     },
     "GooglePageTranslate": {
-        "message": "Google Page Translate",
+        "message": "Google Page Trans.",
         "description": "Translate current page with Google translate api."
     },
     "TranslatePageYouDao": {
