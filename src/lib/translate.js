@@ -6,9 +6,9 @@ const AUDIO = new Audio();
 /**
  * 翻译接口。
  */
-const BASE_URL = "https://translate.google.cn/translate_a/single?ie=UTF-8&client=gtx";
+const BASE_URL = "https://translate.google.cn/translate_a/single?ie=UTF-8&client=webapp";
 
-const BASE_TTS_URL = "https://translate.google.cn/translate_tts?ie=UTF-8&client=gtx";
+const BASE_TTS_URL = "https://translate.google.cn/translate_tts?ie=UTF-8&client=webapp";
 
 // 生成tk需要的密钥
 var TKK = eval(
