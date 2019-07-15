@@ -167,6 +167,14 @@
         "message": "Translate After Dbl Click",
         "description": "Instantly show translating result after double-clicked texts."
     },
+    "YouDaoPageTranslate": {
+        "message": "YouDao Page Translate",
+        "description": "Translate current page with YouDao translate api."
+    },
+    "GooglePageTranslate": {
+        "message": "Google Page Translate",
+        "description": "Translate current page with Google translate api."
+    },
     "TranslatePageYouDao": {
         "message": "Translate this page with YouDao",
         "description": "Translate current page with YouDao translate api."
