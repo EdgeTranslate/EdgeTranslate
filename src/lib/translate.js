@@ -11,9 +11,10 @@ const BASE_URL = "https://translate.google.cn/translate_a/single?ie=UTF-8&client
 const BASE_TTS_URL = "https://translate.google.cn/translate_tts?ie=UTF-8&client=webapp";
 
 // 生成tk需要的密钥
-var TKK = eval(
-    "((function(){var a\x3d3034572292;var b\x3d-192068061;return 426169+\x27.\x27+(a+b)})())"
-);
+// var TKK = eval(
+//     "((function(){var a\x3d3034572292;var b\x3d-192068061;return 426169+\x27.\x27+(a+b)})())"
+// );
+var TKK = "434217.1534559001";
 
 /**
  * 生成google translate api 参数tk的值
