@@ -11,65 +11,65 @@ export {
 // Audio 单例对象.
 const AUDIO = new Audio();
 
+// 出现429之后的重试次数。
+var RETRY = 0;
+const MAX_RETRY = 3;
+
 /**
  * 翻译接口。
  */
-const BASE_URL = "https://translate.google.cn/translate_a/single?ie=UTF-8&client=webapp";
+const HOST = "https://translate.google.cn/";
 
-const BASE_TTS_URL = "https://translate.google.cn/translate_tts?ie=UTF-8&client=webapp";
+const BASE_URL = HOST + "translate_a/single?ie=UTF-8&client=t&otf=1&ssel=0&tsel=0&kc=5";
 
-// 生成tk需要的密钥
-// var TKK = eval(
-//     "((function(){var a\x3d3034572292;var b\x3d-192068061;return 426169+\x27.\x27+(a+b)})())"
-// );
-var TKK = "434217.1534559001";
+const BASE_TTS_URL = HOST + "translate_tts?ie=UTF-8&client=t";
 
-/**
- * 生成google translate api 参数tk的值
- *
- * @param {*} text 翻译的内容
- * @param {*} TKK 生成tk需要的密钥
- */
-function generateTK(text, TKK) {
-    /* eslint-disable */
-    function compute(a, b) {
-        for (var d = 0; d < b.length - 2; d += 3) {
-            var c = b.charAt(d + 2),
-                c = "a" <= c ? c.charCodeAt(0) - 87 : Number(c),
-                c = "+" == b.charAt(d + 1) ? a >>> c : a << c;
-            a = "+" == b.charAt(d) ? (a + c) & 4294967295 : a ^ c;
-        }
-        return a;
+// tk需要的密钥
+var TKK = ["434217", "1534559001"];
+
+/* eslint-disable */
+function generateTK(a, b, c) {
+    b = Number(b) || 0;
+    let e = [];
+    let f = 0;
+    let g = 0;
+    for (; g < a.length; g++) {
+        let l = a.charCodeAt(g);
+        128 > l
+            ? (e[f++] = l)
+            : (2048 > l
+                  ? (e[f++] = (l >> 6) | 192)
+                  : (55296 == (l & 64512) &&
+                    g + 1 < a.length &&
+                    56320 == (a.charCodeAt(g + 1) & 64512)
+                        ? ((l = 65536 + ((l & 1023) << 10) + (a.charCodeAt(++g) & 1023)),
+                          (e[f++] = (l >> 18) | 240),
+                          (e[f++] = ((l >> 12) & 63) | 128))
+                        : (e[f++] = (l >> 12) | 224),
+                    (e[f++] = ((l >> 6) & 63) | 128)),
+              (e[f++] = (l & 63) | 128));
     }
-    for (
-        var e = TKK.split("."), h = Number(e[0]) || 0, g = [], d = 0, f = 0;
-        f < text.length;
-        f++
-    ) {
-        var c = text.charCodeAt(f);
-        128 > c
-            ? (g[d++] = c)
-            : (2048 > c
-                  ? (g[d++] = (c >> 6) | 192)
-                  : (55296 == (c & 64512) &&
-                    f + 1 < text.length &&
-                    56320 == (a.charCodeAt(f + 1) & 64512)
-                        ? ((c = 65536 + ((c & 1023) << 10) + (a.charCodeAt(++f) & 1023)),
-                          (g[d++] = (c >> 18) | 240),
-                          (g[d++] = ((c >> 12) & 63) | 128))
-                        : (g[d++] = (c >> 12) | 224),
-                    (g[d++] = ((c >> 6) & 63) | 128)),
-              (g[d++] = (c & 63) | 128));
+    a = b;
+    for (f = 0; f < e.length; f++) {
+        (a += e[f]), (a = _magic(a, "+-a^+6"));
     }
-    text = h;
-    for (d = 0; d < g.length; d++) (text += g[d]), (text = compute(text, "+-a^+6"));
-    text = compute(text, "+-3^+b+-f");
-    text ^= Number(e[1]) || 0;
-    0 > text && (text = (text & 2147483647) + 2147483648);
-    text %= 1e6;
-    return text.toString() + "." + (text ^ h);
-    /* eslint-enable */
+    a = _magic(a, "+-3^+b+-f");
+    a ^= Number(c) || 0;
+    0 > a && (a = (a & 2147483647) + 2147483648);
+    a %= 1e6;
+    return a.toString() + "." + (a ^ b);
 }
+
+function _magic(a, b) {
+    for (var c = 0; c < b.length - 2; c += 3) {
+        var d = b.charAt(c + 2),
+            d = "a" <= d ? d.charCodeAt(0) - 87 : Number(d),
+            d = "+" == b.charAt(c + 1) ? a >>> d : a << d;
+        a = "+" == b.charAt(c) ? (a + d) & 4294967295 : a ^ d;
+    }
+    return a;
+}
+/* eslint-enable */
 
 /**
  * Send a message to current tab if accessible.
@@ -96,6 +96,35 @@ function sendMessageToCurrentTab(message) {
 }
 
 /**
+ * 更新TKK
+ */
+function updateTKK() {
+    let request = new XMLHttpRequest();
+    request.open("GET", HOST, true);
+    request.send();
+    request.onreadystatechange = function() {
+        if (request.readyState === 4) {
+            if (request.status === 200) {
+                let body = request.responseText;
+                let tkk = (body.match(/TKK=(.*?)\(\)\)'\);/i) || [""])[0]
+                    .replace(/\\x([0-9A-Fa-f]{2})/g, "") // remove hex chars
+                    .match(/[+-]?\d+/g);
+                if (tkk) {
+                    TKK[0] = Number(tkk[2]);
+                    TKK[1] = Number(tkk[0]) + Number(tkk[1]);
+                } else {
+                    tkk = body.match(/TKK[=:]['"](\d+?)\.(\d+?)['"]/i);
+                    if (tkk) {
+                        TKK[0] = Number(tkk[1]);
+                        TKK[1] = Number(tkk[2]);
+                    }
+                }
+            }
+        }
+    };
+}
+
+/**
  *
  * 此函数负责将传入的文本翻译，并在当前页面的侧边栏中展示
  *
@@ -106,28 +135,27 @@ function translate(text, callback) {
     // 获取翻译语言设定。
     chrome.storage.sync.get("languageSetting", function(result) {
         var languageSetting = result.languageSetting;
-        var postData = "sl=" + languageSetting.sl + "&tl=" + languageSetting.tl;
+        var query = "sl=" + languageSetting.sl + "&tl=" + languageSetting.tl;
 
         // 获取翻译参数设定。
         chrome.storage.sync.get("DTSetting", function(result) {
-            var DTSetting = result.DTSetting;
-            var request = new XMLHttpRequest();
+            let DTSetting = result.DTSetting;
 
             DTSetting.forEach(element => {
-                postData = postData + "&dt=" + element;
+                query = query + "&dt=" + element;
             });
 
-            postData += "&tk=" + generateTK(text, TKK);
-            postData += "&q=" + text;
+            query += "&tk=" + generateTK(text, TKK[0], TKK[1]);
+            query += "&q=" + encodeURIComponent(text);
 
             sendMessageToCurrentTab({
                 type: "info",
                 info: "start_translating"
             });
 
-            request.open("POST", BASE_URL, true);
-            request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            request.send(postData);
+            let request = new XMLHttpRequest();
+            request.open("GET", BASE_URL + "&" + query, true);
+            request.send();
             request.onreadystatechange = function() {
                 if (request.readyState === 4) {
                     // HTTPS request sucessfully
@@ -137,15 +165,27 @@ function translate(text, callback) {
                                 targetLanguage: languageSetting.tl
                             })
                         );
+                        return;
                     }
+
+                    // 429错误，需要更新TKK。
+                    if (request.status === 429) {
+                        updateTKK();
+                        if (RETRY < MAX_RETRY) {
+                            RETRY++;
+                            translate(text, callback);
+                            return;
+                        } else {
+                            RETRY = 0;
+                        }
+                    }
+
                     // HTTPS request fail
-                    else {
-                        sendMessageToCurrentTab({
-                            type: "info",
-                            info: "network_error",
-                            detail: request.status
-                        });
-                    }
+                    sendMessageToCurrentTab({
+                        type: "info",
+                        info: "network_error",
+                        detail: request.status
+                    });
                 }
             };
         });
@@ -467,7 +507,7 @@ function pronounce(text, language, speed, callback) {
         "&ttsspeed=" +
         speedValue +
         "&tk=" +
-        generateTK(text, TKK);
+        generateTK(text, TKK[0], TKK[1]);
     AUDIO.play();
 
     if (callback) {
