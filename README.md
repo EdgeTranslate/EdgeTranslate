@@ -36,19 +36,27 @@ It is always recommended to download the latest version.
 
 ### Chrome
 
+* Extract the `.zip` package to somewhere on your disk.
+
 * Navigate to: `chrome://extensions`.
 
 * Enable `Developer mode`. It should be in the upper right corner of the page.
 
-* Drag the extension package into the page and you will see the notification asking you to grant permissions.
+* Click `Load unpacked` in the upper left corner.
+
+* Navigate to the directory of the extracted package.
 
 ### QQ Browser
+
+* Extract the `.zip` package to somewhere on your disk.
 
 * Navigate to: `qqbrowser://extensions/manage`.
 
 * Enable `Developer mode`. It should be in the upper right corner of the page.
 
-* Drag the Installation package into the page and you will see the notification asking you to grant permissions.
+* Click `Load unpacked` in the upper left corner.
+
+* Navigate to the directory of the extracted package.
 
 ### Firefox
 
