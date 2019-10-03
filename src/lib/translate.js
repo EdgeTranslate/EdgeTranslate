@@ -22,7 +22,7 @@ const HOST = "https://translate.google.cn/";
 
 const BASE_URL = HOST + "translate_a/single?ie=UTF-8&client=webapp&otf=1&ssel=0&tsel=0&kc=5";
 
-const BASE_TTS_URL = HOST + "translate_tts?ie=UTF-8&client=t";
+const BASE_TTS_URL = HOST + "translate_tts?ie=UTF-8&client=webapp";
 
 // tk需要的密钥
 var TKK = ["434217", "1534559001"];
