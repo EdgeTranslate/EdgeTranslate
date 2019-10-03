@@ -1,19 +1,11 @@
 {
     "name": "__MSG_AppName__",
     "description": "__MSG_Description__",
-    "version": "1.6.3",
+    "version": "1.6.4",
     "default_locale": "zh_CN",
-    "permissions": [
-        "notifications",
-        "contextMenus",
-        "storage",
-        "tabs",
-        "<all_urls>"
-    ],
+    "permissions": ["notifications", "contextMenus", "storage", "tabs", "<all_urls>"],
     "background": {
-        "scripts": [
-            "background.js"
-        ]
+        "scripts": ["background.js"]
     },
     "browser_action": {
         "default_popup": "./popup/popup.html",
@@ -25,17 +17,9 @@
     },
     "content_scripts": [
         {
-            "matches": [
-                "<all_urls>"
-            ],
-            "js": [
-                "./contents/select.js",
-                "./display/display.js"
-            ],
-            "css": [
-                "./contents/select.css",
-                "./display/display.css"
-            ]
+            "matches": ["<all_urls>"],
+            "js": ["./contents/select.js", "./display/display.js"],
+            "css": ["./contents/select.css", "./display/display.css"]
         },
         {
             "matches": [
@@ -46,16 +30,14 @@
                 "ftp://*/*.pdf",
                 "ftp://*/*.PDF"
             ],
-            "js": [
-                "./contents/pdf.js"
-            ],
+            "js": ["./contents/pdf.js"],
             "run_at": "document_start"
         }
     ],
     "commands": {
         "_execute_browser_action": {
             "suggested_key": {
-              "default": "Alt+Q"
+                "default": "Alt+Q"
             }
         },
         "change_language_setting": {
