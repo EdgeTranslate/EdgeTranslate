@@ -348,4 +348,4 @@ chrome.commands.onCommand.addListener(function(command) {
 });
 
 // Insert google analytics script into this window
-insertAnalyticsScript(window);
+insertAnalyticsScript();
