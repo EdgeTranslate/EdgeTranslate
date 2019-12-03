@@ -55,6 +55,7 @@
         "raw-loader": "^0.5.1",
         "sinon": "^6.1.5",
         "sinon-chrome": "^2.3.2",
+        "ua-parser-js": "^0.7.20",
         "webpack": "^4.29.3",
         "webpack-merge": "^4.1.4",
         "webpack-stream": "^5.1.1"
