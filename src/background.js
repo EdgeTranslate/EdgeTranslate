@@ -14,6 +14,7 @@ import {
     removeDomainBlacklist,
     updateBLackListMenu
 } from "./lib/blacklist.js";
+import { insertAnalyticsScript } from "./lib/analytics.js";
 
 /**
  * 默认的源语言和目标语言。
@@ -345,3 +346,6 @@ chrome.commands.onCommand.addListener(function(command) {
         command: command
     });
 });
+
+// Insert google analytics script into this window
+insertAnalyticsScript(window);
