@@ -12,5 +12,9 @@
     },
     "line-counter.includes": [
         "**/src/**"
+    ],
+    "cSpell.words": [
+        "pageview",
+        "youdao"
     ]
 }
