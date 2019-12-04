@@ -1,10 +1,6 @@
-import UAParser from "ua-parser-js";
 export { insertAnalyticsScript };
 
 const ANALYTICS_ACCOUNT = "UA-153659474-1";
-const UA_INFO = new UAParser();
-const BROWSER = UA_INFO.getBrowser();
-const OS = UA_INFO.getOS();
 const BASE_URL = "https://www.google-analytics.com/collect";
 
 /**
@@ -12,23 +8,6 @@ const BASE_URL = "https://www.google-analytics.com/collect";
  * @param {Window} insertWindow The window object the script insert to.
  */
 function insertAnalyticsScript() {
-    // insertWindow[GLOBAL_NAME]("create", ANALYTICS_ACCOUNT, "auto");
-    // insertWindow[GLOBAL_NAME]("set", "checkProtocolTask", null); // Disable file protocol checking.
-    // insertWindow[GLOBAL_NAME]("set", "language", navigator.language);
-    // insertWindow[GLOBAL_NAME]("set", "appVersion", chrome.runtime.getManifest().version);
-    // insertWindow[GLOBAL_NAME]("set", "dimension1", BROWSER.name || "None");
-    // insertWindow[GLOBAL_NAME](
-    //     "set",
-    //     "dimension2",
-    //     (BROWSER.version || "0.0")
-    //         .split(".")
-    //         .slice(0, 3)
-    //         .join(".")
-    // );
-    // insertWindow[GLOBAL_NAME]("set", "dimension3", OS.name || "None");
-    // insertWindow[GLOBAL_NAME]("set", "dimension4", OS.version || "0.0");
-    // insertWindow[GLOBAL_NAME]("send", "pageview");
-
     send("background", "pageview", null);
 }
 
@@ -40,7 +19,7 @@ function send(page, type, appendRequestData) {
         let request = new XMLHttpRequest();
         formData.append("v", 1); // analytics protocol version
         formData.append("tid", ANALYTICS_ACCOUNT); // google analytics account
-        formData.append("uid", UUID); // unique user ID
+        formData.append("cid", UUID); // unique user ID
         formData.append("ul", navigator.language); // user's language setting
         formData.append("an", chrome.runtime.getManifest().name); // the name of this extension
         formData.append("av", chrome.runtime.getManifest().version); // the version number of this extension
