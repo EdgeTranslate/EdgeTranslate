@@ -800,6 +800,7 @@
                         }
                         return loadingErrorMessage.then(function (msg) {
                             _this3.error(msg, { message: message });
+                            history.back();
                             throw new Error(msg);
                         });
                     });

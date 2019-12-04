@@ -18,20 +18,8 @@
     "content_scripts": [
         {
             "matches": ["<all_urls>"],
-            "js": ["./contents/select.js", "./display/display.js"],
+            "js": ["./contents/select.js", "./display/display.js", "./contents/pdf.js"],
             "css": ["./contents/select.css", "./display/display.css"]
-        },
-        {
-            "matches": [
-                "*://*/*.pdf",
-                "*://*/*.PDF",
-                "file://*/*.pdf",
-                "file://*/*.PDF",
-                "ftp://*/*.pdf",
-                "ftp://*/*.PDF"
-            ],
-            "js": ["./contents/pdf.js"],
-            "run_at": "document_start"
         }
     ],
     "commands": {
