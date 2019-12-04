@@ -1,62 +1,58 @@
-export { insertAnalyticsScript };
+export { sendHitRequest };
 
 const ANALYTICS_ACCOUNT = "UA-153659474-1";
-const BASE_URL = "https://www.google-analytics.com/collect";
+const GA_URL = "https://www.google-analytics.com/collect";
 
 /**
- * Insert google analytics script into a window
- * @param {Window} insertWindow The window object the script insert to.
+ * send hit data to google analytics API
+ * @param {string} page page name of the current document
+ * @param {string} type type of hit. "pageview" and "event" are enumerated
+ * @param {Object} extraHitData extra hit(request) data
  */
-function insertAnalyticsScript() {
-    send("background", "pageview", null);
-}
-
-function send(page, type, appendRequestData) {
+function sendHitRequest(page, type, extraHitData) {
     let documentLocation =
         document.location.origin + document.location.pathname + document.location.search;
     getUUID(function(UUID) {
-        var formData = new FormData();
-        let request = new XMLHttpRequest();
-        formData.append("v", 1); // analytics protocol version
-        formData.append("tid", ANALYTICS_ACCOUNT); // google analytics account
-        formData.append("cid", UUID); // unique user ID
-        formData.append("ul", navigator.language); // user's language setting
-        formData.append("an", chrome.runtime.getManifest().name); // the name of this extension
-        formData.append("av", chrome.runtime.getManifest().version); // the version number of this extension
-        formData.append("t", type); // hit(request) type
-        formData.append("dl", documentLocation); // document location
-        formData.append("dp", "/" + page); // document page
-        formData.append("dt", page); // document title
-        formData.forEa;
-        let url = BASE_URL;
-        request.open("POST", url, true);
-        request.send(generateURLRequest(formData));
-        request.onreadystatechange = function() {
-            if (request.readyState === 4) {
-                // HTTP request successfully
-                if (request.status !== 200) {
-                    // console.log("google analytics request failed");
-                }
-            }
+        // establish basic hit data(payload)
+        var hitData = {
+            v: 1, // analytics protocol version
+            tid: ANALYTICS_ACCOUNT, // analytics protocol version
+            cid: UUID, // unique user ID
+            ul: navigator.language, //   user's language setting
+            an: chrome.runtime.getManifest().name, // the name of this extension
+            av: chrome.runtime.getManifest().version, // the version number of this extension
+            t: type, // hit(request) type
+            dl: documentLocation, // document location
+            dp: "/" + page, // document page
+            dt: page // document title
         };
+        // merge hitData and extraHitData
+        Object.assign(hitData, extraHitData);
+
+        let request = new XMLHttpRequest();
+        request.open("POST", GA_URL, true);
+        request.send(generateURLRequest(hitData));
     });
 }
 
+/**
+ * generate url according to the request object
+ * @param {Object} requestData object contains request data
+ * @returns {string} generated url
+ */
 function generateURLRequest(requestData) {
     let url = "";
     if (requestData) {
-        requestData.forEach((value, key) => {
-            url += key + "=" + value + "&";
-        });
+        for (let key in requestData) {
+            url += key + "=" + requestData[key] + "&";
+        }
     }
     return url;
 }
 
 /**
- * 
- * @param {function name(UUID) {
-     
- }} callback the callback function to be executed when the result is returned. If user is new, set a new UUID
+ * get UUID(unique user ID). If user is new, a new UUID will be generated or return the UUID stored in chrome storage
+ * @param {function(UUID)} callback the callback function to be executed when the result is returned. If user is new, set a new UUID. UUID is a function parameter as result
  */
 function getUUID(callback) {
     chrome.storage.sync.get("UUID", function(result) {
