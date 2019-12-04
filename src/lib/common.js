@@ -8,5 +8,8 @@ export { getDomain };
 function getDomain(url) {
     var URL_PATTERN = /.+:\/+([\w.-]+).*/;
     var groups = url.match(URL_PATTERN);
-    return groups[1];
+    if (groups) {
+        return groups[1];
+    }
+    return "";
 }
