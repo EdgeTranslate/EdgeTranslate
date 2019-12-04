@@ -144,6 +144,13 @@ chrome.runtime.onInstalled.addListener(function(details) {
                 // 为wiki页面创建一个新的标签页
                 url: "https://github.com/EdgeTranslate/EdgeTranslate/wiki"
             });
+
+            // send event hit to google analytics
+            // listen on the installation event
+            sendHitRequest("background", "event", {
+                ec: "installation", // event category
+                ea: "installation" // event label
+            });
         } else if (details.reason === "update") {
             // 从旧版本更新，引导用户查看更新日志
             chrome.notifications.create("update_notification", {

@@ -1,12 +1,15 @@
 export { sendHitRequest };
 
+// specification of this module is in: https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters
 const ANALYTICS_ACCOUNT = "UA-153659474-1";
 const GA_URL = "https://www.google-analytics.com/collect";
 
 /**
  * send hit data to google analytics API
+ * "hit type" includes: "pageview", "event"
+ * "event type" includes: "click", "open", "installation"
  * @param {string} page page name of the current document
- * @param {string} type type of hit. "pageview" and "event" are enumerated
+ * @param {string} type type of hit.
  * @param {Object} extraHitData extra hit(request) data
  */
 function sendHitRequest(page, type, extraHitData) {
