@@ -3,16 +3,40 @@ $color-primary = #4a8cf7;
 html,body
     height: 100%;
     width: 100%;
+
 .row
     display: flex;
     align-items: center;
-    justify-content: space-around;
+    justify-content: space-between;
     line-height: 4em;
+    margin: 2% 40% 2% 5%;
 
+.column
+    display: flex;
+    align-items: center;
+
+.checked-label
+    cursor: pointer;
+    font-size: large;
+    flex: 3 3 50%;
+    justify-content: space-between;
+
+.radio-label
+    cursor: pointer;
+    font-size: large;
+
+.setting-title
+    font-size: large;
+    font-weight: bold;
+
+.space
+    width: 15px;
+
+scale = 1.5;
 .radio
     position: relative;
-    width: 16px;
-    height: 16px;
+    width: (16px * scale);
+    height: (16px * scale);
     background-clip: border-box;
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -21,7 +45,7 @@ html,body
     vertical-align: text-bottom;
     border-radius: 50%;
     background-color: #fff;
-    border: 1px solid #d7d7d7;
+    border: (1px * scale) solid #d7d7d7;
     &:before
         content: '';
         display: block;
@@ -32,22 +56,23 @@ html,body
     &:disabled
         opacity: .65
     &:checked
-        border: 1px solid$color-primary;
+        border: (1px * scale) solid$color-primary;
         background-color: #fff;
         &:before
-            height: 8px;
-            width: 8px;
+            height: (8px * scale);
+            width: (8px * scale);
             border-radius: 50%;
-            margin: 3px 0 0 3px
+            margin: (3px * scale) 0 0 (3px * scale);
             background-color: $color-primary
     &:focus 
         outline: none;
         box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.075), 0 0 2px #38a7ff;
 
+
 .checkbox
     position: relative;
-    width: 16px;
-    height: 16px;
+    width: (16px * scale);
+    height: (16px * scale);
     background-clip: border-box;
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -65,34 +90,20 @@ html,body
         &:after
             content: '';
             display: block;
-            height: 4px;
-            width: 7px;
+            height: (4px * scale);
+            width: (7px * scale);
             border: 0 solid #fff;
             border-width: 0 0 2px 2px;
             -webkit-transform: rotate(-45deg);
             transform: rotate(-45deg);
             position: absolute;
-            top: 3px;
-            left: 3px;
+            top: (3px * scale);
+            left: (3px * scale);
     &:disabled
         opacity: .65
     &:focus
         outline: none;
         box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.075), 0 0 2px #38a7ff
-
-.checked-label
-    cursor: pointer;
-    font-size: 12px;
-    flex: 3 3 50%;
-    justify-content: space-between;
-
-.radio-label
-    cursor: pointer;
-    font-size: 12px;
-
-.setting-title
-    font-size: small;
-    font-weight: bold;
 
 .switch
     -webkit-appearance: none;
@@ -120,7 +131,7 @@ html,body
     &:before
         width: 39px;
         height: 22px;
-        background-color: #fdfdfd;
+        background-color: lightgray;
     &:after
         width: 22px;
         height: 22px;
