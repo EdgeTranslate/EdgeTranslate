@@ -33,7 +33,7 @@ const DEFAULT_SETTINGS = {
         Resize: false
     },
     // Default settings of source language and target language
-    languageSetting: { sl: "auto", tl: "zh-CN" },
+    languageSetting: { sl: "auto", tl: navigator.language },
     OtherSettings: {
         SelectTranslate: true,
         TranslateAfterDblClick: false,
@@ -121,10 +121,12 @@ chrome.runtime.onInstalled.addListener(function(details) {
 
             // send event hit to google analytics
             // listen on the installation event
-            sendHitRequest("background", "event", {
-                ec: "installation", // event category
-                ea: "installation" // event label
-            });
+            setTimeout(() => {
+                sendHitRequest("background", "event", {
+                    ec: "installation", // event category
+                    ea: "installation" // event label
+                });
+            }, 1000);
         } else if (details.reason === "update") {
             // 从旧版本更新，引导用户查看更新日志
             chrome.notifications.create("update_notification", {
@@ -329,7 +331,9 @@ chrome.commands.onCommand.addListener(function(command) {
 });
 
 // send basic hit data to google analytics
-sendHitRequest("background", "pageview", null);
+setTimeout(() => {
+    sendHitRequest("background", "pageview", null);
+}, 1000);
 
 /**
  * assign default value to settings which are undefined in recursive way
