@@ -15,26 +15,28 @@ const GA_URL = "https://www.google-analytics.com/collect";
 function sendHitRequest(page, type, extraHitData) {
     let documentLocation =
         document.location.origin + document.location.pathname + document.location.search;
-    getUUID(function(UUID) {
-        // establish basic hit data(payload)
-        var hitData = {
-            v: 1, // analytics protocol version
-            tid: ANALYTICS_ACCOUNT, // analytics protocol version
-            cid: UUID, // unique user ID
-            ul: navigator.language, //   user's language setting
-            an: chrome.runtime.getManifest().name, // the name of this extension
-            av: chrome.runtime.getManifest().version, // the version number of this extension
-            t: type, // hit(request) type
-            dl: documentLocation, // document location
-            dp: "/" + page, // document page
-            dt: page // document title
-        };
-        // merge hitData and extraHitData
-        Object.assign(hitData, extraHitData);
+    useGoogleAnalytics(function() {
+        getUUID(function(UUID) {
+            // establish basic hit data(payload)
+            var hitData = {
+                v: 1, // analytics protocol version
+                tid: ANALYTICS_ACCOUNT, // analytics protocol version
+                cid: UUID, // unique user ID
+                ul: navigator.language, //   user's language setting
+                an: chrome.runtime.getManifest().name, // the name of this extension
+                av: chrome.runtime.getManifest().version, // the version number of this extension
+                t: type, // hit(request) type
+                dl: documentLocation, // document location
+                dp: "/" + page, // document page
+                dt: page // document title
+            };
+            // merge hitData and extraHitData
+            Object.assign(hitData, extraHitData);
 
-        let request = new XMLHttpRequest();
-        request.open("POST", GA_URL, true);
-        request.send(generateURLRequest(hitData));
+            let request = new XMLHttpRequest();
+            request.open("POST", GA_URL, true);
+            request.send(generateURLRequest(hitData));
+        });
     });
 }
 
@@ -51,6 +53,16 @@ function generateURLRequest(requestData) {
         }
     }
     return url;
+}
+
+/**
+ *
+ * @param {function} callback the callback function executed when the result of settings is ready and value of UseGoogleAnalytics is true
+ */
+function useGoogleAnalytics(callback) {
+    chrome.storage.sync.get("OtherSettings", function(result) {
+        if (result.OtherSettings.UseGoogleAnalytics) callback();
+    });
 }
 
 /**

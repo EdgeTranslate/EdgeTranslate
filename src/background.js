@@ -103,6 +103,7 @@ chrome.runtime.onInstalled.addListener(function(details) {
         visible: false
     });
 
+    // assign default value to settings of this extension
     chrome.storage.sync.get(function(result) {
         var buffer = result; // use var buffer as a pointer
         setDefaultSettings(buffer, DEFAULT_SETTINGS); // assign default value to buffer
@@ -339,7 +340,6 @@ function setDefaultSettings(result, settings) {
     for (var i in settings) {
         // settings[i] contains key-value settings
         if (
-            i &&
             typeof settings[i] === "object" &&
             !(settings[i] instanceof Array) &&
             Object.keys(settings[i]).length > 0
