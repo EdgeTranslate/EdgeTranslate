@@ -337,6 +337,7 @@ sendHitRequest("background", "pageview", null);
  */
 function setDefaultSettings(result, settings) {
     for (var i in settings) {
+        // settings[i] contains key-value settings
         if (
             i &&
             typeof settings[i] === "object" &&
@@ -346,9 +347,11 @@ function setDefaultSettings(result, settings) {
             if (result[i]) {
                 setDefaultSettings(result[i], settings[i]);
             } else {
+                // settings[i] contains several setting items but these have not been set before
                 result[i] = settings[i];
             }
         } else if (result[i] === undefined) {
+            // settings[i] is a single setting item and it has not been set before
             result[i] = settings[i];
         }
     }
