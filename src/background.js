@@ -353,7 +353,3 @@ function setDefaultSettings(result, settings) {
         }
     }
 }
-
-chrome.storage.sync.get(function(result) {
-    console.log(result);
-});
