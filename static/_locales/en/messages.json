@@ -183,6 +183,14 @@
         "message": "Translate this page with Google",
         "description": "Translate current page with Google translate api."
     },
+    "UseGoogleAnalytics": {
+        "message": "Help us to improve the extension",
+        "description": "Use Google Analytics tool to help us improve Edge Translate."
+    },
+    "Settings": {
+        "message": "EdgeTranslate Settings",
+        "description": "EdgeTranslate settings page"
+    },
     "Afrikaans": {
         "message": "Afrikaans",
         "description": "Afrikaans"

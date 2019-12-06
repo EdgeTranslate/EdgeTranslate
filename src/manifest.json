@@ -1,7 +1,7 @@
 {
     "name": "__MSG_AppName__",
     "description": "__MSG_Description__",
-    "version": "1.6.4",
+    "version": "1.6.5",
     "default_locale": "zh_CN",
     "permissions": ["notifications", "contextMenus", "storage", "tabs", "<all_urls>"],
     "background": {
@@ -18,20 +18,8 @@
     "content_scripts": [
         {
             "matches": ["<all_urls>"],
-            "js": ["./contents/select.js", "./display/display.js"],
+            "js": ["./contents/select.js", "./display/display.js", "./contents/pdf.js"],
             "css": ["./contents/select.css", "./display/display.css"]
-        },
-        {
-            "matches": [
-                "*://*/*.pdf",
-                "*://*/*.PDF",
-                "file://*/*.pdf",
-                "file://*/*.PDF",
-                "ftp://*/*.pdf",
-                "ftp://*/*.PDF"
-            ],
-            "js": ["./contents/pdf.js"],
-            "run_at": "document_start"
         }
     ],
     "commands": {
@@ -78,7 +66,7 @@
         "youdao/*",
         "google/*"
     ],
-    "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
+    "content_security_policy": "script-src 'self' 'unsafe-eval' https://www.google-analytics.com; object-src 'self'",
     "icons": {
         "16": "icon/icon16.png",
         "48": "icon/icon48.png",
@@ -86,6 +74,7 @@
     },
     "options_ui": {
         "page": "./options/options.html",
+        "open_in_tab": true,
         "chrome_style": false
     },
     "manifest_version": 2

@@ -161,7 +161,7 @@
     },
     "TranslateAfterSelect": {
         "message": "劃詞後立即翻譯",
-        "description": "選中單詞後立即展示翻譯結果。" 
+        "description": "選中單詞後立即展示翻譯結果。"
     },
     "TranslateAfterDblClick": {
         "message": "雙擊單詞立即翻譯",
@@ -182,6 +182,14 @@
     "TranslatePageGoogle": {
         "message": "使用谷歌翻譯此頁",
         "description": "使用谷歌翻譯的api翻譯當前頁面。"
+    },
+    "UseGoogleAnalytics": {
+        "message": "幫助我們改進插件",
+        "description": "啟用Google Analytics服務協助開發者改進側邊翻譯"
+    },
+    "Settings": {
+        "message": "側邊翻譯設置",
+        "description": "側邊翻譯設置頁面"
     },
     "Afrikaans": {
         "message": "南非荷蘭語",

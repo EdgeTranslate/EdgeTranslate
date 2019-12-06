@@ -5,3 +5,4 @@
 *.crx
 *.pem
 package-lock.json
+npm-debug.log

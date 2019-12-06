@@ -1,5 +1,5 @@
 import render from "../lib/render.js";
-import Resizable from "../lib/Resizable.js";
+import Resizable from "../lib/resizable.js";
 
 /**
  * load templates
