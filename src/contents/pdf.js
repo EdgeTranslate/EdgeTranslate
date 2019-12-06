@@ -8,22 +8,22 @@
  * 3. 如果是从插件内置PDF阅读器中返回，不再自动跳转到插件内置PDF阅读器。
  */
 window.onload = function() {
-    if (this.document.body.children[0]) {
-        if (this.document.body.children[0].type === "application/pdf") {
-            var state = history.state;
-            this.console.log(document.body.children[0].type);
-            if (state === null) {
-                state = { ET_visited: true };
-                redirect();
-            } else if (!state.ET_visited) {
-                state.ET_visited = true;
-                redirect();
-            } else {
-                state.ET_visited = false;
-            }
-
-            history.replaceState(state, document.title);
+    if (
+        this.document.body.children[0] &&
+        this.document.body.children[0].type === "application/pdf"
+    ) {
+        var state = history.state;
+        if (state === null) {
+            state = { ET_visited: true };
+            redirect();
+        } else if (!state.ET_visited) {
+            state.ET_visited = true;
+            redirect();
+        } else {
+            state.ET_visited = false;
         }
+
+        history.replaceState(state, document.title);
     }
 };
 
