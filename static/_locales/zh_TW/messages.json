@@ -187,6 +187,10 @@
         "message": "幫助我們改進插件",
         "description": "啟用Google Analytics服務協助開發者改進側邊翻譯"
     },
+    "Settings": {
+        "message": "側邊翻譯設置",
+        "description": "側邊翻譯設置頁面"
+    },
     "Afrikaans": {
         "message": "南非荷蘭語",
         "description": "南非荷蘭語"

@@ -3,121 +3,141 @@
 
 <head>
     <meta charset="utf-8">
+    <title class="i18n" data-i18n-name="Settings"></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <link type="text/css" rel="stylesheet" href="./options.css">
 </head>
 
-<body>
-    <div style="margin-left:15%;">
-        <label for="content-settings" class="setting-title i18n" data-i18n-name="ContentSettings"></label>
-        <div id="content-settings">
-            <div class="row">
-                <div class="column">
-                    <label for="rm" class="checked-label i18n" data-i18n-name="PhoneticSymbol">
-                        <input type="checkbox" value="rm" class="checkbox dt-option" id="rm"/>
-                    </label>
+<body>        
+    <div id="option">
+        <header>
+            <img src="../icon/icon128.png"/>
+            <span class="space"></span>
+            <span class="space"></span>
+            Edge Translate
+        </header>
+        <div class="content">
+            <label for="content-settings" class="setting-title i18n" data-i18n-name="ContentSettings"></label>
+            <div id="content-settings">
+                <div class="row">
+                    <div class="column">
+                        <label for="rm" class="checked-label i18n" data-i18n-name="PhoneticSymbol">
+                            <input type="checkbox" value="rm" class="checkbox dt-option" id="rm"/>
+                        </label>
+                    </div>
+                    <div class="column">
+                        <label for="at" class="checked-label i18n" data-i18n-name="CommonMeanings">
+                            <input type="checkbox" value="at" class="checkbox dt-option" id="at" />
+                        </label>
+                    </div>
                 </div>
-                <div class="column">
-                    <label for="at" class="checked-label i18n" data-i18n-name="CommonMeanings">
-                        <input type="checkbox" value="at" class="checkbox dt-option" id="at" />
-                    </label>
+                <div class="row">
+                    <div class="column">
+                        <label for="bd" class="checked-label i18n" data-i18n-name="DetailedMeanings">
+                            <input type="checkbox" value="bd" class="checkbox dt-option" id="bd" />
+                        </label>
+                    </div>
+                    <div class="column">
+                        <label for="md" class="checked-label i18n" data-i18n-name="Definitions">
+                            <input type="checkbox" value="md" class="checkbox dt-option" id="md" />
+                        </label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="column">
+                        <label for="ss" class="checked-label i18n" data-i18n-name="Synonyms">
+                            <input type="checkbox" value="ss" class="checkbox dt-option" id="ss" />
+                        </label>
+                    </div>
+                    <div class="column">
+                        <label for="rw" class="checked-label i18n" data-i18n-name="Phrases">
+                            <input type="checkbox" value="rw" class="checkbox dt-option" id="rw" />
+                        </label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="column">
+                        <label for="ex" class="checked-label i18n" data-i18n-name="Examples">
+                            <input type="checkbox" value="ex" class="checkbox dt-option" id="ex" />
+                        </label>
+                    </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="column">
-                    <label for="bd" class="checked-label i18n" data-i18n-name="DetailedMeanings">
-                        <input type="checkbox" value="bd" class="checkbox dt-option" id="bd" />
-                    </label>
-                </div>
-                <div class="column">
-                    <label for="md" class="checked-label i18n" data-i18n-name="Definitions">
-                        <input type="checkbox" value="md" class="checkbox dt-option" id="md" />
-                    </label>
-                </div>
-            </div>
-            <div class="row">
-                <div class="column">
-                    <label for="ss" class="checked-label i18n" data-i18n-name="Synonyms">
-                        <input type="checkbox" value="ss" class="checkbox dt-option" id="ss" />
-                    </label>
-                </div>
-                <div class="column">
-                    <label for="rw" class="checked-label i18n" data-i18n-name="Phrases">
-                        <input type="checkbox" value="rw" class="checkbox dt-option" id="rw" />
-                    </label>
-                </div>
-            </div>
-            <div class="row">
-                <div class="column">
-                    <label for="ex" class="checked-label i18n" data-i18n-name="Examples">
-                        <input type="checkbox" value="ex" class="checkbox dt-option" id="ex" />
-                    </label>
-                </div>
-            </div>
-        </div>
 
-        <label for="layout-settings" class="setting-title i18n" data-i18n-name="LayoutSettings"></label>
-        <div id="layout-settings">
-            <div class="row">
-                <div class="column">
-                    <label for="popup-from-right" class="checked-label i18n" data-i18n-name="PopupFromRight">
-                        <input type="radio" value="right" class="radio layout-option" name="PopupPosition" id="popup-from-right">
-                    </label>
+            <label for="layout-settings" class="setting-title i18n" data-i18n-name="LayoutSettings"></label>
+            <div id="layout-settings">
+                <div class="row">
+                    <div class="column">
+                        <label for="popup-from-right" class="checked-label i18n" data-i18n-name="PopupFromRight">
+                            <input type="radio" value="right" class="radio layout-option" name="PopupPosition" id="popup-from-right">
+                        </label>
+                    </div>
+                    <div class="column">
+                        <label for="popup-from-left" class="checked-label i18n" data-i18n-name="PopupFromLeft">
+                            <input type="radio" value="left" class="radio layout-option" name="PopupPosition" id="popup-from-left">
+                        </label>
+                    </div>
                 </div>
-                <div class="column">
-                    <label for="popup-from-left" class="checked-label i18n" data-i18n-name="PopupFromLeft">
-                        <input type="radio" value="left" class="radio layout-option" name="PopupPosition" id="popup-from-left">
-                    </label>
+                <div class="row">
+                    <div class="column">
+                        <input type="checkbox" value="resize" class="switch resize-option" name="Resize" id="Resize">
+                        <span class="space"></span>
+                        <label for="Resize" class="checked-label i18n" data-i18n-name="ResizeSetting"></label>                    
+                    </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="column">
-                    <input type="checkbox" value="resize" class="switch resize-option" name="Resize" id="Resize">
-                    <span class="space"></span>
-                    <label for="Resize" class="checked-label i18n" data-i18n-name="ResizeSetting"></label>                    
-                </div>
-            </div>
-        </div>
 
-        <label for="other-settings" class="setting-title i18n" data-i18n-name="OtherSettings"></label>
-        <div id="other-settings">
-            <div class="row">
-                <div class="column">
-                    <input type="checkbox" value="SelectTranslate" class="switch other-option" id="select-translate">
-                    <span class="space"></span>
-                    <label for="select-translate" class="checked-label i18n" data-i18n-name="SelectTranslate"></label>
+            <label for="other-settings" class="setting-title i18n" data-i18n-name="OtherSettings"></label>
+            <div id="other-settings">
+                <div class="row">
+                    <div class="column">
+                        <input type="checkbox" value="SelectTranslate" class="switch other-option" id="select-translate">
+                        <span class="space"></span>
+                        <label for="select-translate" class="checked-label i18n" data-i18n-name="SelectTranslate"></label>
+                    </div>
+                </div>           
+                <div class="row">
+                    <div class="column">
+                        <input type="checkbox" value="TranslateAfterSelect" class="switch other-option" id="translate-after-select">
+                        <span class="space"></span>
+                        <label for="translate-after-select" class="checked-label i18n" data-i18n-name="TranslateAfterSelect"></label>                                        
+                    </div>
                 </div>
-            </div>           
-            <div class="row">
-                <div class="column">
-                    <input type="checkbox" value="TranslateAfterSelect" class="switch other-option" id="translate-after-select">
-                    <span class="space"></span>
-                    <label for="translate-after-select" class="checked-label i18n" data-i18n-name="TranslateAfterSelect"></label>                                        
+                <div class="row">
+                    <div class="column">
+                        <input type="checkbox" value="TranslateAfterDblClick" class="switch other-option" id="translate-after-dbl-click">
+                        <span class="space"></span>
+                        <label for="translate-after-dbl-click" class="checked-label i18n" data-i18n-name="TranslateAfterDblClick"></label>
+                    </div>                
+                </div>        
+                <div class="row">
+                    <div class="column">
+                        <input type="checkbox" value="UsePDFjs" class="switch other-option" id="use-pdf-js">
+                        <span class="space"></span>
+                        <label for="use-pdf-js" class="checked-label i18n" data-i18n-name="UsePDFjs"></label>                    
+                    </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="column">
-                    <input type="checkbox" value="TranslateAfterDblClick" class="switch other-option" id="translate-after-dbl-click">
-                    <span class="space"></span>
-                    <label for="translate-after-dbl-click" class="checked-label i18n" data-i18n-name="TranslateAfterDblClick"></label>
-                </div>                
-            </div>        
-            <div class="row">
-                <div class="column">
-                    <input type="checkbox" value="UsePDFjs" class="switch other-option" id="use-pdf-js">
-                    <span class="space"></span>
-                    <label for="use-pdf-js" class="checked-label i18n" data-i18n-name="UsePDFjs"></label>                    
-                </div>
-            </div>
-            <div class="row">
-                <div class="column">
-                    <input type="checkbox" value="UseGoogleAnalytics" class="switch other-option" id="google-analytics"/>
-                    <span class="space"></span>
-                    <label for="google-analytics" class="checked-label i18n" data-i18n-name="UseGoogleAnalytics"></label>
+                <div class="row">
+                    <div class="column">
+                        <input type="checkbox" value="UseGoogleAnalytics" class="switch other-option" id="google-analytics"/>
+                        <span class="space"></span>
+                        <label for="google-analytics" class="checked-label i18n" data-i18n-name="UseGoogleAnalytics"></label>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+        <footer>                    
+            ©2018-2020
+            <a href="https://github.com/EdgeTranslate/EdgeTranslate" target="blank">
+                Edge Translate
+            </a>
+            <span class="space"></span>            
+            Powered by
+            <a href="https://translate.google.cn" target="blank">
+                Google Translate
+            </a>
+        </footer>
+    </div>    
 </body>
 
 <script src="./options.js"></script>
