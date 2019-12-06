@@ -34,7 +34,8 @@ const DEFAULT_OTHER_SETTINGS = {
     SelectTranslate: true,
     UsePDFjs: true,
     TranslateAfterSelect: false,
-    TranslateAfterDblClick: false
+    TranslateAfterDblClick: false,
+    UseGoogleAnalytics: true
 };
 
 /**
@@ -126,7 +127,7 @@ chrome.runtime.onInstalled.addListener(function(details) {
     });
 
     chrome.storage.sync.get("blacklist", function(result) {
-        if (result.blacklist) {
+        if (!result.blacklist) {
             chrome.storage.sync.set({
                 blacklist: {
                     urls: {},
