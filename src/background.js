@@ -17,25 +17,30 @@ import {
 import { sendHitRequest } from "./lib/analytics.js";
 
 /**
- * 默认的源语言和目标语言。
+ * default settings for this extension
  */
-const DEFAULT_LANGUAGE_SETTING = { sl: "auto", tl: "zh-CN" };
-
-/**
- * 默认的翻译参数。
- */
-const DEFAULT_DT_SETTING = ["t", "at", "bd", "ex", "md", "rw", "ss", "rm"];
-
-// PopupPosition: determine the location of translation block
-// Resize value determine whether the web page will resize when showing translation result
-const DEFAULT_LAYOUT_SETTINGS = { PopupPosition: "right", Resize: false };
-
-const DEFAULT_OTHER_SETTINGS = {
-    SelectTranslate: true,
-    UsePDFjs: true,
-    TranslateAfterSelect: false,
-    TranslateAfterDblClick: false,
-    UseGoogleAnalytics: true
+const DEFAULT_SETTINGS = {
+    blacklist: {
+        urls: {},
+        domains: {}
+    },
+    // Default parameters of google translation
+    DTSetting: ["t", "at", "bd", "ex", "md", "rw", "ss", "rm"],
+    // PopupPosition: determine the location of translation block
+    // Resize value determine whether the web page will resize when showing translation result
+    LayoutSettings: {
+        PopupPosition: "right",
+        Resize: false
+    },
+    // Default settings of source language and target language
+    languageSetting: { sl: "auto", tl: "zh-CN" },
+    OtherSettings: {
+        SelectTranslate: true,
+        TranslateAfterDblClick: false,
+        TranslateAfterSelect: false,
+        UseGoogleAnalytics: true,
+        UsePDFjs: true
+    }
 };
 
 /**
@@ -98,43 +103,10 @@ chrome.runtime.onInstalled.addListener(function(details) {
         visible: false
     });
 
-    chrome.storage.sync.get("languageSetting", function(result) {
-        if (!result.languageSetting) {
-            chrome.storage.sync.set({
-                languageSetting: DEFAULT_LANGUAGE_SETTING
-            });
-        }
-    });
-
-    chrome.storage.sync.get("DTSetting", function(result) {
-        if (!result.DTSetting) {
-            chrome.storage.sync.set({ DTSetting: DEFAULT_DT_SETTING });
-        }
-    });
-
-    chrome.storage.sync.get("LayoutSettings", function(result) {
-        if (!result.LayoutSettings) {
-            chrome.storage.sync.set({
-                LayoutSettings: DEFAULT_LAYOUT_SETTINGS
-            });
-        }
-    });
-
-    chrome.storage.sync.get("OtherSettings", function(result) {
-        if (!result.OtherSettings) {
-            chrome.storage.sync.set({ OtherSettings: DEFAULT_OTHER_SETTINGS });
-        }
-    });
-
-    chrome.storage.sync.get("blacklist", function(result) {
-        if (!result.blacklist) {
-            chrome.storage.sync.set({
-                blacklist: {
-                    urls: {},
-                    domains: {}
-                }
-            });
-        }
+    chrome.storage.sync.get(function(result) {
+        var buffer = result; // use var buffer as a pointer
+        setDefaultSettings(buffer, DEFAULT_SETTINGS); // assign default value to buffer
+        chrome.storage.sync.set(buffer);
     });
 
     // 只有在生产环境下，才会展示说明页面
@@ -357,3 +329,31 @@ chrome.commands.onCommand.addListener(function(command) {
 
 // send basic hit data to google analytics
 sendHitRequest("background", "pageview", null);
+
+/**
+ * assign default value to settings which are undefined in recursive way
+ * @param {*} result setting result stored in chrome.storage
+ * @param {*} settings default settings
+ */
+function setDefaultSettings(result, settings) {
+    for (var i in settings) {
+        if (
+            i &&
+            typeof settings[i] === "object" &&
+            !(settings[i] instanceof Array) &&
+            Object.keys(settings[i]).length > 0
+        ) {
+            if (result[i]) {
+                setDefaultSettings(result[i], settings[i]);
+            } else {
+                result[i] = settings[i];
+            }
+        } else if (result[i] === undefined) {
+            result[i] = settings[i];
+        }
+    }
+}
+
+chrome.storage.sync.get(function(result) {
+    console.log(result);
+});
