@@ -1,4 +1,4 @@
-export { getDomain };
+export { getDomain, isPDF };
 
 /**
  * 提取给定的url的域名
@@ -14,4 +14,15 @@ function getDomain(url) {
         }
     }
     return "";
+}
+
+/**
+ * judge if this page is a pdf file
+ */
+function isPDF() {
+    return (
+        document.body &&
+        document.body.children[0] &&
+        document.body.children[0].type === "application/pdf"
+    );
 }
