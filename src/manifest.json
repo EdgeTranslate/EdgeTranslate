@@ -15,13 +15,6 @@
             "128": "icon/icon128.png"
         }
     },
-    "content_scripts": [
-        {
-            "matches": ["<all_urls>"],
-            "js": ["./contents/select.js", "./display/display.js", "./contents/pdf.js"],
-            "css": ["./contents/select.css", "./display/display.css"]
-        }
-    ],
     "commands": {
         "_execute_browser_action": {
             "suggested_key": {

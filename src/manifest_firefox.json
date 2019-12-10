@@ -4,5 +4,12 @@
             "id": "nickyfeng@edgetranslate.com",
             "strict_min_version": "60.0"
         }
-    }
+    },
+    "content_scripts": [
+        {
+            "matches": ["<all_urls>"],
+            "js": ["./contents/select.js", "./display/display.js"],
+            "css": ["./contents/select.css", "./display/display.css"]
+        }
+    ]
 }
