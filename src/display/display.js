@@ -1,5 +1,6 @@
 import render from "../lib/render.js";
 import Resizable from "../lib/resizable.js";
+import { isPDF } from "../lib/common.js";
 
 /**
  * load templates
@@ -306,6 +307,10 @@ function removeSlider() {
             document.body.style.left = "";
         }, transitionDuration);
         document.documentElement.removeEventListener("mousedown", clickListener);
+        // handle the click event exception when using chrome's original pdf viewer
+        if (isPDF()) {
+            document.body.children[0].focus();
+        }
         resizeBody.disableResize();
         resizeDivFrame.disableResize();
     }

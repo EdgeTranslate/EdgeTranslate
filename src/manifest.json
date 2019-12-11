@@ -1,7 +1,7 @@
 {
     "name": "__MSG_AppName__",
     "description": "__MSG_Description__",
-    "version": "1.6.5",
+    "version": "1.6.6",
     "default_locale": "zh_CN",
     "permissions": ["notifications", "contextMenus", "storage", "tabs", "<all_urls>"],
     "background": {
@@ -15,13 +15,6 @@
             "128": "icon/icon128.png"
         }
     },
-    "content_scripts": [
-        {
-            "matches": ["<all_urls>"],
-            "js": ["./contents/select.js", "./display/display.js", "./contents/pdf.js"],
-            "css": ["./contents/select.css", "./display/display.css"]
-        }
-    ],
     "commands": {
         "_execute_browser_action": {
             "suggested_key": {

@@ -1,3 +1,4 @@
+import { isPDF } from "../lib/common.js"; // judge if this page is a pdf file
 /**
  * 处理PDF文件链接
  *
@@ -8,10 +9,7 @@
  * 3. 如果是从插件内置PDF阅读器中返回，不再自动跳转到插件内置PDF阅读器。
  */
 window.onload = function() {
-    if (
-        this.document.body.children[0] &&
-        this.document.body.children[0].type === "application/pdf"
-    ) {
+    if (isPDF()) {
         var state = history.state;
         if (state === null) {
             state = { ET_visited: true };
