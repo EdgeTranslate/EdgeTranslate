@@ -2,6 +2,7 @@
     "background": {
         "persistent": false
     },
+    "permissions": ["notifications", "contextMenus", "storage", "tabs", "activeTab"],
     "content_scripts": [
         {
             "matches": ["<all_urls>"],
