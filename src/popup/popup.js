@@ -64,10 +64,12 @@ window.onload = function() {
         var languageSetting = result.languageSetting;
 
         // 根据源语言设定更新
-        if (languageSetting.sl === "auto" && OtherSettings["MutualTranslate"]) {
-            mutualTranslate.checked = false;
+        if (languageSetting.sl === "auto") {
             mutualTranslate.disabled = true;
-            mutualTranslate.onchange();
+            if (OtherSettings["MutualTranslate"]) {
+                mutualTranslate.checked = false;
+                mutualTranslate.onchange();
+            }
         } else {
             mutualTranslate.checked = OtherSettings["MutualTranslate"];
         }
