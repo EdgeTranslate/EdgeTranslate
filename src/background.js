@@ -35,6 +35,7 @@ const DEFAULT_SETTINGS = {
     // Default settings of source language and target language
     languageSetting: { sl: "auto", tl: navigator.language },
     OtherSettings: {
+        MutualTranslate: false,
         SelectTranslate: true,
         TranslateAfterDblClick: false,
         TranslateAfterSelect: false,
