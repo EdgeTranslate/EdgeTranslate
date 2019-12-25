@@ -84,6 +84,12 @@ chrome.runtime.onMessage.addListener(function(message, sender, callback) {
                     case "pronounce_translated":
                         targetPronounce();
                         break;
+                    case "copy_result":
+                        if (translateResult.mainMeaning) {
+                            /* eslint-disable */
+                            console.log(translateResult.mainMeaning);
+                        }
+                        break;
                     default:
                         break;
                 }

@@ -49,6 +49,9 @@
         },
         "pronounce_translated": {
             "description": "__MSG_PronounceTranslated__"
+        },
+        "copy_result": {
+            "description": "__MSG_CopyResult__"
         }
     },
     "web_accessible_resources": [
