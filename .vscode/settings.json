@@ -14,7 +14,10 @@
         "**/src/**"
     ],
     "cSpell.words": [
+        "contenteditable",
         "pageview",
+        "srcdoc",
+        "tuding",
         "youdao"
     ]
 }
