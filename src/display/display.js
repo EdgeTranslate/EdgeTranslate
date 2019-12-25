@@ -397,16 +397,18 @@ function copyContent() {
     // select all content automatically
     var range = frameDocument.createRange();
     var frameWindow = frame.contentWindow;
-    range.selectNodeContents(translateResult);
-    frameWindow.getSelection().removeAllRanges();
-    frameWindow.getSelection().addRange(range);
-    frameDocument.execCommand("copy");
-
-    // on focus out, set the node to unedible
-    translateResult.addEventListener("blur", function() {
-        translateResult.setAttribute("contenteditable", "false");
+    if (frameWindow) {
+        range.selectNodeContents(translateResult);
         frameWindow.getSelection().removeAllRanges();
-    });
+        frameWindow.getSelection().addRange(range);
+        frameDocument.execCommand("copy");
+
+        // on focus out, set the node to unedible
+        translateResult.addEventListener("blur", function() {
+            translateResult.setAttribute("contenteditable", "false");
+            frameWindow.getSelection().removeAllRanges();
+        });
+    }
 }
 
 /**
