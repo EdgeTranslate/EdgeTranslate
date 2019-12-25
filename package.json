@@ -1,6 +1,6 @@
 {
     "name": "edge_translate",
-    "version": "1.6.6",
+    "version": "1.7.0",
     "description": "A translator extension.",
     "keywords": [
         "Edge Translate",
@@ -13,15 +13,15 @@
             "url": "https://github.com/nickyc975"
         },
         {
-            "name": "Mark-Fritz",
+            "name": "Mark-Fenng",
             "email": "f18846188605@gmail.com",
-            "url": "https://github.com/Mark-Fritz"
+            "url": "https://github.com/Mark-Fenng"
         }
     ],
     "license": "MIT",
     "repository": {
         "type": "git",
-        "url": "https://github.com/nickyc975/EdgeTranslate.git"
+        "url": "https://github.com/EdgeTranslate/EdgeTranslate.git"
     },
     "scripts": {
         "test": "mocha --recursive",

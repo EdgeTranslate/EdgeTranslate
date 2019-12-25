@@ -1,20 +1,20 @@
 import {
     translate,
     showTranslate,
-    sendMessageToCurrentTab,
     pronounce,
     youdaoPageTranslate,
     executeYouDaoScript,
     executeGoogleScript
-} from "./lib/translate.js";
+} from "./lib/scripts/translate.js";
 import {
     addUrlBlacklist,
     addDomainBlacklist,
     removeUrlBlacklist,
     removeDomainBlacklist,
     updateBLackListMenu
-} from "./lib/blacklist.js";
-import { sendHitRequest } from "./lib/analytics.js";
+} from "./lib/scripts/blacklist.js";
+import { sendHitRequest } from "./lib/scripts/analytics.js";
+import { sendMessageToCurrentTab } from "./lib/scripts/common.js";
 
 /**
  * default settings for this extension
@@ -35,6 +35,7 @@ const DEFAULT_SETTINGS = {
     // Default settings of source language and target language
     languageSetting: { sl: "auto", tl: navigator.language },
     OtherSettings: {
+        MutualTranslate: false,
         SelectTranslate: true,
         TranslateAfterDblClick: false,
         TranslateAfterSelect: false,

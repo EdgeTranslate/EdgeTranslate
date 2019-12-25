@@ -1,6 +1,6 @@
-import render from "../lib/render.js";
-import Resizable from "../lib/resizable.js";
-import { isPDF } from "../lib/common.js";
+import render from "../lib/scripts/render.js";
+import Resizable from "../lib/scripts/resizable.js";
+import { isPDF } from "../lib/scripts/common.js";
 
 /**
  * load templates
@@ -83,6 +83,11 @@ chrome.runtime.onMessage.addListener(function(message, sender, callback) {
                         break;
                     case "pronounce_translated":
                         targetPronounce();
+                        break;
+                    case "copy_result":
+                        if (translateResult) {
+                            copyContent();
+                        }
                         break;
                     default:
                         break;
@@ -184,6 +189,8 @@ function addEventListener() {
         // 给固定侧边栏的按钮添加点击事件监听，用户侧边栏的固定与取消固定
         frameDocument.getElementById("icon-tuding-fix").addEventListener("click", fixOn);
         frameDocument.getElementById("icon-tuding-full").addEventListener("click", fixOff);
+        // copy the translation result to the copy board
+        frameDocument.getElementById("icon-copy").addEventListener("click", copyContent);
 
         let sourcePronounceIcon = frameDocument.getElementById("source-pronounce");
         if (sourcePronounceIcon) {
@@ -382,6 +389,29 @@ function targetPronounce() {
         }
     );
 }
+
+function copyContent() {
+    // the node of translation result
+    translateResult = frameDocument.getElementsByClassName("main-meaning")[0].firstChild;
+    translateResult.setAttribute("contenteditable", "true");
+    translateResult.focus();
+    // select all content automatically
+    var range = frameDocument.createRange();
+    var frameWindow = frame.contentWindow;
+    if (frameWindow) {
+        range.selectNodeContents(translateResult);
+        frameWindow.getSelection().removeAllRanges();
+        frameWindow.getSelection().addRange(range);
+        frameDocument.execCommand("copy");
+
+        // on focus out, set the node to unedible
+        translateResult.addEventListener("blur", function() {
+            translateResult.setAttribute("contenteditable", "false");
+            frameWindow.getSelection().removeAllRanges();
+        });
+    }
+}
+
 /**
  * end block
  */

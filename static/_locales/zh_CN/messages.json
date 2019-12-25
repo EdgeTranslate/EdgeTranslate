@@ -75,6 +75,10 @@
         "message": "朗读翻译结果",
         "description": "朗读翻译结果"
     },
+    "CopyResult": {
+        "message": "复制结果",
+        "description": "将翻译结果复制到剪贴板。"
+    },
     "Translate": {
         "message": "翻译",
         "description": "翻译"
@@ -190,6 +194,18 @@
     "Settings": {
         "message": "侧边翻译设置",
         "description": "侧边翻译设置页面"
+    },
+    "MutualTranslation": {
+        "message": "互译模式",
+        "description": "两种语言自动相互翻译"
+    },
+    "Fold": {
+        "message": "折叠语言设置",
+        "description": "将语言设置选项折叠"
+    },
+    "Unfold": {
+        "message": "展开语言设置",
+        "description": "将语言设置选项展开"
     },
     "Afrikaans": {
         "message": "南非荷兰语",

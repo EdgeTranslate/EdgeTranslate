@@ -1,9 +1,8 @@
 {
     "name": "__MSG_AppName__",
     "description": "__MSG_Description__",
-    "version": "1.6.6",
+    "version": "1.7.0",
     "default_locale": "zh_CN",
-    "permissions": ["notifications", "contextMenus", "storage", "tabs", "<all_urls>"],
     "background": {
         "scripts": ["background.js"]
     },
@@ -50,6 +49,12 @@
         },
         "pronounce_translated": {
             "description": "__MSG_PronounceTranslated__"
+        },
+        "copy_result": {
+            "description": "__MSG_CopyResult__"
+        },
+        "change_mutual_translate": {
+            "description": "__MSG_MutualTranslation__"
         }
     },
     "web_accessible_resources": [

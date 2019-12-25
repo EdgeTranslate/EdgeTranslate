@@ -2097,7 +2097,7 @@ if (!J || !J.bind) {
     a.Page = b;
 })(J);
 (function(a) {
-    var b = { runCount: 0, swipe: true, mode: "TIPS", level: 1 };
+    var b = { runCount: 0, swipe: true, mode: "TRANS", level: "0" };
     var c = {
         0: ["TIPS", 3],
         1: ["TIPS", 2],
@@ -2150,8 +2150,8 @@ if (!J || !J.bind) {
                     '<a href="https://fanyi.youdao.com/web2/?keyfrom=headerLogo" target="_blank">' + 
                         '<h1 id="headerLogo" class="logo"></h1>' + 
                     '</a>' + 
-                    '<div id="sliderLabel">翻译级别</div>' + 
-                    '<div id="sliderWrapper" class="slider-wrapper">' + 
+                    '<div id="sliderLabel" style="display: none;">翻译级别</div>' + 
+                    '<div id="sliderWrapper" class="slider-wrapper" style="display: none;">' + 
                         '<div id="levelLabel">' + 
                             '<label id="level-3" rel="0">' + 
                                 '<a>专&nbsp;&nbsp;&nbsp;家</a>' + 

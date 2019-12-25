@@ -5,6 +5,7 @@
             "strict_min_version": "60.0"
         }
     },
+    "permissions": ["notifications", "contextMenus", "storage", "tabs", "<all_urls>"],
     "content_scripts": [
         {
             "matches": ["<all_urls>"],
