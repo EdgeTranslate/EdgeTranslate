@@ -5,16 +5,16 @@ import {
     youdaoPageTranslate,
     executeYouDaoScript,
     executeGoogleScript
-} from "./lib/translate.js";
+} from "./lib/scripts/translate.js";
 import {
     addUrlBlacklist,
     addDomainBlacklist,
     removeUrlBlacklist,
     removeDomainBlacklist,
     updateBLackListMenu
-} from "./lib/blacklist.js";
-import { sendHitRequest } from "./lib/analytics.js";
-import { sendMessageToCurrentTab } from "./lib/common.js";
+} from "./lib/scripts/blacklist.js";
+import { sendHitRequest } from "./lib/scripts/analytics.js";
+import { sendMessageToCurrentTab } from "./lib/scripts/common.js";
 
 /**
  * default settings for this extension

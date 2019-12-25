@@ -4,7 +4,7 @@ import {
     showTranslate,
     executeGoogleScript,
     executeYouDaoScript
-} from "../lib/translate.js";
+} from "../lib/scripts/translate.js";
 
 // 获取下拉列表元素
 var sourceLanguage = document.getElementById("sl");

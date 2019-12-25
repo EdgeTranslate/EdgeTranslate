@@ -1,6 +1,6 @@
-import render from "../lib/render.js";
-import Resizable from "../lib/resizable.js";
-import { isPDF } from "../lib/common.js";
+import render from "../lib/scripts/render.js";
+import Resizable from "../lib/scripts/resizable.js";
+import { isPDF } from "../lib/scripts/common.js";
 
 /**
  * load templates
