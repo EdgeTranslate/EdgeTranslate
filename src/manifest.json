@@ -52,6 +52,9 @@
         },
         "copy_result": {
             "description": "__MSG_CopyResult__"
+        },
+        "change_mutual_translate": {
+            "description": "__MSG_MutualTranslation__"
         }
     },
     "web_accessible_resources": [
