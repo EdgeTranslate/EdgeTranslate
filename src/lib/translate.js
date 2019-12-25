@@ -121,26 +121,23 @@ function translate(text, callback) {
             // normal translation mode
             textTranslate(languageSetting.sl, languageSetting.tl, text, callback);
         } else {
-            alert("test");
-            console.log("mutual translation");
             // Mutual translation mode
-            // TODO: Detected source language
-            // detectLanguage(text, result => {
-            //     let sl = result,
-            //         tl;
-            //     switch (result) {
-            //         case languageSetting.sl:
-            //             tl = languageSetting.tl;
-            //             break;
-            //         case languageSetting.tl:
-            //             tl = languageSetting.sl;
-            //             break;
-            //         default:
-            //             sl = "auto";
-            //             tl = languageSetting.tl;
-            //     }
-            //     textTranslate(sl, tl, text, callback);
-            // });
+            detect(text, result => {
+                let sl = result.toLowerCase(),
+                    tl;
+                switch (sl) {
+                    case languageSetting.sl:
+                        tl = languageSetting.tl;
+                        break;
+                    case languageSetting.tl:
+                        tl = languageSetting.sl;
+                        break;
+                    default:
+                        sl = "auto";
+                        tl = languageSetting.tl;
+                }
+                textTranslate(sl, tl, text, callback);
+            });
         }
     });
 }

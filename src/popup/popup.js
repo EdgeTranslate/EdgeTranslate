@@ -211,7 +211,7 @@ function showSourceTarget() {
     var inputElement = document.getElementById("translate_input");
     var sourceLanguageString = sourceLanguage.options[sourceLanguage.selectedIndex].text;
     var targetLanguageString = targetLanguage.options[targetLanguage.selectedIndex].text;
-    inputElement.placeholder = sourceLanguageString + " => " + targetLanguageString;
+    inputElement.placeholder = sourceLanguageString + " <=> " + targetLanguageString;
 }
 
 /**
