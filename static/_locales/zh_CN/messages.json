@@ -195,6 +195,10 @@
         "message": "侧边翻译设置",
         "description": "侧边翻译设置页面"
     },
+    "MutualTranslation": {
+        "message": "互译模式",
+        "description": "两种语言自动相互翻译"
+    },
     "Afrikaans": {
         "message": "南非荷兰语",
         "description": "南非荷兰语"

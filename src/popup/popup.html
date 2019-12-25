@@ -17,20 +17,18 @@
                 for="translate_input"
                 data-i18n-name="InputHint"
             ></label>
-            <div class="row" id="page-translate">
-                <a id="google-page-translate" class="i18n" data-i18n-name="GooglePageTranslate"></a>
-                <a id="youdao-page-translate" class="i18n" data-i18n-name="YouDaoPageTranslate"></a>
-            </div>
             <div id="setting">
+                <div class="row" style="justify-content: space-between;">
+                    <label
+                        class="switch-label i18n"
+                        for="mutual-translate"
+                        data-i18n-name="MutualTranslation"
+                    ></label>
+                    <input type="checkbox" id="mutual-translate" class="switch" />
+                </div>
                 <div class="row" style="align-items: flex-end;">
                     <div class="col">
                         <div class="selection">
-                            <label
-                                id="sl_label"
-                                class="select-label i18n"
-                                for="sl"
-                                data-i18n-name="SourceLanguage"
-                            ></label>
                             <select id="sl">
                                 <option
                                     class="i18n"
@@ -47,12 +45,6 @@
                     ></i>
                     <div class="col">
                         <div class="selection">
-                            <label
-                                id="tl_label"
-                                class="select-label i18n"
-                                for="tl"
-                                data-i18n-name="TargetLanguage"
-                            ></label>
                             <select id="tl"> </select>
                         </div>
                     </div>
