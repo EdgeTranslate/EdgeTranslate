@@ -75,6 +75,10 @@
         "message": "朗讀翻譯結果",
         "description": "朗讀翻譯結果"
     },
+    "CopyResult": {
+        "message": "複製結果",
+        "description": "將翻譯結果複製到剪貼板。"
+    },
     "Translate": {
         "message": "翻譯",
         "description": "翻譯"

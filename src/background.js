@@ -1,7 +1,6 @@
 import {
     translate,
     showTranslate,
-    sendMessageToCurrentTab,
     pronounce,
     youdaoPageTranslate,
     executeYouDaoScript,
@@ -15,6 +14,7 @@ import {
     updateBLackListMenu
 } from "./lib/blacklist.js";
 import { sendHitRequest } from "./lib/analytics.js";
+import { sendMessageToCurrentTab } from "./lib/common.js";
 
 /**
  * default settings for this extension

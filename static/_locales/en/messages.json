@@ -75,6 +75,10 @@
         "message": "Read translated text",
         "description": "Read translated text."
     },
+    "CopyResult": {
+        "message": "Copy result",
+        "description": "Copy the translation result."
+    },
     "Translate": {
         "message": "Translate",
         "description": "Translate"

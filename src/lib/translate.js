@@ -1,7 +1,8 @@
+import { sendMessageToCurrentTab } from "./common.js";
+
 export {
     translate,
     showTranslate,
-    sendMessageToCurrentTab,
     pronounce,
     youdaoPageTranslate,
     executeYouDaoScript,
@@ -70,30 +71,6 @@ function _magic(a, b) {
     return a;
 }
 /* eslint-enable */
-
-/**
- * Send a message to current tab if accessible.
- *
- * @param {Object} message message to send.
- */
-function sendMessageToCurrentTab(message) {
-    chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
-        if (chrome.runtime.lastError) {
-            // eslint-disable-next-line no-console
-            console.log("Chrome runtime error: " + chrome.runtime.lastError.message);
-        } else if (!tabs[0] || tabs[0].id < 0) {
-            // eslint-disable-next-line no-console
-            console.log("No tabs or tabs not accessible.");
-        } else {
-            chrome.tabs.sendMessage(tabs[0].id, message, function() {
-                if (chrome.runtime.lastError) {
-                    // eslint-disable-next-line no-console
-                    console.log("Chrome runtime error: " + chrome.runtime.lastError.message);
-                }
-            });
-        }
-    });
-}
 
 /**
  * 更新TKK
