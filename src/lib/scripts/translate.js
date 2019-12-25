@@ -121,9 +121,10 @@ function translate(text, callback) {
     });
 
     // get language settings from chrome storage
-    chrome.storage.sync.get("languageSetting", function(result) {
+    chrome.storage.sync.get(["languageSetting", "OtherSettings"], result => {
+        var OtherSettings = result.OtherSettings;
         var languageSetting = result.languageSetting;
-        if (languageSetting.sl === "auto") {
+        if (languageSetting.sl === "auto" || !OtherSettings.MutualTranslate) {
             // normal translation mode
             textTranslate(languageSetting.sl, languageSetting.tl, text, callback);
         } else {

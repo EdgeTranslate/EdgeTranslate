@@ -11,6 +11,9 @@ var sourceLanguage = document.getElementById("sl");
 var targetLanguage = document.getElementById("tl");
 // 获取交换按钮
 var exchangeButton = document.getElementById("exchange");
+// 获取互译模式开关
+var mutualTranslate = document.getElementById("mutual-translate");
+
 /**
  * 初始化设置列表
  */
@@ -23,9 +26,6 @@ window.onload = function() {
             chrome.i18n.getMessage(i18nElements[i].getAttribute("data-i18n-name"))
         );
     }
-
-    // 添加交换按钮对点击事件的监听
-    exchangeButton.onclick = exchangeLanguage;
 
     sourceLanguage.onchange = function() {
         // 如果源语言是自动判断语言类型(值是auto),则按钮显示灰色，避免用户点击,如果不是，则显示蓝色，可以点击
@@ -45,9 +45,32 @@ window.onload = function() {
         showSourceTarget(); // update source language and target language in input placeholder
     };
 
-    // 获得用户之前选择的语言翻译选项
-    chrome.storage.sync.get("languageSetting", function(result) {
+    // 添加交换按钮对点击事件的监听
+    exchangeButton.onclick = exchangeLanguage;
+
+    // 添加互译模式开关的事件监听
+    mutualTranslate.onchange = () => {
+        chrome.storage.sync.get("OtherSettings", result => {
+            var OtherSettings = result.OtherSettings;
+            OtherSettings["MutualTranslate"] = mutualTranslate.checked;
+            saveOption("OtherSettings", OtherSettings);
+        });
+        showSourceTarget();
+    };
+
+    // 获得用户之前选择的语言翻译选项和互译设置
+    chrome.storage.sync.get(["languageSetting", "OtherSettings"], result => {
+        var OtherSettings = result.OtherSettings;
         var languageSetting = result.languageSetting;
+
+        // 根据源语言设定更新
+        if (languageSetting.sl === "auto" && OtherSettings["MutualTranslate"]) {
+            mutualTranslate.checked = false;
+            mutualTranslate.disabled = true;
+            mutualTranslate.onchange();
+        } else {
+            mutualTranslate.checked = OtherSettings["MutualTranslate"];
+        }
 
         // languages是可选的源语言和目标语言的列表
         LANGUAGES.forEach(element => {
@@ -97,6 +120,13 @@ chrome.commands.onCommand.addListener(function(command) {
  */
 function updateLanguageSetting(sourceLanguage, targetLanguage) {
     saveOption("languageSetting", { sl: sourceLanguage, tl: targetLanguage });
+    if (sourceLanguage === "auto") {
+        mutualTranslate.checked = false;
+        mutualTranslate.disabled = true;
+        mutualTranslate.onchange();
+    } else if (mutualTranslate.disabled) {
+        mutualTranslate.disabled = false;
+    }
 }
 
 /**
@@ -211,7 +241,14 @@ function showSourceTarget() {
     var inputElement = document.getElementById("translate_input");
     var sourceLanguageString = sourceLanguage.options[sourceLanguage.selectedIndex].text;
     var targetLanguageString = targetLanguage.options[targetLanguage.selectedIndex].text;
-    inputElement.placeholder = sourceLanguageString + " <=> " + targetLanguageString;
+    if (
+        sourceLanguage.options[sourceLanguage.selectedIndex].value === "auto" ||
+        !mutualTranslate.checked
+    ) {
+        inputElement.placeholder = sourceLanguageString + " ==> " + targetLanguageString;
+    } else {
+        inputElement.placeholder = sourceLanguageString + " <=> " + targetLanguageString;
+    }
 }
 
 /**
