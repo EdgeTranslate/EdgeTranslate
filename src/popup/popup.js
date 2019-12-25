@@ -19,6 +19,11 @@ window.onload = function() {
         );
     }
 
+    var arrowUp = document.getElementById("arrow-up");
+    var arrowDown = document.getElementById("arrow-down");
+    arrowDown.setAttribute("title", chrome.i18n.getMessage("Unfold"));
+    arrowUp.setAttribute("title", chrome.i18n.getMessage("Fold"));
+
     // 添加交换按钮对点击事件的监听
     exchangeButton.onclick = exchangeLanguage;
 

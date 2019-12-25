@@ -199,6 +199,14 @@
         "message": "互譯模式",
         "description": "兩種語言自動相互翻譯"
     },
+    "Fold": {
+        "message": "折疊語言設置",
+        "description": "將語言設置選項折疊"
+    },
+    "Unfold": {
+        "message": "展開語言設置",
+        "description": "將語言設置選項展開"
+    },
     "Afrikaans": {
         "message": "南非荷蘭語",
         "description": "南非荷蘭語"

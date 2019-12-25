@@ -199,6 +199,14 @@
         "message": "Mutual translation mode",
         "description": "Automatic translation between two languages"
     },
+    "Fold": {
+        "message": "Fold language settings",
+        "description": "Fold language setting options"
+    },
+    "Unfold": {
+        "message": "Unfold language settings",
+        "description": "Unfold language setting options"
+    },
     "Afrikaans": {
         "message": "Afrikaans",
         "description": "Afrikaans"
