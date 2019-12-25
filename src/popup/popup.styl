@@ -1,3 +1,5 @@
+@import '../lib/style/input.styl';
+
 @font-face
     font-family: "translateIcon";
     src: url('~/iconfont.eot?t=1531409630632');
@@ -62,6 +64,7 @@ html, body
     display: flex;
     align-items: center;
     justify-content: space-around;
+    margin: 2% 0;
     line-height: 4em;
 
 
@@ -76,10 +79,10 @@ html, body
     align-items: center;
 
 
-.select-label
-    font-size: medium;
-    text-align: center;
-    height: 40px;
+.switch-label
+    display: block;
+    font-size: large;
+    text-align: center;    
 
 
 select
@@ -108,20 +111,6 @@ footer
 
 .option
     line-height: 20px;
-
-#page-translate
-    margin-top: 10%;
-    font-size: x-small;
-
-    a
-        line-height: 1em;
-        color: color-primary;
-        padding: 0 2%; 
-        user-select: none;
-    a:hover
-        cursor pointer;
-    a:active
-        color: skyblue;
 
 i
     max-height: 35px;
@@ -162,3 +151,4 @@ i
 
 #setting
     display: none;
+    margin: 7% 0;

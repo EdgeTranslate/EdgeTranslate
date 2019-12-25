@@ -183,7 +183,7 @@ function build(browser, env) {
     };
 
     var styl = function() {
-        gulp.src("./src/**/*.styl", { base: "src" })
+        gulp.src("./src/!(lib)/**/*.styl", { base: "src" })
             .pipe(
                 stylus({
                     compress: true // 需要压缩
