@@ -109,6 +109,9 @@ chrome.commands.onCommand.addListener(function(command) {
         case "exchange_source_target_lang":
             exchangeLanguage();
             break;
+        case "change_mutual_translate":
+            mutualTranslate.click();
+            break;
         default:
             break;
     }
