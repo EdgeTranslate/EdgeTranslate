@@ -114,6 +114,12 @@ function updateTKK() {
  * @param {Function(Object)} callback Used to get translation results after translation
  */
 function translate(text, callback) {
+    // Start showing loading animation.
+    sendMessageToCurrentTab({
+        type: "info",
+        info: "start_translating"
+    });
+
     // get language settings from chrome storage
     chrome.storage.sync.get("languageSetting", function(result) {
         var languageSetting = result.languageSetting;
@@ -163,11 +169,6 @@ function textTranslate(sourceLanguage, targetLanguage, text, callback) {
         query += "&tk=" + generateTK(text, TKK[0], TKK[1]);
         query += "&q=" + encodeURIComponent(text);
 
-        sendMessageToCurrentTab({
-            type: "info",
-            info: "start_translating"
-        });
-
         let request = new XMLHttpRequest();
         request.open("GET", BASE_URL + "&" + query, true);
         request.send();
@@ -188,7 +189,7 @@ function textTranslate(sourceLanguage, targetLanguage, text, callback) {
                     updateTKK();
                     if (RETRY < MAX_RETRY) {
                         RETRY++;
-                        translate(text, callback);
+                        textTranslate(sourceLanguage, targetLanguage, text, callback);
                         return;
                     } else {
                         RETRY = 0;

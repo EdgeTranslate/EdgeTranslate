@@ -1,4 +1,4 @@
-import { isPDF } from "../lib/common.js"; // judge if this page is a pdf file
+import { isPDF } from "../lib/scripts/common.js"; // judge if this page is a pdf file
 /**
  * 处理PDF文件链接
  *

@@ -1,5 +1,5 @@
 import { LANGUAGES } from "./languages.js";
-import { translate, showTranslate } from "../lib/translate.js";
+import { translate, showTranslate } from "../lib/scripts/translate.js";
 
 // 获取下拉列表元素
 var sourceLanguage = document.getElementById("sl");

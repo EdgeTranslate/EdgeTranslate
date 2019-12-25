@@ -1,4 +1,4 @@
-import { getDomain } from "../lib/common.js";
+import { getDomain } from "../lib/scripts/common.js";
 
 /**
  * 划词翻译功能的实现
