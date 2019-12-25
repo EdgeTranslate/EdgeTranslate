@@ -2,6 +2,7 @@ import { sendMessageToCurrentTab } from "./common.js";
 
 export {
     translate,
+    detect,
     showTranslate,
     pronounce,
     youdaoPageTranslate,
@@ -167,6 +168,52 @@ function translate(text, callback) {
             };
         });
     });
+}
+
+/**
+ *
+ * 检测给定文本的语言。
+ *
+ * @param {string} text 需要检测的文本
+ * @param {function} callback 回调函数，参数为检测结果
+ */
+function detect(text, callback) {
+    // 使用不带dt参数的翻译接口进行语言检测
+    let query = "sl=auto&tl=zh-cn";
+    query += "&tk=" + generateTK(text, TKK[0], TKK[1]);
+    query += "&q=" + encodeURIComponent(text);
+
+    let request = new XMLHttpRequest();
+    request.open("GET", BASE_URL + "&" + query, true);
+    request.send();
+    request.onreadystatechange = function() {
+        if (request.readyState === 4) {
+            // HTTPS request 成功
+            if (request.status === 200) {
+                callback(JSON.parse(request.response)[2]);
+                return;
+            }
+
+            // 429错误，需要更新TKK。
+            if (request.status === 429) {
+                updateTKK();
+                if (RETRY < MAX_RETRY) {
+                    RETRY++;
+                    detect(text, callback);
+                    return;
+                } else {
+                    RETRY = 0;
+                }
+            }
+
+            // HTTPS request 失败
+            sendMessageToCurrentTab({
+                type: "info",
+                info: "network_error",
+                detail: request.status
+            });
+        }
+    };
 }
 
 /**
