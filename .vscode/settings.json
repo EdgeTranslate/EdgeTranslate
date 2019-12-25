@@ -17,7 +17,11 @@
         "contenteditable",
         "pageview",
         "srcdoc",
+        "ssel",
+        "tsel",
+        "ttsspeed",
         "tuding",
+        "webapp",
         "youdao"
     ]
 }

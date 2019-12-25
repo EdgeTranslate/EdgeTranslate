@@ -103,69 +103,108 @@ function updateTKK() {
 
 /**
  *
- * 此函数负责将传入的文本翻译，并在当前页面的侧边栏中展示
+ * This is a translation client function
+ * 1. get language settings
+ * 2. if source language is "auto", use normal translation mode
+ * 3. else use mutual translation mode(auto translate from both sides)
+ * 4. send request, get result and execute callback(result)
+ *
+ * @param {String} text original text to be translated
+ * @param {Function(Object)} callback Used to get translation results after translation
+ */
+function translate(text, callback) {
+    // get language settings from chrome storage
+    chrome.storage.sync.get("languageSetting", function(result) {
+        var languageSetting = result.languageSetting;
+        if (languageSetting.sl === "auto") {
+            // normal translation mode
+            textTranslate(languageSetting.sl, languageSetting.tl, text, callback);
+        } else {
+            alert("test");
+            console.log("mutual translation");
+            // Mutual translation mode
+            // TODO: Detected source language
+            // detectLanguage(text, result => {
+            //     let sl = result,
+            //         tl;
+            //     switch (result) {
+            //         case languageSetting.sl:
+            //             tl = languageSetting.tl;
+            //             break;
+            //         case languageSetting.tl:
+            //             tl = languageSetting.sl;
+            //             break;
+            //         default:
+            //             sl = "auto";
+            //             tl = languageSetting.tl;
+            //     }
+            //     textTranslate(sl, tl, text, callback);
+            // });
+        }
+    });
+}
+
+/**
+ *
+ * 此函数负责根据传入的源目标语言设定,将传入的文本翻译，并在当前页面的侧边栏中展示
  *
  * @param {String} text 需要翻译的文本字符串
  * @param {Function} callback 完成翻译后用以获取翻译结果
  */
-function translate(text, callback) {
-    // 获取翻译语言设定。
-    chrome.storage.sync.get("languageSetting", function(result) {
-        var languageSetting = result.languageSetting;
-        var query = "sl=" + languageSetting.sl + "&tl=" + languageSetting.tl;
+function textTranslate(sourceLanguage, targetLanguage, text, callback) {
+    var query = "sl=" + sourceLanguage + "&tl=" + targetLanguage;
 
-        // 获取翻译参数设定。
-        chrome.storage.sync.get("DTSetting", function(result) {
-            let DTSetting = result.DTSetting;
+    // 获取翻译参数设定。
+    chrome.storage.sync.get("DTSetting", function(result) {
+        let DTSetting = result.DTSetting;
 
-            DTSetting.forEach(element => {
-                query = query + "&dt=" + element;
-            });
-
-            query += "&tk=" + generateTK(text, TKK[0], TKK[1]);
-            query += "&q=" + encodeURIComponent(text);
-
-            sendMessageToCurrentTab({
-                type: "info",
-                info: "start_translating"
-            });
-
-            let request = new XMLHttpRequest();
-            request.open("GET", BASE_URL + "&" + query, true);
-            request.send();
-            request.onreadystatechange = function() {
-                if (request.readyState === 4) {
-                    // HTTPS request sucessfully
-                    if (request.status === 200) {
-                        callback(
-                            parseTranslate(JSON.parse(request.response), {
-                                targetLanguage: languageSetting.tl
-                            })
-                        );
-                        return;
-                    }
-
-                    // 429错误，需要更新TKK。
-                    if (request.status === 429) {
-                        updateTKK();
-                        if (RETRY < MAX_RETRY) {
-                            RETRY++;
-                            translate(text, callback);
-                            return;
-                        } else {
-                            RETRY = 0;
-                        }
-                    }
-
-                    // HTTPS request fail
-                    sendMessageToCurrentTab({
-                        type: "info",
-                        info: "network_error",
-                        detail: request.status
-                    });
-                }
-            };
+        DTSetting.forEach(element => {
+            query = query + "&dt=" + element;
         });
+
+        query += "&tk=" + generateTK(text, TKK[0], TKK[1]);
+        query += "&q=" + encodeURIComponent(text);
+
+        sendMessageToCurrentTab({
+            type: "info",
+            info: "start_translating"
+        });
+
+        let request = new XMLHttpRequest();
+        request.open("GET", BASE_URL + "&" + query, true);
+        request.send();
+        request.onreadystatechange = function() {
+            if (request.readyState === 4) {
+                // HTTPS request successfully
+                if (request.status === 200) {
+                    callback(
+                        parseTranslate(JSON.parse(request.response), {
+                            targetLanguage: targetLanguage
+                        })
+                    );
+                    return;
+                }
+
+                // 429错误，需要更新TKK。
+                if (request.status === 429) {
+                    updateTKK();
+                    if (RETRY < MAX_RETRY) {
+                        RETRY++;
+                        translate(text, callback);
+                        return;
+                    } else {
+                        RETRY = 0;
+                    }
+                }
+
+                // HTTPS request fail
+                sendMessageToCurrentTab({
+                    type: "info",
+                    info: "network_error",
+                    detail: request.status
+                });
+            }
+        };
     });
 }
 
@@ -214,7 +253,7 @@ function translate(text, callback) {
  * </pre>
  *
  * @param {Object} response 谷歌翻译返回的结果。
- * @param {Object} extras 需要一同发送给content scipts的附加信息。
+ * @param {Object} extras 需要一同发送给content scripts的附加信息。
  * @returns {Object} 按照spec中的数据结构存储的结果
  */
 function parseTranslate(response, extras) {
