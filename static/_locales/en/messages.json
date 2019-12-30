@@ -179,6 +179,10 @@
         "message": "Google Page Trans.",
         "description": "Translate current page with Google translate api."
     },
+    "TranslatePage": {
+        "message": "Translate this page",
+        "description": "Translate this page with default page translator."
+    },
     "TranslatePageYouDao": {
         "message": "Translate this page with YouDao",
         "description": "Translate current page with YouDao translate api."

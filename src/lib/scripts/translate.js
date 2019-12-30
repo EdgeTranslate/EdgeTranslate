@@ -5,6 +5,7 @@ export {
     detect,
     showTranslate,
     pronounce,
+    translatePage,
     youdaoPageTranslate,
     executeYouDaoScript,
     executeGoogleScript
@@ -575,6 +576,26 @@ function pronounce(text, language, speed, callback) {
     if (callback) {
         callback();
     }
+}
+
+/**
+ * 使用用户选定的网页翻译引擎翻译当前网页。
+ */
+function translatePage() {
+    chrome.storage.sync.get(["DefaultPageTranslator"], result => {
+        let translator = result.DefaultPageTranslator;
+        switch (translator) {
+            case "youdao":
+                executeYouDaoScript();
+                break;
+            case "google":
+                executeGoogleScript();
+                break;
+            default:
+                executeYouDaoScript();
+                break;
+        }
+    });
 }
 
 /**

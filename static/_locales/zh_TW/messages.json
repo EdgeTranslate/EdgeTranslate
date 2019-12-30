@@ -179,6 +179,10 @@
         "message": "谷歌網頁翻譯",
         "description": "使用谷歌翻譯的api翻譯當前頁面。"
     },
+    "TranslatePage": {
+        "message": "翻譯此頁",
+        "description": "使用默認網頁翻譯引擎翻譯此頁。"
+    },
     "TranslatePageYouDao": {
         "message": "使用有道翻譯此頁",
         "description": "使用有道翻譯的api翻譯當前頁面。"

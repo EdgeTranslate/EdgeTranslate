@@ -2,6 +2,7 @@ import {
     translate,
     showTranslate,
     pronounce,
+    translatePage,
     youdaoPageTranslate,
     executeYouDaoScript,
     executeGoogleScript
@@ -41,7 +42,8 @@ const DEFAULT_SETTINGS = {
         TranslateAfterSelect: false,
         UseGoogleAnalytics: true,
         UsePDFjs: true
-    }
+    },
+    DefaultPageTranslator: "youdao"
 };
 
 /**
@@ -61,15 +63,21 @@ chrome.runtime.onInstalled.addListener(function(details) {
     });
 
     chrome.contextMenus.create({
+        id: "translate_page",
+        title: chrome.i18n.getMessage("TranslatePage"),
+        contexts: ["page"]
+    });
+
+    chrome.contextMenus.create({
         id: "translate_page_youdao",
         title: chrome.i18n.getMessage("TranslatePageYouDao"),
-        contexts: ["page", "browser_action"]
+        contexts: ["browser_action"]
     });
 
     chrome.contextMenus.create({
         id: "translate_page_google",
         title: chrome.i18n.getMessage("TranslatePageGoogle"),
-        contexts: ["page", "browser_action"]
+        contexts: ["browser_action"]
     });
 
     chrome.contextMenus.create({
@@ -181,15 +189,21 @@ chrome.runtime.onStartup.addListener(function() {
     });
 
     chrome.contextMenus.create({
+        id: "translate_page",
+        title: chrome.i18n.getMessage("TranslatePage"),
+        contexts: ["page"]
+    });
+
+    chrome.contextMenus.create({
         id: "translate_page_youdao",
         title: chrome.i18n.getMessage("TranslatePageYouDao"),
-        contexts: ["page", "browser_action"]
+        contexts: ["browser_action"]
     });
 
     chrome.contextMenus.create({
         id: "translate_page_google",
         title: chrome.i18n.getMessage("TranslatePageGoogle"),
-        contexts: ["page", "browser_action"]
+        contexts: ["browser_action"]
     });
 
     chrome.contextMenus.create({
@@ -235,6 +249,9 @@ chrome.contextMenus.onClicked.addListener(function(info, tab) {
             translate(text, function(result) {
                 showTranslate(result, tab);
             }); // 此api位于 translate.js中
+            break;
+        case "translate_page":
+            translatePage();
             break;
         case "translate_page_youdao":
             executeYouDaoScript();
