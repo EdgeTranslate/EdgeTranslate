@@ -135,6 +135,14 @@
         "message": "翻译结果设置",
         "description": "选择需要在翻译结果中展示的内容。"
     },
+    "EngineSettings": {
+        "message": "翻译引擎设置",
+        "description": "选择默认使用的翻译引擎。"
+    },
+    "DefaultPageTranslator": {
+        "message": "默认网页翻译器",
+        "description": "默认网页翻译器。"
+    },
     "LayoutSettings": {
         "message": "布局设置",
         "description": "调整翻译结果展示框的布局"

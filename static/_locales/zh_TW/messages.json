@@ -135,6 +135,14 @@
         "message": "翻譯結果設定",
         "description": "選則需要在翻譯結果中展示的内容。"
     },
+    "EngineSettings": {
+        "message": "翻譯引擎設置",
+        "description": "選擇默認使用的翻譯引擎。"
+    },
+    "DefaultPageTranslator": {
+        "message": "默認網頁翻譯器",
+        "description": "選擇默認網頁翻譯器。"
+    },
     "LayoutSettings": {
         "message": "佈局設定",
         "description": "調整翻譯結果展示框的佈局"

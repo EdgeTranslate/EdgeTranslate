@@ -585,10 +585,10 @@ function translatePage() {
     chrome.storage.sync.get(["DefaultPageTranslator"], result => {
         let translator = result.DefaultPageTranslator;
         switch (translator) {
-            case "youdao":
+            case "YouDaoPageTranslate":
                 executeYouDaoScript();
                 break;
-            case "google":
+            case "GooglePageTranslate":
                 executeGoogleScript();
                 break;
             default:

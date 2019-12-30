@@ -43,7 +43,7 @@ const DEFAULT_SETTINGS = {
         UseGoogleAnalytics: true,
         UsePDFjs: true
     },
-    DefaultPageTranslator: "youdao"
+    DefaultPageTranslator: "YouDaoPageTranslate"
 };
 
 /**
