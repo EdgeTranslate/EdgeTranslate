@@ -55,6 +55,9 @@
         },
         "change_mutual_translate": {
             "description": "__MSG_MutualTranslation__"
+        },
+        "translate_page": {
+            "description": "__MSG_TranslatePage__"
         }
     },
     "web_accessible_resources": [

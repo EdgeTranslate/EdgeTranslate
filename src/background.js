@@ -342,10 +342,17 @@ chrome.runtime.onMessage.addListener(function(message, sender, callback) {
  *  将快捷键消息转发给content_scripts
  */
 chrome.commands.onCommand.addListener(function(command) {
-    sendMessageToCurrentTab({
-        type: "command",
-        command: command
-    });
+    switch (command) {
+        case "translate_page":
+            translatePage();
+            break;
+        default:
+            sendMessageToCurrentTab({
+                type: "command",
+                command: command
+            });
+            break;
+    }
 });
 
 // send basic hit data to google analytics
