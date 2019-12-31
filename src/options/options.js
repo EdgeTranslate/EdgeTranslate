@@ -1,7 +1,7 @@
 /**
  * 初始化设置列表
  */
-window.onload = function() {
+window.onload = () => {
     var i18nElements = document.getElementsByClassName("i18n");
     for (let i = 0; i < i18nElements.length; i++) {
         // 跟随浏览器的语言设置显示内容
@@ -11,116 +11,90 @@ window.onload = function() {
         );
     }
 
-    chrome.storage.sync.get(
-        ["DTSetting", "LayoutSettings", "DefaultPageTranslator", "OtherSettings"],
-        function(result) {
-            var DTSetting = result.DTSetting;
-            var OtherSettings = result.OtherSettings;
-            var PageTranslator = result.DefaultPageTranslator;
-            var LayoutSettings = result.LayoutSettings;
+    /**
+     * initiate and update settings
+     * attribute "setting-type": indicate the setting type of one option
+     * attribute "setting-path": indicate the nested setting path. used to locate the path of one setting item in chrome storage
+     */
+    chrome.storage.sync.get(result => {
+        var inputElements = document.getElementsByTagName("input");
+        for (let element of inputElements) {
+            var settingItemPath = element.getAttribute("setting-path").split(/\s/g);
+            var settingItemValue = getSetting(result, settingItemPath);
 
-            // 存储翻译选项的选择元素
-            var DTOptions = document.getElementsByClassName("dt-option");
-            var OtherOptions = document.getElementsByClassName("other-option");
-            var PopupPositions = document.getElementsByName("PopupPosition");
-            var ResizeOption = document.getElementById("Resize");
-            var PageTranslatorSetting = document.getElementsByName("default-page-translator");
+            switch (element.getAttribute("setting-type")) {
+                case "checkbox":
+                    element.checked = settingItemValue.indexOf(element.value) !== -1;
+                    // update setting value
+                    element.onchange = event => {
+                        let target = event.target;
+                        var settingItemPath = target.getAttribute("setting-path").split(/\s/g);
+                        var settingItemValue = getSetting(result, settingItemPath);
 
-            // 首先将初始化的设置同步到页面
-            for (let i = 0; i < DTOptions.length; i++) {
-                DTOptions[i].checked = DTSetting.indexOf(DTOptions[i].value) !== -1;
-            }
-
-            for (let i = 0; i < OtherOptions.length; i++) {
-                OtherOptions[i].checked = OtherSettings[OtherOptions[i].value];
-            }
-
-            for (let i = 0; i < PopupPositions.length; i++) {
-                PopupPositions[i].checked =
-                    PopupPositions[i].value === LayoutSettings["PopupPosition"];
-            }
-
-            // initiate default page translator setting
-            PageTranslatorSetting.forEach(option => {
-                option.checked = option.value === PageTranslator;
-            });
-            ResizeOption.checked = LayoutSettings["Resize"];
-
-            // 如果用户修改了选项，则添加事件监听,将修改的配置保存
-            for (let i = 0; i < DTOptions.length; i++) {
-                DTOptions[i].onchange = function() {
-                    // this 表示的当前的筛选框元素
-                    if (this.checked)
-                        // 用户勾选了这一选项
-                        DTSetting.push(this.value);
-                    // 用户取消勾选了这一选项
-                    else DTSetting.splice(DTSetting.indexOf(this.value), 1);
-                    // 同步修改后的设定
-                    saveOption("DTSetting", DTSetting);
-                };
-            }
-
-            // 保存布局设定
-            for (let i = 0; i < PopupPositions.length; i++) {
-                PopupPositions[i].onchange = function() {
-                    if (this.checked) {
-                        LayoutSettings["PopupPosition"] = this.value;
-                        saveOption("LayoutSettings", LayoutSettings);
-                    }
-                };
-            }
-
-            ResizeOption.onchange = function() {
-                LayoutSettings["Resize"] = this.checked;
-                saveOption("LayoutSettings", LayoutSettings);
-            };
-
-            // listen to change of page translator options and update settings in chrome storage
-            PageTranslatorSetting.forEach(option => {
-                option.onchange = function() {
-                    if (this.checked) {
-                        PageTranslator = this.value;
-                        saveOption("DefaultPageTranslator", PageTranslator);
-                    }
-                };
-            });
-
-            // 保存其他设置
-            for (let i = 0; i < OtherOptions.length; i++) {
-                OtherOptions[i].onchange = function() {
-                    OtherSettings[OtherOptions[i].value] = this.checked;
-                    saveOption("OtherSettings", OtherSettings);
-                };
+                        // if user checked this option, add value to setting array
+                        if (target.checked) settingItemValue.push(target.value);
+                        // if user unchecked this option, delete value from setting array
+                        else settingItemValue.splice(settingItemValue.indexOf(target.value), 1);
+                        saveOption(result, settingItemPath, settingItemValue);
+                    };
+                    break;
+                case "radio":
+                    element.checked = settingItemValue === element.value;
+                    // update setting value
+                    element.onchange = event => {
+                        let target = event.target;
+                        var settingItemPath = target.getAttribute("setting-path").split(/\s/g);
+                        if (target.checked) {
+                            saveOption(result, settingItemPath, target.value);
+                        }
+                    };
+                    break;
+                case "switch":
+                    element.checked = settingItemValue;
+                    // update setting value
+                    element.onchange = event => {
+                        var settingItemPath = event.target
+                            .getAttribute("setting-path")
+                            .split(/\s/g);
+                        saveOption(result, settingItemPath, event.target.checked);
+                    };
+                    break;
+                default:
             }
         }
-    );
-
-    // 统一添加事件监听
-    addEventListener();
+    });
 };
+
+/**
+ *
+ * get setting value according to path of setting item
+ *
+ * @param {Object} localSettings setting object stored in local
+ * @param {Array} settingItemPath path of the setting item
+ * @returns {*} setting value
+ */
+function getSetting(localSettings, settingItemPath) {
+    var result = localSettings;
+    settingItemPath.forEach(key => {
+        result = result[key];
+    });
+    return result;
+}
 
 /**
  * 保存一条设置项
  *
- * @param {*} key 设置项名
- * @param {*} value 设置项
+ * @param {Object} localSettings  本地存储的设置项
+ * @param {Array} settingItemPath 设置项的层级路径
+ * @param {*} value 设置项的值
  */
-function saveOption(key, value) {
-    var item = {};
-    item[key] = value;
-    chrome.storage.sync.set(item);
+function saveOption(localSettings, settingItemPath, value) {
+    // update local settings
+    var result = localSettings;
+    for (let i = 0; i < settingItemPath.length - 1; i++) {
+        result = result[settingItemPath[i]];
+    }
+    result[settingItemPath[settingItemPath.length - 1]] = value;
+
+    chrome.storage.sync.set(localSettings);
 }
-
-/**
- * 需要对页面中的元素添加事件监听时，请在此函数中添加
- */
-function addEventListener() {}
-
-/**
- * block start
- * 事件监听的回调函数定义请在此区域中进行
- */
-
-/**
- * end block
- */
