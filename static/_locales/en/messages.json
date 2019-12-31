@@ -135,10 +135,6 @@
         "message": "Content Settings",
         "description": "Choose what to display in the translating results."
     },
-    "EngineSettings": {
-        "message": "Translate Engine Settings",
-        "description": "Select default translate engines."
-    },
     "DefaultPageTranslator": {
         "message": "Default Page Translator",
         "description": "Default page translator."

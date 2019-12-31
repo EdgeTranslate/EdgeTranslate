@@ -1,15 +1,13 @@
-const PageTranslators = ["YouDaoPageTranslate", "GooglePageTranslate"];
-
 /**
  * 初始化设置列表
  */
 window.onload = function() {
-    var i18nElemwnts = document.getElementsByClassName("i18n");
-    for (let i = 0; i < i18nElemwnts.length; i++) {
+    var i18nElements = document.getElementsByClassName("i18n");
+    for (let i = 0; i < i18nElements.length; i++) {
         // 跟随浏览器的语言设置显示内容
-        i18nElemwnts[i].insertAdjacentText(
+        i18nElements[i].insertAdjacentText(
             "beforeEnd",
-            chrome.i18n.getMessage(i18nElemwnts[i].getAttribute("data-i18n-name"))
+            chrome.i18n.getMessage(i18nElements[i].getAttribute("data-i18n-name"))
         );
     }
 
@@ -26,7 +24,7 @@ window.onload = function() {
             var OtherOptions = document.getElementsByClassName("other-option");
             var PopupPositions = document.getElementsByName("PopupPosition");
             var ResizeOption = document.getElementById("Resize");
-            var PageTranslatorSetting = document.getElementById("page-translator");
+            var PageTranslatorSetting = document.getElementsByName("default-page-translator");
 
             // 首先将初始化的设置同步到页面
             for (let i = 0; i < DTOptions.length; i++) {
@@ -41,6 +39,11 @@ window.onload = function() {
                 PopupPositions[i].checked =
                     PopupPositions[i].value === LayoutSettings["PopupPosition"];
             }
+
+            // initiate default page translator setting
+            PageTranslatorSetting.forEach(option => {
+                option.checked = option.value === PageTranslator;
+            });
             ResizeOption.checked = LayoutSettings["Resize"];
 
             // 如果用户修改了选项，则添加事件监听,将修改的配置保存
@@ -72,21 +75,15 @@ window.onload = function() {
                 saveOption("LayoutSettings", LayoutSettings);
             };
 
-            PageTranslators.forEach(translator => {
-                var name = chrome.i18n.getMessage(translator);
-                if (PageTranslator === translator) {
-                    PageTranslatorSetting.options.add(new Option(name, translator, true, true));
-                } else {
-                    PageTranslatorSetting.options.add(new Option(name, translator));
-                }
+            // listen to change of page translator options and update settings in chrome storage
+            PageTranslatorSetting.forEach(option => {
+                option.onchange = function() {
+                    if (this.checked) {
+                        PageTranslator = this.value;
+                        saveOption("DefaultPageTranslator", PageTranslator);
+                    }
+                };
             });
-
-            PageTranslatorSetting.onchange = () => {
-                saveOption(
-                    "DefaultPageTranslator",
-                    PageTranslatorSetting.options[PageTranslatorSetting.selectedIndex].value
-                );
-            };
 
             // 保存其他设置
             for (let i = 0; i < OtherOptions.length; i++) {
