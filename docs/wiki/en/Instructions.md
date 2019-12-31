@@ -44,6 +44,26 @@ Method 2: Click the icon ![icon](../../images/icon.png) in the upper right corne
 
 Method 3: Click the icon ![icon](../../images/icon.png) in the upper right corner of the browser and press the shortcut key (default `Alt + S`) to complete the language exchange (__recommended__).
 
+### Mutual translation mode
+
+* __What is the translation mode?__
+
+  When users mainly switch between two languages, frequent exchange of the source language and the target language will be very annoying, so we introduced the mutual translation mode. In the mutual translation mode, after the user selects the text, the plug-in automatically detects the language of the text, and then translates the text to the corresponding another language according to the user's settings.
+
+  For example: The user sets the source language to English, the target language to Chinese, and then enables the translation mode. When the user selects non-Chinese text, the text will be translated into Chinese. When the user selects Chinese text, The text will be translated into English.
+
+  __Note:__ When the source language is set to auto detect, the mutual translation mode will be forcibly turned off and cannot be turned on!
+
+* __How to turn on / off the mutual translation mode?__
+
+  Click the logo in the upper right corner of the browser, and then click the down arrow in the pop-up box to see the switch of the translation mode.
+
+  The mutual translation mode also supports the use of shortcut keys to turn on / off, but the shortcut keys need to be manually set, and only effective when the pop-up box in the upper right corner is turned on.
+
+* __Example__
+
+![mutual_translate](../../images/mutual_translate.gif)
+
 ### Web Page Translation
 
 * YouDao web page translation
