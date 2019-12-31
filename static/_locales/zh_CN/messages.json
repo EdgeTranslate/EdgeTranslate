@@ -135,6 +135,10 @@
         "message": "翻译结果设置",
         "description": "选择需要在翻译结果中展示的内容。"
     },
+    "DefaultPageTranslator": {
+        "message": "默认网页翻译器",
+        "description": "默认网页翻译器。"
+    },
     "LayoutSettings": {
         "message": "布局设置",
         "description": "调整翻译结果展示框的布局"
@@ -178,6 +182,10 @@
     "GooglePageTranslate": {
         "message": "谷歌网页翻译",
         "description": "使用谷歌翻译的api翻译当前页面。"
+    },
+    "TranslatePage": {
+        "message": "翻译此页",
+        "description": "使用默认网页翻译引擎翻译此页。"
     },
     "TranslatePageYouDao": {
         "message": "使用有道翻译此页",

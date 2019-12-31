@@ -135,6 +135,10 @@
         "message": "Content Settings",
         "description": "Choose what to display in the translating results."
     },
+    "DefaultPageTranslator": {
+        "message": "Default Page Translator",
+        "description": "Default page translator."
+    },
     "LayoutSettings": {
         "message": "Layout Settings",
         "description": "Choose how to display the translating results."
@@ -178,6 +182,10 @@
     "GooglePageTranslate": {
         "message": "Google Page Trans.",
         "description": "Translate current page with Google translate api."
+    },
+    "TranslatePage": {
+        "message": "Translate this page",
+        "description": "Translate this page with default page translator."
     },
     "TranslatePageYouDao": {
         "message": "Translate this page with YouDao",
