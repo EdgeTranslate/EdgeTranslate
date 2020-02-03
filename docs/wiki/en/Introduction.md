@@ -58,6 +58,10 @@ We are also grateful to users who have used Edge Translate since 0.2.0 and provi
 
 [Edge Translate precautions](./Precautions.md)
 
+## Privacy Policy
+
+[Edge Translate privacy policy](./PrivacyPolicy.md)
+
 ## Questions and Feedback
 
 Edge Translate were developed by us ( [nickyc975](https://github.com/nickyc975) and [Mark Fenng](https://github.com/Mark-Fenng) ) in our spare time, and there are inevitably some problems. If you have any comments or suggestions, please feel free to give us feedback at the first time and help us to make it better.
