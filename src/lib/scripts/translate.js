@@ -325,14 +325,13 @@ function parseTranslate(response, extras) {
                     result.originalText = originalTexts.join("");
                     try {
                         if (lastIndex > 0) {
-                            if (items[lastIndex].length > 2 && items[lastIndex][2].length > 0) {
+                            if (items[lastIndex][2] && items[lastIndex][2].length > 0) {
                                 result.TPhoneticSymbol = items[lastIndex][2];
                             }
 
-                            if (items[lastIndex].length > 3 && items[lastIndex][3].length > 0) {
+                            if (items[lastIndex][3] && items[lastIndex][3].length > 0) {
                                 result.SPhoneticSymbol = items[lastIndex][3];
                             }
-                            // console.log("phonetic symbol: " + result.phoneticSymbol);
                         }
                     } catch (error) {
                         // eslint-disable-next-line no-console
