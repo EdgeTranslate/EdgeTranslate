@@ -261,7 +261,8 @@ function detect(text, callback) {
  * <pre>
  *     result = {
  *         "mainMeaning": <字符串，单词的主要意思，句子的最可能的意思>,
- *         "phoneticSymbol": <字符串，单词的音标>,
+ *         "TPhoneticSymbol": <字符串，翻译结果的音标>
+ *         "SPhoneticSymbol": <字符串，原文的音标>,
  *         "originalText": <字符串，被翻译的单词或句子>,
  *         "sourceLanguage": <字符串，被翻译词句的源语言>,
  *         "detailedMeanings": [
@@ -323,12 +324,14 @@ function parseTranslate(response, extras) {
                     result.mainMeaning = mainMeanings.join("");
                     result.originalText = originalTexts.join("");
                     try {
-                        if (
-                            lastIndex > 0 &&
-                            items[lastIndex].length > 3 &&
-                            items[lastIndex][3].length > 0
-                        ) {
-                            result.phoneticSymbol = items[lastIndex][3];
+                        if (lastIndex > 0) {
+                            if (items[lastIndex].length > 2 && items[lastIndex][2].length > 0) {
+                                result.TPhoneticSymbol = items[lastIndex][2];
+                            }
+
+                            if (items[lastIndex].length > 3 && items[lastIndex][3].length > 0) {
+                                result.SPhoneticSymbol = items[lastIndex][3];
+                            }
                             // console.log("phonetic symbol: " + result.phoneticSymbol);
                         }
                     } catch (error) {
