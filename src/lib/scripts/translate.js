@@ -1,4 +1,4 @@
-import { sendMessageToCurrentTab } from "./common.js";
+import { sendMessageToCurrentTab, escapeHTML } from "./common.js";
 
 export {
     translate,
@@ -261,7 +261,8 @@ function detect(text, callback) {
  * <pre>
  *     result = {
  *         "mainMeaning": <字符串，单词的主要意思，句子的最可能的意思>,
- *         "phoneticSymbol": <字符串，单词的音标>,
+ *         "TPhoneticSymbol": <字符串，翻译结果的音标>
+ *         "SPhoneticSymbol": <字符串，原文的音标>,
  *         "originalText": <字符串，被翻译的单词或句子>,
  *         "sourceLanguage": <字符串，被翻译词句的源语言>,
  *         "detailedMeanings": [
@@ -320,16 +321,17 @@ function parseTranslate(response, extras) {
                         originalTexts.push(items[j][1]);
                     }
 
-                    result.mainMeaning = mainMeanings.join("");
-                    result.originalText = originalTexts.join("");
+                    result.mainMeaning = escapeHTML(mainMeanings.join(""));
+                    result.originalText = escapeHTML(originalTexts.join(""));
                     try {
-                        if (
-                            lastIndex > 0 &&
-                            items[lastIndex].length > 3 &&
-                            items[lastIndex][3].length > 0
-                        ) {
-                            result.phoneticSymbol = items[lastIndex][3];
-                            // console.log("phonetic symbol: " + result.phoneticSymbol);
+                        if (lastIndex > 0) {
+                            if (items[lastIndex][2] && items[lastIndex][2].length > 0) {
+                                result.TPhoneticSymbol = escapeHTML(items[lastIndex][2]);
+                            }
+
+                            if (items[lastIndex][3] && items[lastIndex][3].length > 0) {
+                                result.SPhoneticSymbol = escapeHTML(items[lastIndex][3]);
+                            }
                         }
                     } catch (error) {
                         // eslint-disable-next-line no-console
@@ -354,7 +356,7 @@ function parseTranslate(response, extras) {
                     if (items.length <= 1) {
                         let meaningArray = new Array();
                         items[0][2].forEach(item => meaningArray.push(item[0]));
-                        result.commonMeanings = meaningArray.join(", ");
+                        result.commonMeanings = escapeHTML(meaningArray.join(", "));
                         // console.log("commonMeanings: " + result.commonMeanings);
                     }
                     break;
