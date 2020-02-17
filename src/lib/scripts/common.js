@@ -1,4 +1,4 @@
-export { getDomain, isPDF, sendMessageToCurrentTab };
+export { getDomain, isPDF, sendMessageToCurrentTab, escapeHTML };
 
 /**
  * 提取给定的url的域名
@@ -48,5 +48,23 @@ function sendMessageToCurrentTab(message) {
                 }
             });
         }
+    });
+}
+
+/**
+ * escape HTML tag to avoid XSS security problems
+ * @param {string} str string text to be escaped
+ */
+function escapeHTML(str) {
+    const REGEX_HTML_ESCAPE = /"|&|'|<|>/g;
+
+    if (typeof str !== "string") return str;
+    return str.replace(REGEX_HTML_ESCAPE, expression => {
+        var char = expression.charCodeAt(0);
+        var result = ["&#"];
+        char = char == 0x20 ? 0xa0 : char;
+        result.push(char);
+        result.push(";");
+        return result.join("");
     });
 }

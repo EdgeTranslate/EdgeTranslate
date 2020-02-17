@@ -1,4 +1,4 @@
-import { sendMessageToCurrentTab } from "./common.js";
+import { sendMessageToCurrentTab, escapeHTML } from "./common.js";
 
 export {
     translate,
@@ -321,16 +321,16 @@ function parseTranslate(response, extras) {
                         originalTexts.push(items[j][1]);
                     }
 
-                    result.mainMeaning = mainMeanings.join("");
-                    result.originalText = originalTexts.join("");
+                    result.mainMeaning = escapeHTML(mainMeanings.join(""));
+                    result.originalText = escapeHTML(originalTexts.join(""));
                     try {
                         if (lastIndex > 0) {
                             if (items[lastIndex][2] && items[lastIndex][2].length > 0) {
-                                result.TPhoneticSymbol = items[lastIndex][2];
+                                result.TPhoneticSymbol = escapeHTML(items[lastIndex][2]);
                             }
 
                             if (items[lastIndex][3] && items[lastIndex][3].length > 0) {
-                                result.SPhoneticSymbol = items[lastIndex][3];
+                                result.SPhoneticSymbol = escapeHTML(items[lastIndex][3]);
                             }
                         }
                     } catch (error) {
@@ -356,7 +356,7 @@ function parseTranslate(response, extras) {
                     if (items.length <= 1) {
                         let meaningArray = new Array();
                         items[0][2].forEach(item => meaningArray.push(item[0]));
-                        result.commonMeanings = meaningArray.join(", ");
+                        result.commonMeanings = escapeHTML(meaningArray.join(", "));
                         // console.log("commonMeanings: " + result.commonMeanings);
                     }
                     break;
