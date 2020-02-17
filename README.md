@@ -133,3 +133,9 @@ E-mails: [nickyc975](mailto:chenjinlong2016@outlook.com), [Mark Fenng](mailto:f1
 ## License
 
 [MIT](./LICENSE.MIT) AND [NPL](./LICENSE.NPL)
+
+## Contributors
+
+* [ArielAxionL](https://github.com/axionl) 
+
+* [ElectroLom](https://github.com/electrolom42)

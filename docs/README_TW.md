@@ -127,3 +127,9 @@ npm run build:firefox
 ## 開源協議
 
 [MIT](../LICENSE.MIT) 與 [NPL](../LICENSE.NPL)
+
+## 貢獻者
+
+* [ArielAxionL](https://github.com/axionl) 
+
+* [ElectroLom](https://github.com/electrolom42)
