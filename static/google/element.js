@@ -72,7 +72,7 @@
         c._ps = this.EDGE_TRANSLATE_URL + "google/translateelement.css";
         c._puh = "translate.google.com";
         _loadCss(c._ps);
-        _loadJs(b + "/translate_static/js/element/main" + language + ".js");
+        _loadJs(this.EDGE_TRANSLATE_URL + "google/main/main" + language + ".js");
     })();
 })();
 
