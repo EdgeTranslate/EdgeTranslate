@@ -169,14 +169,26 @@ function build(browser, env) {
 
     var packStatic = function() {
         if (browser === "chrome") {
-            gulp.src("./static/**/*.js", { base: "static" })
+            gulp.src("./static/**/!(element_main).js", { base: "static" })
                 .pipe(uglify())
                 .pipe(gulp.dest(output_dir));
+
+            // Do not uglify element_main.js
+            gulp.src("./static/google/element_main.js", { base: "static" }).pipe(
+                gulp.dest(output_dir)
+            );
+
             gulp.src("./static/**/!(*.js)", { base: "static" }).pipe(gulp.dest(output_dir));
         } else {
-            gulp.src("./static/!(pdf)/**/*.js", { base: "static" })
+            gulp.src("./static/!(pdf)/**/!(element_main).js", { base: "static" })
                 .pipe(uglify())
                 .pipe(gulp.dest(output_dir));
+
+            // Do not uglify element_main.js
+            gulp.src("./static/google/element_main.js", { base: "static" }).pipe(
+                gulp.dest(output_dir)
+            );
+
             gulp.src("./static/!(pdf)/**/!(*.js)", { base: "static" }).pipe(gulp.dest(output_dir));
         }
         log("Finished build static files");

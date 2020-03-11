@@ -941,7 +941,7 @@
         a.action = Md(b);
     }
     function ve(a, b) {
-        a.src = Gd(b);
+        a.src = b;
         if (null === oc)
             b: {
                 b = y.document;
@@ -9825,7 +9825,7 @@
         f = c.attributes || {};
         pd(f, { type: "text/javascript", charset: "UTF-8" });
         ag(e, f);
-        ve(e, a);
+        ve(e, Mq);
         zr(b).appendChild(e);
         return h;
     }
@@ -9861,11 +9861,10 @@
         this.a = b ? b : "callback";
         this.Eb = 5e3;
     }
-    var Br = 0;
     Ar.prototype.send = function(a, b, c, d) {
         a = a ? nd(a) : {};
-        d = d || "_" + (Br++).toString(36) + D().toString(36);
-        var e = "_callbacks___" + d;
+        d = "";
+        var e = "__callback__" + d;
         b && ((y[e] = Cr(d, b)), (a[this.a] = e));
         b = { timeout: this.Eb, Jh: !0 };
         e = Gd(this.b).toString();
@@ -9892,7 +9891,7 @@
         };
     }
     function Er(a, b) {
-        a = "_callbacks___" + a;
+        a = "__callback__" + a;
         if (y[a])
             if (b)
                 try {
