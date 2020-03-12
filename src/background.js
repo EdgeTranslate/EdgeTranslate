@@ -202,8 +202,8 @@ chrome.notifications.onButtonClicked.addListener(function(notificationId, button
                             // listen on the installation event
                             setTimeout(() => {
                                 sendHitRequest("background", "event", {
-                                    ec: "translate", // event category
-                                    ea: "translate" // event label
+                                    ec: "installation", // event category
+                                    ea: "installation" // event label
                                 });
                             }, 1000);
                         });
