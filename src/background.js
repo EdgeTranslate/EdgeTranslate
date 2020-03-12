@@ -40,7 +40,7 @@ const DEFAULT_SETTINGS = {
         SelectTranslate: true,
         TranslateAfterDblClick: false,
         TranslateAfterSelect: false,
-        UseGoogleAnalytics: true,
+        UseGoogleAnalytics: false,
         UsePDFjs: true
     },
     DefaultPageTranslator: "YouDaoPageTranslate"
@@ -125,17 +125,31 @@ chrome.runtime.onInstalled.addListener(function(details) {
             // 首次安装，引导用户查看wiki
             chrome.tabs.create({
                 // 为wiki页面创建一个新的标签页
-                url: "https://github.com/EdgeTranslate/EdgeTranslate/wiki"
+                url: chrome.i18n.getMessage("WikiLink")
             });
 
-            // send event hit to google analytics
-            // listen on the installation event
-            setTimeout(() => {
-                sendHitRequest("background", "event", {
-                    ec: "installation", // event category
-                    ea: "installation" // event label
+            // 告知用户数据收集相关信息
+            try {
+                chrome.notifications.create("data_collection_notification", {
+                    type: "basic",
+                    iconUrl: "./icon/icon128.png",
+                    title: chrome.i18n.getMessage("AppName"),
+                    message: chrome.i18n.getMessage("DataCollectionNotice"),
+                    buttons: [
+                        { title: chrome.i18n.getMessage("Fine") },
+                        { title: chrome.i18n.getMessage("Dont") }
+                    ],
+                    requireInteraction: true
                 });
-            }, 1000);
+            } catch (error) {
+                // For f**king troublesome Firefox.
+                chrome.notifications.create("data_collection_notification", {
+                    type: "basic",
+                    iconUrl: "./icon/icon128.png",
+                    title: chrome.i18n.getMessage("AppName"),
+                    message: chrome.i18n.getMessage("DataCollectionNotice")
+                });
+            }
         } else if (details.reason === "update") {
             // 从旧版本更新，引导用户查看更新日志
             chrome.notifications.create("update_notification", {
@@ -161,6 +175,49 @@ chrome.notifications.onClicked.addListener(function(notificationId) {
                 // 为releases页面创建一个新的标签页
                 url: "https://github.com/EdgeTranslate/EdgeTranslate/releases"
             });
+            break;
+        case "data_collection_notification":
+            chrome.tabs.create({
+                // 为隐私政策页面单独创建一个标签页
+                url: chrome.i18n.getMessage("PrivacyPolicyLink")
+            });
+            break;
+        default:
+            break;
+    }
+});
+
+/*
+ * 监听用户点击通知按钮事件
+ */
+chrome.notifications.onButtonClicked.addListener(function(notificationId, buttonIndex) {
+    switch (notificationId) {
+        case "data_collection_notification": // 更新GA设置
+            switch (buttonIndex) {
+                case 0:
+                    chrome.storage.sync.get("OtherSettings", result => {
+                        result.OtherSettings.UseGoogleAnalytics = true;
+                        chrome.storage.sync.set(result, () => {
+                            // send event hit to google analytics
+                            // listen on the installation event
+                            setTimeout(() => {
+                                sendHitRequest("background", "event", {
+                                    ec: "translate", // event category
+                                    ea: "translate" // event label
+                                });
+                            }, 1000);
+                        });
+                    });
+                    break;
+                case 1:
+                    chrome.storage.sync.get("OtherSettings", result => {
+                        result.OtherSettings.UseGoogleAnalytics = false;
+                        chrome.storage.sync.set(result);
+                    });
+                    break;
+                default:
+                    break;
+            }
             break;
         default:
             break;
