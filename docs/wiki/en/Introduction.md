@@ -44,7 +44,7 @@ Edge Translate is a simple and practical translation plugin that supports mainst
 
 * __Whole Page Translating__ 
 
-  We support web page translation and can translate the entire web page directly into the language you need. And you are free to choose YouDao web page translation or Google web page translation to fully meet your translation needs.
+  We support web page translation and can translate the entire web page directly into the language you need. And you are free to choose YouDao web page translation or Google web page translation to fully meet your translation needs. (Not supported on Firefox, here is the [reason](./ToFirefoxUsers.md))
 
 The birth of Edge Translate is inseparable from the open source community. In the development process of Edge Translate, we used [Mozilla](https://github.com/mozilla)'s [pdf.js](https://github.com/mozilla/pdf.js) as a built-in PDF reader to support word translation in PDF files. We refered to [crimx](https://github.com/crimx)'s [saladict](https://github.com/crimx/ext-saladict) for solutions of some problems. We also used [gulp](https://github.com/gulpjs/gulp), [webpack](https://github.com/webpack/webpack) and other excellent open source tools to assist in development. And we would like to express our gratitude.
 
