@@ -219,6 +219,10 @@
         "message": "Помочь улучшить расширение",
         "description": "Используется инструмент Google Analytics, чтобы помочь нам улучшить Edge Translate."
     },
+    "PrivacyPolicy":{
+        "message": "Политика конфиденциальности",
+        "description": "Политика конфиденциальности."
+    },
     "Settings": {
         "message": "Настройки Edge Translate",
         "description": "Страница настроек Edge Translate"

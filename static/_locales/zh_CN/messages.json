@@ -216,8 +216,12 @@
         "description": "使用谷歌翻译的api翻译当前页面。"
     },
     "UseGoogleAnalytics": {
-        "message": "帮助我们改进插件",
+        "message": "提供统计数据帮助我们改进插件",
         "description": "启用Google Analytics服务协助开发者改进侧边翻译"
+    },
+    "PrivacyPolicy":{
+        "message": "隐私政策",
+        "description": "隐私政策。"
     },
     "Settings": {
         "message": "侧边翻译设置",

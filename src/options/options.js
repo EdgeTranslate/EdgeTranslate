@@ -11,6 +11,10 @@ window.onload = () => {
         );
     }
 
+    // 设置不同语言的隐私政策链接
+    var PrivacyPolicyLink = document.getElementById("PrivacyPolicyLink");
+    PrivacyPolicyLink.setAttribute("href", chrome.i18n.getMessage("PrivacyPolicyLink"));
+
     /**
      * initiate and update settings
      * attribute "setting-type": indicate the setting type of one option

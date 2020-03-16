@@ -216,8 +216,12 @@
         "description": "Translate current page with Google translate api."
     },
     "UseGoogleAnalytics": {
-        "message": "Help us to improve the extension",
+        "message": "Provide statistics to help improve the extension",
         "description": "Use Google Analytics tool to help us improve Edge Translate."
+    },
+    "PrivacyPolicy":{
+        "message": "Privacy Policy",
+        "description": "Privacy policy."
     },
     "Settings": {
         "message": "EdgeTranslate Settings",
