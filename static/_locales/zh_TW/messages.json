@@ -104,20 +104,12 @@
         "description": "將當前域名移出黑名單。"
     },
     "DataCollectionNotice": {
-        "message": "感謝使用側邊翻譯！\n為了改善用戶體驗，我們需要收集一些統計數據，點此查看隱私政策。",
+        "message": "感謝使用側邊翻譯！\n為了改善用戶體驗，我們需要收集一些統計數據，點此查看選項。",
         "description": "關於收集數據的提示"
     },
     "PrivacyPolicyLink": {
         "message": "https://github.com/EdgeTranslate/EdgeTranslate/blob/master/docs/wiki/zh_TW/%E9%9A%B1%E7%A7%81%E6%94%BF%E7%AD%96.md",
-        "description": "Privacy policy link."
-    },
-    "Fine": {
-        "message": "好的",
-        "description": "同意收集信息"
-    },
-    "Dont": {
-        "message": "不要",
-        "description": "拒絕收集信息"
+        "description": "隱私政策鏈接"
     },
     "ExtensionInstalled": {
         "message": "側邊翻譯安裝成功！點此閱讀使用說明",

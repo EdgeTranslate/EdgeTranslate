@@ -104,20 +104,12 @@
         "description": "Удаление домена просматриваемого сайта из чёрного списка."
     },
     "DataCollectionNotice": {
-        "message": "Спасибо за использование Edge Translate!\nЧтобы улучшить пользовательский опыт, нам нужно собрать некоторую статистику, нажмите здесь, чтобы просмотреть политику конфиденциальности.",
+        "message": "Спасибо за использование Edge Translate! \nНам нужна статистика, чтобы улучшить пользовательский опыт. \nНажмите, чтобы увидеть вариант.",
         "description": "Советы по сбору данных"
     },
     "PrivacyPolicyLink": {
         "message": "https://github.com/EdgeTranslate/EdgeTranslate/blob/master/docs/wiki/en/PrivacyPolicy.md",
         "description": "Privacy policy link."
-    },
-    "Fine": {
-        "message": "хорошо",
-        "description": "Согласие на сбор информации"
-    },
-    "Dont": {
-        "message": "не",
-        "description": "Отказаться от сбора информации"
     },
     "ExtensionInstalled": {
         "message": "Edge Translate установлен! Нажмите, чтобы прочитать wiki!",
