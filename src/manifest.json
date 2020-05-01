@@ -44,6 +44,9 @@
             },
             "description": "__MSG_ExchangeSourceAndTargetLanguage__"
         },
+        "pronounce_selected": {
+            "description": "__MSG_PronounceSelected__"
+        },
         "pronounce_original": {
             "description": "__MSG_PronounceOriginal__"
         },

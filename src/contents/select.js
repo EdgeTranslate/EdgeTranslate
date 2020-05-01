@@ -1,6 +1,11 @@
 import { getDomain } from "../lib/scripts/common.js";
 
 /**
+ * 选中文本TTS语速
+ */
+var selectedTTSSpeed = "fast";
+
+/**
  * 划词翻译功能的实现
  * 需要对页面的相关事件进行监听，根据用户设定来决定是否进行监听。
  */
@@ -141,6 +146,34 @@ function translateSubmit() {
 }
 
 /**
+ * 处理发音快捷键
+ */
+function pronounceSubmit() {
+    if (
+        window
+            .getSelection()
+            .toString()
+            .trim()
+    ) {
+        chrome.runtime.sendMessage(
+            {
+                type: "pronounce",
+                text: window.getSelection().toString(),
+                language: "auto",
+                speed: selectedTTSSpeed
+            },
+            function() {
+                if (selectedTTSSpeed === "fast") {
+                    selectedTTSSpeed = "slow";
+                } else {
+                    selectedTTSSpeed = "fast";
+                }
+            }
+        );
+    }
+}
+
+/**
  * 如果页面中没有鼠标选中的区域，调用此函数去掉翻译按钮
  */
 function disappearButton() {
@@ -184,6 +217,9 @@ chrome.runtime.onMessage.addListener(function(message, sender, callback) {
                 switch (message.command) {
                     case "translate_selected":
                         translateSubmit();
+                        break;
+                    case "pronounce_selected":
+                        pronounceSubmit();
                         break;
                     default:
                         break;

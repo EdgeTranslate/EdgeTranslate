@@ -67,6 +67,10 @@
         "message": "音標",
         "description": "音標"
     },
+    "PronounceSelected": {
+        "message": "朗讀選中文本",
+        "description": "朗讀選中文本"
+    },
     "PronounceOriginal": {
         "message": "朗讀原始文本",
         "description": "朗讀原始文本"

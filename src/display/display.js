@@ -354,39 +354,43 @@ function fixOff() {
  * Send message to background to pronounce the translating text.
  */
 function sourcePronounce() {
-    chrome.runtime.sendMessage(
-        {
-            type: "pronounce",
-            text: translateResult.originalText,
-            language: translateResult.sourceLanguage,
-            speed: sourceTTSSpeed
-        },
-        function() {
-            if (sourceTTSSpeed === "fast") {
-                sourceTTSSpeed = "slow";
-            } else {
-                sourceTTSSpeed = "fast";
+    if (isChildNode(divFrame, document.documentElement)) {
+        chrome.runtime.sendMessage(
+            {
+                type: "pronounce",
+                text: translateResult.originalText,
+                language: translateResult.sourceLanguage,
+                speed: sourceTTSSpeed
+            },
+            function() {
+                if (sourceTTSSpeed === "fast") {
+                    sourceTTSSpeed = "slow";
+                } else {
+                    sourceTTSSpeed = "fast";
+                }
             }
-        }
-    );
+        );
+    }
 }
 
 function targetPronounce() {
-    chrome.runtime.sendMessage(
-        {
-            type: "pronounce",
-            text: translateResult.mainMeaning,
-            language: translateResult.targetLanguage,
-            speed: targetTTSSpeed
-        },
-        function() {
-            if (targetTTSSpeed === "fast") {
-                targetTTSSpeed = "slow";
-            } else {
-                targetTTSSpeed = "fast";
+    if (isChildNode(divFrame, document.documentElement)) {
+        chrome.runtime.sendMessage(
+            {
+                type: "pronounce",
+                text: translateResult.mainMeaning,
+                language: translateResult.targetLanguage,
+                speed: targetTTSSpeed
+            },
+            function() {
+                if (targetTTSSpeed === "fast") {
+                    targetTTSSpeed = "slow";
+                } else {
+                    targetTTSSpeed = "fast";
+                }
             }
-        }
-    );
+        );
+    }
 }
 
 function copyContent() {
