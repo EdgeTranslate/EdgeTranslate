@@ -99,23 +99,24 @@ gulp.task("pack:firefox", function(callback) {
  * @param {String} browser 浏览器的名称
  */
 function watcher(browser) {
+    var builder = build(browser, "development");
     gulp.watch("./src/**/*.js").on("change", function() {
-        build(browser, "development").js();
+        builder.js();
     });
     gulp.watch("./src/display/templates/*.html").on("change", function() {
-        build(browser, "development").js();
+        builder.js();
     });
     gulp.watch("./src/manifest.json").on("change", function() {
-        build(browser, "development").manifest();
+        builder.manifest();
     });
     gulp.watch("./src/**/!(result|loading|error).html").on("change", function() {
-        build(browser, "development").html();
+        builder.html();
     });
     gulp.watch("./static/**/*").on("change", function() {
-        build(browser, "development").static();
+        builder.static();
     });
     gulp.watch("./src/**/*.styl").on("change", function() {
-        build(browser, "development").styl();
+        builder.styl();
     });
 }
 
@@ -140,16 +141,10 @@ function build(browser, env) {
             )
             .pipe(eslint.format());
         gulp.src("./src/**/*.js", { base: "src" })
-            .pipe(
-                webpack_stream(require(webpack_path), webpack).on("error", error =>
-                    // eslint-disable-next-line no-console
-                    console.log(error)
-                )
-            )
+            .pipe(webpack_stream(require(webpack_path), webpack))
             .pipe(gulp.dest(output_dir))
-            .on("end", function() {
-                log("Finished build js files");
-            });
+            .on("end", () => log("Finished build js files"))
+            .on("error", error => log(error));
     };
 
     var manifest = function() {
