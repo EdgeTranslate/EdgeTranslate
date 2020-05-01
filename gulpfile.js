@@ -44,15 +44,17 @@ gulp.task("watcher:firefox", function(callback) {
 /**
  * 开发环境下build chrome扩展的安装包
  */
-gulp.task("dev:chrome", function() {
+gulp.task("dev:chrome", function(callback) {
     build("chrome", "development").all();
+    callback();
 });
 
 /**
  * 开发环境下build firefox扩展的安装包
  */
-gulp.task("dev:firefox", function() {
+gulp.task("dev:firefox", function(callback) {
     build("firefox", "development").all();
+    callback();
 });
 
 /**
