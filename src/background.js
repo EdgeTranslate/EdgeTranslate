@@ -18,6 +18,11 @@ import { sendHitRequest } from "./lib/scripts/analytics.js";
 import { sendMessageToCurrentTab } from "./lib/scripts/common.js";
 
 /**
+ * 选中文本TTS语速
+ */
+var selectedTTSSpeed = "fast";
+
+/**
  * default settings for this extension
  */
 const DEFAULT_SETTINGS = {
@@ -276,10 +281,12 @@ chrome.contextMenus.onClicked.addListener(function(info, tab) {
             }); // 此api位于 translate.js中
             break;
         case "pronounce":
-            sendMessageToCurrentTab({
-                type: "command",
-                command: "pronounce_selected"
-            });
+            pronounce(info.selectionText, "auto", selectedTTSSpeed, null);
+            if (selectedTTSSpeed === "fast") {
+                selectedTTSSpeed = "slow";
+            } else {
+                selectedTTSSpeed = "fast";
+            }
             break;
         case "translate_page":
             translatePage();
@@ -350,7 +357,16 @@ chrome.runtime.onMessage.addListener(function(message, sender, callback) {
                 });
                 break;
             case "pronounce":
-                pronounce(message.text, message.language, message.speed, callback);
+                if (message.speed) {
+                    pronounce(message.text, message.language, message.speed, callback);
+                } else {
+                    pronounce(message.text, message.language, selectedTTSSpeed, callback);
+                    if (selectedTTSSpeed === "fast") {
+                        selectedTTSSpeed = "slow";
+                    } else {
+                        selectedTTSSpeed = "fast";
+                    }
+                }
                 break;
             case "youdao_page_translate":
                 youdaoPageTranslate(message.request, callback);

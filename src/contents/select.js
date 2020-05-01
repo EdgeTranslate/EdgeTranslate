@@ -1,11 +1,6 @@
 import { getDomain } from "../lib/scripts/common.js";
 
 /**
- * 选中文本TTS语速
- */
-var selectedTTSSpeed = "fast";
-
-/**
  * 划词翻译功能的实现
  * 需要对页面的相关事件进行监听，根据用户设定来决定是否进行监听。
  */
@@ -168,21 +163,11 @@ function pronounceSubmit() {
             .toString()
             .trim()
     ) {
-        chrome.runtime.sendMessage(
-            {
-                type: "pronounce",
-                text: window.getSelection().toString(),
-                language: "auto",
-                speed: selectedTTSSpeed
-            },
-            function() {
-                if (selectedTTSSpeed === "fast") {
-                    selectedTTSSpeed = "slow";
-                } else {
-                    selectedTTSSpeed = "fast";
-                }
-            }
-        );
+        chrome.runtime.sendMessage({
+            type: "pronounce",
+            text: window.getSelection().toString(),
+            language: "auto"
+        });
     }
 }
 
