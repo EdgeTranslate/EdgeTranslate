@@ -53,7 +53,7 @@ translateButton.id = "translate-button";
 translateButton.style.backgroundColor = "white"; // 动态设置样式以兼容Dark Reader
 translateButton.style.boxShadow = "0px 0px 2px 2px #ddd"; // 动态设置样式以兼容Dark Reader
 document.documentElement.appendChild(translateButton);
-translateButton.addEventListener("mousedown", translateSubmit);
+translateButton.addEventListener("mousedown", buttonClickHandler);
 
 /**
  * Handle double click event
@@ -105,6 +105,19 @@ function mouseUpHandler(event) {
             translateButton.style.display = "none"; // 使翻译按钮隐藏
         }
     });
+}
+
+/**
+ * 处理鼠标点击按钮事件
+ *
+ * @param {MouseEvent} event 鼠标点击事件
+ */
+function buttonClickHandler(event) {
+    if (event.button === 0) {
+        translateSubmit();
+    } else if (event.button === 2) {
+        pronounceSubmit();
+    }
 }
 
 /**

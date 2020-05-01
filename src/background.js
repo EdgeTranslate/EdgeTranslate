@@ -57,6 +57,12 @@ chrome.runtime.onInstalled.addListener(function(details) {
     });
 
     chrome.contextMenus.create({
+        id: "pronounce",
+        title: chrome.i18n.getMessage("Pronounce") + " '%s'",
+        contexts: ["selection"]
+    });
+
+    chrome.contextMenus.create({
         id: "shortcut",
         title: chrome.i18n.getMessage("ShortcutSetting"),
         contexts: ["browser_action"]
@@ -196,6 +202,12 @@ chrome.runtime.onStartup.addListener(function() {
     });
 
     chrome.contextMenus.create({
+        id: "pronounce",
+        title: chrome.i18n.getMessage("Pronounce") + " '%s'",
+        contexts: ["selection"]
+    });
+
+    chrome.contextMenus.create({
         id: "shortcut",
         title: chrome.i18n.getMessage("ShortcutSetting"),
         contexts: ["browser_action"]
@@ -262,6 +274,12 @@ chrome.contextMenus.onClicked.addListener(function(info, tab) {
             translate(text, function(result) {
                 showTranslate(result, tab);
             }); // 此api位于 translate.js中
+            break;
+        case "pronounce":
+            sendMessageToCurrentTab({
+                type: "command",
+                command: "pronounce_selected"
+            });
             break;
         case "translate_page":
             translatePage();

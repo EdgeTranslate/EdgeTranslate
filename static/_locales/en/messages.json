@@ -67,6 +67,10 @@
         "message": "Phonetic Symbol",
         "description": "Phonetic Symbol"
     },
+    "Pronounce": {
+        "message": "Pronounce",
+        "description": "Pronounce"
+    },
     "PronounceSelected": {
         "message": "Pronounce selected text",
         "description": "Pronounce selected text"
