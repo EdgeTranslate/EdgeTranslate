@@ -368,6 +368,7 @@ function parseTranslate(response, extras) {
                         element.type = item[0];
                         element.words = new Array();
                         item[1].forEach(words => element.words.push(words[0].join(", ")));
+                        element.proto = item[2];
                         result.synonyms.push(element);
                     });
                     // console.log("synonyms: " + JSON.stringify(result.synonyms));

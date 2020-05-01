@@ -100,7 +100,7 @@
                     <p class="content-title"><% chrome.i18n.getMessage("Synonyms") %>: </p>  
                     <% for (let i in this.synonyms) { %>  
                         <p class="synonyms-content">  
-                            <span class="word-type"><% this.synonyms[i].type + ": " %></span>  
+                            <span class="word-type"><% this.synonyms[i].type + " <b>" + this.synonyms[i].proto + "</b>: " %></span>  
                             <span class="content"><% this.synonyms[i].words[0] %></span>  
                         </p>  
                     <% } %>  
