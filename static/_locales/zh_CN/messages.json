@@ -173,7 +173,11 @@
     },
     "ResizeSetting": {
         "message": "收缩页面",
-        "description": "Resize page to avoid occlude original content"
+        "description": "收缩页面以防止翻译框遮挡内容。"
+    },
+    "RTLSetting": {
+        "message": "从右到左的布局",
+        "description": "在某些语言下从右到左显示内容。"
     },
     "OtherSettings": {
         "message": "其他设置",

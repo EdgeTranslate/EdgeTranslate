@@ -173,6 +173,16 @@ function createBlock(content, template) {
         // iframe 一加载完成添加事件监听
         frame.onload = function() {
             frameDocument = frame.contentDocument;
+
+            // 根据用户设定决定是否采用从右到左布局（用于阿拉伯语等从右到左书写的语言）
+            chrome.storage.sync.get("LayoutSettings", result => {
+                if (result.LayoutSettings.RTL) {
+                    let contents = frameDocument.getElementsByClassName("may-need-rtl");
+                    for (let i = 0; i < contents.length; i++) {
+                        contents[i].dir = "rtl";
+                    }
+                }
+            });
             // 添加事件监听
             addEventListener();
         };

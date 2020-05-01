@@ -36,7 +36,8 @@ const DEFAULT_SETTINGS = {
     // Resize value determine whether the web page will resize when showing translation result
     LayoutSettings: {
         PopupPosition: "right",
-        Resize: false
+        Resize: false,
+        RTL: false
     },
     // Default settings of source language and target language
     languageSetting: { sl: "auto", tl: navigator.language },

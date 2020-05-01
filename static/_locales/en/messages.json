@@ -173,7 +173,11 @@
     },
     "ResizeSetting": {
         "message": "Resize page",
-        "description": "Resize page to avoid occlude original content"
+        "description": "Resize page to avoid occlude original content."
+    },
+    "RTLSetting": {
+        "message": "Right to left layout",
+        "description": "Display contents from right to left in some languages."
     },
     "OtherSettings": {
         "message": "Other Settings",
