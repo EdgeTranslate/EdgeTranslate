@@ -46,7 +46,7 @@ const DEFAULT_SETTINGS = {
         SelectTranslate: true,
         TranslateAfterDblClick: false,
         TranslateAfterSelect: false,
-        UseGoogleAnalytics: false,
+        UseGoogleAnalytics: true,
         UsePDFjs: true
     },
     DefaultPageTranslator: "YouDaoPageTranslate"
