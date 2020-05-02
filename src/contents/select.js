@@ -88,7 +88,11 @@ function mouseUpHandler(event) {
                 var OtherSettings = result.OtherSettings;
                 // Show translating result instantly.
                 if (OtherSettings && OtherSettings["TranslateAfterSelect"]) {
+                    // submit translation request
                     translateSubmit();
+                    // to make sure when translation failed, the side block wouldn't show again and again
+                    cancelSelection();
+
                     // Show translate button.
                 } else if (disable) {
                     setTimeout(function() {
@@ -147,6 +151,7 @@ function translateSubmit() {
                 text: window.getSelection().toString()
             },
             function() {
+                cancelSelection();
                 translateButton.style.display = "none";
             }
         );
@@ -203,6 +208,24 @@ function executeIfNotInBlacklist(callback) {
             callback();
         }
     });
+}
+
+/**
+ * cancel text selection when translation is finished
+ */
+function cancelSelection() {
+    if (window.getSelection) {
+        if (window.getSelection().empty) {
+            // Chrome
+            window.getSelection().empty();
+        } else if (window.getSelection().removeAllRanges) {
+            // Firefox
+            window.getSelection().removeAllRanges();
+        }
+    } else if (document.selection) {
+        // IE
+        document.selection.empty();
+    }
 }
 
 /**
