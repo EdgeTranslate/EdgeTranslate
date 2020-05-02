@@ -368,6 +368,7 @@ function parseTranslate(response, extras) {
                         element.type = item[0];
                         element.words = new Array();
                         item[1].forEach(words => element.words.push(words[0].join(", ")));
+                        element.proto = item[2];
                         result.synonyms.push(element);
                     });
                     // console.log("synonyms: " + JSON.stringify(result.synonyms));
@@ -541,7 +542,34 @@ function getCurrentTabId(tab, callback) {
 }
 
 /**
- * Text to speech.
+ * Actual TTS function.
+ *
+ * @param {*} text text to pronounce
+ * @param {*} language language of text
+ * @param {*} speed TTS speed
+ * @param {*} callback callback
+ */
+function doPronounce(text, language, speed, callback) {
+    AUDIO.pause();
+    AUDIO.src =
+        BASE_TTS_URL +
+        "&q=" +
+        text +
+        "&tl=" +
+        language +
+        "&ttsspeed=" +
+        speed +
+        "&tk=" +
+        generateTK(text, TKK[0], TKK[1]);
+    AUDIO.play();
+
+    if (callback) {
+        callback();
+    }
+}
+
+/**
+ * Text to speech proxy.
  *
  * @param {String} text The text.
  * @param {String} language The language of the text.
@@ -562,21 +590,10 @@ function pronounce(text, language, speed, callback) {
             break;
     }
 
-    AUDIO.pause();
-    AUDIO.src =
-        BASE_TTS_URL +
-        "&q=" +
-        text +
-        "&tl=" +
-        language +
-        "&ttsspeed=" +
-        speedValue +
-        "&tk=" +
-        generateTK(text, TKK[0], TKK[1]);
-    AUDIO.play();
-
-    if (callback) {
-        callback();
+    if (language == "auto") {
+        detect(text, lan => doPronounce(text, lan, speedValue, callback));
+    } else {
+        doPronounce(text, language, speedValue, callback);
     }
 }
 

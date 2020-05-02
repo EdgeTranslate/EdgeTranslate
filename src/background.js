@@ -18,6 +18,11 @@ import { sendHitRequest } from "./lib/scripts/analytics.js";
 import { sendMessageToCurrentTab } from "./lib/scripts/common.js";
 
 /**
+ * 选中文本TTS语速
+ */
+var selectedTTSSpeed = "fast";
+
+/**
  * default settings for this extension
  */
 const DEFAULT_SETTINGS = {
@@ -31,7 +36,8 @@ const DEFAULT_SETTINGS = {
     // Resize value determine whether the web page will resize when showing translation result
     LayoutSettings: {
         PopupPosition: "right",
-        Resize: false
+        Resize: false,
+        RTL: false
     },
     // Default settings of source language and target language
     languageSetting: { sl: "auto", tl: navigator.language },
@@ -40,6 +46,7 @@ const DEFAULT_SETTINGS = {
         SelectTranslate: true,
         TranslateAfterDblClick: false,
         TranslateAfterSelect: false,
+        CancelTextSelection: false,
         UseGoogleAnalytics: true,
         UsePDFjs: true
     },
@@ -53,6 +60,12 @@ chrome.runtime.onInstalled.addListener(function(details) {
     chrome.contextMenus.create({
         id: "translate",
         title: chrome.i18n.getMessage("Translate") + " '%s'",
+        contexts: ["selection"]
+    });
+
+    chrome.contextMenus.create({
+        id: "pronounce",
+        title: chrome.i18n.getMessage("Pronounce") + " '%s'",
         contexts: ["selection"]
     });
 
@@ -125,17 +138,24 @@ chrome.runtime.onInstalled.addListener(function(details) {
             // 首次安装，引导用户查看wiki
             chrome.tabs.create({
                 // 为wiki页面创建一个新的标签页
-                url: "https://github.com/EdgeTranslate/EdgeTranslate/wiki"
+                url: chrome.i18n.getMessage("WikiLink")
             });
 
-            // send event hit to google analytics
-            // listen on the installation event
+            // 告知用户数据收集相关信息
+            chrome.notifications.create("data_collection_notification", {
+                type: "basic",
+                iconUrl: "./icon/icon128.png",
+                title: chrome.i18n.getMessage("AppName"),
+                message: chrome.i18n.getMessage("DataCollectionNotice")
+            });
+
+            // 尝试发送安装事件
             setTimeout(() => {
                 sendHitRequest("background", "event", {
                     ec: "installation", // event category
                     ea: "installation" // event label
                 });
-            }, 1000);
+            }, 10 * 60 * 1000); // 10 min
         } else if (details.reason === "update") {
             // 从旧版本更新，引导用户查看更新日志
             chrome.notifications.create("update_notification", {
@@ -162,6 +182,12 @@ chrome.notifications.onClicked.addListener(function(notificationId) {
                 url: "https://github.com/EdgeTranslate/EdgeTranslate/releases"
             });
             break;
+        case "data_collection_notification":
+            chrome.tabs.create({
+                // 为设置页面单独创建一个标签页
+                url: chrome.runtime.getURL("options/options.html#google-analytics")
+            });
+            break;
         default:
             break;
     }
@@ -179,6 +205,12 @@ chrome.runtime.onStartup.addListener(function() {
     chrome.contextMenus.create({
         id: "translate",
         title: chrome.i18n.getMessage("Translate") + " '%s'",
+        contexts: ["selection"]
+    });
+
+    chrome.contextMenus.create({
+        id: "pronounce",
+        title: chrome.i18n.getMessage("Pronounce") + " '%s'",
         contexts: ["selection"]
     });
 
@@ -250,6 +282,14 @@ chrome.contextMenus.onClicked.addListener(function(info, tab) {
                 showTranslate(result, tab);
             }); // 此api位于 translate.js中
             break;
+        case "pronounce":
+            pronounce(info.selectionText, "auto", selectedTTSSpeed, null);
+            if (selectedTTSSpeed === "fast") {
+                selectedTTSSpeed = "slow";
+            } else {
+                selectedTTSSpeed = "fast";
+            }
+            break;
         case "translate_page":
             translatePage();
             break;
@@ -319,7 +359,16 @@ chrome.runtime.onMessage.addListener(function(message, sender, callback) {
                 });
                 break;
             case "pronounce":
-                pronounce(message.text, message.language, message.speed, callback);
+                if (message.speed) {
+                    pronounce(message.text, message.language, message.speed, callback);
+                } else {
+                    pronounce(message.text, message.language, selectedTTSSpeed, callback);
+                    if (selectedTTSSpeed === "fast") {
+                        selectedTTSSpeed = "slow";
+                    } else {
+                        selectedTTSSpeed = "fast";
+                    }
+                }
                 break;
             case "youdao_page_translate":
                 youdaoPageTranslate(message.request, callback);

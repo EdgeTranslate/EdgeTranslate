@@ -44,15 +44,17 @@ gulp.task("watcher:firefox", function(callback) {
 /**
  * 开发环境下build chrome扩展的安装包
  */
-gulp.task("dev:chrome", function() {
+gulp.task("dev:chrome", function(callback) {
     build("chrome", "development").all();
+    callback();
 });
 
 /**
  * 开发环境下build firefox扩展的安装包
  */
-gulp.task("dev:firefox", function() {
+gulp.task("dev:firefox", function(callback) {
     build("firefox", "development").all();
+    callback();
 });
 
 /**
@@ -97,23 +99,24 @@ gulp.task("pack:firefox", function(callback) {
  * @param {String} browser 浏览器的名称
  */
 function watcher(browser) {
+    var builder = build(browser, "development");
     gulp.watch("./src/**/*.js").on("change", function() {
-        build(browser, "development").js();
+        builder.js();
     });
     gulp.watch("./src/display/templates/*.html").on("change", function() {
-        build(browser, "development").js();
+        builder.js();
     });
     gulp.watch("./src/manifest.json").on("change", function() {
-        build(browser, "development").manifest();
+        builder.manifest();
     });
     gulp.watch("./src/**/!(result|loading|error).html").on("change", function() {
-        build(browser, "development").html();
+        builder.html();
     });
     gulp.watch("./static/**/*").on("change", function() {
-        build(browser, "development").static();
+        builder.static();
     });
     gulp.watch("./src/**/*.styl").on("change", function() {
-        build(browser, "development").styl();
+        builder.styl();
     });
 }
 
@@ -138,16 +141,10 @@ function build(browser, env) {
             )
             .pipe(eslint.format());
         gulp.src("./src/**/*.js", { base: "src" })
-            .pipe(
-                webpack_stream(require(webpack_path), webpack).on("error", error =>
-                    // eslint-disable-next-line no-console
-                    console.log(error)
-                )
-            )
+            .pipe(webpack_stream(require(webpack_path), webpack))
             .pipe(gulp.dest(output_dir))
-            .on("end", function() {
-                log("Finished build js files");
-            });
+            .on("end", () => log("Finished build js files"))
+            .on("error", error => log(error));
     };
 
     var manifest = function() {
@@ -169,14 +166,26 @@ function build(browser, env) {
 
     var packStatic = function() {
         if (browser === "chrome") {
-            gulp.src("./static/**/*.js", { base: "static" })
+            gulp.src("./static/**/!(element_main).js", { base: "static" })
                 .pipe(uglify())
                 .pipe(gulp.dest(output_dir));
+
+            // Do not uglify element_main.js
+            gulp.src("./static/google/element_main.js", { base: "static" }).pipe(
+                gulp.dest(output_dir)
+            );
+
             gulp.src("./static/**/!(*.js)", { base: "static" }).pipe(gulp.dest(output_dir));
         } else {
-            gulp.src("./static/!(pdf)/**/*.js", { base: "static" })
+            gulp.src("./static/!(pdf)/**/!(element_main).js", { base: "static" })
                 .pipe(uglify())
                 .pipe(gulp.dest(output_dir));
+
+            // Do not uglify element_main.js
+            gulp.src("./static/google/element_main.js", { base: "static" }).pipe(
+                gulp.dest(output_dir)
+            );
+
             gulp.src("./static/!(pdf)/**/!(*.js)", { base: "static" }).pipe(gulp.dest(output_dir));
         }
         log("Finished build static files");

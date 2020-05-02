@@ -1,5 +1,8 @@
 import { getDomain } from "../lib/scripts/common.js";
 
+// 记录下mousedown事件，只有在mousedown事件发生后再发生mouseup事件才会尝试进行划词翻译
+var HasMouseDown = false;
+
 /**
  * 划词翻译功能的实现
  * 需要对页面的相关事件进行监听，根据用户设定来决定是否进行监听。
@@ -48,7 +51,7 @@ translateButton.id = "translate-button";
 translateButton.style.backgroundColor = "white"; // 动态设置样式以兼容Dark Reader
 translateButton.style.boxShadow = "0px 0px 2px 2px #ddd"; // 动态设置样式以兼容Dark Reader
 document.documentElement.appendChild(translateButton);
-translateButton.addEventListener("mousedown", translateSubmit);
+translateButton.addEventListener("mousedown", buttonClickHandler);
 
 /**
  * Handle double click event
@@ -87,8 +90,12 @@ function mouseUpHandler(event) {
             chrome.storage.sync.get("OtherSettings", function(result) {
                 var OtherSettings = result.OtherSettings;
                 // Show translating result instantly.
-                if (OtherSettings && OtherSettings["TranslateAfterSelect"]) {
+                if (OtherSettings && OtherSettings["TranslateAfterSelect"] && HasMouseDown) {
+                    // 重置HasMouseDown
+                    HasMouseDown = false;
+                    // submit translation request
                     translateSubmit();
+
                     // Show translate button.
                 } else if (disable) {
                     setTimeout(function() {
@@ -100,6 +107,19 @@ function mouseUpHandler(event) {
             translateButton.style.display = "none"; // 使翻译按钮隐藏
         }
     });
+}
+
+/**
+ * 处理鼠标点击按钮事件
+ *
+ * @param {MouseEvent} event 鼠标点击事件
+ */
+function buttonClickHandler(event) {
+    if (event.button === 0) {
+        translateSubmit();
+    } else if (event.button === 2) {
+        pronounceSubmit();
+    }
 }
 
 /**
@@ -134,6 +154,12 @@ function translateSubmit() {
                 text: window.getSelection().toString()
             },
             function() {
+                chrome.storage.sync.get("OtherSettings", result => {
+                    // to check whether user need to cancel text selection after translation finished
+                    if (result.OtherSettings && result.OtherSettings["CancelTextSelection"]) {
+                        cancelTextSelection();
+                    }
+                });
                 translateButton.style.display = "none";
             }
         );
@@ -141,9 +167,30 @@ function translateSubmit() {
 }
 
 /**
+ * 处理发音快捷键
+ */
+function pronounceSubmit() {
+    if (
+        window
+            .getSelection()
+            .toString()
+            .trim()
+    ) {
+        chrome.runtime.sendMessage({
+            type: "pronounce",
+            text: window.getSelection().toString(),
+            language: "auto"
+        });
+    }
+}
+
+/**
  * 如果页面中没有鼠标选中的区域，调用此函数去掉翻译按钮
  */
 function disappearButton() {
+    // 记录下mousedown事件
+    HasMouseDown = true;
+
     var selection = window.getSelection();
     setTimeout(function() {
         if (!selection.toString().trim()) {
@@ -175,6 +222,49 @@ function executeIfNotInBlacklist(callback) {
 }
 
 /**
+ * cancel text selection when translation is finished
+ */
+function cancelTextSelection() {
+    if (window.getSelection) {
+        if (window.getSelection().empty) {
+            // Chrome
+            window.getSelection().empty();
+        } else if (window.getSelection().removeAllRanges) {
+            // Firefox
+            window.getSelection().removeAllRanges();
+        }
+    } else if (document.selection) {
+        // IE
+        document.selection.empty();
+    }
+}
+
+/**
+ * 处理取消网页翻译的快捷键
+ */
+function cancelPageTranslate() {
+    let checkAndClick = button => {
+        if (button !== null && button !== undefined) {
+            button.click();
+        }
+    };
+
+    let frame = document.getElementById(":0.container");
+    if (frame !== null && frame !== undefined) {
+        let cancelButton = frame.contentDocument.getElementById(":0.close");
+        checkAndClick(cancelButton);
+        return;
+    }
+
+    frame = document.getElementById("OUTFOX_JTR_BAR");
+    if (frame !== null && frame !== undefined) {
+        let cancelButton = frame.contentDocument.getElementById("OUTFOX_JTR_BAR_CLOSE");
+        checkAndClick(cancelButton);
+        return;
+    }
+}
+
+/**
  *  实现快捷键翻译
  */
 chrome.runtime.onMessage.addListener(function(message, sender, callback) {
@@ -184,6 +274,12 @@ chrome.runtime.onMessage.addListener(function(message, sender, callback) {
                 switch (message.command) {
                     case "translate_selected":
                         translateSubmit();
+                        break;
+                    case "pronounce_selected":
+                        pronounceSubmit();
+                        break;
+                    case "cancel_page_translate":
+                        cancelPageTranslate();
                         break;
                     default:
                         break;

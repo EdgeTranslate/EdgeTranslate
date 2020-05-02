@@ -67,12 +67,12 @@
         c._pbi = b + "/translate_static/img/te_bk.gif";
         c._pci = b + "/translate_static/img/te_ctrl3.gif";
         c._pli = b + "/translate_static/img/loading.gif";
-        c._plla = h + "/translate_a/l";
+        c._plla = this.EDGE_TRANSLATE_URL + "google/lans/lan" + language + ".js";
         c._pmi = b + "/translate_static/img/mini_google.png";
         c._ps = this.EDGE_TRANSLATE_URL + "google/translateelement.css";
         c._puh = "translate.google.com";
         _loadCss(c._ps);
-        _loadJs(b + "/translate_static/js/element/main" + language + ".js");
+        _loadJs(this.EDGE_TRANSLATE_URL + "google/main/main" + language + ".js");
     })();
 })();
 

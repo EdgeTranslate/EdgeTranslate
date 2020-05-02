@@ -67,6 +67,14 @@
         "message": "Фонетический символ",
         "description": "Фонетический символ"
     },
+    "Pronounce": {
+        "message": "произнести",
+        "description": "произнести"
+    },
+    "PronounceSelected": {
+        "message": "Прочитайте выделенный текст вслух",
+        "description": "Прочитайте выделенный текст вслух"
+    },
     "PronounceOriginal": {
         "message": "Читать оригинальный текст",
         "description": "Читать оригинальный текст."
@@ -103,9 +111,21 @@
         "message": "Удалить этот домен из чёрного списка",
         "description": "Удаление домена просматриваемого сайта из чёрного списка."
     },
+    "DataCollectionNotice": {
+        "message": "Спасибо за использование Edge Translate! \nНам нужна статистика, чтобы улучшить пользовательский опыт. \nНажмите, чтобы увидеть вариант.",
+        "description": "Советы по сбору данных"
+    },
+    "PrivacyPolicyLink": {
+        "message": "https://github.com/EdgeTranslate/EdgeTranslate/blob/master/docs/wiki/en/PrivacyPolicy.md",
+        "description": "Privacy policy link."
+    },
     "ExtensionInstalled": {
         "message": "Edge Translate установлен! Нажмите, чтобы прочитать wiki!",
         "description": "Уведомление пользователю, об успешной установке расширения."
+    },
+    "WikiLink": {
+        "message": "https://github.com/EdgeTranslate/EdgeTranslate/blob/master/docs/wiki/en/Introduction.md",
+        "description": "Wiki link."
     },
     "ExtensionUpdated": {
         "message": "Edge Translate обновлён! Нажмите, чтобы посмотреть что нового.",
@@ -155,6 +175,10 @@
         "message": "Изменить размер страницы",
         "description": "Изменение размера страницы, для избежания перекрытия оригинального содержимого"
     },
+    "RTLSetting": {
+        "message": "Справа налево макет",
+        "description": "Отображать контент справа налево на некоторых языках."
+    },
     "OtherSettings": {
         "message": "Другие настройки",
         "description": "Другие настройки расширения."
@@ -175,6 +199,10 @@
         "message": "Перевод после двойного нажатия",
         "description": "Мгновенный показ результатов перевода после выделения двойным нажатием на текст."
     },
+    "CancelTextSelection": {
+        "message": "Отменить выделение текста после перевода",
+        "description": "Отменить выделение текста автоматически после перевода"
+    },
     "YouDaoPageTranslate": {
         "message": "Переводчик страниц YouDao",
         "description": "Перевод текущей страницы с помощью YouDao Translate API."
@@ -187,6 +215,10 @@
         "message": "Перевести эту страницу",
         "description": "Перевод этой страницы с помощью переводчика страниц по умолчанию."
     },
+    "CancelPageTranslate": {
+        "message": "Отменить перевод страницы",
+        "description": "Отменить перевод страницы."
+    },
     "TranslatePageYouDao": {
         "message": "Перевести страницу с помощью YouDao",
         "description": "Перевод текущей страницы с помощью YouDao Translate API."
@@ -198,6 +230,10 @@
     "UseGoogleAnalytics": {
         "message": "Помочь улучшить расширение",
         "description": "Используется инструмент Google Analytics, чтобы помочь нам улучшить Edge Translate."
+    },
+    "PrivacyPolicy": {
+        "message": "Политика конфиденциальности",
+        "description": "Политика конфиденциальности."
     },
     "Settings": {
         "message": "Настройки Edge Translate",

@@ -142,7 +142,17 @@ function createBlock(content, template) {
                 resizeBody.enableResize();
                 resizeDivFrame = new Resizable(divFrame, "right", {
                     parentElement: document.documentElement,
-                    dragSensitivity: dragSensitivity
+                    dragSensitivity: dragSensitivity,
+                    callback: function(element) {
+                        // if user resize the width of side block, calculate the new width value(range from 0 to 1)
+                        let newSideWidth =
+                            element.clientWidth / document.documentElement.clientWidth;
+                        // update the value to the chrome storage
+                        if (newSideWidth > 0 && newSideWidth <= 1)
+                            chrome.storage.sync.set({
+                                sideWidth: newSideWidth
+                            });
+                    }
                 });
                 resizeDivFrame.enableResize();
             } else {
@@ -162,6 +172,14 @@ function createBlock(content, template) {
                     dragSensitivity: dragSensitivity,
                     callback(element) {
                         element.style.position = "fixed";
+                        // if user resize the width of side block, calculate the new width value(range from 0 to 1)
+                        let newSideWidth =
+                            element.clientWidth / document.documentElement.clientWidth;
+                        // update the value to the chrome storage
+                        if (newSideWidth > 0 && newSideWidth <= 1)
+                            chrome.storage.sync.set({
+                                sideWidth: newSideWidth
+                            });
                     }
                 });
                 resizeDivFrame.enableResize();
@@ -174,6 +192,16 @@ function createBlock(content, template) {
         // iframe 一加载完成添加事件监听
         frame.onload = function() {
             frameDocument = frame.contentDocument;
+
+            // 根据用户设定决定是否采用从右到左布局（用于阿拉伯语等从右到左书写的语言）
+            chrome.storage.sync.get("LayoutSettings", result => {
+                if (result.LayoutSettings.RTL) {
+                    let contents = frameDocument.getElementsByClassName("may-need-rtl");
+                    for (let i = 0; i < contents.length; i++) {
+                        contents[i].dir = "rtl";
+                    }
+                }
+            });
             // 添加事件监听
             addEventListener();
         };
@@ -184,11 +212,16 @@ function createBlock(content, template) {
  * 需要对侧边栏中的元素添加事件监听时，请在此函数中添加
  */
 function addEventListener() {
-    // 如果渲染的是result.html，则有icon-tuding-full 图标， 可以添加事件
-    if (frameDocument.getElementById("icon-tuding-full")) {
+    // 给关闭按钮添加点击事件监听，用于关闭侧边栏
+    frameDocument.getElementById("icon-close").addEventListener("click", removeSlider);
+    // 如果渲染的是result.html或error.html，则有icon-tuding-fix图标， 可以添加点击事件监听
+    if (frameDocument.getElementById("icon-tuding-fix")) {
         // 给固定侧边栏的按钮添加点击事件监听，用户侧边栏的固定与取消固定
         frameDocument.getElementById("icon-tuding-fix").addEventListener("click", fixOn);
         frameDocument.getElementById("icon-tuding-full").addEventListener("click", fixOff);
+    }
+    // 如果渲染的是result.html，则有icon-copy图标， 可以添加点击事件监听
+    if (frameDocument.getElementById("icon-copy")) {
         // copy the translation result to the copy board
         frameDocument.getElementById("icon-copy").addEventListener("click", copyContent);
 
@@ -210,8 +243,6 @@ function addEventListener() {
             fixOn();
         }
     });
-    // 给关闭按钮添加点击事件监听，用于关闭侧边栏
-    frameDocument.getElementById("icon-close").addEventListener("click", removeSlider);
 
     // 将iframe内部的事件转发到document里，以实现更好的拖动效果。
     frameDocument.addEventListener("mousemove", function(event) {
@@ -247,33 +278,41 @@ function isChildNode(node1, node2) {
  * the body size will be contracted
  */
 function startSlider(layoutSettings) {
-    var resizeFlag = layoutSettings["Resize"]; // 保存侧边栏展示的位置
-    if (resizeFlag) {
-        // 用户设置 收缩页面
-        document.body.style.transition = "width " + transitionDuration + "ms";
-        document.body.style.width = 80 + "%";
-    }
-    if (popupPosition === "left") {
-        // 用户设置 在页面左侧显示侧边栏
+    // 获取用户上次通过resize设定的侧边栏宽度
+    chrome.storage.sync.get("sideWidth", function(result) {
+        let sideWidth = 0.2;
+        if (result.sideWidth) {
+            sideWidth = result.sideWidth;
+        }
+        var resizeFlag = layoutSettings["Resize"]; // 保存侧边栏展示的位置
+        divFrame.style.width = sideWidth * 100 + "%";
         if (resizeFlag) {
             // 用户设置 收缩页面
-            document.body.style.position = "absolute";
-            // document.body.style.marginLeft = 0.2 * originOriginWidth + "px";
-            document.body.style.right = "0";
-            document.body.style.left = "";
+            document.body.style.transition = "width " + transitionDuration + "ms";
+            document.body.style.width = (1 - sideWidth) * 100 + "%";
         }
-        divFrame.style.left = "0";
-        divFrame.style["padding-right"] = dragSensitivity + "px";
-    } else {
-        if (resizeFlag) {
-            // 用户设置 收缩页面
-            document.body.style.margin = "0";
-            document.body.style.right = "";
-            document.body.style.left = "0";
+        if (popupPosition === "left") {
+            // 用户设置 在页面左侧显示侧边栏
+            if (resizeFlag) {
+                // 用户设置 收缩页面
+                document.body.style.position = "absolute";
+                // document.body.style.marginLeft = 0.2 * originOriginWidth + "px";
+                document.body.style.right = "0";
+                document.body.style.left = "";
+            }
+            divFrame.style.left = "0";
+            divFrame.style["padding-right"] = dragSensitivity + "px";
+        } else {
+            if (resizeFlag) {
+                // 用户设置 收缩页面
+                document.body.style.margin = "0";
+                document.body.style.right = "";
+                document.body.style.left = "0";
+            }
+            divFrame.style.right = "0";
+            divFrame.style["padding-left"] = dragSensitivity + "px";
         }
-        divFrame.style.right = "0";
-        divFrame.style["padding-left"] = dragSensitivity + "px";
-    }
+    });
 }
 
 /**
@@ -355,39 +394,43 @@ function fixOff() {
  * Send message to background to pronounce the translating text.
  */
 function sourcePronounce() {
-    chrome.runtime.sendMessage(
-        {
-            type: "pronounce",
-            text: translateResult.originalText,
-            language: translateResult.sourceLanguage,
-            speed: sourceTTSSpeed
-        },
-        function() {
-            if (sourceTTSSpeed === "fast") {
-                sourceTTSSpeed = "slow";
-            } else {
-                sourceTTSSpeed = "fast";
+    if (isChildNode(divFrame, document.documentElement)) {
+        chrome.runtime.sendMessage(
+            {
+                type: "pronounce",
+                text: translateResult.originalText,
+                language: translateResult.sourceLanguage,
+                speed: sourceTTSSpeed
+            },
+            function() {
+                if (sourceTTSSpeed === "fast") {
+                    sourceTTSSpeed = "slow";
+                } else {
+                    sourceTTSSpeed = "fast";
+                }
             }
-        }
-    );
+        );
+    }
 }
 
 function targetPronounce() {
-    chrome.runtime.sendMessage(
-        {
-            type: "pronounce",
-            text: translateResult.mainMeaning,
-            language: translateResult.targetLanguage,
-            speed: targetTTSSpeed
-        },
-        function() {
-            if (targetTTSSpeed === "fast") {
-                targetTTSSpeed = "slow";
-            } else {
-                targetTTSSpeed = "fast";
+    if (isChildNode(divFrame, document.documentElement)) {
+        chrome.runtime.sendMessage(
+            {
+                type: "pronounce",
+                text: translateResult.mainMeaning,
+                language: translateResult.targetLanguage,
+                speed: targetTTSSpeed
+            },
+            function() {
+                if (targetTTSSpeed === "fast") {
+                    targetTTSSpeed = "slow";
+                } else {
+                    targetTTSSpeed = "fast";
+                }
             }
-        }
-    );
+        );
+    }
 }
 
 function copyContent() {

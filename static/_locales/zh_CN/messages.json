@@ -67,6 +67,14 @@
         "message": "音标",
         "description": "音标"
     },
+    "Pronounce": {
+        "message": "朗读",
+        "description": "朗读"
+    },
+    "PronounceSelected": {
+        "message": "朗读选中文本",
+        "description": "朗读选中文本"
+    },
     "PronounceOriginal": {
         "message": "朗读原始文本",
         "description": "朗读原始文本"
@@ -103,9 +111,21 @@
         "message": "将当前域名移出黑名单",
         "description": "将当前域名移出黑名单。"
     },
+    "DataCollectionNotice": {
+        "message": "感谢使用侧边翻译！\n为了改善用户体验，我们需要收集一些统计数据，点此查看选项。",
+        "description": "关于收集数据的提示"
+    },
+    "PrivacyPolicyLink": {
+        "message": "https://github.com/EdgeTranslate/EdgeTranslate/blob/master/docs/wiki/zh_CN/%E9%9A%90%E7%A7%81%E6%94%BF%E7%AD%96.md",
+        "description": "隐私政策链接"
+    },
     "ExtensionInstalled": {
         "message": "侧边翻译安装成功！点此阅读使用说明",
         "description": "通知用户侧边翻译已安装。"
+    },
+    "WikiLink": {
+        "message": "https://github.com/EdgeTranslate/EdgeTranslate/blob/master/docs/wiki/zh_CN/%E6%8F%92%E4%BB%B6%E4%BB%8B%E7%BB%8D.md",
+        "description": "Wiki link."
     },
     "ExtensionUpdated": {
         "message": "侧边翻译更新成功！点此阅读更新日志",
@@ -153,7 +173,11 @@
     },
     "ResizeSetting": {
         "message": "收缩页面",
-        "description": "Resize page to avoid occlude original content"
+        "description": "收缩页面以防止翻译框遮挡内容。"
+    },
+    "RTLSetting": {
+        "message": "从右到左的布局",
+        "description": "在某些语言下从右到左显示内容。"
     },
     "OtherSettings": {
         "message": "其他设置",
@@ -175,6 +199,10 @@
         "message": "双击单词立即翻译",
         "description": "双击单词后立即显示翻译结果"
     },
+    "CancelTextSelection": {
+        "message": "翻译后取消文本选择",
+        "description": "翻译后自动取消文本选择"
+    },
     "YouDaoPageTranslate": {
         "message": "有道网页翻译",
         "description": "使用有道翻译的api翻译当前页面。"
@@ -187,6 +215,10 @@
         "message": "翻译此页",
         "description": "使用默认网页翻译引擎翻译此页。"
     },
+    "CancelPageTranslate": {
+        "message": "取消页面翻译",
+        "description": "取消页面翻译。"
+    },
     "TranslatePageYouDao": {
         "message": "使用有道翻译此页",
         "description": "使用有道翻译的api翻译当前页面。"
@@ -196,8 +228,12 @@
         "description": "使用谷歌翻译的api翻译当前页面。"
     },
     "UseGoogleAnalytics": {
-        "message": "帮助我们改进插件",
+        "message": "提供统计数据帮助我们改进插件",
         "description": "启用Google Analytics服务协助开发者改进侧边翻译"
+    },
+    "PrivacyPolicy": {
+        "message": "隐私政策",
+        "description": "隐私政策。"
     },
     "Settings": {
         "message": "侧边翻译设置",

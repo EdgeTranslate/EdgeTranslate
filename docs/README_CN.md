@@ -133,3 +133,9 @@ npm run build:firefox
 * [ArielAxionL](https://github.com/axionl) 
 
 * [ElectroLom](https://github.com/electrolom42)
+
+## 帮助本地化
+
+如果你愿意帮忙将侧边翻译翻译到其他语言，请阅读下方的指引。
+
+[本地化](./wiki/zh_CN/本地化.md)

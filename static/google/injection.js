@@ -4,7 +4,12 @@
  * 检测用户语言，并设定翻译组件的语言。
  */
 chrome.runtime.sendMessage({ type: "get_lang" }, function(response) {
-    var s = document.createElement("script");
+    var s = document.getElementById("google-translate-injection");
+    if (s !== null) {
+        s.remove();
+    }
+
+    s = document.createElement("script");
     var user_lang = response && response.lang ? response.lang : "zh-CN";
 
     s.id = "google-translate-injection";

@@ -11,6 +11,10 @@ window.onload = () => {
         );
     }
 
+    // 设置不同语言的隐私政策链接
+    var PrivacyPolicyLink = document.getElementById("PrivacyPolicyLink");
+    PrivacyPolicyLink.setAttribute("href", chrome.i18n.getMessage("PrivacyPolicyLink"));
+
     /**
      * initiate and update settings
      * attribute "setting-type": indicate the setting type of one option
@@ -90,11 +94,16 @@ function getSetting(localSettings, settingItemPath) {
  */
 function saveOption(localSettings, settingItemPath, value) {
     // update local settings
-    var result = localSettings;
-    for (let i = 0; i < settingItemPath.length - 1; i++) {
-        result = result[settingItemPath[i]];
-    }
-    result[settingItemPath[settingItemPath.length - 1]] = value;
+    var pointer = localSettings; // point to children of local setting or itself
 
-    chrome.storage.sync.set(localSettings);
+    // point to the leaf item recursively
+    for (let i = 0; i < settingItemPath.length - 1; i++) {
+        pointer = pointer[settingItemPath[i]];
+    }
+    // update the setting leaf value
+    pointer[settingItemPath[settingItemPath.length - 1]] = value;
+
+    var result = {};
+    result[settingItemPath[0]] = localSettings[settingItemPath[0]];
+    chrome.storage.sync.set(result);
 }

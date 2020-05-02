@@ -67,6 +67,14 @@
         "message": "Phonetic Symbol",
         "description": "Phonetic Symbol"
     },
+    "Pronounce": {
+        "message": "Pronounce",
+        "description": "Pronounce"
+    },
+    "PronounceSelected": {
+        "message": "Pronounce selected text",
+        "description": "Pronounce selected text"
+    },
     "PronounceOriginal": {
         "message": "Read original text",
         "description": "Read original text."
@@ -103,9 +111,21 @@
         "message": "Remove this domain from blacklist",
         "description": "Remove the domain of currently browsing site from blacklist."
     },
+    "DataCollectionNotice": {
+        "message": "Thank you for using Edge Translate! \nWe need some statistics to improve user experience. \nClick to see the option.",
+        "description": "Notification of collecting statistic information."
+    },
+    "PrivacyPolicyLink": {
+        "message": "https://github.com/EdgeTranslate/EdgeTranslate/blob/master/docs/wiki/en/PrivacyPolicy.md",
+        "description": "Privacy policy link."
+    },
     "ExtensionInstalled": {
         "message": "Edge Translate installed successfully! Click to read the wiki!",
         "description": "Inform user that the extension has been installed."
+    },
+    "WikiLink": {
+        "message": "https://github.com/EdgeTranslate/EdgeTranslate/blob/master/docs/wiki/en/Introduction.md",
+        "description": "Wiki link."
     },
     "ExtensionUpdated": {
         "message": "Edge Translate updated successfully! Click to find what's new!.",
@@ -153,7 +173,11 @@
     },
     "ResizeSetting": {
         "message": "Resize page",
-        "description": "Resize page to avoid occlude original content"
+        "description": "Resize page to avoid occlude original content."
+    },
+    "RTLSetting": {
+        "message": "Right to left layout",
+        "description": "Display contents from right to left in some languages."
     },
     "OtherSettings": {
         "message": "Other Settings",
@@ -175,6 +199,10 @@
         "message": "Translate After Dbl Click",
         "description": "Instantly show translating result after double-clicked texts."
     },
+    "CancelTextSelection": {
+        "message": "Cancel text selection after translation",
+        "description": "Cancel text selection automatically after translation"
+    },
     "YouDaoPageTranslate": {
         "message": "YouDao Page Trans.",
         "description": "Translate current page with YouDao translate api."
@@ -187,6 +215,10 @@
         "message": "Translate this page",
         "description": "Translate this page with default page translator."
     },
+    "CancelPageTranslate": {
+        "message": "Cancel page translate",
+        "description": "Cancel page translate."
+    },
     "TranslatePageYouDao": {
         "message": "Translate this page with YouDao",
         "description": "Translate current page with YouDao translate api."
@@ -196,8 +228,12 @@
         "description": "Translate current page with Google translate api."
     },
     "UseGoogleAnalytics": {
-        "message": "Help us to improve the extension",
+        "message": "Provide statistics to help improve the extension",
         "description": "Use Google Analytics tool to help us improve Edge Translate."
+    },
+    "PrivacyPolicy": {
+        "message": "Privacy Policy",
+        "description": "Privacy policy."
     },
     "Settings": {
         "message": "EdgeTranslate Settings",

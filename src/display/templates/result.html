@@ -11,16 +11,16 @@
         <div class="translate">
             <div class="main-meaning" title="<% chrome.i18n.getMessage('OriginalText') + ': \n' + this.originalText %>">                
                 <% if (this.mainMeaning.length <= 6) { %>
-                    <p class="main-meaning-content-larger"><% this.mainMeaning %></p>
+                    <p class="may-need-rtl main-meaning-content-larger"><% this.mainMeaning %></p>
                 <% } %>
                 <% else if (this.mainMeaning.length > 6 && this.mainMeaning.length <= 12) { %>  
-                    <p class="main-meaning-content-large"><% this.mainMeaning %></p>
+                    <p class="may-need-rtl main-meaning-content-large"><% this.mainMeaning %></p>
                 <% } %>
                 <% else if (this.mainMeaning.length > 12 && this.mainMeaning.length <= 460) { %>  
-                    <p class="main-meaning-content-small"><% this.mainMeaning %></p>
+                    <p class="may-need-rtl main-meaning-content-small"><% this.mainMeaning %></p>
                 <% } %>
                 <% else { %>  
-                    <p class="main-meaning-content-smaller"><% this.mainMeaning %></p>
+                    <p class="may-need-rtl main-meaning-content-smaller"><% this.mainMeaning %></p>
                 <% } %>                                
                 <i id="icon-copy" class="icon icon-copy" title="<% chrome.i18n.getMessage('CopyResult') %>"><?xml version="1.0" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg t="1577246791324" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1128" width="64" height="64" xmlns:xlink="http://www.w3.org/1999/xlink"><defs><style type="text/css"></style></defs><path d="M768 682.666667V170.666667a85.333333 85.333333 0 0 0-85.333333-85.333334H170.666667a85.333333 85.333333 0 0 0-85.333334 85.333334v512a85.333333 85.333333 0 0 0 85.333334 85.333333h512a85.333333 85.333333 0 0 0 85.333333-85.333333zM170.666667 170.666667h512v512H170.666667z m682.666666 85.333333v512a85.333333 85.333333 0 0 1-85.333333 85.333333H256a85.333333 85.333333 0 0 0 85.333333 85.333334h426.666667a170.666667 170.666667 0 0 0 170.666667-170.666667V341.333333a85.333333 85.333333 0 0 0-85.333334-85.333333z" p-id="1129" stroke-width="100"></path></svg></i>
             </div>
@@ -61,7 +61,7 @@
             <div class="common-meanings">  
                 <% if (this.commonMeanings && this.commonMeanings.length > 0) { %>  
                     <p class="content-title"><% chrome.i18n.getMessage("CommonMeanings") %>: </p>  
-                    <ul>
+                    <ul class="may-need-rtl">
                         <li class="common-meanings-content"><% this.commonMeanings %></li>  
                     </ul>
                 <% } %>  
@@ -72,7 +72,7 @@
                     <% for (let i in this.detailedMeanings) { %>
                         <p class="detailed-meanings-content">  
                             <p class="word-type"><% this.detailedMeanings[i].type + ": " %></p>  
-                            <p class="content"><% this.detailedMeanings[i].meaning %></p>  
+                            <p class="may-need-rtl content"><% this.detailedMeanings[i].meaning %></p>  
                         </p>
                     <% } %>  
                 <% } %>  
@@ -100,7 +100,7 @@
                     <p class="content-title"><% chrome.i18n.getMessage("Synonyms") %>: </p>  
                     <% for (let i in this.synonyms) { %>  
                         <p class="synonyms-content">  
-                            <span class="word-type"><% this.synonyms[i].type + ": " %></span>  
+                            <span class="word-type"><% this.synonyms[i].type + " <b>" + this.synonyms[i].proto + "</b>: " %></span>  
                             <span class="content"><% this.synonyms[i].words[0] %></span>  
                         </p>  
                     <% } %>  

@@ -139,3 +139,9 @@ E-mails: [nickyc975](mailto:chenjinlong2016@outlook.com), [Mark Fenng](mailto:f1
 * [ArielAxionL](https://github.com/axionl) 
 
 * [ElectroLom](https://github.com/electrolom42)
+
+## Help Localization
+
+If you want to help localize Edge Translate, please read the following guide.
+
+[Localization](./docs/wiki/en/Localization.md)
