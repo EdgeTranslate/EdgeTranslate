@@ -211,6 +211,10 @@
         "message": "Перевести эту страницу",
         "description": "Перевод этой страницы с помощью переводчика страниц по умолчанию."
     },
+    "CancelPageTranslate": {
+        "message": "Отменить перевод страницы",
+        "description": "Отменить перевод страницы."
+    },
     "TranslatePageYouDao": {
         "message": "Перевести страницу с помощью YouDao",
         "description": "Перевод текущей страницы с помощью YouDao Translate API."

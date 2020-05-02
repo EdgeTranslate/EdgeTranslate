@@ -61,6 +61,9 @@
         },
         "translate_page": {
             "description": "__MSG_TranslatePage__"
+        },
+        "cancel_page_translate": {
+            "description": "__MSG_CancelPageTranslate__"
         }
     },
     "web_accessible_resources": [
