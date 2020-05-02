@@ -141,7 +141,17 @@ function createBlock(content, template) {
                 resizeBody.enableResize();
                 resizeDivFrame = new Resizable(divFrame, "right", {
                     parentElement: document.documentElement,
-                    dragSensitivity: dragSensitivity
+                    dragSensitivity: dragSensitivity,
+                    callback: function(element) {
+                        // if user resize the width of side block, calculate the new width value(range from 0 to 1)
+                        let newSideWidth =
+                            element.clientWidth / document.documentElement.clientWidth;
+                        // update the value to the chrome storage
+                        if (newSideWidth > 0 && newSideWidth <= 1)
+                            chrome.storage.sync.set({
+                                sideWidth: newSideWidth
+                            });
+                    }
                 });
                 resizeDivFrame.enableResize();
             } else {
@@ -161,6 +171,14 @@ function createBlock(content, template) {
                     dragSensitivity: dragSensitivity,
                     callback(element) {
                         element.style.position = "fixed";
+                        // if user resize the width of side block, calculate the new width value(range from 0 to 1)
+                        let newSideWidth =
+                            element.clientWidth / document.documentElement.clientWidth;
+                        // update the value to the chrome storage
+                        if (newSideWidth > 0 && newSideWidth <= 1)
+                            chrome.storage.sync.set({
+                                sideWidth: newSideWidth
+                            });
                     }
                 });
                 resizeDivFrame.enableResize();
@@ -256,33 +274,41 @@ function isChildNode(node1, node2) {
  * the body size will be contracted
  */
 function startSlider(layoutSettings) {
-    var resizeFlag = layoutSettings["Resize"]; // 保存侧边栏展示的位置
-    if (resizeFlag) {
-        // 用户设置 收缩页面
-        document.body.style.transition = "width " + transitionDuration + "ms";
-        document.body.style.width = 80 + "%";
-    }
-    if (popupPosition === "left") {
-        // 用户设置 在页面左侧显示侧边栏
+    // 获取用户上次通过resize设定的侧边栏宽度
+    chrome.storage.sync.get("sideWidth", function(result) {
+        let sideWidth = 0.2;
+        if (result.sideWidth) {
+            sideWidth = result.sideWidth;
+        }
+        var resizeFlag = layoutSettings["Resize"]; // 保存侧边栏展示的位置
+        divFrame.style.width = sideWidth * 100 + "%";
         if (resizeFlag) {
             // 用户设置 收缩页面
-            document.body.style.position = "absolute";
-            // document.body.style.marginLeft = 0.2 * originOriginWidth + "px";
-            document.body.style.right = "0";
-            document.body.style.left = "";
+            document.body.style.transition = "width " + transitionDuration + "ms";
+            document.body.style.width = (1 - sideWidth) * 100 + "%";
         }
-        divFrame.style.left = "0";
-        divFrame.style["padding-right"] = dragSensitivity + "px";
-    } else {
-        if (resizeFlag) {
-            // 用户设置 收缩页面
-            document.body.style.margin = "0";
-            document.body.style.right = "";
-            document.body.style.left = "0";
+        if (popupPosition === "left") {
+            // 用户设置 在页面左侧显示侧边栏
+            if (resizeFlag) {
+                // 用户设置 收缩页面
+                document.body.style.position = "absolute";
+                // document.body.style.marginLeft = 0.2 * originOriginWidth + "px";
+                document.body.style.right = "0";
+                document.body.style.left = "";
+            }
+            divFrame.style.left = "0";
+            divFrame.style["padding-right"] = dragSensitivity + "px";
+        } else {
+            if (resizeFlag) {
+                // 用户设置 收缩页面
+                document.body.style.margin = "0";
+                document.body.style.right = "";
+                document.body.style.left = "0";
+            }
+            divFrame.style.right = "0";
+            divFrame.style["padding-left"] = dragSensitivity + "px";
         }
-        divFrame.style.right = "0";
-        divFrame.style["padding-left"] = dragSensitivity + "px";
-    }
+    });
 }
 
 /**
