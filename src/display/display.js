@@ -211,11 +211,16 @@ function createBlock(content, template) {
  * 需要对侧边栏中的元素添加事件监听时，请在此函数中添加
  */
 function addEventListener() {
-    // 如果渲染的是result.html，则有icon-tuding-full 图标， 可以添加事件
-    if (frameDocument.getElementById("icon-tuding-full")) {
+    // 给关闭按钮添加点击事件监听，用于关闭侧边栏
+    frameDocument.getElementById("icon-close").addEventListener("click", removeSlider);
+    // 如果渲染的是result.html或error.html，则有icon-tuding-fix图标， 可以添加点击事件监听
+    if (frameDocument.getElementById("icon-tuding-fix")) {
         // 给固定侧边栏的按钮添加点击事件监听，用户侧边栏的固定与取消固定
         frameDocument.getElementById("icon-tuding-fix").addEventListener("click", fixOn);
         frameDocument.getElementById("icon-tuding-full").addEventListener("click", fixOff);
+    }
+    // 如果渲染的是result.html，则有icon-copy图标， 可以添加点击事件监听
+    if (frameDocument.getElementById("icon-copy")) {
         // copy the translation result to the copy board
         frameDocument.getElementById("icon-copy").addEventListener("click", copyContent);
 
@@ -237,8 +242,6 @@ function addEventListener() {
             fixOn();
         }
     });
-    // 给关闭按钮添加点击事件监听，用于关闭侧边栏
-    frameDocument.getElementById("icon-close").addEventListener("click", removeSlider);
 
     // 将iframe内部的事件转发到document里，以实现更好的拖动效果。
     frameDocument.addEventListener("mousemove", function(event) {
