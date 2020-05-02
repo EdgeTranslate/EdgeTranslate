@@ -215,6 +215,10 @@
         "message": "Translate this page",
         "description": "Translate this page with default page translator."
     },
+    "CancelPageTranslate": {
+        "message": "Cancel page translate",
+        "description": "Cancel page translate."
+    },
     "TranslatePageYouDao": {
         "message": "Translate this page with YouDao",
         "description": "Translate current page with YouDao translate api."
