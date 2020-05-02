@@ -27,3 +27,7 @@ If your native language is not in the list above, and you would like to add the 
 5. Commit your change and push it to your forked repository.
 
 6. Create a new [pull request](https://github.com/EdgeTranslate/EdgeTranslate/pulls) to our repository. We would merge your pull request soon.
+
+### More Info
+
+Please refer to [Chrome Developer Docs](https://developer.chrome.com/extensions/i18n) for more information.
