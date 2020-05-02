@@ -1,5 +1,8 @@
 import { getDomain } from "../lib/scripts/common.js";
 
+// 记录下mousedown事件，只有在mousedown事件发生后再发生mouseup事件才会尝试进行划词翻译
+var HasMouseDown = false;
+
 /**
  * 划词翻译功能的实现
  * 需要对页面的相关事件进行监听，根据用户设定来决定是否进行监听。
@@ -87,11 +90,11 @@ function mouseUpHandler(event) {
             chrome.storage.sync.get("OtherSettings", function(result) {
                 var OtherSettings = result.OtherSettings;
                 // Show translating result instantly.
-                if (OtherSettings && OtherSettings["TranslateAfterSelect"]) {
+                if (OtherSettings && OtherSettings["TranslateAfterSelect"] && HasMouseDown) {
+                    // 重置HasMouseDown
+                    HasMouseDown = false;
                     // submit translation request
-                    translateSubmit(false);
-                    // to make sure when translation failed, the side block wouldn't show again and again
-                    cancelTextSelection();
+                    translateSubmit();
 
                     // Show translate button.
                 } else if (disable) {
@@ -113,11 +116,7 @@ function mouseUpHandler(event) {
  */
 function buttonClickHandler(event) {
     if (event.button === 0) {
-        // 检查页面中是否有内容被选中
-        chrome.storage.sync.get("OtherSettings", result =>
-            // to check whether user need to cancel text selection after translation finished
-            translateSubmit(result.OtherSettings && result.OtherSettings["CancelTextSelection"])
-        );
+        translateSubmit();
     } else if (event.button === 2) {
         pronounceSubmit();
     }
@@ -139,9 +138,8 @@ function showButton(event) {
 
 /**
  * 处理点击翻译按钮后的事件
- * @param {boolean} ifCancelSelection indicate whether cancel text selection after translation finished
  */
-function translateSubmit(ifCancelSelection) {
+function translateSubmit() {
     disable = false; // 禁止按钮显示
     // 发送消息给后台进行翻译。
     if (
@@ -156,7 +154,12 @@ function translateSubmit(ifCancelSelection) {
                 text: window.getSelection().toString()
             },
             function() {
-                if (ifCancelSelection) cancelTextSelection();
+                chrome.storage.sync.get("OtherSettings", result => {
+                    // to check whether user need to cancel text selection after translation finished
+                    if (result.OtherSettings && result.OtherSettings["CancelTextSelection"]) {
+                        cancelTextSelection();
+                    }
+                });
                 translateButton.style.display = "none";
             }
         );
@@ -185,6 +188,9 @@ function pronounceSubmit() {
  * 如果页面中没有鼠标选中的区域，调用此函数去掉翻译按钮
  */
 function disappearButton() {
+    // 记录下mousedown事件
+    HasMouseDown = true;
+
     var selection = window.getSelection();
     setTimeout(function() {
         if (!selection.toString().trim()) {
