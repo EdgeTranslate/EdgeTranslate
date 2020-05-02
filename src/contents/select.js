@@ -89,9 +89,9 @@ function mouseUpHandler(event) {
                 // Show translating result instantly.
                 if (OtherSettings && OtherSettings["TranslateAfterSelect"]) {
                     // submit translation request
-                    translateSubmit();
+                    translateSubmit(false);
                     // to make sure when translation failed, the side block wouldn't show again and again
-                    cancelSelection();
+                    cancelTextSelection();
 
                     // Show translate button.
                 } else if (disable) {
@@ -113,7 +113,11 @@ function mouseUpHandler(event) {
  */
 function buttonClickHandler(event) {
     if (event.button === 0) {
-        translateSubmit();
+        // 检查页面中是否有内容被选中
+        chrome.storage.sync.get("OtherSettings", result =>
+            // to check whether user need to cancel text selection after translation finished
+            translateSubmit(result.OtherSettings && result.OtherSettings["CancelTextSelection"])
+        );
     } else if (event.button === 2) {
         pronounceSubmit();
     }
@@ -135,8 +139,9 @@ function showButton(event) {
 
 /**
  * 处理点击翻译按钮后的事件
+ * @param {boolean} ifCancelSelection indicate whether cancel text selection after translation finished
  */
-function translateSubmit() {
+function translateSubmit(ifCancelSelection) {
     disable = false; // 禁止按钮显示
     // 发送消息给后台进行翻译。
     if (
@@ -151,7 +156,7 @@ function translateSubmit() {
                 text: window.getSelection().toString()
             },
             function() {
-                cancelSelection();
+                if (ifCancelSelection) cancelTextSelection();
                 translateButton.style.display = "none";
             }
         );
@@ -213,7 +218,7 @@ function executeIfNotInBlacklist(callback) {
 /**
  * cancel text selection when translation is finished
  */
-function cancelSelection() {
+function cancelTextSelection() {
     if (window.getSelection) {
         if (window.getSelection().empty) {
             // Chrome

@@ -199,6 +199,10 @@
         "message": "Translate After Dbl Click",
         "description": "Instantly show translating result after double-clicked texts."
     },
+    "CancelTextSelection": {
+        "message": "Cancel text selection after translation",
+        "description": "Cancel text selection automatically after translation"
+    },
     "YouDaoPageTranslate": {
         "message": "YouDao Page Trans.",
         "description": "Translate current page with YouDao translate api."
@@ -223,7 +227,7 @@
         "message": "Provide statistics to help improve the extension",
         "description": "Use Google Analytics tool to help us improve Edge Translate."
     },
-    "PrivacyPolicy":{
+    "PrivacyPolicy": {
         "message": "Privacy Policy",
         "description": "Privacy policy."
     },

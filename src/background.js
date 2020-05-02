@@ -46,6 +46,7 @@ const DEFAULT_SETTINGS = {
         SelectTranslate: true,
         TranslateAfterDblClick: false,
         TranslateAfterSelect: false,
+        CancelTextSelection: false,
         UseGoogleAnalytics: true,
         UsePDFjs: true
     },

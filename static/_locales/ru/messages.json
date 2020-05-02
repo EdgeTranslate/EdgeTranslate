@@ -199,6 +199,10 @@
         "message": "Перевод после двойного нажатия",
         "description": "Мгновенный показ результатов перевода после выделения двойным нажатием на текст."
     },
+    "CancelTextSelection": {
+        "message": "Отменить выделение текста после перевода",
+        "description": "Отменить выделение текста автоматически после перевода"
+    },
     "YouDaoPageTranslate": {
         "message": "Переводчик страниц YouDao",
         "description": "Перевод текущей страницы с помощью YouDao Translate API."
@@ -223,7 +227,7 @@
         "message": "Помочь улучшить расширение",
         "description": "Используется инструмент Google Analytics, чтобы помочь нам улучшить Edge Translate."
     },
-    "PrivacyPolicy":{
+    "PrivacyPolicy": {
         "message": "Политика конфиденциальности",
         "description": "Политика конфиденциальности."
     },
