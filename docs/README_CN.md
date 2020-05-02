@@ -138,4 +138,4 @@ npm run build:firefox
 
 如果你愿意帮忙将侧边翻译翻译到其他语言，请阅读下方的指引。
 
-[本地化](./docs/wiki/zh_CN/本地化.md)
+[本地化](./wiki/zh_CN/本地化.md)
