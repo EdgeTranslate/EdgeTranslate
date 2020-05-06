@@ -106,7 +106,7 @@ function watcher(browser) {
     gulp.watch("./src/display/templates/*.html").on("change", function() {
         builder.js();
     });
-    gulp.watch("./src/manifest.json").on("change", function() {
+    gulp.watch("./src/(manifest|manifest_chrome|manifest_firefox).json").on("change", function() {
         builder.manifest();
     });
     gulp.watch("./src/**/!(result|loading|error).html").on("change", function() {
