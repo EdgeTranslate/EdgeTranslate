@@ -5,3 +5,5 @@
 *.crx
 *.pem
 npm-debug.log
+
+.DS_Store
