@@ -24,6 +24,15 @@
 
   __A:__ You can click the pin icon on the up right corner of the frame to fix it.
 
+* __Q: Why can't I install *.crx downloaded from the Releases page?__
+  __A:__ If your error message is "``Apps, Extensions and scripts cannot be added from this website.``", you may try these steps:
+  1. Open the url: ``chrome://flags/#extensions-on-chrome-urls`` in your chrome.
+  2. If "``Extensions on chrome:// URLs``" is disabled, enable it and relaunch your chrome.
+  3. Open the url: ``chrome://extensions/``.
+  4. Make sure to enable ``Developer mode``. If this was not enabled, refresh this page after enabling it.
+  5. Now you can try to drag and drop the *.crx file onto this page again.
+
+
 ### Figure 1: Allow Edge Translate to access file links
 
 ![grant_access](../../images/grant_access.gif)
