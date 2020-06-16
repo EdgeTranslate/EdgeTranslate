@@ -320,8 +320,11 @@ function parseTranslate(response, extras) {
                         mainMeanings.push(items[j][0]);
                         originalTexts.push(items[j][1]);
                     }
-
-                    result.mainMeaning = escapeHTML(mainMeanings.join(""));
+                    // 根据源文本将翻译结果格式化
+                    result.mainMeaning = escapeHTML(mainMeanings.join("")).replace(
+                        /\n|\r/g,
+                        "<br/>"
+                    );
                     result.originalText = escapeHTML(originalTexts.join(""));
                     try {
                         if (lastIndex > 0) {
