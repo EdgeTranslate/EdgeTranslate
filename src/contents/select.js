@@ -127,12 +127,26 @@ function buttonClickHandler(event) {
  */
 function showButton(event) {
     if (disable) {
-        // 翻译按钮的纵坐标位置: 鼠标停留位置 + y方向滚动的高度 + bias
-        translateButton.style.top = event.y + document.documentElement.scrollTop - 55 + "px";
-        // 翻译按钮的横坐标位置: 鼠标停留位置 + x方向滚动的高度 + bias
-        translateButton.style.left = event.x + document.documentElement.scrollLeft + 10 + "px";
         // 使翻译按钮显示出来
         translateButton.style.display = "inline-block";
+        const XBias = 10,
+            YBias = 15;
+
+        // 翻译按钮的横坐标位置: 鼠标停留位置 + x方向滚动的高度 + bias
+        let XPosition = event.x + document.documentElement.scrollLeft + XBias;
+        // 翻译按钮的纵坐标位置: 鼠标停留位置 + y方向滚动的高度 + bias
+        let YPosition =
+            event.y + document.documentElement.scrollTop - YBias - translateButton.clientHeight;
+
+        // if the icon is beyond the right side of the page, we need to put the icon on the left of the cursor
+        if (XPosition + translateButton.clientWidth > document.documentElement.clientWidth)
+            XPosition =
+                event.x + document.documentElement.scrollLeft - XBias - translateButton.clientWidth;
+        // if the icon is above the top of the page, we need to put the icon below the cursor
+        if (YPosition <= 0) YPosition = event.y + document.documentElement.scrollTop + YBias;
+
+        translateButton.style.top = YPosition + "px";
+        translateButton.style.left = XPosition + "px";
     }
 }
 
