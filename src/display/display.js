@@ -359,6 +359,11 @@ function removeSlider() {
         }
         resizeBody.disableResize();
         resizeDivFrame.disableResize();
+
+        // 告诉background.js翻译框已关闭
+        chrome.runtime.sendMessage({
+            type: "frame_closed"
+        });
     }
 }
 

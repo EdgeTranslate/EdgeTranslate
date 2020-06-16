@@ -5,6 +5,7 @@ export {
     detect,
     showTranslate,
     pronounce,
+    stopPronounce,
     translatePage,
     youdaoPageTranslate,
     executeYouDaoScript,
@@ -569,6 +570,13 @@ function doPronounce(text, language, speed, callback) {
     if (callback) {
         callback();
     }
+}
+
+/**
+ * Stop pronounce.
+ */
+function stopPronounce() {
+    AUDIO.pause();
 }
 
 /**
