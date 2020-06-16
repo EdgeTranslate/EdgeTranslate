@@ -123,6 +123,7 @@ function createBlock(content, template) {
             divFrame.style.boxShadow = "0px 0px 50px rgb(200,200,200,0.5)"; // 动态设置样式以兼容Dark Reader
             frame = document.createElement("iframe");
             frame.id = "translate_frame";
+            frame.sandbox = "allow-same-origin allow-scripts";
             startSlider(layoutSettings);
             divFrame.appendChild(frame);
             document.documentElement.appendChild(divFrame);
