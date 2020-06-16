@@ -49,7 +49,6 @@ img.src =
 translateButton.appendChild(img);
 translateButton.id = "translate-button";
 translateButton.style.backgroundColor = "white"; // 动态设置样式以兼容Dark Reader
-translateButton.style.boxShadow = "0px 0px 2px 2px #ddd"; // 动态设置样式以兼容Dark Reader
 document.documentElement.appendChild(translateButton);
 translateButton.addEventListener("mousedown", buttonClickHandler);
 
@@ -135,18 +134,17 @@ function showButton(event) {
         // 翻译按钮的横坐标位置: 鼠标停留位置 + x方向滚动的高度 + bias
         let XPosition = event.x + document.documentElement.scrollLeft + XBias;
         // 翻译按钮的纵坐标位置: 鼠标停留位置 + y方向滚动的高度 + bias
-        let YPosition =
-            event.y + document.documentElement.scrollTop - YBias - translateButton.clientHeight;
+        let YPosition = event.y - YBias - translateButton.clientHeight;
 
         // if the icon is beyond the right side of the page, we need to put the icon on the left of the cursor
         if (XPosition + translateButton.clientWidth > document.documentElement.clientWidth)
             XPosition =
                 event.x + document.documentElement.scrollLeft - XBias - translateButton.clientWidth;
         // if the icon is above the top of the page, we need to put the icon below the cursor
-        if (YPosition <= 0) YPosition = event.y + document.documentElement.scrollTop + YBias;
+        if (YPosition <= 0) YPosition = event.y + YBias;
 
-        translateButton.style.top = YPosition + "px";
-        translateButton.style.left = XPosition + "px";
+        // set the new position of the icon
+        translateButton.style.transform = "translate(" + XPosition + "px," + YPosition + "px)";
     }
 }
 
