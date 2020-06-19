@@ -29,7 +29,7 @@ var selectedTTSSpeed = "fast";
 const DEFAULT_SETTINGS = {
     blacklist: {
         urls: {},
-        domains: {}
+        domains: { "chrome.google.com": true, extensions: true }
     },
     // Default parameters of google translation
     DTSetting: ["t", "at", "bd", "ex", "md", "rw", "ss", "rm"],
