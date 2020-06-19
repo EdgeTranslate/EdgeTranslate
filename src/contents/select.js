@@ -57,8 +57,7 @@ translateButton.addEventListener("mousedown", buttonClickHandler);
  */
 function dblClickHandler() {
     executeIfNotInBlacklist(function() {
-        var selection = window.getSelection();
-        if (selection.toString().trim()) {
+        if (isSelected()) {
             // 检查页面中是否有内容被选中
             chrome.storage.sync.get("OtherSettings", function(result) {
                 var OtherSettings = result.OtherSettings;
@@ -83,8 +82,7 @@ function dblClickHandler() {
  */
 function mouseUpHandler(event) {
     executeIfNotInBlacklist(function() {
-        var selection = window.getSelection();
-        if (selection.toString().trim()) {
+        if (isSelected()) {
             // 检查页面中是否有内容被选中
             chrome.storage.sync.get("OtherSettings", function(result) {
                 var OtherSettings = result.OtherSettings;
@@ -176,6 +174,18 @@ function translateSubmit() {
             }
         );
     }
+}
+
+/**
+ * To judge if there is normal text selected
+ * @returns boolean true-> normal text selected
+ */
+function isSelected() {
+    let selectionObject = window.getSelection();
+    return (
+        selectionObject.toString().trim() &&
+        (selectionObject.anchorNode.nodeType === 3 || selectionObject.focusNode.nodeType === 3)
+    ); // to make sure the selected text is not in the input elements. Value "3" map to Node.TEXT_NODE
 }
 
 /**
