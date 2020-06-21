@@ -8,6 +8,8 @@ export {
     updateBLackListMenu
 };
 
+const DISABLED_MARK = "🗙";
+
 /**
  * 将当前页面的url添加到黑名单
  */
@@ -19,7 +21,7 @@ function addUrlBlacklist() {
     });
 
     // change the badge text when add url to blacklist
-    chrome.browserAction.setBadgeText({ text: "✖" });
+    chrome.browserAction.setBadgeText({ text: DISABLED_MARK });
 }
 
 /**
@@ -47,7 +49,7 @@ function addDomainBlacklist() {
     });
 
     // change the badge text when add domain to blacklist
-    chrome.browserAction.setBadgeText({ text: "✖" });
+    chrome.browserAction.setBadgeText({ text: DISABLED_MARK });
 }
 
 /**
@@ -129,7 +131,7 @@ function updateBLackListMenu(url) {
                 enableItems(["remove_domain_blacklist"]);
 
                 // the domain is in the blacklist and update the badge text
-                chrome.browserAction.setBadgeText({ text: "✖" });
+                chrome.browserAction.setBadgeText({ text: DISABLED_MARK });
             } else if (result.blacklist.urls[url]) {
                 disableItems([
                     "add_url_blacklist",
@@ -140,7 +142,7 @@ function updateBLackListMenu(url) {
                 enableItems(["remove_url_blacklist"]);
 
                 // the url is in the blacklist and update the badge text
-                chrome.browserAction.setBadgeText({ text: "✖" });
+                chrome.browserAction.setBadgeText({ text: DISABLED_MARK });
             } else {
                 disableItems(["remove_url_blacklist", "remove_domain_blacklist"]);
 
