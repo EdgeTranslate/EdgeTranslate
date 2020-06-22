@@ -2,6 +2,7 @@ import {
     translate,
     showTranslate,
     pronounce,
+    stopPronounce,
     translatePage,
     youdaoPageTranslate,
     executeYouDaoScript,
@@ -28,7 +29,7 @@ var selectedTTSSpeed = "fast";
 const DEFAULT_SETTINGS = {
     blacklist: {
         urls: {},
-        domains: {}
+        domains: { "chrome.google.com": true, extensions: true }
     },
     // Default parameters of google translation
     DTSetting: ["t", "at", "bd", "ex", "md", "rw", "ss", "rm"],
@@ -363,6 +364,9 @@ chrome.runtime.onMessage.addListener(function(message, sender, callback) {
                 break;
             case "get_lang":
                 callback({ lang: chrome.i18n.getUILanguage() });
+                break;
+            case "frame_closed":
+                stopPronounce();
                 break;
             default:
                 // eslint-disable-next-line no-console

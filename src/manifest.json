@@ -1,7 +1,7 @@
 {
     "name": "__MSG_AppName__",
     "description": "__MSG_Description__",
-    "version": "1.8.1",
+    "version": "1.9.0",
     "default_locale": "en",
     "background": {
         "scripts": ["background.js"]
@@ -83,5 +83,6 @@
         "open_in_tab": true,
         "chrome_style": false
     },
+    "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
     "manifest_version": 2
 }

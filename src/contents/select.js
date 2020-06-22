@@ -49,7 +49,6 @@ img.src =
 translateButton.appendChild(img);
 translateButton.id = "translate-button";
 translateButton.style.backgroundColor = "white"; // 动态设置样式以兼容Dark Reader
-translateButton.style.boxShadow = "0px 0px 2px 2px #ddd"; // 动态设置样式以兼容Dark Reader
 document.documentElement.appendChild(translateButton);
 translateButton.addEventListener("mousedown", buttonClickHandler);
 
@@ -58,8 +57,7 @@ translateButton.addEventListener("mousedown", buttonClickHandler);
  */
 function dblClickHandler() {
     executeIfNotInBlacklist(function() {
-        var selection = window.getSelection();
-        if (selection.toString().trim()) {
+        if (isSelected()) {
             // 检查页面中是否有内容被选中
             chrome.storage.sync.get("OtherSettings", function(result) {
                 var OtherSettings = result.OtherSettings;
@@ -84,8 +82,7 @@ function dblClickHandler() {
  */
 function mouseUpHandler(event) {
     executeIfNotInBlacklist(function() {
-        var selection = window.getSelection();
-        if (selection.toString().trim()) {
+        if (isSelected()) {
             // 检查页面中是否有内容被选中
             chrome.storage.sync.get("OtherSettings", function(result) {
                 var OtherSettings = result.OtherSettings;
@@ -127,12 +124,25 @@ function buttonClickHandler(event) {
  */
 function showButton(event) {
     if (disable) {
-        // 翻译按钮的纵坐标位置: 鼠标停留位置 + y方向滚动的高度 + bias
-        translateButton.style.top = event.y + document.documentElement.scrollTop - 55 + "px";
-        // 翻译按钮的横坐标位置: 鼠标停留位置 + x方向滚动的高度 + bias
-        translateButton.style.left = event.x + document.documentElement.scrollLeft + 10 + "px";
         // 使翻译按钮显示出来
         translateButton.style.display = "inline-block";
+        const XBias = 10,
+            YBias = 15;
+
+        // 翻译按钮的横坐标位置: 鼠标停留位置 + x方向滚动的高度 + bias
+        let XPosition = event.x + document.documentElement.scrollLeft + XBias;
+        // 翻译按钮的纵坐标位置: 鼠标停留位置 + y方向滚动的高度 + bias
+        let YPosition = event.y - YBias - translateButton.clientHeight;
+
+        // if the icon is beyond the right side of the page, we need to put the icon on the left of the cursor
+        if (XPosition + translateButton.clientWidth > document.documentElement.clientWidth)
+            XPosition =
+                event.x + document.documentElement.scrollLeft - XBias - translateButton.clientWidth;
+        // if the icon is above the top of the page, we need to put the icon below the cursor
+        if (YPosition <= 0) YPosition = event.y + YBias;
+
+        // set the new position of the icon
+        translateButton.style.transform = "translate(" + XPosition + "px," + YPosition + "px)";
     }
 }
 
@@ -164,6 +174,18 @@ function translateSubmit() {
             }
         );
     }
+}
+
+/**
+ * To judge if there is normal text selected
+ * @returns boolean true-> normal text selected
+ */
+function isSelected() {
+    let selectionObject = window.getSelection();
+    return (
+        selectionObject.toString().trim() &&
+        (selectionObject.anchorNode.nodeType === 3 || selectionObject.focusNode.nodeType === 3)
+    ); // to make sure the selected text is not in the input elements. Value "3" map to Node.TEXT_NODE
 }
 
 /**

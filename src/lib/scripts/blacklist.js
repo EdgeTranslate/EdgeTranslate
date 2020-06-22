@@ -8,6 +8,8 @@ export {
     updateBLackListMenu
 };
 
+const DISABLED_MARK = "🗙";
+
 /**
  * 将当前页面的url添加到黑名单
  */
@@ -17,7 +19,9 @@ function addUrlBlacklist() {
 
         enableItems(["remove_url_blacklist"]);
     });
-    chrome.browserAction.setIcon({ path: "./icon/icon16forbid.png" }); // change the icon when add url to blacklist
+
+    // change the badge text when add url to blacklist
+    chrome.browserAction.setBadgeText({ text: DISABLED_MARK });
 }
 
 /**
@@ -29,7 +33,9 @@ function removeUrlBlacklist() {
 
         enableItems(["add_url_blacklist", "add_domain_blacklist"]);
     });
-    chrome.browserAction.setIcon({ path: "./icon/icon16.png" }); // change the icon when remove url from blacklist
+
+    // clear the badge text when remove url from blacklist
+    chrome.browserAction.setBadgeText({ text: "" });
 }
 
 /**
@@ -41,7 +47,9 @@ function addDomainBlacklist() {
 
         enableItems(["remove_domain_blacklist"]);
     });
-    chrome.browserAction.setIcon({ path: "./icon/icon16forbid.png" }); // change the icon when add domain to blacklist
+
+    // change the badge text when add domain to blacklist
+    chrome.browserAction.setBadgeText({ text: DISABLED_MARK });
 }
 
 /**
@@ -59,7 +67,8 @@ function removeDomainBlacklist() {
 
             enableItems(["add_url_blacklist", "add_domain_blacklist"]);
 
-            chrome.browserAction.setIcon({ path: "./icon/icon16.png" }); // change the icon when remove domain from blacklist
+            // clear the badge text when remove domain from blacklist
+            chrome.browserAction.setBadgeText({ text: "" });
         }
     });
 }
@@ -121,9 +130,8 @@ function updateBLackListMenu(url) {
 
                 enableItems(["remove_domain_blacklist"]);
 
-                chrome.browserAction.setIcon({
-                    path: "./icon/icon16forbid.png"
-                }); // the domain is in the blacklist and update the forbid icon
+                // the domain is in the blacklist and update the badge text
+                chrome.browserAction.setBadgeText({ text: DISABLED_MARK });
             } else if (result.blacklist.urls[url]) {
                 disableItems([
                     "add_url_blacklist",
@@ -133,15 +141,15 @@ function updateBLackListMenu(url) {
 
                 enableItems(["remove_url_blacklist"]);
 
-                chrome.browserAction.setIcon({
-                    path: "./icon/icon16forbid.png"
-                }); // the url is in the blacklist and update the forbid icon
+                // the url is in the blacklist and update the badge text
+                chrome.browserAction.setBadgeText({ text: DISABLED_MARK });
             } else {
                 disableItems(["remove_url_blacklist", "remove_domain_blacklist"]);
 
                 enableItems(["add_url_blacklist", "add_domain_blacklist"]);
 
-                chrome.browserAction.setIcon({ path: "./icon/icon16.png" }); // the url and domain is not in the blacklist and update the general icon
+                // the url and domain is not in the blacklist and clear the badge text
+                chrome.browserAction.setBadgeText({ text: "" });
             }
         } else {
             chrome.storage.sync.set({
