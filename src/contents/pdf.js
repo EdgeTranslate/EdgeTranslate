@@ -34,7 +34,9 @@ function redirect() {
         if (OtherSettings && OtherSettings["UsePDFjs"]) {
             chrome.runtime.sendMessage({
                 type: "redirect",
-                url: chrome.runtime.getURL("pdf/viewer.html?file=" + window.location.href)
+                url: chrome.runtime.getURL(
+                    "pdf/viewer.html?file=" + encodeURIComponent(window.location.href)
+                )
             });
         }
     });
