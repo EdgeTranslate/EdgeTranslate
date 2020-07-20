@@ -142,7 +142,9 @@ function showButton(event) {
         if (YPosition <= 0) YPosition = event.y + YBias;
 
         // set the new position of the icon
-        translateButton.style.transform = "translate(" + XPosition + "px," + YPosition + "px)";
+        // translateButton.style.transform = "translate(" + XPosition + "px," + YPosition + "px)";
+        translateButton.style.top = YPosition + "px";
+        translateButton.style.left = XPosition + "px";
     }
 }
 
