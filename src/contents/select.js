@@ -59,15 +59,17 @@ var originScrollX = 0; // record the original scroll X position(before scroll ev
 var originScrollY = 0; // record the original scroll Y position(before scroll event)
 var originPositionX = 0; // record the original X position of selection icon(before scroll event)
 var originPositionY = 0; // record the original Y position of selection icon(before scroll event)
+var scrollingElement = document.documentElement; // store the specific scrolling element. In normal web pages, document element is the scrolling element
 
 window.addEventListener("load", () => {
     // the scrolling elements in pdf files are different from normal web pages
     if (isPDFjsPDFViewer()) {
         // #viewerContainer element is the scrolling element in a pdf file
-        document.getElementById("viewerContainer").addEventListener("scroll", scrollHandler);
-    } else {
-        // in normal web pages
+        scrollingElement = document.getElementById("viewerContainer");
         // to make the selection icon move with the mouse scrolling
+        scrollingElement.addEventListener("scroll", scrollHandler);
+    } else {
+        // scrolling event listener has to be added to window and adding to document element doesn't work
         window.addEventListener("scroll", scrollHandler);
     }
 });
@@ -167,8 +169,8 @@ function showButton(event) {
         translateButton.style.left = XPosition + "px";
 
         // record original position of the selection icon and the start mouse scrolling position
-        originScrollX = window.scrollX;
-        originScrollY = window.scrollY;
+        originScrollX = scrollingElement.scrollLeft;
+        originScrollY = scrollingElement.scrollTop;
         originPositionX = XPosition;
         originPositionY = YPosition;
         HasButtonShown = true;
@@ -264,16 +266,10 @@ function mouseDownHandler() {
  * the handler function to make the selection icon move with mouse scrolling
  * @param Event the event of scrolling
  */
-function scrollHandler(event) {
+function scrollHandler() {
     if (HasButtonShown) {
-        // to get the scrolling target
-        // 1. the scrolling target for window is "event.target.scrollingElement"
-        // 2. the target for div element is "event.target"
-        let scrollingTarget = event.target.scrollingElement
-            ? event.target.scrollingElement
-            : event.target;
-        let distanceX = originScrollX - scrollingTarget.scrollLeft;
-        let distanceY = originScrollY - scrollingTarget.scrollTop;
+        let distanceX = originScrollX - scrollingElement.scrollLeft;
+        let distanceY = originScrollY - scrollingElement.scrollTop;
 
         translateButton.style.left = originPositionX + distanceX + "px";
         translateButton.style.top = originPositionY + distanceY + "px";
