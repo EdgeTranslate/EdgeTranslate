@@ -1,6 +1,6 @@
 import render from "../lib/scripts/render.js";
 import Resizable from "../lib/scripts/resizable.js";
-import { isPDF } from "../lib/scripts/common.js";
+import { isChromePDFViewer } from "../lib/scripts/common.js";
 
 /**
  * load templates
@@ -354,7 +354,7 @@ function removeSlider() {
         }, transitionDuration);
         document.documentElement.removeEventListener("mousedown", clickListener);
         // handle the click event exception when using chrome's original pdf viewer
-        if (isPDF()) {
+        if (isChromePDFViewer()) {
             document.body.children[0].focus();
         }
         resizeBody.disableResize();
