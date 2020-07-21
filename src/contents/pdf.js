@@ -1,4 +1,4 @@
-import { isPDF } from "../lib/scripts/common.js"; // judge if this page is a pdf file
+import { isChromePDFViewer } from "../lib/scripts/common.js"; // judge if this page is a pdf file
 /**
  * 处理PDF文件链接
  *
@@ -8,22 +8,23 @@ import { isPDF } from "../lib/scripts/common.js"; // judge if this page is a pdf
  *
  * 3. 如果是从插件内置PDF阅读器中返回，不再自动跳转到插件内置PDF阅读器。
  */
-window.onload = function() {
-    if (isPDF()) {
+window.addEventListener("load", () => {
+    if (isChromePDFViewer()) {
         var state = history.state;
         if (state === null) {
             state = { ET_visited: true };
+            history.replaceState(state, document.title, window.location.href);
             redirect();
         } else if (!state.ET_visited) {
             state.ET_visited = true;
+            history.replaceState(state, document.title, window.location.href);
             redirect();
         } else {
             state.ET_visited = false;
+            history.replaceState(state, document.title, window.location.href);
         }
-
-        history.replaceState(state, document.title);
     }
-};
+});
 
 /**
  * 向background.js发送消息实现跳转。
