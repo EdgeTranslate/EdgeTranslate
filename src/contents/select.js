@@ -1,5 +1,5 @@
 import { getDomain } from "../lib/scripts/common.js";
-import { isPDF } from "../lib/scripts/common.js"; // judge if this page is a pdf file
+import { isPDFjsPDFViewer } from "../lib/scripts/common.js"; // judge if this page is a pdf file
 
 // 记录下mousedown事件，只有在mousedown事件发生后再发生mouseup事件才会尝试进行划词翻译
 var HasMouseDown = false;
@@ -60,15 +60,17 @@ var originScrollY = 0; // record the original scroll Y position(before scroll ev
 var originPositionX = 0; // record the original X position of selection icon(before scroll event)
 var originPositionY = 0; // record the original Y position of selection icon(before scroll event)
 
-// the scrolling elements in pdf files are different from normal web pages
-if (isPDF()) {
-    // #viewerContainer element is the scrolling element in a pdf file
-    document.getElementById("viewerContainer").addEventListener("scroll", scrollHandler);
-} else {
-    // in normal web pages
-    // to make the selection icon move with the mouse scrolling
-    window.addEventListener("scroll", scrollHandler);
-}
+window.addEventListener("load", () => {
+    // the scrolling elements in pdf files are different from normal web pages
+    if (isPDFjsPDFViewer()) {
+        // #viewerContainer element is the scrolling element in a pdf file
+        document.getElementById("viewerContainer").addEventListener("scroll", scrollHandler);
+    } else {
+        // in normal web pages
+        // to make the selection icon move with the mouse scrolling
+        window.addEventListener("scroll", scrollHandler);
+    }
+});
 
 /**
  * Handle double click event

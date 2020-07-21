@@ -1,4 +1,11 @@
-export { getDomain, isPDF, sendMessageToCurrentTab, escapeHTML };
+export {
+    getDomain,
+    isPDF,
+    isChromePDFViewer,
+    isPDFjsPDFViewer,
+    sendMessageToCurrentTab,
+    escapeHTML
+};
 
 /**
  * 提取给定的url的域名
@@ -20,10 +27,27 @@ function getDomain(url) {
  * judge if this page is a pdf file
  */
 function isPDF() {
+    return isChromePDFViewer() || isPDFjsPDFViewer();
+}
+
+/**
+ * Check if current page is Chrome PDF Viewer.
+ */
+function isChromePDFViewer() {
     return (
         document.body &&
         document.body.children[0] &&
         document.body.children[0].type === "application/pdf"
+    );
+}
+
+/**
+ * Check if current page is PDF.js viewer.
+ */
+function isPDFjsPDFViewer() {
+    return (
+        window.location.origin + window.location.pathname ===
+        chrome.runtime.getURL("pdf/viewer.html")
     );
 }
 
