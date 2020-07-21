@@ -140,6 +140,8 @@ E-mails: [nickyc975](mailto:chenjinlong2016@outlook.com), [Mark Fenng](mailto:f1
 
 * [ElectroLom](https://github.com/electrolom42)
 
+* [knlyknly](https://github.com/knlyknly)
+
 ## Help Localization
 
 If you want to help localize Edge Translate, please read the following guide.

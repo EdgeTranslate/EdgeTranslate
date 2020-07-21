@@ -134,6 +134,8 @@ npm run build:firefox
 
 * [ElectroLom](https://github.com/electrolom42)
 
+* [knlyknly](https://github.com/knlyknly)
+
 ## 幫助本地化
 
 如果你願意幫忙將側邊翻譯翻譯到其他語言，請閱讀下方的指引。
