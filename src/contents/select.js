@@ -1,7 +1,9 @@
-import { getDomain } from "../lib/scripts/common.js";
+import { getDomain, isPDFjsPDFViewer } from "../lib/scripts/common.js";
 
 // 记录下mousedown事件，只有在mousedown事件发生后再发生mouseup事件才会尝试进行划词翻译
 var HasMouseDown = false;
+// to indicate whether the translation button has been shown
+var HasButtonShown = false;
 
 /**
  * 划词翻译功能的实现
@@ -11,7 +13,7 @@ chrome.storage.sync.get("OtherSettings", function(result) {
     var OtherSettings = result.OtherSettings;
     if (OtherSettings && OtherSettings["SelectTranslate"]) {
         document.addEventListener("mouseup", mouseUpHandler);
-        document.addEventListener("mousedown", disappearButton);
+        document.addEventListener("mousedown", mouseDownHandler);
     }
     if (OtherSettings && OtherSettings["TranslateAfterDblClick"]) {
         document.addEventListener("dblclick", dblClickHandler);
@@ -25,10 +27,10 @@ chrome.storage.onChanged.addListener(function(changes, area) {
     if (area === "sync" && changes["OtherSettings"]) {
         if (changes["OtherSettings"].newValue["SelectTranslate"]) {
             document.addEventListener("mouseup", mouseUpHandler);
-            document.addEventListener("mousedown", disappearButton);
+            document.addEventListener("mousedown", mouseDownHandler);
         } else {
             document.removeEventListener("mouseup", mouseUpHandler);
-            document.removeEventListener("mousedown", disappearButton);
+            document.removeEventListener("mousedown", mouseDownHandler);
         }
         if (changes["OtherSettings"].newValue["TranslateAfterDblClick"]) {
             document.addEventListener("dblclick", dblClickHandler);
@@ -52,6 +54,25 @@ translateButton.style.backgroundColor = "white"; // 动态设置样式以兼容D
 document.documentElement.appendChild(translateButton);
 translateButton.addEventListener("mousedown", buttonClickHandler);
 
+var originScrollX = 0; // record the original scroll X position(before scroll event)
+var originScrollY = 0; // record the original scroll Y position(before scroll event)
+var originPositionX = 0; // record the original X position of selection icon(before scroll event)
+var originPositionY = 0; // record the original Y position of selection icon(before scroll event)
+var scrollingElement = document.documentElement; // store the specific scrolling element. In normal web pages, document element is the scrolling element
+
+window.addEventListener("load", () => {
+    // the scrolling elements in pdf files are different from normal web pages
+    if (isPDFjsPDFViewer()) {
+        // #viewerContainer element is the scrolling element in a pdf file
+        scrollingElement = document.getElementById("viewerContainer");
+        // to make the selection icon move with the mouse scrolling
+        scrollingElement.addEventListener("scroll", scrollHandler);
+    } else {
+        // scrolling event listener has to be added to window and adding to document element doesn't work
+        window.addEventListener("scroll", scrollHandler);
+    }
+});
+
 /**
  * Handle double click event
  */
@@ -72,7 +93,7 @@ function dblClickHandler() {
                 }
             });
         } else {
-            translateButton.style.display = "none"; // 使翻译按钮隐藏
+            disappearButton(); // 使翻译按钮隐藏
         }
     });
 }
@@ -101,7 +122,7 @@ function mouseUpHandler(event) {
                 }
             });
         } else {
-            translateButton.style.display = "none"; // 使翻译按钮隐藏
+            disappearButton(); // 使翻译按钮隐藏
         }
     });
 }
@@ -123,7 +144,7 @@ function buttonClickHandler(event) {
  * 当鼠标选中一段文字后，调用此函数，显示出翻译按钮
  */
 function showButton(event) {
-    if (disable) {
+    if (disable && !HasButtonShown) {
         // 使翻译按钮显示出来
         translateButton.style.display = "inline-block";
         const XBias = 10,
@@ -142,7 +163,16 @@ function showButton(event) {
         if (YPosition <= 0) YPosition = event.y + YBias;
 
         // set the new position of the icon
-        translateButton.style.transform = "translate(" + XPosition + "px," + YPosition + "px)";
+        // translateButton.style.transform = "translate(" + XPosition + "px," + YPosition + "px)";
+        translateButton.style.top = YPosition + "px";
+        translateButton.style.left = XPosition + "px";
+
+        // record original position of the selection icon and the start mouse scrolling position
+        originScrollX = scrollingElement.scrollLeft;
+        originScrollY = scrollingElement.scrollTop;
+        originPositionX = XPosition;
+        originPositionY = YPosition;
+        HasButtonShown = true;
     }
 }
 
@@ -170,7 +200,7 @@ function translateSubmit() {
                         cancelTextSelection();
                     }
                 });
-                translateButton.style.display = "none";
+                disappearButton();
             }
         );
     }
@@ -207,25 +237,42 @@ function pronounceSubmit() {
 }
 
 /**
- * 如果页面中没有鼠标选中的区域，调用此函数去掉翻译按钮
+ * execute this function to make the translation button disappear
  */
 function disappearButton() {
+    translateButton.style.display = "none";
+    HasButtonShown = false;
+}
+
+/**
+ * 如果页面中没有鼠标选中的区域，调用此函数去掉翻译按钮
+ */
+function mouseDownHandler() {
     // 记录下mousedown事件
     HasMouseDown = true;
 
+    // set time out to avoid the button to flash after clicking it
     var selection = window.getSelection();
     setTimeout(function() {
         if (!selection.toString().trim()) {
-            translateButton.style.display = "none";
+            disappearButton();
             disable = true; // 回复按钮显示
         }
-    }, 100);
-    setTimeout(function() {
-        if (!selection.toString().trim()) {
-            translateButton.style.display = "none";
-            disable = true; // 回复按钮显示
-        }
-    }, 400);
+    }, 0);
+}
+
+/**
+ * the handler function to make the selection icon move with mouse scrolling
+ * @param Event the event of scrolling
+ */
+function scrollHandler() {
+    if (HasButtonShown) {
+        let distanceX = originScrollX - scrollingElement.scrollLeft;
+        let distanceY = originScrollY - scrollingElement.scrollTop;
+
+        translateButton.style.left = originPositionX + distanceX + "px";
+        translateButton.style.top = originPositionY + distanceY + "px";
+    }
 }
 
 /**
