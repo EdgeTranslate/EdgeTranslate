@@ -1,4 +1,5 @@
 import { getDomain } from "../lib/scripts/common.js";
+import { isPDF } from "../lib/scripts/common.js"; // judge if this page is a pdf file
 
 // 记录下mousedown事件，只有在mousedown事件发生后再发生mouseup事件才会尝试进行划词翻译
 var HasMouseDown = false;
@@ -58,15 +59,16 @@ var originScrollX = 0; // record the original scroll X position(before scroll ev
 var originScrollY = 0; // record the original scroll Y position(before scroll event)
 var originPositionX = 0; // record the original X position of selection icon(before scroll event)
 var originPositionY = 0; // record the original Y position of selection icon(before scroll event)
-// to make the selection icon move with the mouse scrolling
-window.addEventListener("scroll", () => {
-    if (isSelected()) {
-        let distanceY = originScrollY - window.scrollY;
-        let distanceX = originScrollX - window.scrollX;
-        translateButton.style.left = originPositionX + distanceX + "px";
-        translateButton.style.top = originPositionY + distanceY + "px";
-    }
-});
+
+// the scrolling elements in pdf files are different from normal web pages
+if (isPDF()) {
+    // #viewerContainer element is the scrolling element in a pdf file
+    document.getElementById("viewerContainer").addEventListener("scroll", scrollHandler);
+} else {
+    // in normal web pages
+    // to make the selection icon move with the mouse scrolling
+    window.addEventListener("scroll", scrollHandler);
+}
 
 /**
  * Handle double click event
@@ -254,6 +256,26 @@ function mouseDownHandler() {
             disable = true; // 回复按钮显示
         }
     }, 0);
+}
+
+/**
+ * the handler function to make the selection icon move with mouse scrolling
+ * @param Event the event of scrolling
+ */
+function scrollHandler(event) {
+    if (HasButtonShown) {
+        // to get the scrolling target
+        // 1. the scrolling target for window is "event.target.scrollingElement"
+        // 2. the target for div element is "event.target"
+        let scrollingTarget = event.target.scrollingElement
+            ? event.target.scrollingElement
+            : event.target;
+        let distanceX = originScrollX - scrollingTarget.scrollLeft;
+        let distanceY = originScrollY - scrollingTarget.scrollTop;
+
+        translateButton.style.left = originPositionX + distanceX + "px";
+        translateButton.style.top = originPositionY + distanceY + "px";
+    }
 }
 
 /**
