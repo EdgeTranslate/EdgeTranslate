@@ -124,6 +124,12 @@ npm run build:firefox
 
 电子邮件: [nickyc975](mailto:chenjinlong2016@outlook.com), [Mark Fenng](mailto:f18846188605@gmail.com)
 
+Telegram 频道: [侧边翻译频道](https://t.me/EdgeTranslate)
+
+QQ 群: [侧边翻译用户交流群](https://jq.qq.com/?_wv=1027&k=gT5EYfFB)
+
+加入频道或群组可以在正式版本发布前获得测试包，提前体验新特性。
+
 ## 开源协议
 
 [MIT](../LICENSE.MIT) 与 [NPL](../LICENSE.NPL)
