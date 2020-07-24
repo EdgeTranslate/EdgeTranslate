@@ -130,6 +130,12 @@ After building finished, you will get the unpacked extension under `./build/chro
 
 E-mails: [nickyc975](mailto:chenjinlong2016@outlook.com), [Mark Fenng](mailto:f18846188605@gmail.com)
 
+Telegram channel: [Edge Translate Channel](https://t.me/EdgeTranslate)
+
+QQ group: [Edge Translate QQ Group](https://jq.qq.com/?_wv=1027&k=gT5EYfFB)
+
+Join the channel or group to get Edge Translate beta packages before releases.
+
 ## License
 
 [MIT](./LICENSE.MIT) AND [NPL](./LICENSE.NPL)

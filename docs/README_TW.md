@@ -124,6 +124,12 @@ npm run build:firefox
 
 電子郵件: [nickyc975](mailto:chenjinlong2016@outlook.com), [Mark Fenng](mailto:f18846188605@gmail.com)
 
+Telegram 頻道: [側邊翻譯頻道](https://t.me/EdgeTranslate)
+
+QQ 群: [側邊翻譯用戶交流群](https://jq.qq.com/?_wv=1027&k=gT5EYfFB)
+
+加入頻道或群組可以在正式版本發佈前獲得測試包，提前體驗新特性。
+
 ## 開源協議
 
 [MIT](../LICENSE.MIT) 與 [NPL](../LICENSE.NPL)
