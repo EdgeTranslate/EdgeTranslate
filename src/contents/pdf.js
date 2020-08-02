@@ -12,14 +12,17 @@ window.addEventListener("load", () => {
     if (isChromePDFViewer()) {
         var state = history.state;
         if (state === null) {
+            // 第一次打开页面，直接跳转到PDF.js阅读器，并将ET_visited设为真
             state = { ET_visited: true };
             history.replaceState(state, document.title, window.location.href);
             redirect();
         } else if (!state.ET_visited) {
+            // 没设置过ET_visited，或者ET_visited为假，需要跳转到PDF.js阅读器，并将ET_visited设为真
             state.ET_visited = true;
             history.replaceState(state, document.title, window.location.href);
             redirect();
         } else {
+            // ET_visited为真，说明是从PDF.js阅读器返回，不再跳转到PDF.js阅读器，并将ET_visited设为假
             state.ET_visited = false;
             history.replaceState(state, document.title, window.location.href);
         }
