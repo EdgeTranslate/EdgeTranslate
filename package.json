@@ -46,7 +46,7 @@
         "gulp": "^4.0.2",
         "gulp-eslint": "^5.0.0",
         "gulp-stylus": "^2.7.0",
-        "gulp-uglify": "^3.0.2",
+        "gulp-terser": "^1.2.0",
         "gulp-zip": "^4.2.0",
         "jsdom": "^11.12.0",
         "lodash": "^4.17.19",

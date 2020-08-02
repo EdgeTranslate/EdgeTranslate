@@ -6,7 +6,7 @@ const through = require("through2");
 const webpack = require("webpack");
 const webpack_stream = require("webpack-stream");
 const zip = require("gulp-zip");
-const uglify = require("gulp-uglify");
+const terser = require("gulp-terser");
 const eslint = require("gulp-eslint");
 
 /**
@@ -167,7 +167,7 @@ function build(browser, env) {
     var packStatic = function() {
         if (browser === "chrome") {
             gulp.src("./static/**/!(element_main).js", { base: "static" })
-                .pipe(uglify())
+                .pipe(terser().on("error", console.error))
                 .pipe(gulp.dest(output_dir));
 
             // Do not uglify element_main.js
@@ -178,7 +178,7 @@ function build(browser, env) {
             gulp.src("./static/**/!(*.js)", { base: "static" }).pipe(gulp.dest(output_dir));
         } else {
             gulp.src("./static/!(pdf)/**/!(element_main).js", { base: "static" })
-                .pipe(uglify())
+                .pipe(terser().on("error", console.error))
                 .pipe(gulp.dest(output_dir));
 
             // Do not uglify element_main.js
