@@ -83,6 +83,49 @@ function parseResult(result) {
 }
 
 /**
+ * Detect language of given te4xt.
+ *
+ * @param {String} text text to detect
+ * @param {Function} callback callback
+ */
+function detect(text, callback) {
+    let retryCount = 0;
+    let innerFunc = () => {
+        let request = new XMLHttpRequest();
+        let path = "ttranslatev3?isVertical=1&IG=" + IG + "&IID=" + IID;
+
+        request.open("POST", HOST + path);
+        for (let key in HEADERS) {
+            request.setRequestHeader(key, HEADERS[key]);
+        }
+        request.send("&fromLang=auto-detect&to=zh-Hans&text=" + text);
+
+        request.onreadystatechange = () => {
+            if (request.readyState == 4) {
+                if (request.status == 200) {
+                    try {
+                        let result = JSON.parse(request.response)[0].detectedLanguage.language;
+                        callback(result);
+                    } catch (error) {
+                        // Retry after failure
+                        if (retryCount < MAX_RETRY) {
+                            getIGIID(innerFunc);
+                            retryCount++;
+                        }
+                    }
+                }
+            }
+        };
+    };
+
+    if (IG && IG.length > 0 && IID && IID.length > 0) {
+        innerFunc();
+    } else {
+        getIGIID(innerFunc);
+    }
+}
+
+/**
  * Translate given text.
  *
  * @param {String} text text to translate
