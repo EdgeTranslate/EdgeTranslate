@@ -19,6 +19,11 @@ const HEADERS = {
 };
 
 /**
+ * Max retry times after failure.
+ */
+const MAX_RETRY = 3;
+
+/**
  * Request parameters.
  */
 var IG = "";
@@ -60,9 +65,9 @@ function parseResult(result) {
     parsed.mainMeaning = translations[0].displayTarget;
 
     let detailedMeanings = [];
-    for (i in translations) {
+    for (let i in translations) {
         let synonyms = [];
-        for (j in translations[i].backTranslations) {
+        for (let j in translations[i].backTranslations) {
             synonyms.push(translations[i].backTranslations[j].displayText);
         }
 
@@ -86,12 +91,13 @@ function parseResult(result) {
  * @param {Function} callback callback
  */
 function translate(text, from, to, callback) {
-    var innerFunc = () => {
+    let retryCount = 0;
+    let innerFunc = () => {
         let request = new XMLHttpRequest();
         let path = "tlookupv3?isVertical=1&IG=" + IG + "&IID=" + IID;
 
         request.open("POST", HOST + path);
-        for (key in HEADERS) {
+        for (let key in HEADERS) {
             request.setRequestHeader(key, HEADERS[key]);
         }
         request.send("&from=" + from + "&to=" + to + "&text=" + text);
@@ -99,7 +105,16 @@ function translate(text, from, to, callback) {
         request.onreadystatechange = () => {
             if (request.readyState == 4) {
                 if (request.status == 200) {
-                    callback(parseResult(JSON.parse(request.response)));
+                    try {
+                        let result = parseResult(JSON.parse(request.response));
+                        callback(result);
+                    } catch (error) {
+                        // Retry after failure
+                        if (retryCount < MAX_RETRY) {
+                            getIGIID(innerFunc);
+                            retryCount++;
+                        }
+                    }
                 }
             }
         };
