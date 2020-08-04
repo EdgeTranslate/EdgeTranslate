@@ -34,6 +34,7 @@
         "pack:firefox": "gulp clean:firefox && gulp build:firefox && gulp pack:firefox"
     },
     "devDependencies": {
+        "acorn": "^7.3.1",
         "babel-core": "^6.26.3",
         "babel-eslint": "^10.1.0",
         "babel-loader": "^7.1.5",
@@ -58,8 +59,5 @@
         "webpack": "^4.44.1",
         "webpack-merge": "^4.2.2",
         "webpack-stream": "^5.2.1"
-    },
-    "dependencies": {
-        "acorn": "^7.3.1"
     }
 }
