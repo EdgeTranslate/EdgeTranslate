@@ -6,41 +6,6 @@ var HasMouseDown = false;
 var HasButtonShown = false;
 
 /**
- * 划词翻译功能的实现
- * 需要对页面的相关事件进行监听，根据用户设定来决定是否进行监听。
- */
-chrome.storage.sync.get("OtherSettings", function(result) {
-    var OtherSettings = result.OtherSettings;
-    if (OtherSettings && OtherSettings["SelectTranslate"]) {
-        document.addEventListener("mouseup", mouseUpHandler);
-        document.addEventListener("mousedown", mouseDownHandler);
-    }
-    if (OtherSettings && OtherSettings["TranslateAfterDblClick"]) {
-        document.addEventListener("dblclick", dblClickHandler);
-    }
-});
-
-/**
- * 当用户更改设定时添加或删除事件监听。
- */
-chrome.storage.onChanged.addListener(function(changes, area) {
-    if (area === "sync" && changes["OtherSettings"]) {
-        if (changes["OtherSettings"].newValue["SelectTranslate"]) {
-            document.addEventListener("mouseup", mouseUpHandler);
-            document.addEventListener("mousedown", mouseDownHandler);
-        } else {
-            document.removeEventListener("mouseup", mouseUpHandler);
-            document.removeEventListener("mousedown", mouseDownHandler);
-        }
-        if (changes["OtherSettings"].newValue["TranslateAfterDblClick"]) {
-            document.addEventListener("dblclick", dblClickHandler);
-        } else {
-            document.removeEventListener("dblclick", dblClickHandler);
-        }
-    }
-});
-
-/**
  * 创建翻译按钮的图标元素
  */
 var translateButton = document.createElement("div");
@@ -60,7 +25,9 @@ var originPositionX = 0; // record the original X position of selection icon(bef
 var originPositionY = 0; // record the original Y position of selection icon(before scroll event)
 var scrollingElement = document.documentElement; // store the specific scrolling element. In normal web pages, document element is the scrolling element
 
-window.addEventListener("load", () => {
+// this listener activated when document content is loaded
+// to make selection button available ASAP
+window.addEventListener("DOMContentLoaded", () => {
     // the scrolling elements in pdf files are different from normal web pages
     if (isPDFjsPDFViewer()) {
         // #viewerContainer element is the scrolling element in a pdf file
@@ -71,6 +38,41 @@ window.addEventListener("load", () => {
         // scrolling event listener has to be added to window and adding to document element doesn't work
         window.addEventListener("scroll", scrollHandler);
     }
+
+    /**
+     * 划词翻译功能的实现
+     * 需要对页面的相关事件进行监听，根据用户设定来决定是否进行监听。
+     */
+    chrome.storage.sync.get("OtherSettings", function(result) {
+        var OtherSettings = result.OtherSettings;
+        if (OtherSettings && OtherSettings["SelectTranslate"]) {
+            document.addEventListener("mouseup", mouseUpHandler);
+            document.addEventListener("mousedown", mouseDownHandler);
+        }
+        if (OtherSettings && OtherSettings["TranslateAfterDblClick"]) {
+            document.addEventListener("dblclick", dblClickHandler);
+        }
+    });
+
+    /**
+     * 当用户更改设定时添加或删除事件监听。
+     */
+    chrome.storage.onChanged.addListener(function(changes, area) {
+        if (area === "sync" && changes["OtherSettings"]) {
+            if (changes["OtherSettings"].newValue["SelectTranslate"]) {
+                document.addEventListener("mouseup", mouseUpHandler);
+                document.addEventListener("mousedown", mouseDownHandler);
+            } else {
+                document.removeEventListener("mouseup", mouseUpHandler);
+                document.removeEventListener("mousedown", mouseDownHandler);
+            }
+            if (changes["OtherSettings"].newValue["TranslateAfterDblClick"]) {
+                document.addEventListener("dblclick", dblClickHandler);
+            } else {
+                document.removeEventListener("dblclick", dblClickHandler);
+            }
+        }
+    });
 });
 
 /**

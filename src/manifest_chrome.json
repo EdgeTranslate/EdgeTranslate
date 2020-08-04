@@ -11,6 +11,7 @@
         },
         {
             "matches": ["<all_urls>"],
+            "run_at": "document_start",
             "js": ["./contents/select.js"],
             "css": ["./contents/select.css"],
             "all_frames": true
