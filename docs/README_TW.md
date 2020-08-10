@@ -142,6 +142,8 @@ QQ 群: [側邊翻譯用戶交流群](https://jq.qq.com/?_wv=1027&k=gT5EYfFB)
 
 * [knlyknly](https://github.com/knlyknly)
 
+* [ykyuki](https://github.com/ykyuki)
+
 ## 幫助本地化
 
 如果你願意幫忙將側邊翻譯翻譯到其他語言，請閱讀下方的指引。
