@@ -26,12 +26,12 @@
     "scripts": {
         "test": "mocha --recursive",
         "format": "eslint 'src/**/*.js' 'config/**/*.js' --fix",
-        "dev:chrome": "gulp clean:chrome && gulp dev:chrome && gulp watcher:chrome",
-        "dev:firefox": "gulp clean:firefox && gulp dev:firefox && gulp watcher:firefox",
-        "build:chrome": "gulp clean:chrome && gulp build:chrome",
-        "build:firefox": "gulp clean:firefox && gulp build:firefox",
-        "pack:chrome": "gulp clean:chrome && gulp build:chrome && gulp pack:chrome",
-        "pack:firefox": "gulp clean:firefox && gulp build:firefox && gulp pack:firefox"
+        "dev:chrome": "gulp dev:chrome & gulp buildJS:chrome",
+        "dev:firefox": " gulp dev:firefox & gulp buildJS:firefox",
+        "build:chrome": "gulp build:chrome",
+        "build:firefox": "gulp build:firefox",
+        "pack:chrome": "gulp pack:chrome",
+        "pack:firefox": "gulp pack:firefox"
     },
     "devDependencies": {
         "acorn": "^7.3.1",
