@@ -9,216 +9,198 @@ const zip = require("gulp-zip");
 const terser = require("gulp-terser");
 const eslint = require("gulp-eslint");
 
-/**
- * 清除之前打包好的chrome的缓存
- */
-gulp.task("clean:chrome", function(callback) {
-    del(["./build/chrome/*", "./build/edge_translate_chrome.zip"]);
-    callback();
-});
+var browser; // store the name of browser
+var environment; // store the type of environment: enum{production,development}
 
 /**
- * 清除之前打包好的firefox的缓存
+ * define public tasks of gulp
  */
-gulp.task("clean:firefox", function(callback) {
-    del(["./build/firefox/*", "./build/edge_translate_firefox.zip"]);
+exports["buildJS:chrome"] = callback => {
+    browser = "chrome";
+    environment = "development";
+    buildJS();
     callback();
-});
-
-/**
- * 开发环境下热更新 chrome扩展的安装包
- */
-gulp.task("watcher:chrome", function(callback) {
-    watcher("chrome");
+};
+exports["buildJS:firefox"] = callback => {
+    browser = "firefox";
+    environment = "development";
+    buildJS();
     callback();
-});
-
-/**
- * 开发环境下热更新 firefox扩展的安装包
- */
-gulp.task("watcher:firefox", function(callback) {
-    watcher("firefox");
+};
+exports["dev:chrome"] = callback => {
+    browser = "chrome";
+    environment = "development";
+    gulp.series(clean, gulp.parallel(eslintJS, manifest, html, styl, packStatic), watcher)();
     callback();
-});
-
-/**
- * 开发环境下build chrome扩展的安装包
- */
-gulp.task("dev:chrome", function(callback) {
-    build("chrome", "development").all();
+};
+exports["dev:firefox"] = callback => {
+    browser = "firefox";
+    environment = "development";
+    gulp.series(clean, gulp.parallel(eslintJS, manifest, html, styl, packStatic), watcher)();
     callback();
-});
-
-/**
- * 开发环境下build firefox扩展的安装包
- */
-gulp.task("dev:firefox", function(callback) {
-    build("firefox", "development").all();
+};
+exports["build:chrome"] = callback => {
+    browser = "chrome";
+    environment = "production";
+    gulp.series(clean, gulp.parallel(eslintJS, buildJS, manifest, html, styl, packStatic))();
     callback();
-});
-
-/**
- * 生产环境下build chrome版扩展
- */
-gulp.task("build:chrome", function(callback) {
-    build("chrome", "production").all();
+};
+exports["build:firefox"] = callback => {
+    browser = "firefox";
+    environment = "production";
+    gulp.series(clean, gulp.parallel(eslintJS, buildJS, manifest, html, styl, packStatic))();
     callback();
-});
-
-/**
- * 生产环境下build firefox版扩展
- */
-gulp.task("build:firefox", function(callback) {
-    build("firefox", "production").all();
+};
+exports["pack:chrome"] = callback => {
+    browser = "chrome";
+    environment = "production";
+    gulp.series(
+        clean,
+        gulp.parallel(eslintJS, buildJS, manifest, html, styl, packStatic),
+        packToZip
+    )();
     callback();
-});
-
-/**
- * 将chrome版扩展打包成zip文件以备发布
- */
-gulp.task("pack:chrome", function(callback) {
-    gulp.src("./build/chrome/**/*")
-        .pipe(zip("edge_translate_chrome.zip"))
-        .pipe(gulp.dest("./build/"));
+};
+exports["pack:firefox"] = callback => {
+    browser = "firefox";
+    environment = "production";
+    gulp.series(
+        clean,
+        gulp.parallel(eslintJS, buildJS, manifest, html, styl, packStatic),
+        packToZip
+    )();
     callback();
-});
-
+};
 /**
- * 将firefox版扩展打包成zip文件以备发布
+ * End definition
  */
-gulp.task("pack:firefox", function(callback) {
-    gulp.src("./build/firefox/**/*")
-        .pipe(zip("edge_translate_firefox.zip"))
-        .pipe(gulp.dest("./build/"));
+
+async function clean(callback) {
+    let output_dir = "./build/" + browser + "/";
+    let packageName = "edge_translate_" + browser + ".zip";
+    await del([output_dir, output_dir + packageName]);
     callback();
-});
-
-/**
- * 根据传入的参数执行不同的热更新场景
- *
- * @param {String} browser 浏览器的名称
- */
-function watcher(browser) {
-    var builder = build(browser, "development");
-    gulp.watch("./src/**/*.js").on("change", function() {
-        builder.js();
-    });
-    gulp.watch("./src/display/templates/*.html").on("change", function() {
-        builder.js();
-    });
-    gulp.watch("./src/(manifest|manifest_chrome|manifest_firefox).json").on("change", function() {
-        builder.manifest();
-    });
-    gulp.watch("./src/**/!(result|loading|error).html").on("change", function() {
-        builder.html();
-    });
-    gulp.watch("./static/**/*").on("change", function() {
-        builder.static();
-    });
-    gulp.watch("./src/**/*.styl").on("change", function() {
-        builder.styl();
-    });
 }
 
 /**
- * 根据传入的参数build对应版本的扩展
- *
- * @param {String} browser 浏览器的名称
- * @param {String} env build的环境变量  (production/development)两种值
+ * 将build的扩展打包成zip文件以备发布
  */
-function build(browser, env) {
+function packToZip(callback) {
+    let match_dir = "./build/" + browser + "/**/*";
+    let packageName = "edge_translate_" + browser + ".zip";
+    gulp.src(match_dir)
+        .pipe(zip(packageName))
+        .pipe(gulp.dest("./build/"));
+    callback();
+}
+
+function watcher(callback) {
+    gulp.watch("./src/**/*.js").on("change", function() {
+        eslintJS();
+    });
+    gulp.watch("./src/display/templates/*.html").on("change", function() {
+        eslintJS();
+    });
+    gulp.watch("./src/(manifest|manifest_chrome|manifest_firefox).json").on("change", function() {
+        manifest();
+    });
+    gulp.watch("./src/**/!(result|loading|error).html").on("change", function() {
+        html();
+    });
+    gulp.watch("./static/**/*").on("change", function() {
+        packStatic();
+    });
+    gulp.watch("./src/**/*.styl").on("change", function() {
+        styl();
+    });
+    callback();
+}
+
+function eslintJS() {
+    return gulp
+        .src("./src/**/*.js", { base: "src" })
+        .pipe(
+            eslint({
+                configFile: "./.eslintrc.js"
+            })
+        )
+        .pipe(eslint.format());
+}
+
+function buildJS() {
+    let output_dir = "./build/" + browser + "/";
+    let webpack_path =
+        environment === "production"
+            ? "./config/webpack.prod.config.js"
+            : "./config/webpack.dev.config.js"; // webpack 配置文件路径
+    return gulp
+        .src("./src/**/*.js", { base: "src" })
+        .pipe(webpack_stream(require(webpack_path), webpack))
+        .pipe(gulp.dest(output_dir))
+        .on("error", error => log(error));
+}
+
+function manifest() {
     let output_dir = "./build/" + browser + "/";
     let manifest_patch = "./src/manifest_" + browser + ".json";
-    let webpack_path =
-        env === "production" ? "./config/webpack.prod.config.js" : "./config/webpack.dev.config.js"; // webpack 配置文件路径
+    return gulp
+        .src("./src/manifest.json", { base: "src" })
+        .pipe(merge_json(manifest_patch))
+        .pipe(gulp.dest(output_dir))
+        .on("end", function() {
+            log("Finished build manifest files");
+        });
+}
 
-    var js = function() {
-        gulp.src("./src/**/*.js", { base: "src" })
-            .pipe(
-                eslint({
-                    configFile: "./.eslintrc.js"
-                })
-            )
-            .pipe(eslint.format());
-        gulp.src("./src/**/*.js", { base: "src" })
-            .pipe(webpack_stream(require(webpack_path), webpack))
-            .pipe(gulp.dest(output_dir))
-            .on("end", () => log("Finished build js files"))
-            .on("error", error => log(error));
-    };
+function html(callback) {
+    let output_dir = "./build/" + browser + "/";
+    gulp.src(["./src/**/!(result|loading|error).html"], { base: "src" })
+        .pipe(gulp.dest(output_dir))
+        .on("end", function() {
+            log("Finished build html files");
+        });
+    callback();
+}
 
-    var manifest = function() {
-        gulp.src("./src/manifest.json", { base: "src" })
-            .pipe(merge_json(manifest_patch))
-            .pipe(gulp.dest(output_dir))
-            .on("end", function() {
-                log("Finished build manifest files");
-            });
-    };
+function styl() {
+    let output_dir = "./build/" + browser + "/";
+    return gulp
+        .src("./src/!(lib)/**/*.styl", { base: "src" })
+        .pipe(
+            stylus({
+                compress: true // 需要压缩
+                // eslint-disable-next-line no-console
+            }).on("error", error => console.log(error))
+        )
+        .pipe(gulp.dest(output_dir))
+        .on("end", function() {
+            log("Finished build stylus files");
+        });
+}
 
-    var html = function() {
-        gulp.src(["./src/**/!(result|loading|error).html"], { base: "src" })
-            .pipe(gulp.dest(output_dir))
-            .on("end", function() {
-                log("Finished build html files");
-            });
-    };
+function packStatic() {
+    let output_dir = "./build/" + browser + "/";
+    if (browser === "chrome") {
+        gulp.src("./static/**/!(element_main).js", { base: "static" })
+            .pipe(terser().on("error", error => log(error)))
+            .pipe(gulp.dest(output_dir));
 
-    var packStatic = function() {
-        if (browser === "chrome") {
-            gulp.src("./static/**/!(element_main).js", { base: "static" })
-                .pipe(terser().on("error", console.error))
-                .pipe(gulp.dest(output_dir));
+        // Do not uglify element_main.js
+        gulp.src("./static/google/element_main.js", { base: "static" }).pipe(gulp.dest(output_dir));
 
-            // Do not uglify element_main.js
-            gulp.src("./static/google/element_main.js", { base: "static" }).pipe(
-                gulp.dest(output_dir)
-            );
+        return gulp.src("./static/**/!(*.js)", { base: "static" }).pipe(gulp.dest(output_dir));
+    } else {
+        gulp.src("./static/!(pdf)/**/!(element_main).js", { base: "static" })
+            .pipe(terser().on("error", error => log(error)))
+            .pipe(gulp.dest(output_dir));
 
-            gulp.src("./static/**/!(*.js)", { base: "static" }).pipe(gulp.dest(output_dir));
-        } else {
-            gulp.src("./static/!(pdf)/**/!(element_main).js", { base: "static" })
-                .pipe(terser().on("error", console.error))
-                .pipe(gulp.dest(output_dir));
+        // Do not uglify element_main.js
+        gulp.src("./static/google/element_main.js", { base: "static" }).pipe(gulp.dest(output_dir));
 
-            // Do not uglify element_main.js
-            gulp.src("./static/google/element_main.js", { base: "static" }).pipe(
-                gulp.dest(output_dir)
-            );
-
-            gulp.src("./static/!(pdf)/**/!(*.js)", { base: "static" }).pipe(gulp.dest(output_dir));
-        }
-        log("Finished build static files");
-    };
-
-    var styl = function() {
-        gulp.src("./src/!(lib)/**/*.styl", { base: "src" })
-            .pipe(
-                stylus({
-                    compress: true // 需要压缩
-                    // eslint-disable-next-line no-console
-                }).on("error", error => console.log(error))
-            )
-            .pipe(gulp.dest(output_dir))
-            .on("end", function() {
-                log("Finished build stylus files");
-            });
-    };
-
-    return {
-        js: js,
-        manifest: manifest,
-        html: html,
-        static: packStatic,
-        styl: styl,
-        all: function() {
-            js();
-            manifest();
-            html();
-            packStatic();
-            styl();
-        }
-    };
+        return gulp
+            .src("./static/!(pdf)/**/!(*.js)", { base: "static" })
+            .pipe(gulp.dest(output_dir));
+    }
 }
 
 /**
@@ -246,6 +228,6 @@ function merge_json() {
 }
 
 // 定义 log函数 ，便于输出task的执行情况
-var log = function(d) {
+function log(d) {
     process.stdout.write(d + "\n");
-};
+}
