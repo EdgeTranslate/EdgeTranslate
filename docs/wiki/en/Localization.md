@@ -10,6 +10,8 @@ We developed this extension to help more people overcome language barriers. But 
 
 - Russian(Thanks to [ElectroLom](https://github.com/electrolom42))
 
+- Japanese(Thanks to [ykyuki](https://github.com/ykyuki))
+
 If your native language is not in the list above, and you would like to add the support of your language, we would really appreciate it.
 
 ### How to add your local language support

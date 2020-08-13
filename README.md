@@ -148,6 +148,8 @@ Join the channel or group to get Edge Translate beta packages before releases.
 
 * [knlyknly](https://github.com/knlyknly)
 
+* [ykyuki](https://github.com/ykyuki)
+
 ## Help Localization
 
 If you want to help localize Edge Translate, please read the following guide.
