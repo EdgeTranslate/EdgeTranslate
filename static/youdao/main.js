@@ -2942,7 +2942,8 @@ if (!J || !J.bind) {
         cssURL: b,
         tipsURL: c,
         transURL: a,
-        logURL: e,
+        // 禁用log以避免跨域cookie造成的问题(#107)
+        // logURL: e,
         connFilePath: h,
         reqSize: 20
     });
