@@ -34,7 +34,7 @@
         "pack:firefox": "gulp pack:firefox"
     },
     "devDependencies": {
-        "acorn": "^7.3.1",
+        "acorn": "^7.4.0",
         "babel-core": "^6.26.3",
         "babel-eslint": "^10.1.0",
         "babel-loader": "^7.1.5",
@@ -47,10 +47,10 @@
         "gulp": "^4.0.2",
         "gulp-eslint": "^5.0.0",
         "gulp-stylus": "^2.7.0",
-        "gulp-terser": "^1.2.0",
+        "gulp-terser": "^1.3.2",
         "gulp-zip": "^4.2.0",
         "jsdom": "^11.12.0",
-        "lodash": "^4.17.19",
+        "lodash": "^4.17.20",
         "mocha": "^7.2.0",
         "prettier": "^1.19.1",
         "raw-loader": "^0.5.1",
