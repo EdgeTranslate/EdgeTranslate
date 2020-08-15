@@ -15,6 +15,7 @@ const HOME_PAGE = "https://cn.bing.com/translator";
  * Request headers
  */
 const HEADERS = {
+    // eslint-disable-next-line
     "accept": "*/*",
     "accept-language": "zh-CN,zh-TW;q=0.9,zh;q=0.8,en;q=0.7",
     "content-type": "application/x-www-form-urlencoded"
@@ -121,7 +122,7 @@ class BingTranslator {
             };
         };
 
-        if (IG && IG.length > 0 && IID && IID.length > 0) {
+        if (this.IG && this.IG.length > 0 && this.IID && this.IID.length > 0) {
             innerFunc();
         } else {
             this.getIGIID(innerFunc);
@@ -173,7 +174,6 @@ class BingTranslator {
         }
     }
 }
-
 
 /**
  * Create default translator object.
