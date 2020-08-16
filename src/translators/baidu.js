@@ -1,54 +1,61 @@
 export default TRANSLATOR;
-/**
- * Max retry times after failure.
- */
-const MAX_RETRY = 3;
-
-/**
- * URLs
- */
-const HOST = "https://fanyi.baidu.com/";
-
-/**
- * Request headers
- */
-const HEADERS = {
-    accept: "*/*",
-    "accept-language":
-        "en,zh;q=0.9,en-GB;q=0.8,en-CA;q=0.7,en-AU;q=0.6,en-ZA;q=0.5,en-NZ;q=0.4,en-IN;q=0.3,zh-CN;q=0.2",
-    "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
-    cookie: document.cookie ? document.cookie : null
-};
 
 /**
  * Baidu translator interface.
  */
 class BaiduTranslator {
     constructor() {
+        this.MAX_RETRY = 3; // Max retry times after failure.
+        this.HOST = "https://fanyi.baidu.com/"; // Baidu translation url
         this.token = "";
         this.gtk = ""; // used to calculate value of "sign"
+        this.sign = "";
         this.languages = {};
+        /**
+         * Request headers
+         */
+        this.HEADERS = {
+            accept: "*/*",
+            "accept-language":
+                "en,zh;q=0.9,en-GB;q=0.8,en-CA;q=0.7,en-AU;q=0.6,en-ZA;q=0.5,en-NZ;q=0.4,en-IN;q=0.3,zh-CN;q=0.2",
+            "content-type": "application/x-www-form-urlencoded; charset=UTF-8"
+        };
     }
 
     /**
-     * Get token and gtk for urls.
+     * Get latest token and gtk for urls.
      *
-     * @param {Function} callback Callback
+     * @returns {Promise} then(this=>callback()) used to run callback. catch(error) used to catch error
      */
-    getTokenGtk(callback) {
-        let request = new XMLHttpRequest();
-        request.open("GET", HOST, true);
-        request.send();
-        request.onreadystatechange = () => {
-            if (request.readyState == 4) {
-                if (request.status == 200) {
-                    window.document.innerHTML = request.responseText;
-                    this.token = request.responseText.match(/token: '(.*?)',/)[1];
-                    this.gtk = request.responseText.match(/window.gtk = '(.*?)'/)[1];
-                    callback();
-                }
-            }
+    getTokenGtk() {
+        let oneRequest = () => {
+            return new Promise((resolve, reject) => {
+                let request = new XMLHttpRequest();
+                request.open("GET", this.HOST, true);
+                request.send();
+                request.onreadystatechange = () => {
+                    if (request.readyState == 4) {
+                        if (request.status == 200) {
+                            window.document.innerHTML = request.responseText;
+                            this.token = request.responseText.match(/token: '(.*?)',/)[1];
+                            this.gtk = request.responseText.match(/window.gtk = '(.*?)'/)[1];
+                            resolve(this);
+                        }
+                    }
+                };
+                request.ontimeout = function(e) {
+                    reject(e);
+                };
+                request.onerror = function(e) {
+                    reject(e);
+                };
+            });
         };
+        // request two times to ensure the token is the latest value
+        // otherwise the request would return "997" error
+        return oneRequest().then(() => {
+            return oneRequest();
+        });
     }
 
     /**
@@ -79,14 +86,14 @@ class BaiduTranslator {
      * @param {String} to target language
      * @param {Function} callback callback
      */
-    translate(text, from, to, callback) {
-        let innerFunc = () => {
+    translate(text, from, to) {
+        return new Promise((resolve, reject) => {
             let request = new XMLHttpRequest();
             let path = "/v2transapi?" + "from=" + from + "&to=" + to;
 
-            request.open("POST", HOST + path);
-            for (let key in HEADERS) {
-                request.setRequestHeader(key, HEADERS[key]);
+            request.open("POST", this.HOST + path);
+            for (let key in this.HEADERS) {
+                request.setRequestHeader(key, this.HEADERS[key]);
             }
             let data = new URLSearchParams({
                 from: from,
@@ -103,24 +110,26 @@ class BaiduTranslator {
             request.onreadystatechange = () => {
                 if (request.readyState == 4) {
                     if (request.status == 200) {
-                        try {
-                            // console.log(request.response);
-                            // let result = parseResult(JSON.parse(request.response));
-                            callback(request.response);
-                        } catch (error) {
-                            // Retry after failure
-                            // if (retryCount < MAX_RETRY) {
-                            //     getIGIID(innerFunc);
-                            //     retryCount++;
-                            // }
-                            console.log(error);
+                        if (request.response) {
+                            let responseObject = JSON.parse(request.response);
+                            if (responseObject.errno === 997) reject(request.response);
+                            resolve(request.response);
                         }
+                        // try {
+                        //     // console.log(request.response);
+                        //     // let result = parseResult(JSON.parse(request.response));
+                        // } catch (error) {
+                        //     // Retry after failure
+                        //     // if (retryCount < MAX_RETRY) {
+                        //     //     getIGIID(innerFunc);
+                        //     //     retryCount++;
+                        //     // }
+                        //     console.log(error);
+                        // }
                     }
                 }
             };
-        };
-
-        innerFunc();
+        });
 
         // if (IG && IG.length > 0 && IID && IID.length > 0) {
         //     innerFunc();
