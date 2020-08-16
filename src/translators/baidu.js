@@ -7,9 +7,9 @@ class BaiduTranslator {
     constructor() {
         this.MAX_RETRY = 3; // Max retry times after failure.
         this.HOST = "https://fanyi.baidu.com/"; // Baidu translation url
-        this.token = "";
+        this.token = ""; // one of request parameters
         this.gtk = ""; // used to calculate value of "sign"
-        this.sign = "";
+        this.sign = ""; // one of request parameters
         this.languages = {};
         /**
          * Request headers
@@ -69,13 +69,38 @@ class BaiduTranslator {
     }
 
     /**
-     * Detect language of given te4xt.
+     * Detect language of given text.
      *
      * @param {String} text text to detect
-     * @param {Function} callback callback
+     * @returns {Promise} then(result) used to return request result. catch(error) used to catch error
      */
-    detect(text, callback) {
-        // TODO
+    detect(text) {
+        return new Promise((resolve, reject) => {
+            let request = new XMLHttpRequest();
+            let path = "langdetect";
+
+            request.open("POST", this.HOST + path);
+            for (let key in this.HEADERS) {
+                request.setRequestHeader(key, this.HEADERS[key]);
+            }
+            let data = new URLSearchParams({
+                query: text
+            });
+            request.send(data.toString());
+            request.onreadystatechange = () => {
+                if (request.readyState == 4) {
+                    if (request.status == 200) {
+                        resolve(request.response);
+                    }
+                }
+            };
+            request.ontimeout = function(e) {
+                reject(e);
+            };
+            request.onerror = function(e) {
+                reject(e);
+            };
+        });
     }
 
     /**
@@ -84,58 +109,71 @@ class BaiduTranslator {
      * @param {String} text text to translate
      * @param {String} from source language
      * @param {String} to target language
-     * @param {Function} callback callback
+     * @returns {Promise} then(result) used to return request result. catch(error) used to catch error
      */
     translate(text, from, to) {
-        return new Promise((resolve, reject) => {
-            let request = new XMLHttpRequest();
-            let path = "/v2transapi?" + "from=" + from + "&to=" + to;
+        var reTryCount = 0;
+        // send translation request one time
+        // if the first request fails, resend requests no more than {this.MAX_RETRY} times
+        let translateOneTime = function() {
+            return new Promise((resolve, reject) => {
+                let request = new XMLHttpRequest();
+                let path = "/v2transapi?" + "from=" + from + "&to=" + to;
 
-            request.open("POST", this.HOST + path);
-            for (let key in this.HEADERS) {
-                request.setRequestHeader(key, this.HEADERS[key]);
-            }
-            let data = new URLSearchParams({
-                from: from,
-                to: to,
-                query: text,
-                transtype: "realtime",
-                simple_means_flag: 3,
-                sign: this.generateSign(text, this.gtk),
-                token: this.token,
-                domain: "common"
-            });
-            request.send(data.toString());
+                request.open("POST", this.HOST + path);
+                for (let key in this.HEADERS) {
+                    request.setRequestHeader(key, this.HEADERS[key]);
+                }
+                let data = new URLSearchParams({
+                    from: from,
+                    to: to,
+                    query: text,
+                    transtype: "realtime",
+                    simple_means_flag: 3,
+                    sign: this.generateSign(text, this.gtk),
+                    token: this.token,
+                    domain: "common"
+                });
+                request.send(data.toString());
 
-            request.onreadystatechange = () => {
-                if (request.readyState == 4) {
-                    if (request.status == 200) {
-                        if (request.response) {
+                request.onreadystatechange = () => {
+                    if (request.readyState == 4) {
+                        if (request.status == 200) {
                             let responseObject = JSON.parse(request.response);
-                            if (responseObject.errno === 997) reject(request.response);
+                            // token is out of date and try to resend request
+                            if (responseObject.errno) {
+                                if (reTryCount < this.MAX_RETRY) {
+                                    reTryCount++;
+                                    resolve(
+                                        // get new token and gtk
+                                        this.getTokenGtk().then(() => {
+                                            // resend translation request
+                                            return translateOneTime();
+                                        })
+                                    );
+                                } else reject(responseObject);
+                            }
                             resolve(request.response);
                         }
-                        // try {
-                        //     // console.log(request.response);
-                        //     // let result = parseResult(JSON.parse(request.response));
-                        // } catch (error) {
-                        //     // Retry after failure
-                        //     // if (retryCount < MAX_RETRY) {
-                        //     //     getIGIID(innerFunc);
-                        //     //     retryCount++;
-                        //     // }
-                        //     console.log(error);
-                        // }
                     }
-                }
-            };
-        });
-
-        // if (IG && IG.length > 0 && IID && IID.length > 0) {
-        //     innerFunc();
-        // } else {
-        //     getIGIID(innerFunc);
-        // }
+                };
+                request.ontimeout = function(e) {
+                    reject(e);
+                };
+                request.onerror = function(e) {
+                    reject(e);
+                };
+            });
+        }.bind(this);
+        // if old token and gtk exist
+        if (this.token && this.gtk) {
+            return translateOneTime();
+        } else {
+            // get token and gtk when the translator is initiated
+            return this.getTokenGtk().then(() => {
+                return translateOneTime();
+            });
+        }
     }
 
     /* eslint-disable */
@@ -200,5 +238,5 @@ class BaiduTranslator {
 /**
  * Create default translator object.
  */
-var TRANSLATOR = new BaiduTranslator();
 window.TRANSLATOR = new BaiduTranslator();
+var TRANSLATOR = window.TRANSLATOR;

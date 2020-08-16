@@ -39,6 +39,7 @@
         "babel-eslint": "^10.1.0",
         "babel-loader": "^7.1.5",
         "babel-preset-env": "^1.7.0",
+        "chai": "^4.2.0",
         "del": "^3.0.0",
         "eslint": "^5.16.0",
         "eslint-config-prettier": "^4.3.0",
