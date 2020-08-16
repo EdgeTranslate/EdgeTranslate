@@ -1,6 +1,15 @@
 {
     "presets": [
-        "es2015"
+        [
+            "env",
+            {
+                "modules": "umd",
+                "targets": {
+                    "chrome": "55",
+                    "firefox": "60"
+                }
+            }
+        ]
     ],
     "plugins": []
 }

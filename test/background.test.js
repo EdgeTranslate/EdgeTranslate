@@ -1,4 +1,4 @@
-const assert = require("sinon").assert;
+const { describe, beforeEach, afterEach } = require("mocha");
 const chrome = require("sinon-chrome");
 const fs = require("fs");
 const jsdom = require("jsdom");

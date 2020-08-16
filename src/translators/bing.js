@@ -16,7 +16,7 @@ const HOME_PAGE = "https://cn.bing.com/translator";
  */
 const HEADERS = {
     // eslint-disable-next-line
-    "accept": "*/*",
+    accept: "*/*",
     "accept-language": "zh-CN,zh-TW;q=0.9,zh;q=0.8,en;q=0.7",
     "content-type": "application/x-www-form-urlencoded"
 };
@@ -87,7 +87,7 @@ class BingTranslator {
     }
 
     /**
-     * Detect language of given te4xt.
+     * Detect language of given text.
      *
      * @param {String} text text to detect
      * @param {Function} callback callback
