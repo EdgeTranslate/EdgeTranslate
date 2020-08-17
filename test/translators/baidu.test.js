@@ -1,13 +1,13 @@
-import axios from "axios";
+// import axios from "axios";
 import fs from "fs";
 import TRANSLATOR from "../../src/translators/baidu.js";
 
 describe("baidu translator api", () => {
     beforeEach(() => {
         // set http module of nodejs as axios' request method
-        let path = require("path");
-        let lib = path.join(path.dirname(require.resolve("axios")), "lib/adapters/http");
-        axios.defaults.adapter = require(lib);
+        // let path = require("path");
+        // let lib = path.join(path.dirname(require.resolve("axios")), "lib/adapters/http");
+        // axios.defaults.adapter = require(lib);
     });
 
     it("to detect language type", done => {
@@ -41,12 +41,12 @@ describe("baidu translator api", () => {
         TRANSLATOR.translate("hello", "en", "zh")
             .then(result => {
                 let resultObject = result.data;
-                expect(resultObject).toContain("trans_result");
+                expect(resultObject.trans_result).toBeDefined();
                 expect(resultObject.trans_result.data[0].dst).toEqual("你好");
-                expect(resultObject).toContain("liju_result");
-                expect(resultObject.dict_result).toContain("collins");
-                expect(resultObject.dict_result).toContain("edict");
-                expect(resultObject.dict_result).toContain("oxford");
+                expect(resultObject.liju_result).toBeDefined();
+                expect(resultObject.dict_result.collins).toBeDefined();
+                expect(resultObject.dict_result.edict).toBeDefined();
+                expect(resultObject.dict_result.oxford).toBeDefined();
                 done();
             })
             .catch(error => {
