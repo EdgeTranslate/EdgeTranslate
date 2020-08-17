@@ -65,7 +65,9 @@ class BaiduTranslator {
      * @returns {Object} Parsed result
      */
     parseResult(result) {
-        // TODO
+        let parsed = {};
+        parsed.originalText = result.trans_result.data[0].src;
+        parsed.mainMeaning = result.trans_result.data[0].dst;
     }
 
     /**
