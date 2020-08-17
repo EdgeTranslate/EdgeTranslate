@@ -1,4 +1,4 @@
-export default TRANSLATOR;
+import axios from "axios";
 
 /**
  * Max retry times after failure.
@@ -35,24 +35,24 @@ class BingTranslator {
     /**
      * Get IG and IID for urls.
      *
-     * @param {Function} callback Callback
+     * @returns {Promise} IG and IID Promise
      */
-    getIGIID(callback) {
-        let request = new XMLHttpRequest();
-        request.open("GET", HOME_PAGE, true);
-        request.send();
-        request.onreadystatechange = () => {
-            if (request.readyState == 4) {
-                if (request.status == 200) {
-                    this.IG = request.responseText.match(/IG:"([a-zA-Z0-9]+)"/)[1];
+    getIGIID() {
+        return new Promise((resolve, reject) => {
+            axios
+                .get(HOME_PAGE)
+                .then(response => {
+                    this.IG = response.data.match(/IG:"([a-zA-Z0-9]+)"/)[1];
 
-                    let html = this.HTMLParser.parseFromString(request.responseText, "text/html");
+                    let html = this.HTMLParser.parseFromString(response.data, "text/html");
                     this.IID = html.getElementById("rich_tta").getAttribute("data-iid");
 
-                    callback();
-                }
-            }
-        };
+                    resolve();
+                })
+                .catch(error => {
+                    reject(error);
+                });
+        });
     }
 
     /**
@@ -90,42 +90,42 @@ class BingTranslator {
      * Detect language of given text.
      *
      * @param {String} text text to detect
-     * @param {Function} callback callback
+     * @returns {Promise} detected language Promise
      */
-    detect(text, callback) {
+    detect(text) {
         let retryCount = 0;
-        let innerFunc = () => {
-            let request = new XMLHttpRequest();
-            let path = "ttranslatev3?isVertical=1&IG=" + this.IG + "&IID=" + this.IID;
-
-            request.open("POST", HOST + path);
-            for (let key in HEADERS) {
-                request.setRequestHeader(key, HEADERS[key]);
-            }
-            request.send("&fromLang=auto-detect&to=zh-Hans&text=" + text);
-
-            request.onreadystatechange = () => {
-                if (request.readyState == 4) {
-                    if (request.status == 200) {
+        let detectOnce = () => {
+            return new Promise((resolve, reject) => {
+                axios({
+                    url: "ttranslatev3?isVertical=1&IG=" + this.IG + "&IID=" + this.IID,
+                    method: "POST",
+                    baseURL: HOST,
+                    headers: HEADERS,
+                    data: "&fromLang=auto-detect&to=zh-Hans&text=" + text,
+                    timeout: 5000
+                })
+                    .then(response => {
                         try {
-                            let result = JSON.parse(request.response)[0].detectedLanguage.language;
-                            callback(result);
+                            let result = response.data[0].detectedLanguage.language;
+                            resolve(result);
                         } catch (error) {
                             // Retry after failure
                             if (retryCount < MAX_RETRY) {
-                                this.getIGIID(innerFunc);
                                 retryCount++;
-                            }
+                                resolve(this.getIGIID().then(detectOnce));
+                            } else reject(error);
                         }
-                    }
-                }
-            };
+                    })
+                    .catch(error => {
+                        reject(error);
+                    });
+            });
         };
 
         if (this.IG && this.IG.length > 0 && this.IID && this.IID.length > 0) {
-            innerFunc();
+            return detectOnce();
         } else {
-            this.getIGIID(innerFunc);
+            return this.getIGIID().then(detectOnce);
         }
     }
 
@@ -135,47 +135,48 @@ class BingTranslator {
      * @param {String} text text to translate
      * @param {String} from source language
      * @param {String} to target language
-     * @param {Function} callback callback
+     * @returns {Promise} translate result Promise
      */
-    translate(text, from, to, callback) {
+    translate(text, from, to) {
         let retryCount = 0;
-        let innerFunc = () => {
-            let request = new XMLHttpRequest();
-            let path = "tlookupv3?isVertical=1&IG=" + this.IG + "&IID=" + this.IID;
-
-            request.open("POST", HOST + path);
-            for (let key in HEADERS) {
-                request.setRequestHeader(key, HEADERS[key]);
-            }
-            request.send("&from=" + from + "&to=" + to + "&text=" + text);
-
-            request.onreadystatechange = () => {
-                if (request.readyState == 4) {
-                    if (request.status == 200) {
+        let translateOnce = () => {
+            return new Promise((resolve, reject) => {
+                axios({
+                    url: "tlookupv3?isVertical=1&IG=" + this.IG + "&IID=" + this.IID,
+                    method: "post",
+                    baseURL: HOST,
+                    headers: HEADERS,
+                    data: "&from=" + from + "&to=" + to + "&text=" + text,
+                    timeout: 5000
+                })
+                    .then(response => {
                         try {
-                            let result = this.parseResult(JSON.parse(request.response));
-                            callback(result);
+                            let result = this.parseResult(response.data);
+                            resolve(result);
                         } catch (error) {
                             // Retry after failure
                             if (retryCount < MAX_RETRY) {
-                                this.getIGIID(innerFunc);
                                 retryCount++;
-                            }
+                                resolve(this.getIGIID().then(translateOnce));
+                            } else reject(error);
                         }
-                    }
-                }
-            };
+                    })
+                    .catch(error => {
+                        reject(error);
+                    });
+            });
         };
 
         if (this.IG && this.IG.length > 0 && this.IID && this.IID.length > 0) {
-            innerFunc();
+            return translateOnce();
         } else {
-            this.getIGIID(innerFunc);
+            return this.getIGIID().then(translateOnce);
         }
     }
 }
 
 /**
- * Create default translator object.
+ * Create and export default translator object.
  */
 const TRANSLATOR = new BingTranslator();
+export default TRANSLATOR;
