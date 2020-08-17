@@ -1,9 +1,9 @@
-export default TRANSLATOR;
+var axios = require("axios");
 
 /**
  * Baidu translator interface.
  */
-class BaiduTranslator {
+export default class BaiduTranslator {
     constructor() {
         this.MAX_RETRY = 3; // Max retry times after failure.
         this.HOST = "https://fanyi.baidu.com/"; // Baidu translation url
@@ -18,7 +18,8 @@ class BaiduTranslator {
             accept: "*/*",
             "accept-language":
                 "en,zh;q=0.9,en-GB;q=0.8,en-CA;q=0.7,en-AU;q=0.6,en-ZA;q=0.5,en-NZ;q=0.4,en-IN;q=0.3,zh-CN;q=0.2",
-            "content-type": "application/x-www-form-urlencoded; charset=UTF-8"
+            "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+            Origin: "http://localhost:3000"
         };
     }
 
@@ -77,31 +78,15 @@ class BaiduTranslator {
      * @returns {Promise} then(result) used to return request result. catch(error) used to catch error
      */
     detect(text) {
-        return new Promise((resolve, reject) => {
-            let request = new XMLHttpRequest();
-            let path = "langdetect";
-
-            request.open("POST", this.HOST + path);
-            for (let key in this.HEADERS) {
-                request.setRequestHeader(key, this.HEADERS[key]);
-            }
-            let data = new URLSearchParams({
+        return axios({
+            url: "langdetect",
+            method: "post",
+            baseURL: this.HOST,
+            headers: this.HEADERS,
+            data: new URLSearchParams({
                 query: text
-            });
-            request.send(data.toString());
-            request.onreadystatechange = () => {
-                if (request.readyState == 4) {
-                    if (request.status == 200) {
-                        resolve(request.response);
-                    }
-                }
-            };
-            request.ontimeout = function(e) {
-                reject(e);
-            };
-            request.onerror = function(e) {
-                reject(e);
-            };
+            }),
+            timeout: 5000
         });
     }
 
@@ -236,9 +221,3 @@ class BaiduTranslator {
     }
     /* eslint-enable */
 }
-
-/**
- * Create default translator object.
- */
-window.TRANSLATOR = new BaiduTranslator();
-var TRANSLATOR = window.TRANSLATOR;

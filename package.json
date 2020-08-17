@@ -24,7 +24,7 @@
         "url": "https://github.com/EdgeTranslate/EdgeTranslate.git"
     },
     "scripts": {
-        "test": "mocha --recursive -t 5000",
+        "test": "jest",
         "format": "eslint 'src/**/*.js' 'config/**/*.js' --fix",
         "dev:chrome": "gulp dev:chrome & gulp buildJS:chrome",
         "dev:firefox": " gulp dev:firefox & gulp buildJS:firefox",
@@ -35,11 +35,11 @@
     },
     "devDependencies": {
         "acorn": "^7.4.0",
+        "axios": "^0.19.2",
         "babel-core": "^6.26.3",
         "babel-eslint": "^10.1.0",
         "babel-loader": "^7.1.5",
         "babel-preset-env": "^1.7.0",
-        "chai": "^4.2.0",
         "del": "^3.0.0",
         "eslint": "^5.16.0",
         "eslint-config-prettier": "^4.3.0",
@@ -50,13 +50,10 @@
         "gulp-stylus": "^2.7.0",
         "gulp-terser": "^1.3.2",
         "gulp-zip": "^4.2.0",
-        "jsdom": "^11.12.0",
+        "jest": "^26.4.0",
         "lodash": "^4.17.20",
-        "mocha": "^7.2.0",
         "prettier": "^1.19.1",
         "raw-loader": "^0.5.1",
-        "sinon": "^6.3.5",
-        "sinon-chrome": "^2.3.2",
         "webpack": "^4.44.1",
         "webpack-merge": "^4.2.2",
         "webpack-stream": "^5.2.1"
