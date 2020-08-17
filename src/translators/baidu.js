@@ -1,9 +1,9 @@
-var axios = require("axios");
+import axios from "axios";
 
 /**
  * Baidu translator interface.
  */
-export default class BaiduTranslator {
+class BaiduTranslator {
     constructor() {
         this.MAX_RETRY = 3; // Max retry times after failure.
         this.HOST = "https://fanyi.baidu.com/"; // Baidu translation url
@@ -37,7 +37,6 @@ export default class BaiduTranslator {
                 request.onreadystatechange = () => {
                     if (request.readyState == 4) {
                         if (request.status == 200) {
-                            window.document.innerHTML = request.responseText;
                             this.token = request.responseText.match(/token: '(.*?)',/)[1];
                             this.gtk = request.responseText.match(/window.gtk = '(.*?)'/)[1];
                             resolve(this);
@@ -221,3 +220,9 @@ export default class BaiduTranslator {
     }
     /* eslint-enable */
 }
+
+/**
+ * Create and export default Translator object.
+ */
+var TRANSLATOR = new BaiduTranslator();
+export default TRANSLATOR;

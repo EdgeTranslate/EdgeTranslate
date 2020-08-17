@@ -1,5 +1,5 @@
-import baidu from "../../src/translators/baidu.js";
 import axios from "axios";
+import TRANSLATOR from "../../src/translators/baidu.js";
 
 describe("baidu translator api", () => {
     beforeEach(() => {
@@ -10,8 +10,7 @@ describe("baidu translator api", () => {
     });
 
     it("to detect language type", done => {
-        let translator = new baidu();
-        translator.detect("hello").then(() => {
+        TRANSLATOR.detect("hello").then(() => {
             done();
         });
     });
