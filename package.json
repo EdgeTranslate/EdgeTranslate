@@ -53,6 +53,7 @@
         "gulp-zip": "^4.2.0",
         "jest": "^26.4.0",
         "lodash": "^4.17.20",
+        "merge-stream": "^2.0.0",
         "prettier": "^1.19.1",
         "raw-loader": "^0.5.1",
         "webpack": "^4.44.1",
