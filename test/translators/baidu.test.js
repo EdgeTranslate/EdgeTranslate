@@ -38,6 +38,13 @@ describe("baidu translator api", () => {
         });
     });
 
+    it("to parse translation result", done => {
+        let result = fs.readFileSync("test/translators/baiduTransResult.json", "utf-8");
+        result = JSON.parse(result);
+        TRANSLATOR.parseResult(result);
+        done();
+    });
+
     it("to translate a word", done => {
         TRANSLATOR.getTokenGtk()
             .then(() => {
@@ -78,12 +85,5 @@ describe("baidu translator api", () => {
                 expect(error).toBeFalsy();
                 done();
             });
-    });
-
-    it("to parse translation result", done => {
-        let result = fs.readFileSync("test/translators/baiduTransResult.json", "utf-8");
-        result = JSON.parse(result);
-        TRANSLATOR.parseResult(result);
-        done();
     });
 });

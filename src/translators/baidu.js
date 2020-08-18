@@ -56,6 +56,28 @@ class BaiduTranslator {
         let parsed = {};
         parsed.originalText = result.trans_result.data[0].src;
         parsed.mainMeaning = result.trans_result.data[0].dst;
+        parsed.tPronunciation = result.trans_result.phonetic.reduce(
+            (entry1, entry2) => entry1.trg_str + " " + entry2.trg_str
+        );
+        parsed.sPronunciation = result.dict_result.simple_means.symbols[0].ph_en;
+        parsed.detailedMeanings = [];
+        for (let part of result.dict_result.simple_means.symbols[0].parts) {
+            let meaning = {};
+            meaning.pos = part.part; // part of speech
+            meaning.meaning = part.means.reduce((meaning1, meaning2) => meaning1 + "\n" + meaning2);
+            parsed.detailedMeanings.push(meaning);
+        }
+        parsed.definitions = [];
+        for (let item of result.dict_result.edict.item) {
+            let meaning = {};
+            meaning.pos = item.pos;
+            item = item.tr_group[0];
+            meaning.meaning = item.tr[0];
+            meaning.example = item.example[0];
+            meaning.synonyms = item.similar_word;
+            parsed.definitions.push(meaning);
+        }
+        return parsed;
     }
 
     /**
