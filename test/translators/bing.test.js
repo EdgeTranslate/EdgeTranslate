@@ -11,7 +11,6 @@ describe("bing translator api", () => {
 
     it("to detect language type", done => {
         TRANSLATOR.detect("hello").then(result => {
-            console.log(result);
             done();
         });
     });

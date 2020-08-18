@@ -106,8 +106,8 @@ class BingTranslator {
                 })
                     .then(response => {
                         try {
-                            let result = response.data[0].detectedLanguage.language;
-                            resolve(result);
+                            // let result = response.data[0].detectedLanguage.language;
+                            resolve(response);
                         } catch (error) {
                             // Retry after failure
                             if (retryCount < MAX_RETRY) {

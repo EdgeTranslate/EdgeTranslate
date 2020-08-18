@@ -18,8 +18,7 @@ class BaiduTranslator {
             accept: "*/*",
             "accept-language":
                 "en,zh;q=0.9,en-GB;q=0.8,en-CA;q=0.7,en-AU;q=0.6,en-ZA;q=0.5,en-NZ;q=0.4,en-IN;q=0.3,zh-CN;q=0.2",
-            "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
-            Origin: "http://localhost:3000"
+            "content-type": "application/x-www-form-urlencoded; charset=UTF-8"
         };
     }
 
@@ -29,28 +28,17 @@ class BaiduTranslator {
      * @returns {Promise} then(this=>callback()) used to run callback. catch(error) used to catch error
      */
     getTokenGtk() {
-        let oneRequest = () => {
-            return new Promise((resolve, reject) => {
-                let request = new XMLHttpRequest();
-                request.open("GET", this.HOST, true);
-                request.send();
-                request.onreadystatechange = () => {
-                    if (request.readyState == 4) {
-                        if (request.status == 200) {
-                            this.token = request.responseText.match(/token: '(.*?)',/)[1];
-                            this.gtk = request.responseText.match(/window.gtk = '(.*?)'/)[1];
-                            resolve(this);
-                        }
-                    }
-                };
-                request.ontimeout = function(e) {
-                    reject(e);
-                };
-                request.onerror = function(e) {
-                    reject(e);
-                };
+        let oneRequest = function() {
+            return axios({
+                method: "get",
+                baseURL: this.HOST,
+                timeout: 5000
+            }).then(response => {
+                this.token = response.data.match(/token: '(.*?)',/)[1];
+                this.gtk = response.data.match(/window.gtk = '(.*?)'/)[1];
+                return Promise.resolve();
             });
-        };
+        }.bind(this);
         // request two times to ensure the token is the latest value
         // otherwise the request would return "997" error
         return oneRequest().then(() => {
@@ -98,19 +86,16 @@ class BaiduTranslator {
      * @returns {Promise} then(result) used to return request result. catch(error) used to catch error
      */
     translate(text, from, to) {
-        var reTryCount = 0;
+        let reTryCount = 0;
         // send translation request one time
         // if the first request fails, resend requests no more than {this.MAX_RETRY} times
         let translateOneTime = function() {
-            return new Promise((resolve, reject) => {
-                let request = new XMLHttpRequest();
-                let path = "/v2transapi?" + "from=" + from + "&to=" + to;
-
-                request.open("POST", this.HOST + path);
-                for (let key in this.HEADERS) {
-                    request.setRequestHeader(key, this.HEADERS[key]);
-                }
-                let data = new URLSearchParams({
+            return axios({
+                url: "/v2transapi?" + "from=" + from + "&to=" + to,
+                method: "post",
+                baseURL: this.HOST,
+                headers: this.HEADERS,
+                data: new URLSearchParams({
                     from: from,
                     to: to,
                     query: text,
@@ -119,36 +104,21 @@ class BaiduTranslator {
                     sign: this.generateSign(text, this.gtk),
                     token: this.token,
                     domain: "common"
-                });
-                request.send(data.toString());
-
-                request.onreadystatechange = () => {
-                    if (request.readyState == 4) {
-                        if (request.status == 200) {
-                            let responseObject = JSON.parse(request.response);
-                            // token is out of date and try to resend request
-                            if (responseObject.errno) {
-                                if (reTryCount < this.MAX_RETRY) {
-                                    reTryCount++;
-                                    resolve(
-                                        // get new token and gtk
-                                        this.getTokenGtk().then(() => {
-                                            // resend translation request
-                                            return translateOneTime();
-                                        })
-                                    );
-                                } else reject(responseObject);
-                            }
-                            resolve(request.response);
-                        }
-                    }
-                };
-                request.ontimeout = function(e) {
-                    reject(e);
-                };
-                request.onerror = function(e) {
-                    reject(e);
-                };
+                }),
+                timeout: 5000
+            }).then(result => {
+                let data = result.data;
+                // token is out of date and try to resend request
+                if (data.errno) {
+                    if (reTryCount < this.MAX_RETRY) {
+                        reTryCount++;
+                        // get new token and gtk
+                        return this.getTokenGtk().then(() => {
+                            // resend translation request
+                            return translateOneTime();
+                        });
+                    } else return Promise.reject(data);
+                } else return Promise.resolve(result);
             });
         }.bind(this);
         // if old token and gtk exist
