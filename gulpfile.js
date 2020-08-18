@@ -8,6 +8,7 @@ const webpack_stream = require("webpack-stream");
 const zip = require("gulp-zip");
 const terser = require("gulp-terser");
 const eslint = require("gulp-eslint");
+const mergeStream = require("merge-stream");
 
 var browser; // store the name of browser
 var environment; // store the type of environment: enum{production,development}
@@ -241,25 +242,41 @@ function styl() {
 function packStatic() {
     let output_dir = "./build/" + browser + "/";
     if (browser === "chrome") {
-        gulp.src("./static/**/!(element_main).js", { base: "static" })
+        // static JS files except google JS
+        let staticJSFiles = gulp
+            .src("./static/**/!(element_main).js", { base: "static" })
             .pipe(terser().on("error", error => log(error)))
             .pipe(gulp.dest(output_dir));
 
+        // google page translation files
         // Do not uglify element_main.js
-        gulp.src("./static/google/element_main.js", { base: "static" }).pipe(gulp.dest(output_dir));
+        let googleJS = gulp
+            .src("./static/google/element_main.js", { base: "static" })
+            .pipe(gulp.dest(output_dir));
 
-        return gulp.src("./static/**/!(*.js)", { base: "static" }).pipe(gulp.dest(output_dir));
+        // non-js static files
+        let staticOtherFiles = gulp
+            .src("./static/**/!(*.js)", { base: "static" })
+            .pipe(gulp.dest(output_dir));
+        return mergeStream([staticJSFiles, googleJS, staticOtherFiles]);
     } else {
-        gulp.src("./static/!(pdf)/**/!(element_main).js", { base: "static" })
+        // static JS files except google JS
+        let staticJSFiles = gulp
+            .src("./static/!(pdf)/**/!(element_main).js", { base: "static" })
             .pipe(terser().on("error", error => log(error)))
             .pipe(gulp.dest(output_dir));
 
+        // google page translation files
         // Do not uglify element_main.js
-        gulp.src("./static/google/element_main.js", { base: "static" }).pipe(gulp.dest(output_dir));
+        let googleJS = gulp
+            .src("./static/google/element_main.js", { base: "static" })
+            .pipe(gulp.dest(output_dir));
 
-        return gulp
+        // non-js static files
+        let staticOtherFiles = gulp
             .src("./static/!(pdf)/**/!(*.js)", { base: "static" })
             .pipe(gulp.dest(output_dir));
+        return mergeStream([staticJSFiles, googleJS, staticOtherFiles]);
     }
 }
 /**
