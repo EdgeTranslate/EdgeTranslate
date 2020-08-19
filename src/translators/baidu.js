@@ -56,45 +56,78 @@ class BaiduTranslator {
         let parsed = {};
         parsed.originalText = result.trans_result.data[0].src;
         parsed.mainMeaning = result.trans_result.data[0].dst;
-        parsed.tPronunciation = result.trans_result.phonetic.reduce(
-            (entry1, entry2) => entry1.trg_str + " " + entry2.trg_str
-        ); // get the result by splicing the array
-        parsed.sPronunciation = result.dict_result.simple_means.symbols[0].ph_en;
 
-        parsed.detailedMeanings = [];
-        for (let part of result.dict_result.simple_means.symbols[0].parts) {
-            let meaning = {};
-            meaning.pos = part.part; // part of speech
-            meaning.meaning = part.means.reduce((meaning1, meaning2) => meaning1 + "\n" + meaning2);
-            parsed.detailedMeanings.push(meaning);
+        if (result.trans_result.phonetic)
+            parsed.tPronunciation = result.trans_result.phonetic
+                .map(e => e.trg_str)
+                .reduce((t1, t2) => t1 + " " + t2); // get the result by splicing the array
+
+        // japanese target pronunciation
+        if (result.trans_result.jp_pinyin) {
+            parsed.tPronunciation = result.trans_result.jp_pinyin[0].dst;
         }
 
-        parsed.definitions = [];
-        for (let item of result.dict_result.edict.item) {
-            let meaning = {};
-            meaning.pos = item.pos;
-            item = item.tr_group[0];
-            meaning.meaning = item.tr[0];
-            meaning.example = item.example[0];
-            meaning.synonyms = item.similar_word;
-            parsed.definitions.push(meaning);
+        // dictionary is not in the result
+        if (result.dict_result) {
+            if (result.dict_result.simple_means) {
+                parsed.sPronunciation = result.dict_result.simple_means.symbols[0].ph_en;
+
+                parsed.detailedMeanings = [];
+                for (let part of result.dict_result.simple_means.symbols[0].parts) {
+                    let meaning = {};
+                    meaning.pos = part.part; // part of speech
+                    meaning.meaning = part.means.reduce(
+                        (meaning1, meaning2) => meaning1 + "\n" + meaning2
+                    );
+                    parsed.detailedMeanings.push(meaning);
+                }
+            }
+
+            if (result.dict_result.edict) {
+                parsed.definitions = [];
+                // iterate pos
+                for (let item of result.dict_result.edict.item) {
+                    // iterate meaning of each pos
+                    for (let tr of item.tr_group) {
+                        let meaning = {};
+                        meaning.pos = item.pos;
+                        meaning.meaning = tr.tr[0];
+                        meaning.example = tr.example[0];
+                        meaning.synonyms = tr.similar_word;
+                        parsed.definitions.push(meaning);
+                    }
+                }
+            }
+
+            if (result.dict_result.content) {
+                parsed.sPronunciation = result.dict_result.voice[0].en_phonic;
+                if (!parsed.detailedMeanings) parsed.detailedMeanings = [];
+                for (let item of result.dict_result.content[0].mean) {
+                    let meaning = {};
+                    meaning.pos = item.pre;
+                    meaning.meaning = Object.keys(item.cont)[0];
+                    parsed.detailedMeanings.push(meaning);
+                }
+            }
         }
 
-        parsed.examples = [];
-        let examples = result.liju_result.double;
-        examples = JSON.parse(examples);
-        for (let sentence of examples) {
-            let example = {};
-            // source language examples
-            example.source = sentence[0]
-                .map(a => {
-                    if (a.length > 4) return a[0] + " ";
-                    return a[0];
-                })
-                .reduce((a1, a2) => a1 + a2);
-            // target language examples
-            example.target = sentence[1].map(a => a[0]).reduce((a1, a2) => a1 + a2);
-            parsed.examples.push(example);
+        if (result.liju_result.double) {
+            parsed.examples = [];
+            let examples = result.liju_result.double;
+            examples = JSON.parse(examples);
+            for (let sentence of examples) {
+                let example = {};
+                // source language examples
+                example.source = sentence[0]
+                    .map(a => {
+                        if (a.length > 4) return a[0] + " ";
+                        return a[0];
+                    })
+                    .reduce((a1, a2) => a1 + a2);
+                // target language examples
+                example.target = sentence[1].map(a => a[0]).reduce((a1, a2) => a1 + a2);
+                parsed.examples.push(example);
+            }
         }
         return parsed;
     }
@@ -159,7 +192,7 @@ class BaiduTranslator {
                             return translateOneTime();
                         });
                     } else return Promise.reject(data);
-                } else return Promise.resolve(result);
+                } else return Promise.resolve(this.parseResult(result.data));
             });
         }.bind(this);
         // if old token and gtk exist

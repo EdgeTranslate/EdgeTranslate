@@ -81,14 +81,14 @@ describe("baidu translator api", () => {
                 });
                 return TRANSLATOR.translate(query, from, to);
             })
-            .then(result => {
-                let resultObject = result.data;
-                expect(resultObject.trans_result).toBeDefined();
-                expect(resultObject.trans_result.data[0].dst).toEqual("你好");
-                expect(resultObject.liju_result).toBeDefined();
-                expect(resultObject.dict_result.collins).toBeDefined();
-                expect(resultObject.dict_result.edict).toBeDefined();
-                expect(resultObject.dict_result.oxford).toBeDefined();
+            .then(parseResult => {
+                expect(parseResult.originalText).toEqual("hello");
+                expect(parseResult.mainMeaning).toEqual("你好");
+                expect(parseResult.tPronunciation).toEqual("nǐ hǎo");
+                expect(parseResult.sPronunciation).toEqual("həˈləʊ");
+                expect(parseResult.detailedMeanings[0].pos).toBeDefined();
+                expect(parseResult.definitions[0].pos).toBeDefined();
+                expect(parseResult.examples.length).toBeGreaterThan(0);
                 done();
             })
             .catch(error => done(error));
