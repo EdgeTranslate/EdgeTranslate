@@ -71,12 +71,16 @@ window.onload = function() {
         // 根据源语言设定更新
         if (languageSetting.sl === "auto") {
             mutualTranslate.disabled = true;
+            mutualTranslate.parentElement.title = chrome.i18n.getMessage(
+                "MutualTranslationWarning"
+            );
             if (OtherSettings["MutualTranslate"]) {
                 mutualTranslate.checked = false;
                 mutualTranslate.onchange();
             }
         } else {
             mutualTranslate.checked = OtherSettings["MutualTranslate"];
+            mutualTranslate.parentElement.title = "";
         }
 
         // languages是可选的源语言和目标语言的列表
@@ -133,9 +137,11 @@ function updateLanguageSetting(sourceLanguage, targetLanguage) {
     if (sourceLanguage === "auto") {
         mutualTranslate.checked = false;
         mutualTranslate.disabled = true;
+        mutualTranslate.parentElement.title = chrome.i18n.getMessage("MutualTranslationWarning");
         mutualTranslate.onchange();
     } else if (mutualTranslate.disabled) {
         mutualTranslate.disabled = false;
+        mutualTranslate.parentElement.title = "";
     }
 }
 

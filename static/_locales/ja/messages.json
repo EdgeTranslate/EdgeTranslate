@@ -243,6 +243,10 @@
         "message": "相互翻訳モード",
         "description": "2つの言語間の自動翻訳"
     },
+    "MutualTranslationWarning": {
+        "message": "ソース言語が「自動検出」の場合、相互翻訳モードをオンにすることはできません",
+        "description": "ソース言語が「自動検出」の場合、相互翻訳モードをオンにすることはできません"
+    },
     "Fold": {
         "message": "言語設定を折りたたむ",
         "description": "言語設定折りたたみオプション"

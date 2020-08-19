@@ -243,6 +243,10 @@
         "message": "互譯模式",
         "description": "兩種語言自動相互翻譯"
     },
+    "MutualTranslationWarning": {
+        "message": "源語言是'自動檢測'時無法打開互譯模式",
+        "description": "源語言是自動檢測時無法打開互譯模式"
+    },
     "Fold": {
         "message": "折疊語言設置",
         "description": "將語言設置選項折疊"
