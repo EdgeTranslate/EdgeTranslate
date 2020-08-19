@@ -59,5 +59,9 @@
         "webpack": "^4.44.1",
         "webpack-merge": "^4.2.2",
         "webpack-stream": "^5.2.1"
+    },
+    "jest": {
+        "verbose": true,
+        "testTimeout": 10000
     }
 }

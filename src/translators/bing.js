@@ -3,7 +3,7 @@ import axios from "axios";
 /**
  * Max retry times after failure.
  */
-const MAX_RETRY = 3;
+const MAX_RETRY = 1;
 
 /**
  * URLs
@@ -28,6 +28,7 @@ class BingTranslator {
     constructor() {
         this.IG = "";
         this.IID = "";
+        this.count = 0;
         this.languages = {};
         this.HTMLParser = new DOMParser();
     }
@@ -96,18 +97,18 @@ class BingTranslator {
         let retryCount = 0;
         let detectOnce = () => {
             return new Promise((resolve, reject) => {
+                this.count++;
                 axios({
-                    url: "ttranslatev3?isVertical=1&IG=" + this.IG + "&IID=" + this.IID,
+                    url: "ttranslatev3?isVertical=1&IG=" + this.IG + "&IID=" + this.IID + "." + this.count.toString(),
                     method: "POST",
                     baseURL: HOST,
                     headers: HEADERS,
-                    data: "&fromLang=auto-detect&to=zh-Hans&text=" + text,
-                    timeout: 5000
+                    data: "&fromLang=auto-detect&to=zh-Hans&text=" + text
                 })
                     .then(response => {
                         try {
-                            // let result = response.data[0].detectedLanguage.language;
-                            resolve(response);
+                            let result = response.data[0].detectedLanguage.language;
+                            resolve(result);
                         } catch (error) {
                             // Retry after failure
                             if (retryCount < MAX_RETRY) {
@@ -141,13 +142,13 @@ class BingTranslator {
         let retryCount = 0;
         let translateOnce = () => {
             return new Promise((resolve, reject) => {
+                this.count++;
                 axios({
-                    url: "tlookupv3?isVertical=1&IG=" + this.IG + "&IID=" + this.IID,
+                    url: "tlookupv3?isVertical=1&IG=" + this.IG + "&IID=" + this.IID + "." + this.count.toString(),
                     method: "post",
                     baseURL: HOST,
                     headers: HEADERS,
-                    data: "&from=" + from + "&to=" + to + "&text=" + text,
-                    timeout: 5000
+                    data: "&from=" + from + "&to=" + to + "&text=" + text
                 })
                     .then(response => {
                         try {
