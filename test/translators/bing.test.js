@@ -14,6 +14,10 @@ describe("bing translator api", () => {
             .then(() => {
                 expect(typeof TRANSLATOR.IG).toEqual("string");
                 expect(TRANSLATOR.IG.length).toBeGreaterThan(0);
+
+                expect(typeof TRANSLATOR.IID).toEqual("string");
+                expect(TRANSLATOR.IID.length).toBeGreaterThan(0);
+
                 done();
             })
             .catch(error => {
