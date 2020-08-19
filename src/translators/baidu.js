@@ -58,8 +58,9 @@ class BaiduTranslator {
         parsed.mainMeaning = result.trans_result.data[0].dst;
         parsed.tPronunciation = result.trans_result.phonetic.reduce(
             (entry1, entry2) => entry1.trg_str + " " + entry2.trg_str
-        );
+        ); // get the result by splicing the array
         parsed.sPronunciation = result.dict_result.simple_means.symbols[0].ph_en;
+
         parsed.detailedMeanings = [];
         for (let part of result.dict_result.simple_means.symbols[0].parts) {
             let meaning = {};
@@ -67,6 +68,7 @@ class BaiduTranslator {
             meaning.meaning = part.means.reduce((meaning1, meaning2) => meaning1 + "\n" + meaning2);
             parsed.detailedMeanings.push(meaning);
         }
+
         parsed.definitions = [];
         for (let item of result.dict_result.edict.item) {
             let meaning = {};
@@ -76,6 +78,23 @@ class BaiduTranslator {
             meaning.example = item.example[0];
             meaning.synonyms = item.similar_word;
             parsed.definitions.push(meaning);
+        }
+
+        parsed.examples = [];
+        let examples = result.liju_result.double;
+        examples = JSON.parse(examples);
+        for (let sentence of examples) {
+            let example = {};
+            // source language examples
+            example.source = sentence[0]
+                .map(a => {
+                    if (a.length > 4) return a[0] + " ";
+                    return a[0];
+                })
+                .reduce((a1, a2) => a1 + a2);
+            // target language examples
+            example.target = sentence[1].map(a => a[0]).reduce((a1, a2) => a1 + a2);
+            parsed.examples.push(example);
         }
         return parsed;
     }

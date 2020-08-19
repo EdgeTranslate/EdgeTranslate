@@ -13,35 +13,45 @@ describe("baidu translator api", () => {
 
     it("to detect language type", done => {
         // detect an English word
-        TRANSLATOR.detect("hello").then(result => {
-            let resultObject = result.data;
-            expect(resultObject.error).toEqual(0);
-            expect(resultObject.msg).toEqual("success");
-            expect(resultObject.lan).toEqual("en");
-        });
+        TRANSLATOR.detect("hello")
+            .then(result => {
+                let resultObject = result.data;
+                expect(resultObject.error).toEqual(0);
+                expect(resultObject.msg).toEqual("success");
+                expect(resultObject.lan).toEqual("en");
+            })
+            .catch(error => done(error));
         // detect a Chinese word
-        TRANSLATOR.detect("你好").then(result => {
-            let resultObject = result.data;
-            expect(resultObject.error).toEqual(0);
-            expect(resultObject.msg).toEqual("success");
-            expect(resultObject.lan).toEqual("zh");
-            done();
-        });
+        TRANSLATOR.detect("你好")
+            .then(result => {
+                let resultObject = result.data;
+                expect(resultObject.error).toEqual(0);
+                expect(resultObject.msg).toEqual("success");
+                expect(resultObject.lan).toEqual("zh");
+                done();
+            })
+            .catch(error => done(error));
     });
 
-    it("to get token and gtk", done => {
-        TRANSLATOR.getTokenGtk().then(translator => {
+    it("to get token and gtk", () => {
+        return TRANSLATOR.getTokenGtk().then(translator => {
             expect(translator).toBeUndefined();
             expect(TRANSLATOR.token).not.toEqual("");
             expect(TRANSLATOR.gtk).not.toEqual("");
-            done();
         });
     });
 
     it("to parse translation result", done => {
         let result = fs.readFileSync("test/translators/baiduTransResult.json", "utf-8");
         result = JSON.parse(result);
-        TRANSLATOR.parseResult(result);
+        let parseResult = TRANSLATOR.parseResult(result);
+        expect(parseResult.originalText).toEqual("hello");
+        expect(parseResult.mainMeaning).toEqual("你好");
+        expect(parseResult.tPronunciation).toEqual("nǐ hǎo");
+        expect(parseResult.sPronunciation).toEqual("həˈləʊ");
+        expect(parseResult.detailedMeanings[0].pos).toBeDefined();
+        expect(parseResult.definitions[0].pos).toBeDefined();
+        expect(parseResult.examples.length).toBeGreaterThan(0);
         done();
     });
 
@@ -81,9 +91,6 @@ describe("baidu translator api", () => {
                 expect(resultObject.dict_result.oxford).toBeDefined();
                 done();
             })
-            .catch(error => {
-                expect(error).toBeFalsy();
-                done();
-            });
+            .catch(error => done(error));
     });
 });
