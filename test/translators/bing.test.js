@@ -42,4 +42,28 @@ describe("bing translator api", () => {
                 done(error);
             });
     });
+
+    it("to translate a piece of English text", done => {
+        TRANSLATOR.translate("hello", "en", "zh-Hans")
+            .then(result => {
+                expect(result.mainMeaning).toEqual("你好");
+                expect(result.originalText).toEqual("Hello");
+                done();
+            })
+            .catch(error => {
+                done(error);
+            });
+    });
+
+    it("to translate a piece of Chinese text", done => {
+        TRANSLATOR.translate("你好", "zh-Hans", "en")
+            .then(result => {
+                expect(result.mainMeaning).toEqual("Hello");
+                expect(result.originalText).toEqual("你好");
+                done();
+            })
+            .catch(error => {
+                done(error);
+            });
+    });
 });
