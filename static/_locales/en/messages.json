@@ -243,6 +243,10 @@
         "message": "Mutual translation mode",
         "description": "Automatic translation between two languages"
     },
+    "MutualTranslationWarning": {
+        "message": "You can't open mutual translation mode when source language is 'Auto Detect'",
+        "description": "You can't open mutual translation mode when source language is 'Auto Detect'"
+    },
     "Fold": {
         "message": "Fold language settings",
         "description": "Fold language setting options"
