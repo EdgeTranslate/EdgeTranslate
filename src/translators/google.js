@@ -122,7 +122,7 @@ class GoogleTranslator {
                 let items = response[i];
                 switch (i) {
                     // 单词的基本意思和音标
-                    case 0:
+                    case 0: {
                         let mainMeanings = [];
                         let originalTexts = [];
                         let lastIndex = items.length - 1;
@@ -153,6 +153,7 @@ class GoogleTranslator {
                         }
                         // console.log("text: " + result.originalText + "\nmeaning: " + result.mainMeaning);
                         break;
+                    }
                     // 单词的所有词性及对应的意思
                     case 1:
                         result.detailedMeanings = new Array();
