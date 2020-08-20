@@ -99,7 +99,13 @@ class BingTranslator {
             return new Promise((resolve, reject) => {
                 this.count++;
                 axios({
-                    url: "ttranslatev3?isVertical=1&IG=" + this.IG + "&IID=" + this.IID + "." + this.count.toString(),
+                    url:
+                        "ttranslatev3?isVertical=1&IG=" +
+                        this.IG +
+                        "&IID=" +
+                        this.IID +
+                        "." +
+                        this.count.toString(),
                     method: "POST",
                     baseURL: HOST,
                     headers: HEADERS,
@@ -144,7 +150,13 @@ class BingTranslator {
             return new Promise((resolve, reject) => {
                 this.count++;
                 axios({
-                    url: "tlookupv3?isVertical=1&IG=" + this.IG + "&IID=" + this.IID + "." + this.count.toString(),
+                    url:
+                        "tlookupv3?isVertical=1&IG=" +
+                        this.IG +
+                        "&IID=" +
+                        this.IID +
+                        "." +
+                        this.count.toString(),
                     method: "post",
                     baseURL: HOST,
                     headers: HEADERS,
