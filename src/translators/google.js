@@ -2,6 +2,118 @@ import axios from "axios";
 import { escapeHTML } from "../lib/scripts/common.js";
 
 /**
+ * Language maps.
+ */
+const LANGUAGES = [
+    ["auto", "auto"],
+    ["zh-CN", "zh-CN"],
+    ["zh-TW", "zh-TW"],
+    ["en", "en"],
+    ["af", "af"],
+    ["am", "am"],
+    ["ar", "ar"],
+    ["az", "az"],
+    ["be", "be"],
+    ["bg", "bg"],
+    ["bn", "bn"],
+    ["bs", "bs"],
+    ["ca", "ca"],
+    ["ceb", "ceb"],
+    ["co", "co"],
+    ["cs", "cs"],
+    ["cy", "cy"],
+    ["da", "da"],
+    ["de", "de"],
+    ["el", "el"],
+    ["eo", "eo"],
+    ["es", "es"],
+    ["et", "et"],
+    ["eu", "eu"],
+    ["fa", "fa"],
+    ["fi", "fi"],
+    ["fr", "fr"],
+    ["fy", "fy"],
+    ["ga", "ga"],
+    ["gd", "gd"],
+    ["gl", "gl"],
+    ["gu", "gu"],
+    ["ha", "ha"],
+    ["haw", "haw"],
+    ["he", "he"],
+    ["hi", "hi"],
+    ["hmn", "hmn"],
+    ["hr", "hr"],
+    ["ht", "ht"],
+    ["hu", "hu"],
+    ["hy", "hy"],
+    ["id", "id"],
+    ["ig", "ig"],
+    ["is", "is"],
+    ["it", "it"],
+    ["ja", "ja"],
+    ["jw", "jw"],
+    ["ka", "ka"],
+    ["kk", "kk"],
+    ["km", "km"],
+    ["kn", "kn"],
+    ["ko", "ko"],
+    ["ku", "ku"],
+    ["ky", "ky"],
+    ["la", "la"],
+    ["lb", "lb"],
+    ["lo", "lo"],
+    ["lt", "lt"],
+    ["lv", "lv"],
+    ["mg", "mg"],
+    ["mi", "mi"],
+    ["mk", "mk"],
+    ["ml", "ml"],
+    ["mn", "mn"],
+    ["mr", "mr"],
+    ["ms", "ms"],
+    ["mt", "mt"],
+    ["my", "my"],
+    ["ne", "ne"],
+    ["nl", "nl"],
+    ["no", "no"],
+    ["ny", "ny"],
+    ["pa", "pa"],
+    ["pl", "pl"],
+    ["ps", "ps"],
+    ["pt", "pt"],
+    ["ro", "ro"],
+    ["ru", "ru"],
+    ["sd", "sd"],
+    ["si", "si"],
+    ["sk", "sk"],
+    ["sl", "sl"],
+    ["sm", "sm"],
+    ["sn", "sn"],
+    ["so", "so"],
+    ["sq", "sq"],
+    ["sr", "sr"],
+    ["st", "st"],
+    ["su", "su"],
+    ["sv", "sv"],
+    ["sw", "sw"],
+    ["ta", "ta"],
+    ["te", "te"],
+    ["tg", "tg"],
+    ["th", "th"],
+    ["fil", "tl"],
+    ["tr", "tr"],
+    ["ug", "ug"],
+    ["uk", "uk"],
+    ["ur", "ur"],
+    ["uz", "uz"],
+    ["vi", "vi"],
+    ["xh", "xh"],
+    ["yi", "yi"],
+    ["yo", "yo"],
+    ["zu", "zu"]
+];
+
+/**
  * Google translate interface.
  */
 class GoogleTranslator {
@@ -21,6 +133,16 @@ class GoogleTranslator {
         this.TRANSLATE_URL =
             this.HOST +
             "translate_a/single?ie=UTF-8&client=webapp&otf=1&ssel=0&tsel=0&kc=5&dt=t&dt=at&dt=bd&dt=ex&dt=md&dt=rw&dt=ss&dt=rm";
+
+        /**
+         * Language to translator language code.
+         */
+        this.LAN_TO_CODE = new Map(LANGUAGES);
+
+        /**
+         * Translator language code to language.
+         */
+        this.CODE_TO_LAN = new Map(LANGUAGES.map(([lan, code]) => [code, lan]));
     }
 
     /* eslint-disable */
@@ -202,6 +324,15 @@ class GoogleTranslator {
     }
 
     /**
+     * Get supported languages of this API.
+     *
+     * @returns {Set<String>} supported languages
+     */
+    supportedLanguages() {
+        return new Set(this.LAN_TO_CODE.keys());
+    }
+
+    /**
      * Detect the language of given text.
      *
      * @param {String} text text to detect
@@ -221,7 +352,7 @@ class GoogleTranslator {
                     .get(this.TRANSLATE_URL + query)
                     .then(response => {
                         if (response.status === 200) {
-                            resolve(response.data[2]);
+                            resolve(this.CODE_TO_LAN.get(response.data[2]));
                         } else if (response.status === 429 && retryCount < this.MAX_RETRY) {
                             retryCount++;
                             resolve(this.updateTKK().then(detectOnce));
@@ -247,7 +378,7 @@ class GoogleTranslator {
         let retryCount = 0;
         let translateOnce = () => {
             return new Promise((resolve, reject) => {
-                let query = "&sl=" + from + "&tl=" + to;
+                let query = "&sl=" + this.LAN_TO_CODE.get(from) + "&tl=" + this.LAN_TO_CODE.get(to);
                 query +=
                     "&tk=" +
                     this.generateTK(text, this.TKK[0], this.TKK[1]) +

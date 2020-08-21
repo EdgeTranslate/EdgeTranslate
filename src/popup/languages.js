@@ -3,9 +3,9 @@ export { LANGUAGES };
  * 支持的语言列表
  */
 const LANGUAGES = [
-    { name: "ChineseSimplified", value: "zh-cn" },
+    { name: "ChineseSimplified", value: "zh-CN" },
     { name: "English", value: "en" },
-    { name: "ChineseTraditional", value: "zh-tw" },
+    { name: "ChineseTraditional", value: "zh-TW" },
     { name: "French", value: "fr" },
     { name: "Japanese", value: "ja" },
     { name: "Portuguese", value: "pt" },
@@ -32,7 +32,7 @@ const LANGUAGES = [
     { name: "Dutch", value: "nl" },
     { name: "Esperanto", value: "eo" },
     { name: "Estonian", value: "et" },
-    { name: "Filipino", value: "tl" },
+    { name: "Filipino", value: "fil" },
     { name: "Finnish", value: "fi" },
     { name: "Frisian", value: "fy" },
     { name: "Galician", value: "gl" },

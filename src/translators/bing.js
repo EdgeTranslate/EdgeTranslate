@@ -1,5 +1,86 @@
 import axios from "axios";
 
+const LANGUAGES = [
+    ["auto", "auto-detect"],
+    ["ar", "ar"],
+    ["ga", "ga"],
+    ["et", "et"],
+    ["or", "or"],
+    ["bg", "bg"],
+    ["is", "is"],
+    ["pl", "pl"],
+    ["bs", "bs-Latn"],
+    ["fa", "fa"],
+    ["prs", "prs"],
+    ["da", "da"],
+    ["de", "de"],
+    ["ru", "ru"],
+    ["fr", "fr"],
+    ["zh-TW", "zh-Hant"],
+    ["fil", "fil"],
+    ["fj", "fj"],
+    ["fi", "fi"],
+    ["gu", "gu"],
+    ["kk", "kk"],
+    ["ht", "ht"],
+    ["ko", "ko"],
+    ["nl", "nl"],
+    ["ca", "ca"],
+    ["zh-CN", "zh-Hans"],
+    ["cs", "cs"],
+    ["kn", "kn"],
+    ["otq", "otq"],
+    ["tlh", "tlh"],
+    ["hr", "hr"],
+    ["lv", "lv"],
+    ["lt", "lt"],
+    ["ro", "ro"],
+    ["mg", "mg"],
+    ["mt", "mt"],
+    ["mr", "mr"],
+    ["ml", "ml"],
+    ["ms", "ms"],
+    ["mi", "mi"],
+    ["bn", "bn-BD"],
+    ["hmn", "mww"],
+    ["af", "af"],
+    ["ma", "pa"],
+    ["pt", "pt"],
+    ["pt-pt", "pt-pt"],
+    ["ps", "ps"],
+    ["ja", "ja"],
+    ["sv", "sv"],
+    ["sm", "sm"],
+    ["sr-Latn", "sr-Latn"],
+    ["sr-Cyrl", "sr-Cyrl"],
+    ["no", "nb"],
+    ["sk", "sk"],
+    ["sl", "sl"],
+    ["sw", "sw"],
+    ["ty", "ty"],
+    ["te", "te"],
+    ["ta", "ta"],
+    ["th", "th"],
+    ["to", "to"],
+    ["tr", "tr"],
+    ["cy", "cy"],
+    ["ur", "ur"],
+    ["uk", "uk"],
+    ["es", "es"],
+    ["he", "iw"],
+    ["el", "el"],
+    ["hu", "hu"],
+    ["it", "it"],
+    ["hi", "hi"],
+    ["id", "id"],
+    ["en", "en"],
+    ["yua", "yua"],
+    ["yue", "yua"],
+    ["vi", "vi"],
+    ["ku", "ku"],
+    ["kmr", "kmr"]
+];
+
 /**
  * Bing translator interface.
  */
@@ -34,6 +115,16 @@ class BingTranslator {
             "accept-language": "zh-CN,zh-TW;q=0.9,zh;q=0.8,en;q=0.7",
             "content-type": "application/x-www-form-urlencoded"
         };
+
+        /**
+         * Language to translator language code.
+         */
+        this.LAN_TO_CODE = new Map(LANGUAGES);
+
+        /**
+         * Translator language code to language.
+         */
+        this.CODE_TO_LAN = new Map(LANGUAGES.map(([lan, code]) => [code, lan]));
     }
 
     /**
@@ -91,6 +182,15 @@ class BingTranslator {
     }
 
     /**
+     * Get supported languages of this API.
+     *
+     * @returns {Set<String>} supported languages
+     */
+    supportedLanguages() {
+        return new Set(this.LAN_TO_CODE.keys());
+    }
+
+    /**
      * Detect language of given text.
      *
      * @param {String} text text to detect
@@ -112,12 +212,12 @@ class BingTranslator {
                     method: "POST",
                     baseURL: this.HOST,
                     headers: this.HEADERS,
-                    data: "&fromLang=auto-detect&to=zh-Hans&text=" + text
+                    data: "&fromLang=auto-detect&to=zh-Hans&text=" + encodeURIComponent(text)
                 })
                     .then(response => {
                         try {
                             let result = response.data[0].detectedLanguage.language;
-                            resolve(result);
+                            resolve(this.CODE_TO_LAN.get(result));
                         } catch (error) {
                             // Retry after failure
                             if (retryCount < this.MAX_RETRY) {
@@ -140,14 +240,14 @@ class BingTranslator {
     }
 
     /**
-     * Translate given text.
+     * Translate given text using given language settings.
      *
      * @param {String} text text to translate
      * @param {String} from source language
      * @param {String} to target language
      * @returns {Promise} translate result Promise
      */
-    translate(text, from, to) {
+    translateImmediately(text, from, to) {
         let retryCount = 0;
         let translateOnce = () => {
             return new Promise((resolve, reject) => {
@@ -163,7 +263,13 @@ class BingTranslator {
                     method: "post",
                     baseURL: this.HOST,
                     headers: this.HEADERS,
-                    data: "&from=" + from + "&to=" + to + "&text=" + text
+                    data:
+                        "&from=" +
+                        this.LAN_TO_CODE.get(from) +
+                        "&to=" +
+                        this.LAN_TO_CODE.get(to) +
+                        "&text=" +
+                        encodeURIComponent(text)
                 })
                     .then(response => {
                         try {
@@ -188,6 +294,22 @@ class BingTranslator {
         } else {
             return this.getIGIID().then(translateOnce);
         }
+    }
+
+    /**
+     * Translate given text.
+     *
+     * @param {String} text text to translate
+     * @param {String} from source language
+     * @param {String} to target language
+     * @returns {Promise} translate result Promise
+     */
+    translate(text, from, to) {
+        if (from !== "auto") {
+            return this.translateImmediately(text, from, to);
+        }
+
+        return this.detect(text).then(result => this.translateImmediately(text, result, to));
     }
 }
 

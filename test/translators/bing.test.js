@@ -43,7 +43,7 @@ describe("bing translator api", () => {
     it("to detect language of Chinese text", done => {
         TRANSLATOR.detect("你好")
             .then(result => {
-                expect(result).toEqual("zh-Hans");
+                expect(result).toEqual("zh-CN");
                 done();
             })
             .catch(error => {
@@ -52,7 +52,7 @@ describe("bing translator api", () => {
     });
 
     it("to translate a piece of English text", done => {
-        TRANSLATOR.translate("hello", "en", "zh-Hans")
+        TRANSLATOR.translate("hello", "en", "zh-CN")
             .then(result => {
                 expect(result.mainMeaning).toEqual("你好");
                 expect(result.originalText).toEqual("Hello");
@@ -64,7 +64,7 @@ describe("bing translator api", () => {
     });
 
     it("to translate a piece of Chinese text", done => {
-        TRANSLATOR.translate("你好", "zh-Hans", "en")
+        TRANSLATOR.translate("你好", "zh-CN", "en")
             .then(result => {
                 expect(result.mainMeaning).toEqual("Hello");
                 expect(result.originalText).toEqual("你好");

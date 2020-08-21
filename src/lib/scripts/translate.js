@@ -63,7 +63,7 @@ function translate(text, callback) {
         } else {
             // Mutual translation mode
             detect(text, result => {
-                let sl = result.toLowerCase(),
+                let sl = result,
                     tl;
                 switch (sl) {
                     case languageSetting.sl:
