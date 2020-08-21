@@ -1,5 +1,8 @@
 import axios from "axios";
 
+/**
+ * Supported languages.
+ */
 const LANGUAGES = [
     ["auto", "auto-detect"],
     ["ar", "ar"],
@@ -151,34 +154,109 @@ class BingTranslator {
     }
 
     /**
-     * Parse the translate result.
+     * Parse translate interface result.
      *
      * @param {Object} result translate result
+     *
      * @returns {Object} Parsed result
      */
-    parseResult(result) {
-        let parsed = new Object();
-        parsed.originalText = result[0].displaySource;
+    parseTranslateResult(result, extras) {
+        let parsed = extras || new Object();
 
-        let translations = result[0].translations;
-        parsed.mainMeaning = translations[0].displayTarget;
+        try {
+            let translations = result[0].translations;
+            parsed.mainMeaning = translations[0].text;
+            parsed.tPronunciation = translations[0].transliteration.text;
+            // eslint-disable-next-line no-empty
+        } catch (error) {}
 
-        let detailedMeanings = [];
-        for (let i in translations) {
-            let synonyms = [];
-            for (let j in translations[i].backTranslations) {
-                synonyms.push(translations[i].backTranslations[j].displayText);
+        return parsed;
+    }
+
+    /**
+     * Parse the lookup interface result.
+     *
+     * @param {Object} result lookup result
+     *
+     * @returns {Object} Parsed result
+     */
+    parseLookupResult(result, extras) {
+        let parsed = extras || new Object();
+
+        try {
+            parsed.originalText = result[0].displaySource;
+
+            let translations = result[0].translations;
+            parsed.mainMeaning = translations[0].displayTarget;
+
+            let detailedMeanings = [];
+            for (let i in translations) {
+                let synonyms = [];
+                for (let j in translations[i].backTranslations) {
+                    synonyms.push(translations[i].backTranslations[j].displayText);
+                }
+
+                detailedMeanings.push({
+                    pos: translations[i].posTag,
+                    meaning: translations[i].displayTarget,
+                    synonyms: synonyms
+                });
             }
 
-            detailedMeanings.push({
-                pos: translations[i].posTag,
-                meaning: translations[i].displayTarget,
-                synonyms: synonyms
+            parsed.detailedMeanings = detailedMeanings;
+            // eslint-disable-next-line no-empty
+        } catch (error) {}
+
+        return parsed;
+    }
+
+    /**
+     * Request APIs.
+     *
+     * @param {String} method method to use
+     * @param {String} url url to request
+     * @param {String} data data to send
+     * @param {Boolean} retry whether retry is needed
+     *
+     * @returns {Promise<Object>} Promise of response data
+     */
+    async request(method, url, data, retry = true) {
+        let retryCount = 0;
+        let requestOnce = () => {
+            return new Promise((resolve, reject) => {
+                this.count++;
+                axios({
+                    url: url,
+                    method: method,
+                    baseURL: this.HOST,
+                    headers: this.HEADERS,
+                    data: data
+                })
+                    .then(response => {
+                        // response.data.statusCode will indicate the info of error when error encountered
+                        if (response.data.statusCode) {
+                            // Retry after failure
+                            if (retry && retryCount < this.MAX_RETRY) {
+                                retryCount++;
+                                resolve(this.getIGIID().then(requestOnce));
+                            } else {
+                                reject({ response: response });
+                            }
+                        } else {
+                            resolve(response.data);
+                        }
+                    })
+                    .catch(error => {
+                        reject(error);
+                    });
             });
+        };
+
+        if (!(this.IG && this.IG.length > 0 && this.IID && this.IID.length > 0)) {
+            await this.getIGIID();
         }
 
-        parsed.detailedMeanings = detailedMeanings;
-        return parsed;
+        return requestOnce();
     }
 
     /**
@@ -194,122 +272,102 @@ class BingTranslator {
      * Detect language of given text.
      *
      * @param {String} text text to detect
-     * @returns {Promise} detected language Promise
+     *
+     * @returns {Promise<String>} detected language Promise
      */
     detect(text) {
-        let retryCount = 0;
-        let detectOnce = () => {
-            return new Promise((resolve, reject) => {
-                this.count++;
-                axios({
-                    url:
-                        "ttranslatev3?isVertical=1&IG=" +
-                        this.IG +
-                        "&IID=" +
-                        this.IID +
-                        "." +
-                        this.count.toString(),
-                    method: "POST",
-                    baseURL: this.HOST,
-                    headers: this.HEADERS,
-                    data: "&fromLang=auto-detect&to=zh-Hans&text=" + encodeURIComponent(text)
+        let url =
+                "ttranslatev3?isVertical=1&IG=" +
+                this.IG +
+                "&IID=" +
+                this.IID +
+                "." +
+                this.count.toString(),
+            data = "&fromLang=auto-detect&to=zh-Hans&text=" + encodeURIComponent(text);
+
+        return (
+            this.request("POST", url, data)
+                .then(response => {
+                    let result = response[0].detectedLanguage.language;
+                    return this.CODE_TO_LAN.get(result);
                 })
-                    .then(response => {
-                        try {
-                            let result = response.data[0].detectedLanguage.language;
-                            resolve(this.CODE_TO_LAN.get(result));
-                        } catch (error) {
-                            // Retry after failure
-                            if (retryCount < this.MAX_RETRY) {
-                                retryCount++;
-                                resolve(this.getIGIID().then(detectOnce));
-                            } else reject(error);
-                        }
-                    })
-                    .catch(error => {
-                        reject(error);
-                    });
-            });
-        };
-
-        if (this.IG && this.IG.length > 0 && this.IID && this.IID.length > 0) {
-            return detectOnce();
-        } else {
-            return this.getIGIID().then(detectOnce);
-        }
-    }
-
-    /**
-     * Translate given text using given language settings.
-     *
-     * @param {String} text text to translate
-     * @param {String} from source language
-     * @param {String} to target language
-     * @returns {Promise} translate result Promise
-     */
-    translateImmediately(text, from, to) {
-        let retryCount = 0;
-        let translateOnce = () => {
-            return new Promise((resolve, reject) => {
-                this.count++;
-                axios({
-                    url:
-                        "tlookupv3?isVertical=1&IG=" +
-                        this.IG +
-                        "&IID=" +
-                        this.IID +
-                        "." +
-                        this.count.toString(),
-                    method: "post",
-                    baseURL: this.HOST,
-                    headers: this.HEADERS,
-                    data:
-                        "&from=" +
-                        this.LAN_TO_CODE.get(from) +
-                        "&to=" +
-                        this.LAN_TO_CODE.get(to) +
-                        "&text=" +
-                        encodeURIComponent(text)
-                })
-                    .then(response => {
-                        try {
-                            let result = this.parseResult(response.data);
-                            resolve(result);
-                        } catch (error) {
-                            // Retry after failure
-                            if (retryCount < this.MAX_RETRY) {
-                                retryCount++;
-                                resolve(this.getIGIID().then(translateOnce));
-                            } else reject(error);
-                        }
-                    })
-                    .catch(error => {
-                        reject(error);
-                    });
-            });
-        };
-
-        if (this.IG && this.IG.length > 0 && this.IID && this.IID.length > 0) {
-            return translateOnce();
-        } else {
-            return this.getIGIID().then(translateOnce);
-        }
+                // eslint-disable-next-line no-console
+                .catch(error => console.log(error))
+        );
     }
 
     /**
      * Translate given text.
      *
+     * This method will request the translate API firstly with 2 purposes:
+     *     1. detect the language of the translating text
+     *     2. get a basic translation of the text incase lookup is not available
+     *
+     * After that, it will attempt to request the lookup API to get detailed translation.
+     * If that failed, the method will use the translation from the translate API instead.
+     *
      * @param {String} text text to translate
      * @param {String} from source language
      * @param {String} to target language
-     * @returns {Promise} translate result Promise
+     *
+     * @returns {Promise<Object>} translation Promise
      */
     translate(text, from, to) {
-        if (from !== "auto") {
-            return this.translateImmediately(text, from, to);
-        }
+        let translateURL =
+                "ttranslatev3?isVertical=1&IG=" +
+                this.IG +
+                "&IID=" +
+                this.IID +
+                "." +
+                this.count.toString(),
+            translateData =
+                "&fromLang=" +
+                this.LAN_TO_CODE.get(from) +
+                "&to=" +
+                this.LAN_TO_CODE.get(to) +
+                "&text=" +
+                encodeURIComponent(text);
 
-        return this.detect(text).then(result => this.translateImmediately(text, result, to));
+        return (
+            // Request the translate API firstly.
+            this.request("POST", translateURL, translateData)
+                .then(async transResponse => {
+                    let lookupURL =
+                            "tlookupv3?isVertical=1&IG=" +
+                            this.IG +
+                            "&IID=" +
+                            this.IID +
+                            "." +
+                            this.count.toString(),
+                        lookupData =
+                            "&from=" +
+                            // Use detected language.
+                            transResponse[0].detectedLanguage.language +
+                            "&to=" +
+                            this.LAN_TO_CODE.get(to) +
+                            "&text=" +
+                            encodeURIComponent(text);
+
+                    let transResult = this.parseTranslateResult(transResponse, {
+                        originalText: text
+                    });
+
+                    try {
+                        // Attempt to request the lookup API for detailed translation.
+                        const lookupResponse = await this.request(
+                            "POST",
+                            lookupURL,
+                            lookupData,
+                            false
+                        );
+                        return this.parseLookupResult(lookupResponse, transResult);
+                    } catch (e) {
+                        return transResult;
+                    }
+                })
+                // eslint-disable-next-line no-console
+                .catch(error => console.log(error))
+        );
     }
 }
 
