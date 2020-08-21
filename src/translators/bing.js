@@ -1,27 +1,6 @@
 import axios from "axios";
 
 /**
- * Max retry times after failure.
- */
-const MAX_RETRY = 1;
-
-/**
- * URLs
- */
-const HOST = "https://cn.bing.com/";
-const HOME_PAGE = "https://cn.bing.com/translator";
-
-/**
- * Request headers
- */
-const HEADERS = {
-    // eslint-disable-next-line
-    accept: "*/*",
-    "accept-language": "zh-CN,zh-TW;q=0.9,zh;q=0.8,en;q=0.7",
-    "content-type": "application/x-www-form-urlencoded"
-};
-
-/**
  * Bing translator interface.
  */
 class BingTranslator {
@@ -31,6 +10,30 @@ class BingTranslator {
         this.count = 0;
         this.languages = {};
         this.HTMLParser = new DOMParser();
+
+        /**
+         * Max retry times.
+         */
+        this.MAX_RETRY = 1;
+
+        /**
+         * Translate API host.
+         */
+        this.HOST = "https://cn.bing.com/";
+
+        /**
+         * Translate API home page.
+         */
+        this.HOME_PAGE = "https://cn.bing.com/translator";
+
+        /**
+         * Request headers.
+         */
+        this.HEADERS = {
+            accept: "*/*",
+            "accept-language": "zh-CN,zh-TW;q=0.9,zh;q=0.8,en;q=0.7",
+            "content-type": "application/x-www-form-urlencoded"
+        };
     }
 
     /**
@@ -41,7 +44,7 @@ class BingTranslator {
     getIGIID() {
         return new Promise((resolve, reject) => {
             axios
-                .get(HOME_PAGE)
+                .get(this.HOME_PAGE)
                 .then(response => {
                     this.IG = response.data.match(/IG:"([a-zA-Z0-9]+)"/)[1];
 
@@ -107,8 +110,8 @@ class BingTranslator {
                         "." +
                         this.count.toString(),
                     method: "POST",
-                    baseURL: HOST,
-                    headers: HEADERS,
+                    baseURL: this.HOST,
+                    headers: this.HEADERS,
                     data: "&fromLang=auto-detect&to=zh-Hans&text=" + text
                 })
                     .then(response => {
@@ -117,7 +120,7 @@ class BingTranslator {
                             resolve(result);
                         } catch (error) {
                             // Retry after failure
-                            if (retryCount < MAX_RETRY) {
+                            if (retryCount < this.MAX_RETRY) {
                                 retryCount++;
                                 resolve(this.getIGIID().then(detectOnce));
                             } else reject(error);
@@ -158,8 +161,8 @@ class BingTranslator {
                         "." +
                         this.count.toString(),
                     method: "post",
-                    baseURL: HOST,
-                    headers: HEADERS,
+                    baseURL: this.HOST,
+                    headers: this.HEADERS,
                     data: "&from=" + from + "&to=" + to + "&text=" + text
                 })
                     .then(response => {
@@ -168,7 +171,7 @@ class BingTranslator {
                             resolve(result);
                         } catch (error) {
                             // Retry after failure
-                            if (retryCount < MAX_RETRY) {
+                            if (retryCount < this.MAX_RETRY) {
                                 retryCount++;
                                 resolve(this.getIGIID().then(translateOnce));
                             } else reject(error);

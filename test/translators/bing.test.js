@@ -2,11 +2,15 @@ import axios from "axios";
 import TRANSLATOR from "../../src/translators/bing.js";
 
 describe("bing translator api", () => {
-    beforeEach(() => {
+    beforeAll(() => {
         // set http module of nodejs as axios' request method
         let path = require("path");
         let lib = path.join(path.dirname(require.resolve("axios")), "lib/adapters/http");
         axios.defaults.adapter = require(lib);
+
+        // Set user-agent to prevent 429 error.
+        TRANSLATOR.HEADERS["user-agent"] =
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.135 Safari/537.36";
     });
 
     it("to get IG and IID", done => {
