@@ -2,25 +2,25 @@ import axios from "axios";
 import { escapeHTML } from "../lib/scripts/common.js";
 
 /**
- * Max retry times.
- */
-const MAX_RETRY = 3;
-
-/**
- * 翻译接口。
- */
-const HOST = "https://translate.google.cn/";
-const BASE_URL =
-    HOST +
-    "translate_a/single?ie=UTF-8&client=webapp&otf=1&ssel=0&tsel=0&kc=5&dt=t&dt=at&dt=bd&dt=ex&dt=md&dt=rw&dt=ss&dt=rm";
-
-/**
  * Google translate interface.
  */
 class GoogleTranslator {
     constructor() {
+        /**
+         * Max retry times.
+         */
+        this.MAX_RETRY = 3;
+
         // tk需要的密钥
         this.TKK = [434217, 1534559001];
+
+        /**
+         * Translate API.
+         */
+        this.HOST = "https://translate.google.cn/";
+        this.TRANSLATE_URL =
+            this.HOST +
+            "translate_a/single?ie=UTF-8&client=webapp&otf=1&ssel=0&tsel=0&kc=5&dt=t&dt=at&dt=bd&dt=ex&dt=md&dt=rw&dt=ss&dt=rm";
     }
 
     /* eslint-disable */
@@ -86,7 +86,7 @@ class GoogleTranslator {
     updateTKK() {
         return new Promise((resolve, reject) => {
             axios
-                .get(HOST)
+                .get(this.HOST)
                 .then(response => {
                     let body = response.data;
                     let tkk = (body.match(/TKK=(.*?)\(\)\)'\);/i) || [""])[0]
@@ -218,11 +218,11 @@ class GoogleTranslator {
                     encodeURIComponent(text);
 
                 axios
-                    .get(BASE_URL + query)
+                    .get(this.TRANSLATE_URL + query)
                     .then(response => {
                         if (response.status === 200) {
                             resolve(response.data[2]);
-                        } else if (response.status === 429 && retryCount < MAX_RETRY) {
+                        } else if (response.status === 429 && retryCount < this.MAX_RETRY) {
                             retryCount++;
                             resolve(this.updateTKK().then(detectOnce));
                         } else reject(response);
@@ -255,12 +255,12 @@ class GoogleTranslator {
                     encodeURIComponent(text);
 
                 axios
-                    .get(BASE_URL + query)
+                    .get(this.TRANSLATE_URL + query)
                     .then(response => {
                         if (response.status === 200) {
                             let result = this.parseResult(response.data);
                             resolve(result);
-                        } else if (response.status === 429 && retryCount < MAX_RETRY) {
+                        } else if (response.status === 429 && retryCount < this.MAX_RETRY) {
                             retryCount++;
                             resolve(this.updateTKK().then(translateOnce));
                         } else reject(response);
