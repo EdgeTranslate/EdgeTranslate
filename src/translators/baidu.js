@@ -268,5 +268,5 @@ class BaiduTranslator {
 /**
  * Create and export default Translator object.
  */
-var TRANSLATOR = new BaiduTranslator();
+const TRANSLATOR = new BaiduTranslator();
 export default TRANSLATOR;

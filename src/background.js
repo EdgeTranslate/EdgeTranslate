@@ -31,10 +31,9 @@ const DEFAULT_SETTINGS = {
         urls: {},
         domains: { "chrome.google.com": true, extensions: true }
     },
-    // Default parameters of google translation
-    DTSetting: ["t", "at", "bd", "ex", "md", "rw", "ss", "rm"],
     // PopupPosition: determine the location of translation block
-    // Resize value determine whether the web page will resize when showing translation result
+    // Resize: determine whether the web page will resize when showing translation result
+    // RTL: determine whether the text in translation block should display from right to left
     LayoutSettings: {
         PopupPosition: "right",
         Resize: false,
@@ -51,6 +50,7 @@ const DEFAULT_SETTINGS = {
         UseGoogleAnalytics: true,
         UsePDFjs: true
     },
+    DefaultTranslator: "GoogleTranslate",
     DefaultPageTranslator: "YouDaoPageTranslate"
 };
 
