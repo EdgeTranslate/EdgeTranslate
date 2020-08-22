@@ -15,11 +15,6 @@ export {
     executeGoogleScript
 };
 
-const BASE_TTS_URL = GOOGLE.HOST + "translate_tts?ie=UTF-8&client=webapp";
-
-// Audio 单例对象.
-const AUDIO = new Audio();
-
 /**
  * Translators.
  */
@@ -28,6 +23,19 @@ const TRANSLATORS = {
     BingTranslate: BING,
     GoogleTranslate: GOOGLE
 };
+
+/**
+ *
+ * 检测给定文本的语言。
+ *
+ * @param {string} text 需要检测的文本
+ * @param {function} callback 回调函数，参数为检测结果
+ */
+function detect(text, callback) {
+    chrome.storage.sync.get("DefaultTranslator", result => {
+        TRANSLATORS[result.DefaultTranslator].detect(text).then(result => callback(result));
+    });
+}
 
 /**
  *
@@ -59,7 +67,11 @@ function translate(text, callback) {
                 text,
                 languageSetting.sl,
                 languageSetting.tl
-            ).then(result => callback(result));
+            ).then(result => {
+                result.sourceLanguage = languageSetting.sl;
+                result.targetLanguage = languageSetting.tl;
+                callback(result);
+            });
         } else {
             // Mutual translation mode
             detect(text, result => {
@@ -76,24 +88,43 @@ function translate(text, callback) {
                         sl = "auto";
                         tl = languageSetting.tl;
                 }
-                TRANSLATORS[DefaultTranslator].translate(text, sl, tl).then(result =>
-                    callback(result)
-                );
+                TRANSLATORS[DefaultTranslator].translate(text, sl, tl).then(result => {
+                    result.sourceLanguage = sl;
+                    result.targetLanguage = tl;
+                    callback(result);
+                });
             });
         }
     });
 }
 
 /**
+ * Text to speech proxy.
  *
- * 检测给定文本的语言。
- *
- * @param {string} text 需要检测的文本
- * @param {function} callback 回调函数，参数为检测结果
+ * @param {String} text The text.
+ * @param {String} language The language of the text.
+ * @param {String} speed The speed of the speech.
+ * @param {Function} callback The callback function.
  */
-function detect(text, callback) {
+function pronounce(text, language, speed, callback) {
     chrome.storage.sync.get("DefaultTranslator", result => {
-        TRANSLATORS[result.DefaultTranslator].detect(text).then(result => callback(result));
+        let translator = TRANSLATORS[result.DefaultTranslator];
+        if (language == "auto") {
+            translator.detect(text).then(lan => {
+                translator.pronounce(text, lan, speed).then(callback);
+            });
+        } else {
+            translator.pronounce(text, language, speed).then(callback);
+        }
+    });
+}
+
+/**
+ * Stop pronounce proxy.
+ */
+function stopPronounce() {
+    chrome.storage.sync.get("DefaultTranslator", result => {
+        TRANSLATORS[result.DefaultTranslator].stopPronounce();
     });
 }
 
@@ -227,69 +258,6 @@ function getCurrentTabId(tab, callback) {
         // eslint-disable-next-line no-console
         console.log("Unsupported page.");
         callback(chrome.tabs.TAB_ID_NONE);
-    }
-}
-
-/**
- * Actual TTS function.
- *
- * @param {*} text text to pronounce
- * @param {*} language language of text
- * @param {*} speed TTS speed
- * @param {*} callback callback
- */
-function doPronounce(text, language, speed, callback) {
-    AUDIO.pause();
-    AUDIO.src =
-        BASE_TTS_URL +
-        "&q=" +
-        text +
-        "&tl=" +
-        language +
-        "&ttsspeed=" +
-        speed +
-        "&tk=" +
-        GOOGLE.generateTK(text, GOOGLE.TKK[0], GOOGLE.TKK[1]);
-    AUDIO.play();
-
-    if (callback) {
-        callback();
-    }
-}
-
-/**
- * Stop pronounce.
- */
-function stopPronounce() {
-    AUDIO.pause();
-}
-
-/**
- * Text to speech proxy.
- *
- * @param {String} text The text.
- * @param {String} language The language of the text.
- * @param {String} speed The speed of the speech.
- * @param {Function} callback The callback function.
- */
-function pronounce(text, language, speed, callback) {
-    var speedValue;
-    switch (speed) {
-        case "fast":
-            speedValue = "0.8";
-            break;
-        case "slow":
-            speedValue = "0.2";
-            break;
-        default:
-            speedValue = "0.5";
-            break;
-    }
-
-    if (language == "auto") {
-        detect(text, lan => doPronounce(text, lan, speedValue, callback));
-    } else {
-        doPronounce(text, language, speedValue, callback);
     }
 }
 
