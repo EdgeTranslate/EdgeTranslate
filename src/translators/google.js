@@ -133,6 +133,7 @@ class GoogleTranslator {
         this.TRANSLATE_URL =
             this.HOST +
             "translate_a/single?ie=UTF-8&client=webapp&otf=1&ssel=0&tsel=0&kc=5&dt=t&dt=at&dt=bd&dt=ex&dt=md&dt=rw&dt=ss&dt=rm";
+        this.TTS_URL = this.HOST + "translate_tts?ie=UTF-8&client=webapp";
 
         /**
          * Language to translator language code.
@@ -143,6 +144,11 @@ class GoogleTranslator {
          * Translator language code to language.
          */
         this.CODE_TO_LAN = new Map(LANGUAGES.map(([lan, code]) => [code, lan]));
+
+        /**
+         * Audio instance.
+         */
+        this.AUDIO = new Audio();
     }
 
     /* eslint-disable */
@@ -152,6 +158,8 @@ class GoogleTranslator {
      * @param {String} a parameter
      * @param {String} b parameter
      * @param {String} c parameter
+     *
+     * @returns {String} request TK
      */
     generateTK(a, b, c) {
         b = Number(b) || 0;
@@ -190,6 +198,8 @@ class GoogleTranslator {
      *
      * @param {String} a parameter
      * @param {String} b parameter
+     * 
+     * @returns {String} magic number
      */
     _magic(a, b) {
         for (var c = 0; c < b.length - 2; c += 3) {
@@ -204,6 +214,8 @@ class GoogleTranslator {
 
     /**
      * Update TKK from Google translate page.
+     *
+     * @returns {Promise<void>} promise
      */
     updateTKK() {
         return new Promise((resolve, reject) => {
@@ -236,6 +248,8 @@ class GoogleTranslator {
      * Parse Google translate result.
      *
      * @param {Object} response Google translate response
+     *
+     * @returns {Object} parsed result
      */
     parseResult(response) {
         let result = new Object();
@@ -336,6 +350,8 @@ class GoogleTranslator {
      * Detect the language of given text.
      *
      * @param {String} text text to detect
+     *
+     * @returns {Promise<String>} detected language Promise
      */
     detect(text) {
         let retryCount = 0;
@@ -372,7 +388,9 @@ class GoogleTranslator {
      *
      * @param {String} text text to translate
      * @param {String} from source language
-     * @param {String} to target languaage
+     * @param {String} to target language
+     *
+     * @returns {Promise<Object>} translation Promise
      */
     translate(text, from, to) {
         let retryCount = 0;
@@ -403,6 +421,40 @@ class GoogleTranslator {
         };
 
         return translateOnce();
+    }
+
+    /**
+     * Pronounce text.
+     *
+     * @param {String} text text to pronounce
+     * @param {String} language language of text
+     * @param {String} speed pronounce speed, "fast" or "slow"
+     *
+     * @returns {Promise<void>} Promise of playing
+     */
+    pronounce(text, language, speed) {
+        this.stopPronounce();
+        let speedValue = speed === "fast" ? "0.2" : "0.8";
+        this.AUDIO.src =
+            this.TTS_URL +
+            "&q=" +
+            encodeURIComponent(text) +
+            "&tl=" +
+            this.LAN_TO_CODE.get(language) +
+            "&ttsspeed=" +
+            speedValue +
+            "&tk=" +
+            this.generateTK(text, this.TKK[0], this.TKK[1]);
+        return this.AUDIO.play();
+    }
+
+    /**
+     * Stop pronouncing.
+     */
+    stopPronounce() {
+        if (!this.AUDIO.paused) {
+            this.AUDIO.pause();
+        }
     }
 }
 
