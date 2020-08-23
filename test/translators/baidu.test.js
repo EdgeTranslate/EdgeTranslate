@@ -19,7 +19,7 @@ describe("baidu translator api", () => {
 
     it("to detect language of Chinese text", () => {
         return TRANSLATOR.detect("你好").then(result => {
-            expect(result).toEqual("zh");
+            expect(result).toEqual("zh-CN");
         });
     });
 
@@ -53,7 +53,7 @@ describe("baidu translator api", () => {
                 let mock = new mockAdapter(axios);
                 let query = "hello",
                     from = "en",
-                    to = "zh",
+                    to = TRANSLATOR.LAN_TO_CODE.get("zh-CN"),
                     url = "/v2transapi?" + "from=" + from + "&to=" + to;
                 mock.onPost(url).reply(config => {
                     // to check post data
@@ -69,7 +69,7 @@ describe("baidu translator api", () => {
                     let result = fs.readFileSync(localResultPath, "utf-8").toString();
                     return [200, result];
                 });
-                return TRANSLATOR.translate(query, from, to);
+                return TRANSLATOR.translate(query, "en", "zh-CN");
             })
             .then(parseResult => {
                 expect(parseResult.originalText).toEqual("hello");

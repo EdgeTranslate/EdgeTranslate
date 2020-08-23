@@ -124,7 +124,6 @@ const LANGUAGES = [
     ["mau", "mau"],
     ["frm", "frm"],
     ["mot", "mot"],
-    ["nqo", "nqo"],
     ["nea", "nea"],
     ["ne", "nep"],
     ["sme", "sme"],

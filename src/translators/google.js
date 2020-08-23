@@ -77,7 +77,6 @@ const LANGUAGES = [
     ["nl", "nl"],
     ["no", "no"],
     ["ny", "ny"],
-    ["pa", "pa"],
     ["pl", "pl"],
     ["ps", "ps"],
     ["pt", "pt"],
@@ -102,7 +101,6 @@ const LANGUAGES = [
     ["th", "th"],
     ["fil", "tl"],
     ["tr", "tr"],
-    ["ug", "ug"],
     ["uk", "uk"],
     ["ur", "ur"],
     ["uz", "uz"],
@@ -198,7 +196,7 @@ class GoogleTranslator {
      *
      * @param {String} a parameter
      * @param {String} b parameter
-     * 
+     *
      * @returns {String} magic number
      */
     _magic(a, b) {
