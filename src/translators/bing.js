@@ -165,10 +165,22 @@ const TTS_LAN_CODE = {
  */
 class BingTranslator {
     constructor() {
+        /**
+         * Basic request parameters.
+         */
         this.IG = "";
         this.IID = "";
+
+        /**
+         * TTS auth info.
+         */
+        this.TTS_AUTH = { region: "", token: "" };
+
+        /**
+         * Request count.
+         */
         this.count = 0;
-        this.languages = {};
+
         this.HTMLParser = new DOMParser();
 
         /**
@@ -216,7 +228,7 @@ class BingTranslator {
      *
      * @returns {Promise} IG and IID Promise
      */
-    getIGIID() {
+    updateIGIID() {
         return new Promise((resolve, reject) => {
             axios
                 .get(this.HOME_PAGE)
@@ -225,6 +237,9 @@ class BingTranslator {
 
                     let html = this.HTMLParser.parseFromString(response.data, "text/html");
                     this.IID = html.getElementById("rich_tta").getAttribute("data-iid");
+
+                    // Reset request count.
+                    this.count = 0;
 
                     resolve();
                 })
@@ -296,7 +311,7 @@ class BingTranslator {
      *
      * @returns {Promise<Object>} Promise of auth data
      */
-    getTTSAuth() {
+    updateTTSAuth() {
         return this.request({
             method: "POST",
             baseURL: this.HOST,
@@ -309,7 +324,41 @@ class BingTranslator {
                 this.count.toString(),
             headers: this.HEADERS,
             data: ""
+        }).then(response => {
+            this.TTS_AUTH.region = response.region;
+            this.TTS_AUTH.token = response.token;
         });
+    }
+
+    /**
+     * Generate TTS request data.
+     *
+     * @param {String} text text to pronounce
+     * @param {String} language language of text
+     * @param {String} speed pronouncing speed, "fast" or "slow"
+     *
+     * @returns {String} TTS request data
+     */
+    generateTTSData(text, language, speed) {
+        let lanCode = this.LAN_TO_CODE.get(language);
+        let reader = READERS[lanCode];
+        let ttsLanCode = TTS_LAN_CODE[lanCode];
+        let speedValue = speed === "fast" ? "-10.00%" : "-30.00%";
+        return (
+            "<speak version='1.0' xml:lang='" +
+            ttsLanCode +
+            "'><voice xml:lang='" +
+            ttsLanCode +
+            "' xml:gender='" +
+            reader[1] +
+            "' name='" +
+            reader[2] +
+            "'><prosody rate='" +
+            speedValue +
+            "'>" +
+            text +
+            "</prosody></voice></speak>"
+        );
     }
 
     /**
@@ -352,7 +401,7 @@ class BingTranslator {
                             // Retry after failure
                             if (retry && retryCount < this.MAX_RETRY) {
                                 retryCount++;
-                                resolve(this.getIGIID().then(requestOnce));
+                                resolve(this.updateIGIID().then(requestOnce));
                             } else {
                                 reject({ response: response });
                             }
@@ -366,8 +415,8 @@ class BingTranslator {
             });
         };
 
-        if (!(this.IG && this.IG.length > 0 && this.IID && this.IID.length > 0)) {
-            await this.getIGIID();
+        if (!(this.IG.length > 0 && this.IID.length > 0)) {
+            await this.updateIGIID();
         }
 
         return requestOnce();
@@ -399,21 +448,16 @@ class BingTranslator {
                 this.count.toString(),
             data = "&fromLang=auto-detect&to=zh-Hans&text=" + encodeURIComponent(text);
 
-        return (
-            this.request({
-                method: "POST",
-                baseURL: this.HOST,
-                url: url,
-                headers: this.HEADERS,
-                data: data
-            })
-                .then(response => {
-                    let result = response[0].detectedLanguage.language;
-                    return this.CODE_TO_LAN.get(result);
-                })
-                // eslint-disable-next-line no-console
-                .catch(error => console.log(error))
-        );
+        return this.request({
+            method: "POST",
+            baseURL: this.HOST,
+            url: url,
+            headers: this.HEADERS,
+            data: data
+        }).then(response => {
+            let result = response[0].detectedLanguage.language;
+            return this.CODE_TO_LAN.get(result);
+        });
     }
 
     /**
@@ -456,47 +500,45 @@ class BingTranslator {
                 url: translateURL,
                 headers: this.HEADERS,
                 data: translateData
+            }).then(async transResponse => {
+                let lookupURL =
+                        "tlookupv3?isVertical=1&IG=" +
+                        this.IG +
+                        "&IID=" +
+                        this.IID +
+                        "." +
+                        this.count.toString(),
+                    lookupData =
+                        "&from=" +
+                        // Use detected language.
+                        transResponse[0].detectedLanguage.language +
+                        "&to=" +
+                        this.LAN_TO_CODE.get(to) +
+                        "&text=" +
+                        encodeURIComponent(text);
+
+                // Set up originalText in case that lookup failed.
+                let transResult = this.parseTranslateResult(transResponse, {
+                    originalText: text
+                });
+
+                try {
+                    // Attempt to request the lookup API for detailed translation.
+                    const lookupResponse = await this.request(
+                        {
+                            method: "POST",
+                            baseURL: this.HOST,
+                            url: lookupURL,
+                            headers: this.HEADERS,
+                            data: lookupData
+                        },
+                        false
+                    );
+                    return this.parseLookupResult(lookupResponse, transResult);
+                } catch (e) {
+                    return transResult;
+                }
             })
-                .then(async transResponse => {
-                    let lookupURL =
-                            "tlookupv3?isVertical=1&IG=" +
-                            this.IG +
-                            "&IID=" +
-                            this.IID +
-                            "." +
-                            this.count.toString(),
-                        lookupData =
-                            "&from=" +
-                            // Use detected language.
-                            transResponse[0].detectedLanguage.language +
-                            "&to=" +
-                            this.LAN_TO_CODE.get(to) +
-                            "&text=" +
-                            encodeURIComponent(text);
-
-                    let transResult = this.parseTranslateResult(transResponse, {
-                        originalText: text
-                    });
-
-                    try {
-                        // Attempt to request the lookup API for detailed translation.
-                        const lookupResponse = await this.request(
-                            {
-                                method: "POST",
-                                baseURL: this.HOST,
-                                url: lookupURL,
-                                headers: this.HEADERS,
-                                data: lookupData
-                            },
-                            false
-                        );
-                        return this.parseLookupResult(lookupResponse, transResult);
-                    } catch (e) {
-                        return transResult;
-                    }
-                })
-                // eslint-disable-next-line no-console
-                .catch(error => console.log(error))
         );
     }
 
@@ -509,66 +551,52 @@ class BingTranslator {
      *
      * @returns {Promise<void>} pronounce finished
      */
-    pronounce(text, language, speed) {
+    async pronounce(text, language, speed) {
         // Pause audio in case that it's playing.
         this.stopPronounce();
 
-        return (
-            this.getTTSAuth()
-                .then(authResponse => {
-                    let url =
-                        "https://" +
-                        authResponse.region +
-                        ".tts.speech.microsoft.com/cognitiveservices/v1?";
+        let retryCount = 0;
+        let pronounceOnce = async () => {
+            let url =
+                "https://" +
+                this.TTS_AUTH.region +
+                ".tts.speech.microsoft.com/cognitiveservices/v1?";
 
-                    let lanCode = this.LAN_TO_CODE.get(language);
-                    let reader = READERS[lanCode];
-                    let ttsLanCode = TTS_LAN_CODE[lanCode];
-                    let speedValue = speed === "fast" ? "-10.00%" : "-30.00%";
-                    let data =
-                        "<speak version='1.0' xml:lang='" +
-                        ttsLanCode +
-                        "'><voice xml:lang='" +
-                        ttsLanCode +
-                        "' xml:gender='" +
-                        reader[1] +
-                        "' name='" +
-                        reader[2] +
-                        "'><prosody rate='" +
-                        speedValue +
-                        "'>" +
-                        text +
-                        "</prosody></voice></speak>";
+            let headers = {
+                "Content-Type": "application/ssml+xml",
+                Authorization: "Bearer " + this.TTS_AUTH.token,
+                "X-MICROSOFT-OutputFormat": "audio-16khz-32kbitrate-mono-mp3",
+                "cache-control": "no-cache"
+            };
 
-                    let headers = {
-                        "Content-Type": "application/ssml+xml",
-                        Authorization: "Bearer " + authResponse.token,
-                        "X-MICROSOFT-OutputFormat": "audio-16khz-32kbitrate-mono-mp3",
-                        "cache-control": "no-cache"
-                    };
+            try {
+                const TTSResponse = await this.request(
+                    {
+                        method: "POST",
+                        baseURL: url,
+                        headers: headers,
+                        data: this.generateTTSData(text, language, speed),
+                        responseType: "arraybuffer"
+                    },
+                    false
+                );
+                this.AUDIO.src = "data:audio/mp3;base64," + this.arrayBufferToBase64(TTSResponse);
+                return this.AUDIO.play();
+            } catch (error) {
+                if (retryCount < this.MAX_RETRY) {
+                    retryCount++;
+                    return this.updateTTSAuth().then(pronounceOnce);
+                } else {
+                    throw error;
+                }
+            }
+        };
 
-                    return (
-                        this.request({
-                            method: "POST",
-                            baseURL: this.HOST,
-                            url: url,
-                            headers: headers,
-                            data: data,
-                            responseType: "arraybuffer"
-                        })
-                            .then(TTSResponse => {
-                                this.AUDIO.src =
-                                    "data:audio/mp3;base64," +
-                                    this.arrayBufferToBase64(TTSResponse);
-                                return this.AUDIO.play();
-                            })
-                            // eslint-disable-next-line no-console
-                            .catch(error => console.log(error))
-                    );
-                })
-                // eslint-disable-next-line no-console
-                .catch(error => console.log(error))
-        );
+        if (!(this.TTS_AUTH.region.length > 0 && this.TTS_AUTH.token.length > 0)) {
+            await this.updateTTSAuth();
+        }
+
+        return pronounceOnce();
     }
 
     /**
