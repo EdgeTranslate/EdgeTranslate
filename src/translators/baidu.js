@@ -1,6 +1,209 @@
 import axios from "axios";
 
 /**
+ * Supported languages.
+ */
+const LANGUAGES = [
+    ["ach", "ach"],
+    ["af", "afr"],
+    ["aka", "aka"],
+    ["sq", "alb"],
+    ["am", "amh"],
+    ["ar", "ara"],
+    ["arg", "arg"],
+    ["hy", "arm"],
+    ["asm", "asm"],
+    ["ast", "ast"],
+    ["auto", "auto"],
+    ["aym", "aym"],
+    ["az", "aze"],
+    ["bal", "bal"],
+    ["sun", "sun"],
+    ["bak", "bak"],
+    ["eu", "baq"],
+    ["be", "bel"],
+    ["bem", "bem"],
+    ["bn", "ben"],
+    ["ber", "ber"],
+    ["bho", "bho"],
+    ["bis", "bis"],
+    ["bli", "bli"],
+    ["nob", "nob"],
+    ["bs", "bos"],
+    ["bre", "bre"],
+    ["bg", "bul"],
+    ["bur", "bur"],
+    ["yue", "yue"],
+    ["ca", "cat"],
+    ["ceb", "ceb"],
+    ["chr", "chr"],
+    ["ny", "nya"],
+    ["chv", "chv"],
+    ["wyw", "wyw"],
+    ["cor", "cor"],
+    ["co", "cos"],
+    ["cre", "cre"],
+    ["cri", "cri"],
+    ["hr", "hrv"],
+    ["cs", "cs"],
+    ["da", "dan"],
+    ["div", "div"],
+    ["nl", "nl"],
+    ["en", "en"],
+    ["eo", "epo"],
+    ["et", "est"],
+    ["fao", "fao"],
+    ["fil", "fil"],
+    ["fi", "fin"],
+    ["fr", "fra"],
+    ["fri", "fri"],
+    ["ful", "ful"],
+    ["gla", "gla"],
+    ["gl", "glg"],
+    ["ka", "geo"],
+    ["de", "de"],
+    ["el", "el"],
+    ["grn", "grn"],
+    ["gu", "guj"],
+    ["ht", "ht"],
+    ["hak", "hak"],
+    ["ha", "hau"],
+    ["haw", "haw"],
+    ["he", "heb"],
+    ["hil", "hil"],
+    ["hi", "hi"],
+    ["hmn", "hmn"],
+    ["hu", "hu"],
+    ["hup", "hup"],
+    ["is", "ice"],
+    ["ido", "ido"],
+    ["ig", "ibo"],
+    ["id", "id"],
+    ["ing", "ing"],
+    ["ina", "ina"],
+    ["iku", "iku"],
+    ["ga", "gle"],
+    ["it", "it"],
+    ["ja", "jp"],
+    ["jw", "jav"],
+    ["kab", "kab"],
+    ["kal", "kal"],
+    ["kn", "kan"],
+    ["kau", "kau"],
+    ["kas", "kas"],
+    ["kah", "kah"],
+    ["kk", "kaz"],
+    ["km", "hkm"],
+    ["kin", "kin"],
+    ["tlh", "kli"],
+    ["kon", "kon"],
+    ["kok", "kok"],
+    ["ko", "kor"],
+    ["ku", "kur"],
+    ["ky", "kir"],
+    ["lo", "lao"],
+    ["lag", "lag"],
+    ["la", "lat"],
+    ["lv", "lav"],
+    ["lim", "lim"],
+    ["lin", "lin"],
+    ["lt", "lit"],
+    ["loj", "loj"],
+    ["lug", "lug"],
+    ["lb", "ltz"],
+    ["mk", "mac"],
+    ["mai", "mai"],
+    ["mg", "mg"],
+    ["ms", "may"],
+    ["ml", "mal"],
+    ["mt", "mlt"],
+    ["glv", "glv"],
+    ["mi", "mao"],
+    ["mr", "mar"],
+    ["mah", "mah"],
+    ["mau", "mau"],
+    ["frm", "frm"],
+    ["mot", "mot"],
+    ["nqo", "nqo"],
+    ["nea", "nea"],
+    ["ne", "nep"],
+    ["sme", "sme"],
+    ["ped", "ped"],
+    ["no", "nor"],
+    ["nno", "nno"],
+    ["oci", "oci"],
+    ["oji", "oji"],
+    ["eno", "eno"],
+    ["or", "ori"],
+    ["orm", "orm"],
+    ["oss", "oss"],
+    ["pam", "pam"],
+    ["pap", "pap"],
+    ["ps", "pus"],
+    ["fa", "per"],
+    ["pl", "pl"],
+    ["pt", "pt"],
+    ["ma", "pan"],
+    ["que", "que"],
+    ["ro", "rom"],
+    ["roh", "roh"],
+    ["ro", "ro"],
+    ["ru", "ru"],
+    ["ruy", "ruy"],
+    ["sm", "sm"],
+    ["san", "san"],
+    ["srd", "srd"],
+    ["sco", "sco"],
+    ["src", "src"],
+    ["sr", "srp"],
+    ["sec", "sec"],
+    ["sha", "sha"],
+    ["sn", "sna"],
+    ["sil", "sil"],
+    ["sd", "snd"],
+    ["si", "sin"],
+    ["sk", "sk"],
+    ["sl", "slo"],
+    ["so", "som"],
+    ["sol", "sol"],
+    ["nbl", "nbl"],
+    ["sot", "sot"],
+    ["es", "spa"],
+    ["sw", "swa"],
+    ["sv", "swe"],
+    ["syr", "syr"],
+    ["tgl", "tgl"],
+    ["tg", "tgk"],
+    ["ta", "tam"],
+    ["tat", "tat"],
+    ["te", "tel"],
+    ["tet", "tet"],
+    ["th", "th"],
+    ["tir", "tir"],
+    ["zh-TW", "cht"],
+    ["zh-CN", "zh"],
+    ["tso", "tso"],
+    ["tr", "tr"],
+    ["tuk", "tuk"],
+    ["twi", "twi"],
+    ["uk", "ukr"],
+    ["ups", "ups"],
+    ["ur", "urd"],
+    ["uz", "uzb"],
+    ["ven", "ven"],
+    ["vi", "vie"],
+    ["wln", "wln"],
+    ["cy", "wel"],
+    ["fry", "fry"],
+    ["wol", "wol"],
+    ["xh", "xho"],
+    ["yi", "yid"],
+    ["yo", "yor"],
+    ["zaz", "zaz"],
+    ["zu", "zul"]
+];
+
+/**
  * Baidu translator interface.
  */
 class BaiduTranslator {
@@ -20,6 +223,16 @@ class BaiduTranslator {
                 "en,zh;q=0.9,en-GB;q=0.8,en-CA;q=0.7,en-AU;q=0.6,en-ZA;q=0.5,en-NZ;q=0.4,en-IN;q=0.3,zh-CN;q=0.2",
             "content-type": "application/x-www-form-urlencoded; charset=UTF-8"
         };
+
+        /**
+         * Language to translator language code.
+         */
+        this.LAN_TO_CODE = new Map(LANGUAGES);
+
+        /**
+         * Translator language code to language.
+         */
+        this.CODE_TO_LAN = new Map(LANGUAGES.map(([lan, code]) => [code, lan]));
     }
 
     /**
@@ -133,6 +346,15 @@ class BaiduTranslator {
     }
 
     /**
+     * Get supported languages of this API.
+     *
+     * @returns {Set<String>} supported languages
+     */
+    supportedLanguages() {
+        return new Set(this.LAN_TO_CODE.keys());
+    }
+
+    /**
      * Detect language of given text.
      *
      * @param {String} text text to detect
@@ -149,7 +371,8 @@ class BaiduTranslator {
             }),
             timeout: 5000
         }).then(result => {
-            if (result.data.msg === "success") return Promise.resolve(result.data.lan);
+            if (result.data.msg === "success")
+                return Promise.resolve(this.CODE_TO_LAN.get(result.data.lan));
             else return Promise.reject(result.data);
         });
     }
@@ -167,6 +390,8 @@ class BaiduTranslator {
         // send translation request one time
         // if the first request fails, resend requests no more than {this.MAX_RETRY} times
         let translateOneTime = function() {
+            to = this.LAN_TO_CODE.get(to);
+            from = this.LAN_TO_CODE.get(from);
             return axios({
                 url: "/v2transapi?" + "from=" + from + "&to=" + to,
                 method: "post",
