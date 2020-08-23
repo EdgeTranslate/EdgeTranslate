@@ -509,7 +509,7 @@ class BingTranslator {
      * @param {String} language language of text
      * @param {String} speed "fast" or "slow"
      *
-     * @returns {Promise} pronounce finished
+     * @returns {Promise<void>} pronounce finished
      */
     pronounce(text, language, speed) {
         // Pause audio in case that it's playing.
@@ -562,7 +562,7 @@ class BingTranslator {
                                 this.AUDIO.src =
                                     "data:audio/mp3;base64," +
                                     this.arrayBufferToBase64(TTSResponse);
-                                this.AUDIO.play();
+                                return this.AUDIO.play();
                             })
                             // eslint-disable-next-line no-console
                             .catch(error => console.log(error))
