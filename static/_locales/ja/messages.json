@@ -255,61 +255,25 @@
         "message": "言語設定を展開する",
         "description": "言語設定展開オプション"
     },
-    "Afrikaans": {
-        "message": "Afrikaans",
-        "description": "Afrikaans"
+    "NETERR": {
+        "message": "ネットワークエラー! ネットワーク接続を確認してください。",
+        "description": "ネットワークエラーメッセージ"
     },
-    "Albanian": {
-        "message": "Albanian",
-        "description": "Albanian"
+    "NETERR_CODE": {
+        "message": "エラーコード",
+        "description": "ネットワークエラーコード"
     },
-    "Amharic": {
-        "message": "Amharic",
-        "description": "Amharic"
+    "NETERR_503": {
+        "message": "頻繁にリクエストしすぎです! Googleが一時的にあなたのIPアドレスをブロックしました。30分後にもう一度お試しください。",
+        "description": "エラーコード503のネットワークエラーメッセージ。"
     },
-    "Arabic": {
-        "message": "Arabic",
-        "description": "Arabic"
+    "NETERR_413": {
+        "message": "翻訳テキストが長すぎます! 翻訳テキストを短くして、もう一度試してみてください。",
+        "description": "エラーコード413のネットワークエラーメッセージ。"
     },
-    "Armenian": {
-        "message": "Armenian",
-        "description": "Armenian"
-    },
-    "Azerbaijani": {
-        "message": "Azerbaijani",
-        "description": "Azerbaijani"
-    },
-    "Basque": {
-        "message": "Basque",
-        "description": "Basque"
-    },
-    "Belarusian": {
-        "message": "Belarusian",
-        "description": "Belarusian"
-    },
-    "Bengali": {
-        "message": "Bengali",
-        "description": "Bengali"
-    },
-    "Bosnian": {
-        "message": "Bosnian",
-        "description": "Bosnian"
-    },
-    "Bulgarian": {
-        "message": "Bulgarian",
-        "description": "Bulgarian"
-    },
-    "Catalan": {
-        "message": "Catalan",
-        "description": "Catalan"
-    },
-    "Cebuano": {
-        "message": "Cebuano",
-        "description": "Cebuano"
-    },
-    "Chichewa": {
-        "message": "Chichewa",
-        "description": "Chichewa"
+    "English": {
+        "message": "English",
+        "description": "English"
     },
     "ChineseSimplified": {
         "message": "Chinese Simplified",
@@ -319,9 +283,197 @@
         "message": "Chinese Traditional",
         "description": "Chinese Traditional"
     },
+    "French": {
+        "message": "French",
+        "description": "French"
+    },
+    "Spanish": {
+        "message": "Spanish",
+        "description": "Spanish"
+    },
+    "Russian": {
+        "message": "Russian",
+        "description": "Russian"
+    },
+    "Arabic": {
+        "message": "Arabic",
+        "description": "Arabic"
+    },
+    "German": {
+        "message": "German",
+        "description": "German"
+    },
+    "Japanese": {
+        "message": "Japanese",
+        "description": "Japanese"
+    },
+    "Portuguese": {
+        "message": "Portuguese",
+        "description": "Portuguese"
+    },
+    "Hindi": {
+        "message": "Hindi",
+        "description": "Hindi"
+    },
+    "Urdu": {
+        "message": "Urdu",
+        "description": "Urdu"
+    },
+    "Korean": {
+        "message": "Korean",
+        "description": "Korean"
+    },
+    "Achinese": {
+        "message": "Achinese",
+        "description": "Achinese"
+    },
+    "Afrikaans": {
+        "message": "Afrikaans",
+        "description": "Afrikaans"
+    },
+    "Akan": {
+        "message": "Akan",
+        "description": "Akan"
+    },
+    "Albanian": {
+        "message": "Albanian",
+        "description": "Albanian"
+    },
+    "Amharic": {
+        "message": "Amharic",
+        "description": "Amharic"
+    },
+    "Aragonese": {
+        "message": "Aragonese",
+        "description": "Aragonese"
+    },
+    "Armenian": {
+        "message": "Armenian",
+        "description": "Armenian"
+    },
+    "Assamese": {
+        "message": "Assamese",
+        "description": "Assamese"
+    },
+    "Asturian": {
+        "message": "Asturian",
+        "description": "Asturian"
+    },
+    "Aymara": {
+        "message": "Aymara",
+        "description": "Aymara"
+    },
+    "Azerbaijani": {
+        "message": "Azerbaijani",
+        "description": "Azerbaijani"
+    },
+    "Baluchi": {
+        "message": "Baluchi",
+        "description": "Baluchi"
+    },
+    "BasaSunda": {
+        "message": "BasaSunda",
+        "description": "BasaSunda"
+    },
+    "Bashkir": {
+        "message": "Bashkir",
+        "description": "Bashkir"
+    },
+    "Basque": {
+        "message": "Basque",
+        "description": "Basque"
+    },
+    "Belarusian": {
+        "message": "Belarusian",
+        "description": "Belarusian"
+    },
+    "Bemba": {
+        "message": "Bemba",
+        "description": "Bemba"
+    },
+    "Bengali": {
+        "message": "Bengali",
+        "description": "Bengali"
+    },
+    "Berberlanguages": {
+        "message": "Berber languages",
+        "description": "Berber languages"
+    },
+    "Bhojpuri": {
+        "message": "Bhojpuri",
+        "description": "Bhojpuri"
+    },
+    "Bislama": {
+        "message": "Bislama",
+        "description": "Bislama"
+    },
+    "Blin": {
+        "message": "Blin",
+        "description": "Blin"
+    },
+    "Bokmål": {
+        "message": "Bokmål",
+        "description": "Bokmål"
+    },
+    "Bosnian": {
+        "message": "Bosnian",
+        "description": "Bosnian"
+    },
+    "Breton": {
+        "message": "Breton",
+        "description": "Breton"
+    },
+    "Bulgarian": {
+        "message": "Bulgarian",
+        "description": "Bulgarian"
+    },
+    "Burmese": {
+        "message": "Burmese",
+        "description": "Burmese"
+    },
+    "Cantonese": {
+        "message": "Cantonese",
+        "description": "Cantonese"
+    },
+    "Catalan": {
+        "message": "Catalan",
+        "description": "Catalan"
+    },
+    "Cebuano": {
+        "message": "Cebuano",
+        "description": "Cebuano"
+    },
+    "Cherokee": {
+        "message": "Cherokee",
+        "description": "Cherokee"
+    },
+    "Chichewa": {
+        "message": "Chichewa",
+        "description": "Chichewa"
+    },
+    "Chuvash": {
+        "message": "Chuvash",
+        "description": "Chuvash"
+    },
+    "ClassicalChinese": {
+        "message": "Classical Chinese",
+        "description": "Classical Chinese"
+    },
+    "Cornish": {
+        "message": "Cornish",
+        "description": "Cornish"
+    },
     "Corsican": {
         "message": "Corsican",
         "description": "Corsican"
+    },
+    "Creek": {
+        "message": "Creek",
+        "description": "Creek"
+    },
+    "CrimeanTatar": {
+        "message": "Crimean Tatar",
+        "description": "Crimean Tatar"
     },
     "Croatian": {
         "message": "Croatian",
@@ -335,13 +487,17 @@
         "message": "Danish",
         "description": "Danish"
     },
+    "Dari": {
+        "message": "Dari",
+        "description": "Dari"
+    },
+    "Divehi": {
+        "message": "Divehi",
+        "description": "Divehi"
+    },
     "Dutch": {
         "message": "Dutch",
         "description": "Dutch"
-    },
-    "English": {
-        "message": "English",
-        "description": "English"
     },
     "Esperanto": {
         "message": "Esperanto",
@@ -351,6 +507,14 @@
         "message": "Estonian",
         "description": "Estonian"
     },
+    "Faroese": {
+        "message": "Faroese",
+        "description": "Faroese"
+    },
+    "Fiji": {
+        "message": "Fiji",
+        "description": "Fiji"
+    },
     "Filipino": {
         "message": "Filipino",
         "description": "Filipino"
@@ -359,13 +523,21 @@
         "message": "Finnish",
         "description": "Finnish"
     },
-    "French": {
-        "message": "French",
-        "description": "French"
-    },
     "Frisian": {
         "message": "Frisian",
         "description": "Frisian"
+    },
+    "Friulian": {
+        "message": "Friulian",
+        "description": "Friulian"
+    },
+    "Fulani": {
+        "message": "Fulani",
+        "description": "Fulani"
+    },
+    "Gaelic": {
+        "message": "Gaelic",
+        "description": "Gaelic"
     },
     "Galician": {
         "message": "Galician",
@@ -375,13 +547,13 @@
         "message": "Georgian",
         "description": "Georgian"
     },
-    "German": {
-        "message": "German",
-        "description": "German"
-    },
     "Greek": {
         "message": "Greek",
         "description": "Greek"
+    },
+    "Guarani": {
+        "message": "Guarani",
+        "description": "Guarani"
     },
     "Gujarati": {
         "message": "Gujarati",
@@ -390,6 +562,10 @@
     "HaitianCreole": {
         "message": "Haitian Creole",
         "description": "Haitian Creole"
+    },
+    "HakhaChin": {
+        "message": "Hakha Chin",
+        "description": "Hakha Chin"
     },
     "Hausa": {
         "message": "Hausa",
@@ -403,9 +579,9 @@
         "message": "Hebrew",
         "description": "Hebrew"
     },
-    "Hindi": {
-        "message": "Hindi",
-        "description": "Hindi"
+    "Hiligaynon": {
+        "message": "Hiligaynon",
+        "description": "Hiligaynon"
     },
     "Hmong": {
         "message": "Hmong",
@@ -415,9 +591,17 @@
         "message": "Hungarian",
         "description": "Hungarian"
     },
+    "Hupa": {
+        "message": "Hupa",
+        "description": "Hupa"
+    },
     "Icelandic": {
         "message": "Icelandic",
         "description": "Icelandic"
+    },
+    "Ido": {
+        "message": "Ido",
+        "description": "Ido"
     },
     "Igbo": {
         "message": "Igbo",
@@ -427,6 +611,18 @@
         "message": "Indonesian",
         "description": "Indonesian"
     },
+    "Ingush": {
+        "message": "Ingush",
+        "description": "Ingush"
+    },
+    "Interlingua ": {
+        "message": "Interlingua ",
+        "description": "Interlingua "
+    },
+    "Inuktitut": {
+        "message": "Inuktitut",
+        "description": "Inuktitut"
+    },
     "Irish": {
         "message": "Irish",
         "description": "Irish"
@@ -435,17 +631,33 @@
         "message": "Italian",
         "description": "Italian"
     },
-    "Japanese": {
-        "message": "Japanese",
-        "description": "Japanese"
-    },
     "Javanese": {
         "message": "Javanese",
         "description": "Javanese"
     },
+    "Kabyle": {
+        "message": "Kabyle",
+        "description": "Kabyle"
+    },
+    "Kalaallisut": {
+        "message": "Kalaallisut",
+        "description": "Kalaallisut"
+    },
     "Kannada": {
         "message": "Kannada",
         "description": "Kannada"
+    },
+    "Kanuri": {
+        "message": "Kanuri",
+        "description": "Kanuri"
+    },
+    "Kashmiri": {
+        "message": "Kashmiri",
+        "description": "Kashmiri"
+    },
+    "Kashubian": {
+        "message": "Kashubian",
+        "description": "Kashubian"
     },
     "Kazakh": {
         "message": "Kazakh",
@@ -455,13 +667,29 @@
         "message": "Khmer",
         "description": "Khmer"
     },
-    "Korean": {
-        "message": "Korean",
-        "description": "Korean"
+    "Kinyarwanda": {
+        "message": "Kinyarwanda",
+        "description": "Kinyarwanda"
+    },
+    "Klingon": {
+        "message": "Klingon",
+        "description": "Klingon"
+    },
+    "Kongo": {
+        "message": "Kongo",
+        "description": "Kongo"
+    },
+    "Konkani": {
+        "message": "Konkani",
+        "description": "Konkani"
     },
     "Kurdish": {
         "message": "Kurdish (Kurmanji)",
         "description": "Kurdish (Kurmanji)"
+    },
+    "KurdishNorthern": {
+        "message": "Kurdish Northern",
+        "description": "Kurdish Northern"
     },
     "Kyrgyz": {
         "message": "Kyrgyz",
@@ -471,6 +699,10 @@
         "message": "Lao",
         "description": "Lao"
     },
+    "Latgalian": {
+        "message": "Latgalian",
+        "description": "Latgalian"
+    },
     "Latin": {
         "message": "Latin",
         "description": "Latin"
@@ -479,9 +711,25 @@
         "message": "Latvian",
         "description": "Latvian"
     },
+    "Limburgish": {
+        "message": "Limburgish",
+        "description": "Limburgish"
+    },
+    "Lingala": {
+        "message": "Lingala",
+        "description": "Lingala"
+    },
     "Lithuanian": {
         "message": "Lithuanian",
         "description": "Lithuanian"
+    },
+    "Lojban": {
+        "message": "Lojban",
+        "description": "Lojban"
+    },
+    "Luganda": {
+        "message": "Luganda",
+        "description": "Luganda"
     },
     "Luxembourgish": {
         "message": "Luxembourgish",
@@ -490,6 +738,10 @@
     "Macedonian": {
         "message": "Macedonian",
         "description": "Macedonian"
+    },
+    "Maithili": {
+        "message": "Maithili",
+        "description": "Maithili"
     },
     "Malagasy": {
         "message": "Malagasy",
@@ -507,6 +759,10 @@
         "message": "Maltese",
         "description": "Maltese"
     },
+    "Manx": {
+        "message": "Manx",
+        "description": "Manx"
+    },
     "Maori": {
         "message": "Maori",
         "description": "Maori"
@@ -515,21 +771,85 @@
         "message": "Marathi",
         "description": "Marathi"
     },
+    "Marshallese": {
+        "message": "Marshallese",
+        "description": "Marshallese"
+    },
+    "MauritianCreole": {
+        "message": "Mauritian Creole",
+        "description": "Mauritian Creole"
+    },
+    "MiddleFrench": {
+        "message": "Middle French",
+        "description": "Middle French"
+    },
     "Mongolian": {
         "message": "Mongolian",
         "description": "Mongolian"
+    },
+    "Montenegrin": {
+        "message": "Montenegrin",
+        "description": "Montenegrin"
     },
     "Myanmar": {
         "message": "Myanmar (Burmese)",
         "description": "Myanmar (Burmese)"
     },
+    "Neapolitan": {
+        "message": "Neapolitan",
+        "description": "Neapolitan"
+    },
     "Nepali": {
         "message": "Nepali",
         "description": "Nepali"
     },
+    "NorthernSami": {
+        "message": "Northern Sami",
+        "description": "Northern Sami"
+    },
+    "NorthernSotho": {
+        "message": "Northern Sotho",
+        "description": "Northern Sotho"
+    },
     "Norwegian": {
         "message": "Norwegian",
         "description": "Norwegian"
+    },
+    "Nynorsk": {
+        "message": "Nynorsk",
+        "description": "Nynorsk"
+    },
+    "Occitan": {
+        "message": "Occitan",
+        "description": "Occitan"
+    },
+    "Ojibwa": {
+        "message": "Ojibwa",
+        "description": "Ojibwa"
+    },
+    "OldEnglish": {
+        "message": "Old English",
+        "description": "Old English"
+    },
+    "Oriya": {
+        "message": "Oriya",
+        "description": "Oriya"
+    },
+    "Oromo": {
+        "message": "Oromo",
+        "description": "Oromo"
+    },
+    "Ossetian": {
+        "message": "Ossetian",
+        "description": "Ossetian"
+    },
+    "Pampanga": {
+        "message": "Pampanga",
+        "description": "Pampanga"
+    },
+    "Papiamento": {
+        "message": "Papiamento",
+        "description": "Papiamento"
     },
     "Pashto": {
         "message": "Pashto",
@@ -543,41 +863,89 @@
         "message": "Polish",
         "description": "Polish"
     },
-    "Portuguese": {
-        "message": "Portuguese",
-        "description": "Portuguese"
-    },
     "Punjabi": {
         "message": "Punjabi",
         "description": "Punjabi"
+    },
+    "Quechua": {
+        "message": "Quechua",
+        "description": "Quechua"
+    },
+    "QueretaroOttomi": {
+        "message": "Queretaro Ottomi",
+        "description": "Queretaro Ottomi"
     },
     "Romanian": {
         "message": "Romanian",
         "description": "Romanian"
     },
-    "Russian": {
-        "message": "Russian",
-        "description": "Russian"
+    "Romansh": {
+        "message": "Romansh",
+        "description": "Romansh"
+    },
+    "Romany": {
+        "message": "Romany",
+        "description": "Romany"
+    },
+    "Rusyn": {
+        "message": "Rusyn",
+        "description": "Rusyn"
     },
     "Samoan": {
         "message": "Samoan",
         "description": "Samoan"
     },
+    "Sanskrit": {
+        "message": "Sanskrit",
+        "description": "Sanskrit"
+    },
+    "Sardinian": {
+        "message": "Sardinian",
+        "description": "Sardinian"
+    },
+    "Scots": {
+        "message": "Scots",
+        "description": "Scots"
+    },
     "ScotsGaelic": {
         "message": "Scots Gaelic",
         "description": "Scots Gaelic"
+    },
+    "Serb(Cyrillic)": {
+        "message": "Serb(Cyrillic)",
+        "description": "Serb(Cyrillic)"
     },
     "Serbian": {
         "message": "Serbian",
         "description": "Serbian"
     },
+    "SerbianCyrillic": {
+        "message": "Serbian Cyrillic",
+        "description": "Serbian Cyrillic"
+    },
+    "SerbianLatin": {
+        "message": "Serbian Latin",
+        "description": "Serbian Latin"
+    },
+    "Serbo-Croatian": {
+        "message": "Serbo-Croatian",
+        "description": "Serbo-Croatian"
+    },
     "Sesotho": {
         "message": "Sesotho",
         "description": "Sesotho"
     },
+    "Shan": {
+        "message": "Shan",
+        "description": "Shan"
+    },
     "Shona": {
         "message": "Shona",
         "description": "Shona"
+    },
+    "Silesian": {
+        "message": "Silesian",
+        "description": "Silesian"
     },
     "Sindhi": {
         "message": "Sindhi",
@@ -599,9 +967,17 @@
         "message": "Somali",
         "description": "Somali"
     },
-    "Spanish": {
-        "message": "Spanish",
-        "description": "Spanish"
+    "Songhailanguages": {
+        "message": "Songhai languages",
+        "description": "Songhai languages"
+    },
+    "SouthernNdebele": {
+        "message": "Southern Ndebele",
+        "description": "Southern Ndebele"
+    },
+    "SouthernSotho": {
+        "message": "Southern Sotho",
+        "description": "Southern Sotho"
     },
     "Sundanese": {
         "message": "Sundanese",
@@ -615,6 +991,18 @@
         "message": "Swedish",
         "description": "Swedish"
     },
+    "Syriac": {
+        "message": "Syriac",
+        "description": "Syriac"
+    },
+    "Tagalog": {
+        "message": "Tagalog",
+        "description": "Tagalog"
+    },
+    "Tahiti": {
+        "message": "Tahiti",
+        "description": "Tahiti"
+    },
     "Tajik": {
         "message": "Tajik",
         "description": "Tajik"
@@ -623,37 +1011,81 @@
         "message": "Tamil",
         "description": "Tamil"
     },
+    "Tatar": {
+        "message": "Tatar",
+        "description": "Tatar"
+    },
     "Telugu": {
         "message": "Telugu",
         "description": "Telugu"
+    },
+    "Tetum": {
+        "message": "Tetum",
+        "description": "Tetum"
     },
     "Thai": {
         "message": "Thai",
         "description": "Thai"
     },
+    "Tigrinya": {
+        "message": "Tigrinya",
+        "description": "Tigrinya"
+    },
+    "Tongan": {
+        "message": "Tongan",
+        "description": "Tongan"
+    },
+    "Tsonga": {
+        "message": "Tsonga",
+        "description": "Tsonga"
+    },
     "Turkish": {
         "message": "Turkish",
         "description": "Turkish"
+    },
+    "Turkmen": {
+        "message": "Turkmen",
+        "description": "Turkmen"
+    },
+    "Twi": {
+        "message": "Twi",
+        "description": "Twi"
     },
     "Ukrainian": {
         "message": "Ukrainian",
         "description": "Ukrainian"
     },
-    "Urdu": {
-        "message": "Urdu",
-        "description": "Urdu"
+    "UpperSorbian": {
+        "message": "Upper Sorbian",
+        "description": "Upper Sorbian"
     },
     "Uzbek": {
         "message": "Uzbek",
         "description": "Uzbek"
     },
+    "Venda": {
+        "message": "Venda",
+        "description": "Venda"
+    },
     "Vietnamese": {
         "message": "Vietnamese",
         "description": "Vietnamese"
     },
+    "Walloon": {
+        "message": "Walloon",
+        "description": "Walloon"
+    },
     "Welsh": {
         "message": "Welsh",
         "description": "Welsh"
+    },
+    "WesternFrisian": {
+        "message": "Western Frisian",
+        "description": "Western Frisian"
+    },
+    "Wolof": {
+        "message": "Wolof",
+        "description": "Wolof"
     },
     "Xhosa": {
         "message": "Xhosa",
@@ -667,24 +1099,16 @@
         "message": "Yoruba",
         "description": "Yoruba"
     },
+    "YukatanMayan": {
+        "message": "YukatanMayan",
+        "description": "YukatanMayan"
+    },
+    "Zaza": {
+        "message": "Zaza",
+        "description": "Zaza"
+    },
     "Zulu": {
         "message": "Zulu",
         "description": "Zulu"
-    },
-    "NETERR": {
-        "message": "ネットワークエラー! ネットワーク接続を確認してください。",
-        "description": "ネットワークエラーメッセージ"
-    },
-    "NETERR_CODE": {
-        "message": "エラーコード",
-        "description": "ネットワークエラーコード"
-    },
-    "NETERR_503": {
-        "message": "頻繁にリクエストしすぎです! Googleが一時的にあなたのIPアドレスをブロックしました。30分後にもう一度お試しください。",
-        "description": "エラーコード503のネットワークエラーメッセージ。"
-    },
-    "NETERR_413": {
-        "message": "翻訳テキストが長すぎます! 翻訳テキストを短くして、もう一度試してみてください。",
-        "description": "エラーコード413のネットワークエラーメッセージ。"
     }
 }
