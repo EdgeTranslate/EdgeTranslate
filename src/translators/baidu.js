@@ -148,6 +148,9 @@ class BaiduTranslator {
                 query: text
             }),
             timeout: 5000
+        }).then(result => {
+            if (result.data.msg === "success") return Promise.resolve(result.data.lan);
+            else return Promise.reject(result.data);
         });
     }
 
