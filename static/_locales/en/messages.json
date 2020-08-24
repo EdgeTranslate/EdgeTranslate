@@ -411,7 +411,7 @@
         "message": "Blin",
         "description": "Blin"
     },
-    "Bokmål": {
+    "Bokmal": {
         "message": "Bokmål",
         "description": "Bokmål"
     },
@@ -615,9 +615,9 @@
         "message": "Ingush",
         "description": "Ingush"
     },
-    "Interlingua ": {
-        "message": "Interlingua ",
-        "description": "Interlingua "
+    "interlingua": {
+        "message": "interlingua",
+        "description": "interlingua"
     },
     "Inuktitut": {
         "message": "Inuktitut",
@@ -911,7 +911,7 @@
         "message": "Scots Gaelic",
         "description": "Scots Gaelic"
     },
-    "Serb(Cyrillic)": {
+    "SerbCyrillic": {
         "message": "Serb(Cyrillic)",
         "description": "Serb(Cyrillic)"
     },
@@ -927,7 +927,7 @@
         "message": "Serbian Latin",
         "description": "Serbian Latin"
     },
-    "Serbo-Croatian": {
+    "SerboCroatian": {
         "message": "Serbo-Croatian",
         "description": "Serbo-Croatian"
     },

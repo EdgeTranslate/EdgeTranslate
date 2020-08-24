@@ -411,7 +411,7 @@
         "message": "比林語",
         "description": "比林語"
     },
-    "Bokmål": {
+    "Bokmal": {
         "message": "書面挪威語",
         "description": "書面挪威語"
     },
@@ -615,7 +615,7 @@
         "message": "印古什語",
         "description": "印古什語"
     },
-    "Interlingua ": {
+    "interlingua": {
         "message": "因特語",
         "description": "因特語"
     },
@@ -911,7 +911,7 @@
         "message": "蘇格蘭蓋爾語",
         "description": "蘇格蘭蓋爾語"
     },
-    "Serb(Cyrillic)": {
+    "SerbCyrillic": {
         "message": "塞爾維亞語(西里爾文)",
         "description": "塞爾維亞語(西里爾文)"
     },
@@ -927,7 +927,7 @@
         "message": "塞爾維亞語拉丁字母",
         "description": "塞爾維亞語拉丁字母"
     },
-    "Serbo-Croatian": {
+    "SerboCroatian": {
         "message": "塞爾維亞-克羅地亞語",
         "description": "塞爾維亞-克羅地亞語"
     },
