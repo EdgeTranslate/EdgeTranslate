@@ -255,61 +255,25 @@
         "message": "展開語言設置",
         "description": "將語言設置選項展開"
     },
-    "Afrikaans": {
-        "message": "南非荷蘭語",
-        "description": "南非荷蘭語"
+    "NETERR": {
+        "message": "網絡錯誤！請檢查您的網絡連接。",
+        "description": "網絡錯誤信息。"
     },
-    "Albanian": {
-        "message": "阿爾巴尼亞語",
-        "description": "阿爾巴尼亞語"
+    "NETERR_CODE": {
+        "message": "錯誤代碼",
+        "description": "網絡錯誤代碼。"
     },
-    "Amharic": {
-        "message": "阿姆哈拉語",
-        "description": "阿姆哈拉語"
+    "NETERR_503": {
+        "message": "由於您的請求過於頻繁，Google已將您的IP暫時封鎖，請等待半小時后重試！",
+        "description": "503狀態碼錯誤信息。"
     },
-    "Arabic": {
-        "message": "阿拉伯語",
-        "description": "阿拉伯語"
+    "NETERR_413": {
+        "message": "您請求的的翻譯文本太長，請分段翻譯！",
+        "description": "413狀態碼錯誤信息。"
     },
-    "Armenian": {
-        "message": "亞美尼亞語",
-        "description": "亞美尼亞語"
-    },
-    "Azerbaijani": {
-        "message": "阿塞拜疆語",
-        "description": "阿塞拜疆語"
-    },
-    "Basque": {
-        "message": "巴斯克語",
-        "description": "巴斯克語"
-    },
-    "Belarusian": {
-        "message": "白俄羅斯語",
-        "description": "白俄羅斯語"
-    },
-    "Bengali": {
-        "message": "孟加拉語",
-        "description": "孟加拉語"
-    },
-    "Bosnian": {
-        "message": "波斯尼亞語",
-        "description": "波斯尼亞語"
-    },
-    "Bulgarian": {
-        "message": "保加利亞語",
-        "description": "保加利亞語"
-    },
-    "Catalan": {
-        "message": "加泰羅尼亞語",
-        "description": "加泰羅尼亞語"
-    },
-    "Cebuano": {
-        "message": "宿務語",
-        "description": "宿務語"
-    },
-    "Chichewa": {
-        "message": "斯瓦希里語",
-        "description": "斯瓦希里語"
+    "English": {
+        "message": "英語",
+        "description": "英語"
     },
     "ChineseSimplified": {
         "message": "簡體中文",
@@ -319,9 +283,197 @@
         "message": "繁體中文",
         "description": "繁體中文"
     },
+    "French": {
+        "message": "法語",
+        "description": "法語"
+    },
+    "Spanish": {
+        "message": "西班牙語",
+        "description": "西班牙語"
+    },
+    "Russian": {
+        "message": "俄語",
+        "description": "俄語"
+    },
+    "Arabic": {
+        "message": "阿拉伯語",
+        "description": "阿拉伯語"
+    },
+    "German": {
+        "message": "德語",
+        "description": "德語"
+    },
+    "Japanese": {
+        "message": "日語",
+        "description": "日語"
+    },
+    "Portuguese": {
+        "message": "葡萄牙語",
+        "description": "葡萄牙語"
+    },
+    "Hindi": {
+        "message": "印地語",
+        "description": "印地語"
+    },
+    "Urdu": {
+        "message": "烏爾都語",
+        "description": "烏爾都語"
+    },
+    "Korean": {
+        "message": "韓語",
+        "description": "韓語"
+    },
+    "Achinese": {
+        "message": "亞齊語",
+        "description": "亞齊語"
+    },
+    "Afrikaans": {
+        "message": "南非荷蘭語",
+        "description": "南非荷蘭語"
+    },
+    "Akan": {
+        "message": "阿肯語",
+        "description": "阿肯語"
+    },
+    "Albanian": {
+        "message": "阿爾巴尼亞語",
+        "description": "阿爾巴尼亞語"
+    },
+    "Amharic": {
+        "message": "阿姆哈拉語",
+        "description": "阿姆哈拉語"
+    },
+    "Aragonese": {
+        "message": "阿拉貢語",
+        "description": "阿拉貢語"
+    },
+    "Armenian": {
+        "message": "亞美尼亞語",
+        "description": "亞美尼亞語"
+    },
+    "Assamese": {
+        "message": "阿薩姆語",
+        "description": "阿薩姆語"
+    },
+    "Asturian": {
+        "message": "阿斯圖里亞斯語",
+        "description": "阿斯圖里亞斯語"
+    },
+    "Aymara": {
+        "message": "艾馬拉語",
+        "description": "艾馬拉語"
+    },
+    "Azerbaijani": {
+        "message": "阿塞拜疆語",
+        "description": "阿塞拜疆語"
+    },
+    "Baluchi": {
+        "message": "俾路支語",
+        "description": "俾路支語"
+    },
+    "BasaSunda": {
+        "message": "巽他語",
+        "description": "巽他語"
+    },
+    "Bashkir": {
+        "message": "巴什基爾語",
+        "description": "巴什基爾語"
+    },
+    "Basque": {
+        "message": "巴斯克語",
+        "description": "巴斯克語"
+    },
+    "Belarusian": {
+        "message": "白俄羅斯語",
+        "description": "白俄羅斯語"
+    },
+    "Bemba": {
+        "message": "本巴語",
+        "description": "本巴語"
+    },
+    "Bengali": {
+        "message": "孟加拉語",
+        "description": "孟加拉語"
+    },
+    "Berberlanguages": {
+        "message": "柏柏爾語",
+        "description": "柏柏爾語"
+    },
+    "Bhojpuri": {
+        "message": "博傑普爾語",
+        "description": "博傑普爾語"
+    },
+    "Bislama": {
+        "message": "比斯拉馬語",
+        "description": "比斯拉馬語"
+    },
+    "Blin": {
+        "message": "比林語",
+        "description": "比林語"
+    },
+    "Bokmal": {
+        "message": "書面挪威語",
+        "description": "書面挪威語"
+    },
+    "Bosnian": {
+        "message": "波斯尼亞語",
+        "description": "波斯尼亞語"
+    },
+    "Breton": {
+        "message": "布列塔尼語",
+        "description": "布列塔尼語"
+    },
+    "Bulgarian": {
+        "message": "保加利亞語",
+        "description": "保加利亞語"
+    },
+    "Burmese": {
+        "message": "緬甸語",
+        "description": "緬甸語"
+    },
+    "Cantonese": {
+        "message": "中文(粵語)",
+        "description": "中文(粵語)"
+    },
+    "Catalan": {
+        "message": "加泰羅尼亞語",
+        "description": "加泰羅尼亞語"
+    },
+    "Cebuano": {
+        "message": "宿務語",
+        "description": "宿務語"
+    },
+    "Cherokee": {
+        "message": "切羅基語",
+        "description": "切羅基語"
+    },
+    "Chichewa": {
+        "message": "斯瓦希里語",
+        "description": "斯瓦希里語"
+    },
+    "Chuvash": {
+        "message": "楚瓦什語",
+        "description": "楚瓦什語"
+    },
+    "ClassicalChinese": {
+        "message": "中文(文言文)",
+        "description": "中文(文言文)"
+    },
+    "Cornish": {
+        "message": "康瓦爾語",
+        "description": "康瓦爾語"
+    },
     "Corsican": {
         "message": "科西嘉語",
         "description": "科西嘉語"
+    },
+    "Creek": {
+        "message": "克里克語",
+        "description": "克里克語"
+    },
+    "CrimeanTatar": {
+        "message": "克里米亞韃靼語",
+        "description": "克里米亞韃靼語"
     },
     "Croatian": {
         "message": "克羅地亞語",
@@ -335,13 +487,17 @@
         "message": "丹麥語",
         "description": "丹麥語"
     },
+    "Dari": {
+        "message": "達里語",
+        "description": "達里語"
+    },
+    "Divehi": {
+        "message": "迪維希語",
+        "description": "迪維希語"
+    },
     "Dutch": {
         "message": "荷蘭語",
         "description": "荷蘭語"
-    },
-    "English": {
-        "message": "英語",
-        "description": "英語"
     },
     "Esperanto": {
         "message": "世界語",
@@ -351,21 +507,37 @@
         "message": "愛沙尼亞語",
         "description": "愛沙尼亞語"
     },
+    "Faroese": {
+        "message": "法羅語",
+        "description": "法羅語"
+    },
+    "Fiji": {
+        "message": "斐濟語",
+        "description": "斐濟語"
+    },
     "Filipino": {
-        "message": " 菲律賓",
-        "description": " 菲律賓"
+        "message": " 菲律賓語",
+        "description": " 菲律賓語"
     },
     "Finnish": {
         "message": "芬蘭語",
         "description": "芬蘭語"
     },
-    "French": {
-        "message": "法語",
-        "description": "法語"
-    },
     "Frisian": {
         "message": "弗里斯蘭語",
         "description": "弗里斯蘭語"
+    },
+    "Friulian": {
+        "message": "弗留利語",
+        "description": "弗留利語"
+    },
+    "Fulani": {
+        "message": "富拉尼語",
+        "description": "富拉尼語"
+    },
+    "Gaelic": {
+        "message": "蓋爾語",
+        "description": "蓋爾語"
     },
     "Galician": {
         "message": "加利西亞語",
@@ -375,13 +547,13 @@
         "message": "格魯吉亞語",
         "description": "格魯吉亞語"
     },
-    "German": {
-        "message": "德語",
-        "description": "德語"
-    },
     "Greek": {
         "message": "希臘語",
         "description": "希臘語"
+    },
+    "Guarani": {
+        "message": "瓜拉尼語",
+        "description": "瓜拉尼語"
     },
     "Gujarati": {
         "message": "古吉拉特語",
@@ -390,6 +562,10 @@
     "HaitianCreole": {
         "message": "海地克里奧爾語",
         "description": "海地克里奧爾語"
+    },
+    "HakhaChin": {
+        "message": "哈卡欽語",
+        "description": "哈卡欽語"
     },
     "Hausa": {
         "message": "豪薩語",
@@ -403,9 +579,9 @@
         "message": "希伯來語",
         "description": "希伯來語"
     },
-    "Hindi": {
-        "message": "印地語",
-        "description": "印地語"
+    "Hiligaynon": {
+        "message": "希利蓋農語",
+        "description": "希利蓋農語"
     },
     "Hmong": {
         "message": "苗語",
@@ -415,9 +591,17 @@
         "message": "匈牙利語",
         "description": "匈牙利語"
     },
+    "Hupa": {
+        "message": "胡帕語",
+        "description": "胡帕語"
+    },
     "Icelandic": {
         "message": "冰島語",
         "description": "冰島語"
+    },
+    "Ido": {
+        "message": "伊多語",
+        "description": "伊多語"
     },
     "Igbo": {
         "message": "伊博語",
@@ -427,6 +611,18 @@
         "message": "印度尼西亞語",
         "description": "印度尼西亞語"
     },
+    "Ingush": {
+        "message": "印古什語",
+        "description": "印古什語"
+    },
+    "interlingua": {
+        "message": "因特語",
+        "description": "因特語"
+    },
+    "Inuktitut": {
+        "message": "伊努克提圖特語",
+        "description": "伊努克提圖特語"
+    },
     "Irish": {
         "message": "愛爾蘭語",
         "description": "愛爾蘭語"
@@ -435,33 +631,65 @@
         "message": "意大利語",
         "description": "意大利語"
     },
-    "Japanese": {
-        "message": "日語",
-        "description": "日語"
-    },
     "Javanese": {
         "message": "爪哇語",
         "description": "爪哇語"
+    },
+    "Kabyle": {
+        "message": "卡拜爾語",
+        "description": "卡拜爾語"
+    },
+    "Kalaallisut": {
+        "message": "格陵蘭語",
+        "description": "格陵蘭語"
     },
     "Kannada": {
         "message": "卡納達語",
         "description": "卡納達語"
     },
+    "Kanuri": {
+        "message": "卡努里語",
+        "description": "卡努里語"
+    },
+    "Kashmiri": {
+        "message": "克什米爾語",
+        "description": "克什米爾語"
+    },
+    "Kashubian": {
+        "message": "卡舒比語",
+        "description": "卡舒比語"
+    },
     "Kazakh": {
-        "message": "哈薩克語 ",
-        "description": "哈薩克語 "
+        "message": "哈薩克語",
+        "description": "哈薩克語"
     },
     "Khmer": {
         "message": "高棉語",
         "description": "高棉語"
     },
-    "Korean": {
-        "message": "韓語",
-        "description": "韓語"
+    "Kinyarwanda": {
+        "message": "盧旺達語",
+        "description": "盧旺達語"
+    },
+    "Klingon": {
+        "message": "克林貢語",
+        "description": "克林貢語"
+    },
+    "Kongo": {
+        "message": "剛果語",
+        "description": "剛果語"
+    },
+    "Konkani": {
+        "message": "孔卡尼語",
+        "description": "孔卡尼語"
     },
     "Kurdish": {
         "message": "庫爾德語",
         "description": "庫爾德語"
+    },
+    "KurdishNorthern": {
+        "message": "庫爾德北部語",
+        "description": "庫爾德北部語"
     },
     "Kyrgyz": {
         "message": "吉爾吉斯語",
@@ -471,6 +699,10 @@
         "message": "老撾語",
         "description": "老撾語"
     },
+    "Latgalian": {
+        "message": "拉特加萊語",
+        "description": "拉特加萊語"
+    },
     "Latin": {
         "message": "拉丁語",
         "description": "拉丁語"
@@ -479,9 +711,25 @@
         "message": "拉脫維亞語",
         "description": "拉脫維亞語"
     },
+    "Limburgish": {
+        "message": "林堡語",
+        "description": "林堡語"
+    },
+    "Lingala": {
+        "message": "林加拉語",
+        "description": "林加拉語"
+    },
     "Lithuanian": {
         "message": "立陶宛語",
         "description": "立陶宛語"
+    },
+    "Lojban": {
+        "message": "邏輯語",
+        "description": "邏輯語"
+    },
+    "Luganda": {
+        "message": "盧干達語",
+        "description": "盧干達語"
     },
     "Luxembourgish": {
         "message": "盧森堡語",
@@ -490,6 +738,10 @@
     "Macedonian": {
         "message": "馬其頓語",
         "description": "馬其頓語"
+    },
+    "Maithili": {
+        "message": "邁蒂利語",
+        "description": "邁蒂利語"
     },
     "Malagasy": {
         "message": "馬達加斯加語",
@@ -507,6 +759,10 @@
         "message": "馬耳他語",
         "description": "馬耳他語"
     },
+    "Manx": {
+        "message": "曼克斯語",
+        "description": "曼克斯語"
+    },
     "Maori": {
         "message": "毛利語",
         "description": "毛利語"
@@ -515,69 +771,181 @@
         "message": "馬拉地語",
         "description": "馬拉地語"
     },
+    "Marshallese": {
+        "message": "馬紹爾語",
+        "description": "馬紹爾語"
+    },
+    "MauritianCreole": {
+        "message": "毛里求斯克里奧爾語",
+        "description": "毛里求斯克里奧爾語"
+    },
+    "MiddleFrench": {
+        "message": "中古法語",
+        "description": "中古法語"
+    },
     "Mongolian": {
         "message": "蒙古語",
         "description": "蒙古語"
+    },
+    "Montenegrin": {
+        "message": "黑山語",
+        "description": "黑山語"
     },
     "Myanmar": {
         "message": "緬甸語",
         "description": "緬甸語"
     },
+    "Neapolitan": {
+        "message": "那不勒斯語",
+        "description": "那不勒斯語"
+    },
     "Nepali": {
         "message": "尼泊爾語",
         "description": "尼泊爾語"
     },
+    "NorthernSami": {
+        "message": "北方薩米語",
+        "description": "北方薩米語"
+    },
+    "NorthernSotho": {
+        "message": "北索托語",
+        "description": "北索托語"
+    },
     "Norwegian": {
         "message": "挪威語",
         "description": "挪威語"
+    },
+    "Nynorsk": {
+        "message": "新挪威語",
+        "description": "新挪威語"
+    },
+    "Occitan": {
+        "message": "奧克語",
+        "description": "奧克語"
+    },
+    "Ojibwa": {
+        "message": "奧傑布瓦語",
+        "description": "奧傑布瓦語"
+    },
+    "OldEnglish": {
+        "message": "古英語",
+        "description": "古英語"
+    },
+    "Oriya": {
+        "message": "奧里亞語",
+        "description": "奧里亞語"
+    },
+    "Oromo": {
+        "message": "奧羅莫語",
+        "description": "奧羅莫語"
+    },
+    "Ossetian": {
+        "message": "奧塞梯語",
+        "description": "奧塞梯語"
+    },
+    "Pampanga": {
+        "message": "邦板牙語",
+        "description": "邦板牙語"
+    },
+    "Papiamento": {
+        "message": "帕皮阿門托語",
+        "description": "帕皮阿門托語"
     },
     "Pashto": {
         "message": "普什圖語",
         "description": "普什圖語"
     },
     "Persian": {
-        "message": "波斯語 ",
-        "description": "波斯語 "
+        "message": "波斯語",
+        "description": "波斯語"
     },
     "Polish": {
         "message": "波蘭語",
         "description": "波蘭語"
     },
-    "Portuguese": {
-        "message": "葡萄牙語",
-        "description": "葡萄牙語"
-    },
     "Punjabi": {
         "message": "旁遮普語",
         "description": "旁遮普語"
+    },
+    "Quechua": {
+        "message": "克丘亞語",
+        "description": "克丘亞語"
+    },
+    "QueretaroOttomi": {
+        "message": "克雷塔羅奧托米語",
+        "description": "克雷塔羅奧托米語"
     },
     "Romanian": {
         "message": "羅馬尼亞語",
         "description": "羅馬尼亞語"
     },
-    "Russian": {
-        "message": "俄語",
-        "description": "俄語"
+    "Romansh": {
+        "message": "羅曼什語",
+        "description": "羅曼什語"
+    },
+    "Romany": {
+        "message": "羅姆語",
+        "description": "羅姆語"
+    },
+    "Rusyn": {
+        "message": "盧森尼亞語",
+        "description": "盧森尼亞語"
     },
     "Samoan": {
         "message": "薩摩亞語",
         "description": "薩摩亞語"
     },
+    "Sanskrit": {
+        "message": "梵語",
+        "description": "梵語"
+    },
+    "Sardinian": {
+        "message": "薩丁尼亞語",
+        "description": "薩丁尼亞語"
+    },
+    "Scots": {
+        "message": "蘇格蘭語",
+        "description": "蘇格蘭語"
+    },
     "ScotsGaelic": {
         "message": "蘇格蘭蓋爾語",
         "description": "蘇格蘭蓋爾語"
+    },
+    "SerbCyrillic": {
+        "message": "塞爾維亞語(西里爾文)",
+        "description": "塞爾維亞語(西里爾文)"
     },
     "Serbian": {
         "message": "塞爾維亞語",
         "description": "塞爾維亞語"
     },
+    "SerbianCyrillic": {
+        "message": "塞爾維亞語西里爾字母",
+        "description": "塞爾維亞語西里爾字母"
+    },
+    "SerbianLatin": {
+        "message": "塞爾維亞語拉丁字母",
+        "description": "塞爾維亞語拉丁字母"
+    },
+    "SerboCroatian": {
+        "message": "塞爾維亞-克羅地亞語",
+        "description": "塞爾維亞-克羅地亞語"
+    },
     "Sesotho": {
         "message": "塞索托語",
         "description": "塞索托語"
     },
+    "Shan": {
+        "message": "撣語",
+        "description": "撣語"
+    },
     "Shona": {
         "message": "紹納語",
         "description": "紹納語"
+    },
+    "Silesian": {
+        "message": "西里西亞語",
+        "description": "西里西亞語"
     },
     "Sindhi": {
         "message": "信德語",
@@ -599,9 +967,17 @@
         "message": "索馬里語",
         "description": "索馬里語"
     },
-    "Spanish": {
-        "message": "西班牙語",
-        "description": "西班牙語"
+    "Songhailanguages": {
+        "message": "桑海語",
+        "description": "桑海語"
+    },
+    "SouthernNdebele": {
+        "message": "南恩德貝萊語",
+        "description": "南恩德貝萊語"
+    },
+    "SouthernSotho": {
+        "message": "南索托語",
+        "description": "南索托語"
     },
     "Sundanese": {
         "message": "巽他語",
@@ -615,6 +991,18 @@
         "message": "瑞典語",
         "description": "瑞典語"
     },
+    "Syriac": {
+        "message": "敘利亞語",
+        "description": "敘利亞語"
+    },
+    "Tagalog": {
+        "message": "他加祿語",
+        "description": "他加祿語"
+    },
+    "Tahiti": {
+        "message": "塔希提語",
+        "description": "塔希提語"
+    },
     "Tajik": {
         "message": "塔吉克語",
         "description": "塔吉克語"
@@ -623,37 +1011,81 @@
         "message": "泰米爾語",
         "description": "泰米爾語"
     },
+    "Tatar": {
+        "message": "韃靼語",
+        "description": "韃靼語"
+    },
     "Telugu": {
         "message": "泰盧固語",
         "description": "泰盧固語"
+    },
+    "Tetum": {
+        "message": "德頓語",
+        "description": "德頓語"
     },
     "Thai": {
         "message": "泰語",
         "description": "泰語"
     },
+    "Tigrinya": {
+        "message": "提格利尼亞語",
+        "description": "提格利尼亞語"
+    },
+    "Tongan": {
+        "message": "湯加語",
+        "description": "湯加語"
+    },
+    "Tsonga": {
+        "message": "聰加語",
+        "description": "聰加語"
+    },
     "Turkish": {
         "message": "土耳其語",
         "description": "土耳其語"
+    },
+    "Turkmen": {
+        "message": "土庫曼語",
+        "description": "土庫曼語"
+    },
+    "Twi": {
+        "message": "契維語",
+        "description": "契維語"
     },
     "Ukrainian": {
         "message": "烏克蘭語",
         "description": "烏克蘭語"
     },
-    "Urdu": {
-        "message": "烏爾都語",
-        "description": "烏爾都語"
+    "UpperSorbian": {
+        "message": "高地索布語",
+        "description": "高地索布語"
     },
     "Uzbek": {
         "message": "烏茲別克語",
         "description": "烏茲別克語"
     },
+    "Venda": {
+        "message": "文達語",
+        "description": "文達語"
+    },
     "Vietnamese": {
         "message": "越南語",
         "description": "越南語"
     },
+    "Walloon": {
+        "message": "瓦隆語",
+        "description": "瓦隆語"
+    },
     "Welsh": {
         "message": "威爾士語",
         "description": "威爾士語"
+    },
+    "WesternFrisian": {
+        "message": "西弗里斯語",
+        "description": "西弗里斯語"
+    },
+    "Wolof": {
+        "message": "沃洛夫語",
+        "description": "沃洛夫語"
     },
     "Xhosa": {
         "message": "科薩語",
@@ -667,24 +1099,16 @@
         "message": "約魯巴語",
         "description": "約魯巴語"
     },
+    "YukatanMayan": {
+        "message": "尤卡坦瑪雅語",
+        "description": "尤卡坦瑪雅語"
+    },
+    "Zaza": {
+        "message": "紮紮其語",
+        "description": "紮紮其語"
+    },
     "Zulu": {
         "message": "祖魯語",
         "description": "祖魯語"
-    },
-    "NETERR": {
-        "message": "網絡錯誤！請檢查您的網絡連接。",
-        "description": "網絡錯誤信息。"
-    },
-    "NETERR_CODE": {
-        "message": "錯誤代碼",
-        "description": "網絡錯誤代碼。"
-    },
-    "NETERR_503": {
-        "message": "由於您的請求過於頻繁，Google已將您的IP暫時封鎖，請等待半小時后重試！",
-        "description": "503狀態碼錯誤信息。"
-    },
-    "NETERR_413": {
-        "message": "您請求的的翻譯文本太長，請分段翻譯！",
-        "description": "413狀態碼錯誤信息。"
     }
 }
