@@ -25,15 +25,15 @@
                 <i id="icon-copy" class="icon icon-copy" title="<% chrome.i18n.getMessage('CopyResult') %>"><?xml version="1.0" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg t="1577246791324" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1128" width="64" height="64" xmlns:xlink="http://www.w3.org/1999/xlink"><defs><style type="text/css"></style></defs><path d="M768 682.666667V170.666667a85.333333 85.333333 0 0 0-85.333333-85.333334H170.666667a85.333333 85.333333 0 0 0-85.333334 85.333334v512a85.333333 85.333333 0 0 0 85.333334 85.333333h512a85.333333 85.333333 0 0 0 85.333333-85.333333zM170.666667 170.666667h512v512H170.666667z m682.666666 85.333333v512a85.333333 85.333333 0 0 1-85.333333 85.333333H256a85.333333 85.333333 0 0 0 85.333333 85.333334h426.666667a170.666667 170.666667 0 0 0 170.666667-170.666667V341.333333a85.333333 85.333333 0 0 0-85.333334-85.333333z" p-id="1129" stroke-width="100"></path></svg></i>
             </div>
             <div class="target-phonetic-symbol">
-                <% if (this.TPhoneticSymbol && this.TPhoneticSymbol.length > 0) { %>
-                    <% if (this.TPhoneticSymbol.length <= 10) { %>
-                        <p class="target-phonetic-symbol-large"><% this.TPhoneticSymbol %></p>
+                <% if (this.tPronunciation && this.tPronunciation.length > 0) { %>
+                    <% if (this.tPronunciation.length <= 10) { %>
+                        <p class="target-phonetic-symbol-large"><% this.tPronunciation %></p>
                     <% } %>
-                    <% else if (this.TPhoneticSymbol.length > 10 && this.TPhoneticSymbol.length <= 16) { %>  
-                        <p class="target-phonetic-symbol-medium"><% this.TPhoneticSymbol %></p>
+                    <% else if (this.tPronunciation.length > 10 && this.tPronunciation.length <= 16) { %>  
+                        <p class="target-phonetic-symbol-medium"><% this.tPronunciation %></p>
                     <% } %>
                     <% else { %>  
-                        <p class="target-phonetic-symbol-small"><% this.TPhoneticSymbol %></p>
+                        <p class="target-phonetic-symbol-small"><% this.tPronunciation %></p>
                     <% } %>                                
                 <% } %>
             </div>
@@ -51,28 +51,23 @@
                 <% } %>
             </div>
             <div class="phonetic-symbol">
-                <% if (this.SPhoneticSymbol && this.SPhoneticSymbol.length > 0) { %>
+                <% if (this.sPronunciation && this.sPronunciation.length > 0) { %>
                     <p class="content-title"><% chrome.i18n.getMessage("PhoneticSymbol") %>: </p>  
                     <ul>
-                        <li class="phonetic-symbol-content">[<% this.SPhoneticSymbol %>]</li>  
+                        <li class="phonetic-symbol-content">[<% this.sPronunciation %>]</li>  
                     </ul>
                 <% } %>
             </div>
-            <div class="common-meanings">  
-                <% if (this.commonMeanings && this.commonMeanings.length > 0) { %>  
-                    <p class="content-title"><% chrome.i18n.getMessage("CommonMeanings") %>: </p>  
-                    <ul class="may-need-rtl">
-                        <li class="common-meanings-content"><% this.commonMeanings %></li>  
-                    </ul>
-                <% } %>  
-            </div>  
             <div class="detailed-meanings">
                 <% if (this.detailedMeanings && this.detailedMeanings.length > 0) { %>
                     <span class="content-title"><% chrome.i18n.getMessage("DetailedMeanings") %>: </span>
                     <% for (let i in this.detailedMeanings) { %>
                         <p class="detailed-meanings-content">  
-                            <p class="word-type"><% this.detailedMeanings[i].type + ": " %></p>  
-                            <p class="may-need-rtl content"><% this.detailedMeanings[i].meaning %></p>  
+                            <p class="word-type"><% this.detailedMeanings[i].pos + ": " %></p>  
+                            <p class="may-need-rtl content"><% this.detailedMeanings[i].meaning %></p>
+                            <% if (this.detailedMeanings[i].synonyms) { %>
+                                <p class="may-need-rtl content"><% this.detailedMeanings[i].synonyms.join(", ") %></p>
+                            <% } %>
                         </p>
                     <% } %>  
                 <% } %>  
@@ -82,47 +77,29 @@
                     <p class="content-title"><% chrome.i18n.getMessage("Definitions") %>: </p>  
                     <% for (let i in this.definitions) { %>  
                         <div class="definitions-content">  
-                            <p class="word-type"><% this.definitions[i].type + ": " %></p>
-                            <% for (let j in this.definitions[i].meanings) { %> 
-                                <span class="content">
-                                    <span><% chrome.i18n.getMessage("DefinitionsMeaning") %>: </span>
-                                    <p class="definitions-content"><% this.definitions[i].meanings[j].meaning %></p>  
-                                    <span><% chrome.i18n.getMessage("DefinitionsExample") %>: </span>
-                                    <p class="definitions-content"><% this.definitions[i].meanings[j].example %></p>  
-                                </span>   
-                            <% } %>  
+                            <p class="word-type"><% this.definitions[i].pos + ": " %></p>
+                            <span class="content">
+                                <span><% chrome.i18n.getMessage("DefinitionsMeaning") %>: </span>
+                                <p class="definitions-content"><% this.definitions[i].meaning %></p>  
+                                <span><% chrome.i18n.getMessage("DefinitionsExample") %>: </span>
+                                <p class="definitions-content"><% this.definitions[i].example %></p>
+                                <% if (this.definitions[i].synonyms) { %>
+                                    <span><% chrome.i18n.getMessage("Synonyms") %>: </span>
+                                    <p class="definitions-content"><% this.definitions[i].synonyms.join(", ") %></p>
+                                <% } %>
+                            </span>
                         </div>  
                     <% } %>  
                 <% } %>  
-            </div>  
-            <div class="synonyms">  
-                <% if (this.synonyms && this.synonyms.length > 0) { %>  
-                    <p class="content-title"><% chrome.i18n.getMessage("Synonyms") %>: </p>  
-                    <% for (let i in this.synonyms) { %>  
-                        <p class="synonyms-content">  
-                            <span class="word-type"><% this.synonyms[i].type + " <b>" + this.synonyms[i].proto + "</b>: " %></span>  
-                            <span class="content"><% this.synonyms[i].words[0] %></span>  
-                        </p>  
-                    <% } %>  
-                <% } %> 
-            </div>  
-            <div class="phrases">  
-                <% if (this.phrases && this.phrases.length > 0) { %>  
-                    <p class="content-title"><% chrome.i18n.getMessage("Phrases") %>: </p>  
-                    <ol>  
-                        <% for (let i in this.phrases) { %>  
-                            <li class="phrases-content"><% this.phrases[i] %></li>  
-                        <% } %>  
-                    </ol>  
-                <% } %>  
-            </div>  
+            </div>
             <div class="examples">  
                 <% if (this.examples && this.examples.length > 0) { %>  
                     <p class="content-title"><% chrome.i18n.getMessage("Examples") %>: </p>  
                     <ol>  
                         <% for (let i in this.examples) { %>  
                             <li class="sentences">
-                                <p><% this.examples[i] %></p>
+                                <p><% this.examples[i].target %></p>
+                                <p><% this.examples[i].source %></p>
                             </li>  
                         <% } %>  
                     </ol>  

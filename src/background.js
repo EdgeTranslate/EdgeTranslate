@@ -56,9 +56,9 @@ const DEFAULT_SETTINGS = {
         translators: ["BaiduTranslate", "BingTranslate", "GoogleTranslate"],
         selections: {
             originalText: "GoogleTranslate",
-            mainMeaning: "GoogleTranslate",
-            tPronunciation: "BaiduTranslate",
-            sPronunciation: "BingTranslate",
+            mainMeaning: "BingTranslate",
+            tPronunciation: "BingTranslate",
+            sPronunciation: "BaiduTranslate",
             detailedMeanings: "BingTranslate",
             definitions: "GoogleTranslate",
             examples: "BaiduTranslate"
