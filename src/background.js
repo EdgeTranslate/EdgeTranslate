@@ -50,8 +50,20 @@ const DEFAULT_SETTINGS = {
         UseGoogleAnalytics: true,
         UsePDFjs: true
     },
-    DefaultTranslator: "BingTranslate",
-    DefaultPageTranslator: "YouDaoPageTranslate"
+    DefaultTranslator: "HybridTranslate",
+    DefaultPageTranslator: "YouDaoPageTranslate",
+    HybridTranslateConfig: {
+        translators: ["BaiduTranslate", "BingTranslate", "GoogleTranslate"],
+        selections: {
+            originalText: "GoogleTranslate",
+            mainMeaning: "GoogleTranslate",
+            tPronunciation: "BaiduTranslate",
+            sPronunciation: "BingTranslate",
+            detailedMeanings: "BingTranslate",
+            definitions: "GoogleTranslate",
+            examples: "BaiduTranslate"
+        }
+    }
 };
 
 /**

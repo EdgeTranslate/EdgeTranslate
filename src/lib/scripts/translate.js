@@ -1,6 +1,7 @@
 import BAIDU from "../../translators/baidu.js";
 import BING from "../../translators/bing.js";
 import GOOGLE from "../../translators/google.js";
+import HYBRID from "../../translators/hybrid.js";
 import { sendMessageToCurrentTab } from "./common.js";
 
 export {
@@ -21,7 +22,8 @@ export {
 const TRANSLATORS = {
     BaiduTranslate: BAIDU,
     BingTranslate: BING,
-    GoogleTranslate: GOOGLE
+    GoogleTranslate: GOOGLE,
+    HybridTranslate: HYBRID
 };
 
 /**
