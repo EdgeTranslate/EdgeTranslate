@@ -389,20 +389,22 @@ class BaiduTranslator {
         // send translation request one time
         // if the first request fails, resend requests no more than {this.MAX_RETRY} times
         let translateOneTime = async function() {
-            to = this.LAN_TO_CODE.get(to);
-            from = this.LAN_TO_CODE.get(from);
-            if (from === "auto") {
-                from = await this.detect(text);
-                from = this.LAN_TO_CODE.get(from);
+            let detectedFrom = from;
+            if (detectedFrom === "auto") {
+                detectedFrom = await this.detect(text);
             }
+
+            let toCode = this.LAN_TO_CODE.get(to),
+                fromCode = this.LAN_TO_CODE.get(detectedFrom);
+
             return axios({
-                url: "/v2transapi?" + "from=" + from + "&to=" + to,
+                url: "/v2transapi?" + "from=" + fromCode + "&to=" + toCode,
                 method: "post",
                 baseURL: this.HOST,
                 headers: this.HEADERS,
                 data: new URLSearchParams({
-                    from: from,
-                    to: to,
+                    from: fromCode,
+                    to: toCode,
                     query: text,
                     transtype: "realtime",
                     simple_means_flag: 3,
