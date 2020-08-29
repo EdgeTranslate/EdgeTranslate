@@ -14,9 +14,18 @@ class HybridTranslator {
         };
 
         /**
-         * Fallback translator.
+         * Translate config.
          */
-        this.FALLBACK = "GoogleTranslate";
+        this.CONFIG = {};
+        this.MAIN_TRANSLATOR = "GoogleTranslate";
+        chrome.storage.onChanged.addListener(
+            ((changes, area) => {
+                if (area === "sync" && changes["HybridTranslateConfig"]) {
+                    this.CONFIG = changes["HybridTranslateConfig"].newValue;
+                    this.MAIN_TRANSLATOR = this.CONFIG.selections.mainMeaning;
+                }
+            }).bind(this)
+        );
     }
 
     /**
@@ -25,7 +34,7 @@ class HybridTranslator {
      * @returns {Set<String>} supported languages
      */
     supportedLanguages() {
-        return this.TRANSLATORS[this.FALLBACK].supportedLanguages();
+        return this.TRANSLATORS[this.MAIN_TRANSLATOR].supportedLanguages();
     }
 
     /**
@@ -36,7 +45,7 @@ class HybridTranslator {
      * @returns {Promise<String>} Promise of language of given text
      */
     detect(text) {
-        return this.TRANSLATORS[this.FALLBACK].detect(text);
+        return this.TRANSLATORS[this.MAIN_TRANSLATOR].detect(text);
     }
 
     /**
@@ -50,56 +59,57 @@ class HybridTranslator {
      */
     translate(text, from, to) {
         return new Promise((resolve, reject) => {
-            chrome.storage.sync.get("HybridTranslateConfig", res => {
-                let count = 0;
-                let results = {};
-                let config = res.HybridTranslateConfig;
+            // chrome.storage.sync.get("HybridTranslateConfig", res => {
+            let count = 0;
+            let results = {};
+            let config = this.CONFIG;
+            // let config = res.HybridTranslateConfig;
 
-                /**
-                 * Receive results from different translators.
-                 *
-                 * This function will be called for several times to collect all results from
-                 * selected translators.
-                 *
-                 * @param {String} translator translator used
-                 * @param {Object} result result from the translator
-                 *
-                 * @returns {void} nothing
-                 */
-                let receive = (translator, result) => {
-                    count++;
-                    results[translator] = result;
+            /**
+             * Receive results from different translators.
+             *
+             * This function will be called for several times to collect all results from
+             * selected translators.
+             *
+             * @param {String} translator translator used
+             * @param {Object} result result from the translator
+             *
+             * @returns {void} nothing
+             */
+            let receive = (translator, result) => {
+                count++;
+                results[translator] = result;
 
-                    // Check if all results have been collected.
-                    if (count >= config.translators.length) {
-                        let translation = {};
-                        for (let item in config.selections) {
-                            try {
-                                let selectedTranslator = config.selections[item];
-                                translation[item] = results[selectedTranslator][item];
-                            } catch (error) {
-                                // eslint-disable-next-line no-console
-                                console.log(item + " " + config.selections[item]);
-                                // eslint-disable-next-line no-console
-                                console.log(error);
-                            }
+                // Check if all results have been collected.
+                if (count >= config.translators.length) {
+                    let translation = {};
+                    for (let item in config.selections) {
+                        try {
+                            let selectedTranslator = config.selections[item];
+                            translation[item] = results[selectedTranslator][item];
+                        } catch (error) {
+                            // eslint-disable-next-line no-console
+                            console.log(item + " " + config.selections[item]);
+                            // eslint-disable-next-line no-console
+                            console.log(error);
                         }
-                        resolve(translation);
                     }
-                };
-
-                // Initiate translation requests.
-                try {
-                    config.translators.forEach(translator => {
-                        this.TRANSLATORS[translator]
-                            .translate(text, from, to)
-                            .then(result => receive(translator, result));
-                    });
-                } catch (error) {
-                    reject(error);
+                    resolve(translation);
                 }
-            });
+            };
+
+            // Initiate translation requests.
+            try {
+                config.translators.forEach(translator => {
+                    this.TRANSLATORS[translator]
+                        .translate(text, from, to)
+                        .then(result => receive(translator, result));
+                });
+            } catch (error) {
+                reject(error);
+            }
         });
+        // });
     }
 
     /**
@@ -111,15 +121,15 @@ class HybridTranslator {
      *
      * @returns {Promise<void>} pronounce finished
      */
-    pronounce(text, languages, speed) {
-        return this.TRANSLATORS[this.FALLBACK].pronounce(text, languages, speed);
+    pronounce(text, language, speed) {
+        return this.TRANSLATORS[this.MAIN_TRANSLATOR].pronounce(text, language, speed);
     }
 
     /**
      * Pause pronounce.
      */
     stopPronounce() {
-        this.TRANSLATORS[this.FALLBACK].stopPronounce();
+        this.TRANSLATORS[this.MAIN_TRANSLATOR].stopPronounce();
     }
 }
 

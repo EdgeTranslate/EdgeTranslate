@@ -447,6 +447,31 @@ class BaiduTranslator {
         }
     }
 
+    /**
+     * Pronounce given text.
+     *
+     * @param {String} text text to pronounce
+     * @param {String} language language of text
+     * @param {String} speed "fast" or "slow"
+     *
+     * @returns {Promise<void>} pronounce finished
+     */
+    /* eslint-disable */
+    pronounce(text, language, speed) {
+        // TODO: Implement pronounce of Baidu API.
+        return new Promise((resolve, reject) => {
+            resolve();
+        });
+    }
+    /* eslint-enable */
+
+    /**
+     * Pause pronounce.
+     */
+    stopPronounce() {
+        // TODO: Implement stopPronounce of Baidu API.
+    }
+
     /* eslint-disable */
     tokenA(r, o) {
         for (var t = 0; t < o.length - 2; t += 3) {

@@ -50,7 +50,6 @@ const DEFAULT_SETTINGS = {
         UseGoogleAnalytics: true,
         UsePDFjs: true
     },
-    DefaultTranslator: "HybridTranslate",
     DefaultPageTranslator: "YouDaoPageTranslate",
     HybridTranslateConfig: {
         translators: ["BaiduTranslate", "BingTranslate", "GoogleTranslate"],

@@ -1,7 +1,4 @@
-import BAIDU from "../../translators/baidu.js";
-import BING from "../../translators/bing.js";
-import GOOGLE from "../../translators/google.js";
-import HYBRID from "../../translators/hybrid.js";
+import TRANSLATOR from "../../translators/hybrid.js";
 import { sendMessageToCurrentTab } from "./common.js";
 
 export {
@@ -17,16 +14,6 @@ export {
 };
 
 /**
- * Translators.
- */
-const TRANSLATORS = {
-    BaiduTranslate: BAIDU,
-    BingTranslate: BING,
-    GoogleTranslate: GOOGLE,
-    HybridTranslate: HYBRID
-};
-
-/**
  *
  * 检测给定文本的语言。
  *
@@ -34,9 +21,7 @@ const TRANSLATORS = {
  * @param {function} callback 回调函数，参数为检测结果
  */
 function detect(text, callback) {
-    chrome.storage.sync.get("DefaultTranslator", result => {
-        TRANSLATORS[result.DefaultTranslator].detect(text).then(result => callback(result));
-    });
+    TRANSLATOR.detect(text).then(result => callback(result));
 }
 
 /**
@@ -58,18 +43,13 @@ function translate(text, callback) {
     });
 
     // get language settings from chrome storage
-    chrome.storage.sync.get(["languageSetting", "OtherSettings", "DefaultTranslator"], result => {
+    chrome.storage.sync.get(["languageSetting", "OtherSettings"], result => {
         var OtherSettings = result.OtherSettings;
         var languageSetting = result.languageSetting;
-        let DefaultTranslator = result.DefaultTranslator;
 
         if (languageSetting.sl === "auto" || !OtherSettings.MutualTranslate) {
             // normal translation mode
-            TRANSLATORS[DefaultTranslator].translate(
-                text,
-                languageSetting.sl,
-                languageSetting.tl
-            ).then(result => {
+            TRANSLATOR.translate(text, languageSetting.sl, languageSetting.tl).then(result => {
                 result.sourceLanguage = languageSetting.sl;
                 result.targetLanguage = languageSetting.tl;
                 callback(result);
@@ -90,7 +70,7 @@ function translate(text, callback) {
                         sl = "auto";
                         tl = languageSetting.tl;
                 }
-                TRANSLATORS[DefaultTranslator].translate(text, sl, tl).then(result => {
+                TRANSLATOR.translate(text, sl, tl).then(result => {
                     result.sourceLanguage = sl;
                     result.targetLanguage = tl;
                     callback(result);
@@ -109,25 +89,20 @@ function translate(text, callback) {
  * @param {Function} callback The callback function.
  */
 function pronounce(text, language, speed, callback) {
-    chrome.storage.sync.get("DefaultTranslator", result => {
-        let translator = TRANSLATORS[result.DefaultTranslator];
-        if (language == "auto") {
-            translator.detect(text).then(lan => {
-                translator.pronounce(text, lan, speed).then(callback);
-            });
-        } else {
-            translator.pronounce(text, language, speed).then(callback);
-        }
-    });
+    if (language == "auto") {
+        TRANSLATOR.detect(text).then(lan => {
+            TRANSLATOR.pronounce(text, lan, speed).then(callback);
+        });
+    } else {
+        TRANSLATOR.pronounce(text, language, speed).then(callback);
+    }
 }
 
 /**
  * Stop pronounce proxy.
  */
 function stopPronounce() {
-    chrome.storage.sync.get("DefaultTranslator", result => {
-        TRANSLATORS[result.DefaultTranslator].stopPronounce();
-    });
+    TRANSLATOR.stopPronounce();
 }
 
 /**
