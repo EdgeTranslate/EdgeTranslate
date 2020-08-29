@@ -17,7 +17,7 @@
             Edge Translate
         </header>
         <div class="content">
-            <label for="content-settings" class="setting-title i18n" data-i18n-name="ContentSettings"></label>
+            <!-- <label for="content-settings" class="setting-title i18n" data-i18n-name="ContentSettings"></label>
             <div id="content-settings">
                 <div class="row">
                     <div class="column">
@@ -59,6 +59,41 @@
                     <div class="column">
                         <label for="ex" class="checked-label i18n" data-i18n-name="Examples">
                             <input type="checkbox" value="ex" setting-type="checkbox" setting-path="DTSetting" class="checkbox" id="ex" />
+                        </label>
+                    </div>
+                </div>
+            </div> -->
+
+            <!--TODO: Finish i18n-->
+            <label class="setting-title">翻译源设置</label>
+            <div class="row">
+                <div class="column">
+                    <div class="selection">
+                        <label for="main-translator" class="checked-label">
+                            主翻译源：
+                            <select id="main-translator" class="translator-setting" data-affected="originalText mainMeaning tPronunciation sPronunciation"></select>
+                        </label>
+                    </div>
+                    <div class="selection">
+                        <label for="detailed-translator" class="checked-label">
+                            单词详解：
+                            <select id="detailed-translator" class="translator-setting" data-affected="detailedMeanings"></select>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="column">
+                    <div class="selection">
+                        <label for="definition-translator" class="checked-label">
+                            单词定义：
+                            <select id="definition-translator" class="translator-setting" data-affected="definitions"></select>
+                        </label>
+                    </div>
+                    <div class="selection">
+                        <label for="example-translator" class="checked-label">
+                            典型例句：
+                            <select id="example-translator" class="translator-setting" data-affected="examples"></select>
                         </label>
                     </div>
                 </div>

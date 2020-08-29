@@ -1,3 +1,5 @@
+import TRANSLATOR from "../translators/hybrid.js";
+
 /**
  * 初始化设置列表
  */
@@ -14,6 +16,11 @@ window.onload = () => {
     // 设置不同语言的隐私政策链接
     var PrivacyPolicyLink = document.getElementById("PrivacyPolicyLink");
     PrivacyPolicyLink.setAttribute("href", chrome.i18n.getMessage("PrivacyPolicyLink"));
+
+    /**
+     * Set up hybrid translate config.
+     */
+    setUpTranslateConfig();
 
     /**
      * initiate and update settings
@@ -64,10 +71,57 @@ window.onload = () => {
                     };
                     break;
                 default:
+                    break;
             }
         }
     });
 };
+
+/**
+ * Set up hybrid translate config.
+ *
+ * TODO: Finish i18n.
+ */
+function setUpTranslateConfig() {
+    chrome.storage.sync.get("HybridTranslateConfig", result => {
+        let config = result.HybridTranslateConfig;
+        let translatorSettingEles = document.getElementsByClassName("translator-setting");
+
+        for (let ele of translatorSettingEles) {
+            // data-affected indicates items affected by this element in config.selections, they always have the same value.
+            let affected = ele.getAttribute("data-affected").split(/\s/g);
+            let selected = config.selections[affected[0]];
+            for (let translator in TRANSLATOR.TRANSLATORS) {
+                if (translator === selected) {
+                    ele.options.add(new Option(translator, translator, true, true));
+                } else {
+                    ele.options.add(new Option(translator, translator));
+                }
+            }
+
+            ele.onchange = () => {
+                let value = ele.options[ele.selectedIndex].value;
+                // Update every affected item.
+                for (let item of affected) {
+                    result.HybridTranslateConfig.selections[item] = value;
+                }
+
+                // Get the new selected translator set.
+                let translators = new Set();
+                result.HybridTranslateConfig.translators = [];
+                for (let item in result.HybridTranslateConfig.selections) {
+                    let translator = result.HybridTranslateConfig.selections[item];
+                    if (!translators.has(translator)) {
+                        result.HybridTranslateConfig.translators.push(translator);
+                        translators.add(translator);
+                    }
+                }
+
+                chrome.storage.sync.set(result);
+            };
+        }
+    });
+}
 
 /**
  *
