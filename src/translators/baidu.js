@@ -329,15 +329,23 @@ class BaiduTranslator {
             examples = JSON.parse(examples);
             for (let sentence of examples) {
                 let example = {};
+
                 // source language examples
                 example.source = sentence[0]
                     .map(a => {
-                        if (a.length > 4) return a[0] + " ";
+                        if (a.length > 4) return a[0] + a[4];
                         return a[0];
                     })
                     .reduce((a1, a2) => a1 + a2);
+
                 // target language examples
-                example.target = sentence[1].map(a => a[0]).reduce((a1, a2) => a1 + a2);
+                example.target = sentence[1]
+                    .map(a => {
+                        if (a.length > 4) return a[0] + a[4];
+                        return a[0];
+                    })
+                    .reduce((a1, a2) => a1 + a2);
+
                 parsed.examples.push(example);
             }
         }
