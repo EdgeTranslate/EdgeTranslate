@@ -10,9 +10,11 @@
             "parser": "plain"
         }
     },
-    "line-counter.includes": [
-        "**/src/**"
+    "VSCodeCounter.include": [
+        "**/src/**",
+        "**/static/_locales/**"
     ],
+    "VSCodeCounter.outputDirectory": "build/counter/",
     "cSpell.words": [
         "Bing",
         "IGIID",
