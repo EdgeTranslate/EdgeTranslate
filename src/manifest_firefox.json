@@ -5,7 +5,15 @@
             "strict_min_version": "60.0"
         }
     },
-    "permissions": ["notifications", "contextMenus", "storage", "tabs", "<all_urls>"],
+    "permissions": [
+        "notifications",
+        "contextMenus",
+        "storage",
+        "tabs",
+        "<all_urls>",
+        "webRequest",
+        "webRequestBlocking"
+    ],
     "content_scripts": [
         {
             "matches": ["<all_urls>"],

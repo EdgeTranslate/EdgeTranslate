@@ -412,19 +412,32 @@ chrome.commands.onCommand.addListener(function(command) {
  */
 chrome.webRequest.onBeforeSendHeaders.addListener(
     details => {
+        let modified = false;
+        let origin = "https://" + getDomain(details.url);
+
         // console.log("requesting " + details.url);
         for (let header of details.requestHeaders) {
             // console.log(header);
             if (header.name.toLowerCase() === "origin") {
                 // console.log("changed origin: " + header.value);
-                header.value = "https://" + getDomain(details.url);
+                header.value = origin;
+                modified = true;
                 break;
             }
         }
+
+        // Origin header has not been set.
+        if (!modified) {
+            details.requestHeaders.push({ name: "Origin", value: origin });
+        }
+
         return { requestHeaders: details.requestHeaders };
     },
     { urls: ["*://fanyi.qq.com/*"] },
-    ["blocking", "requestHeaders", "extraHeaders"]
+    // Browser compatibility.
+    navigator.userAgent.indexOf("Chrome") >= 0
+        ? ["blocking", "requestHeaders", "extraHeaders"]
+        : ["blocking", "requestHeaders"]
 );
 
 // send basic hit data to google analytics
