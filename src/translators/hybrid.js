@@ -29,6 +29,28 @@ class HybridTranslator {
     }
 
     /**
+     * Load hybrid translate config if it is not loaded.
+     *
+     * @returns {Promise<void>} loading Promise.
+     */
+    loadConfigIfNotLoaded() {
+        return new Promise((resolve, reject) => {
+            if (!(this.CONFIG.translators && this.CONFIG.selections)) {
+                chrome.storage.sync.get("HybridTranslateConfig", res => {
+                    if (chrome.runtime.lastError) {
+                        reject(chrome.runtime.lastError);
+                        return;
+                    }
+
+                    this.CONFIG = res.HybridTranslateConfig;
+                    this.MAIN_TRANSLATOR = this.CONFIG.selections.mainMeaning;
+                    resolve();
+                });
+            } else resolve();
+        });
+    }
+
+    /**
      * Get supported languages.
      *
      * @returns {Set<String>} supported languages
@@ -57,14 +79,16 @@ class HybridTranslator {
      *
      * @returns {Promise<Object>} result Promise
      */
-    translate(text, from, to) {
+    async translate(text, from, to) {
+        /**
+         * Check config firstly.
+         */
+        await this.loadConfigIfNotLoaded();
+
         return new Promise((resolve, reject) => {
-            // chrome.storage.sync.get("HybridTranslateConfig", res => {
             let count = 0;
             let results = {};
             let config = this.CONFIG;
-            // let config = res.HybridTranslateConfig;
-
             /**
              * Receive results from different translators.
              *
@@ -109,7 +133,6 @@ class HybridTranslator {
                 reject(error);
             }
         });
-        // });
     }
 
     /**
