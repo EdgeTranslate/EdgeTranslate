@@ -6,7 +6,6 @@ import axios from "axios";
 const LANGUAGES = [
     ["auto", "auto"],
     ["zh-CN", "zh"],
-    ["zh-TW", "zh"],
     ["en", "en"],
     ["jp", "jp"],
     ["ko", "kr"],
@@ -47,8 +46,7 @@ class TencentTranslator {
          * Request headers.
          */
         this.HEADERS = {
-            // Origin: "chrome-extension://kkmljocnkcefhhmocbomoccadpalmhho"
-            Origin: this.BASE_URL
+            // Origin: this.BASE_URL
         };
 
         /**
@@ -111,7 +109,63 @@ class TencentTranslator {
      * @returns {Object} parsed result
      */
     parseResult(response) {
-        return response;
+        let result = {};
+        result.originalText = response.translate.records[0].sourceText;
+        result.mainMeaning = response.translate.records[0].targetText.split(/\s*\/\s*/g)[0];
+
+        if (response.suggest && response.suggest.data && response.suggest.data.length > 0) {
+            if (response.suggest.data[0].prx_ph_AmE) {
+                result.sPronunciation = response.suggest.data[0].prx_ph_AmE;
+            }
+
+            if (response.suggest.data[0].examples_json) {
+                result.examples = JSON.parse(response.suggest.data[0].examples_json).basic.map(
+                    item => {
+                        return { source: item.sourceText, target: item.targetText };
+                    }
+                );
+            }
+        }
+
+        if (response.dict && response.dict.abstract && response.dict.abstract.length > 0) {
+            result.detailedMeanings = response.dict.abstract.map(item => {
+                return { pos: item.ps, meaning: item.explanation.join(", ") };
+            });
+        }
+
+        return result;
+    }
+
+    /**
+     * Detect language of given text.
+     *
+     * @param {String} text text to detect
+     *
+     * @returns {Promise<String>} detected language Promise
+     */
+    detect(text) {
+        return new Promise((resolve, reject) => {
+            axios({
+                method: "POST",
+                baseURL: this.BASE_URL,
+                url: "/api/translate",
+                headers: this.HEADERS,
+                data: new URLSearchParams({
+                    source: this.LAN_TO_CODE.get("auto"),
+                    target: this.LAN_TO_CODE.get("zh-CN"),
+                    sourceText: text
+                })
+            })
+                .then(response => {
+                    if (response.status === 200) {
+                        let result = response.data.translate.source;
+                        resolve(this.CODE_TO_LAN.get(result));
+                    } else reject(response);
+                })
+                .catch(error => {
+                    reject(error);
+                });
+        });
     }
 
     /**
@@ -157,6 +211,31 @@ class TencentTranslator {
         };
 
         return translateOnce();
+    }
+
+    /**
+     * Pronounce given text.
+     *
+     * @param {String} text text to pronounce
+     * @param {String} language language of text
+     * @param {String} speed "fast" or "slow"
+     *
+     * @returns {Promise<void>} pronounce finished
+     */
+    /* eslint-disable */
+    pronounce(text, language, speed) {
+        // TODO: Implement pronounce of Baidu API.
+        return new Promise((resolve, reject) => {
+            resolve();
+        });
+    }
+    /* eslint-enable */
+
+    /**
+     * Pause pronounce.
+     */
+    stopPronounce() {
+        // TODO: Implement stopPronounce of Baidu API.
     }
 }
 

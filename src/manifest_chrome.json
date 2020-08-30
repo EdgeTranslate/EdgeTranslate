@@ -2,7 +2,16 @@
     "background": {
         "persistent": true
     },
-    "permissions": ["notifications", "contextMenus", "storage", "tabs", "activeTab", "*://fanyi.qq.com/*", "webRequest", "webRequestBlocking"],
+    "permissions": [
+        "notifications",
+        "contextMenus",
+        "storage",
+        "tabs",
+        "activeTab",
+        "*://fanyi.qq.com/*",
+        "webRequest",
+        "webRequestBlocking"
+    ],
     "content_scripts": [
         {
             "matches": ["<all_urls>"],

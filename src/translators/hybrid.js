@@ -1,6 +1,7 @@
 import BAIDU from "./baidu.js";
 import BING from "./bing.js";
 import GOOGLE from "./google.js";
+import TENCENT from "./tencent.js";
 
 class HybridTranslator {
     constructor() {
@@ -10,7 +11,8 @@ class HybridTranslator {
         this.TRANSLATORS = {
             BaiduTranslate: BAIDU,
             BingTranslate: BING,
-            GoogleTranslate: GOOGLE
+            GoogleTranslate: GOOGLE,
+            TencentTranslate: TENCENT
         };
 
         /**

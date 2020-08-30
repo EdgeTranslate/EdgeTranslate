@@ -16,7 +16,7 @@ import {
     updateBLackListMenu
 } from "./lib/scripts/blacklist.js";
 import { sendHitRequest } from "./lib/scripts/analytics.js";
-import { sendMessageToCurrentTab } from "./lib/scripts/common.js";
+import { getDomain, sendMessageToCurrentTab } from "./lib/scripts/common.js";
 
 /**
  * 选中文本TTS语速
@@ -417,7 +417,7 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
             // console.log(header);
             if (header.name.toLowerCase() === "origin") {
                 // console.log("changed origin: " + header.value);
-                header.value = "https://fanyi.qq.com";
+                header.value = "https://" + getDomain(details.url);
                 break;
             }
         }
