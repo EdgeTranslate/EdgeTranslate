@@ -255,6 +255,42 @@
         "message": "言語設定を展開する",
         "description": "言語設定展開オプション"
     },
+    "TranslatorConfig": {
+        "message": "Translator Config",
+        "description": "Config providers for each part of the translation."
+    },
+    "MainTranslator": {
+        "message": "Main Provider",
+        "description": "Choose the main translation provider."
+    },
+    "DetailedTranslator": {
+        "message": "Detailed Provider",
+        "description": "Choose the detailed meaning provider."
+    },
+    "DefinitionTranslator": {
+        "message": "Definition Provider",
+        "description": "Choose the definition provider."
+    },
+    "ExampleTranslator": {
+        "message": "Example Provider",
+        "description": "Choose the example provider."
+    },
+    "BaiduTranslate": {
+        "message": "Baidu Translate",
+        "description": "Baidu Translate."
+    },
+    "BingTranslate": {
+        "message": "Bing Translate",
+        "description": "Bing Translate"
+    },
+    "GoogleTranslate": {
+        "message": "Google Translate",
+        "description": "Google Translate"
+    },
+    "TencentTranslate": {
+        "message": "Tencent Translate",
+        "description": "Tencent Translate"
+    },
     "NETERR": {
         "message": "ネットワークエラー! ネットワーク接続を確認してください。",
         "description": "ネットワークエラーメッセージ"

@@ -64,39 +64,30 @@
                 </div>
             </div> -->
 
-            <!--TODO: Finish i18n-->
-            <label class="setting-title">翻译源设置</label>
+            <label class="setting-title i18n" data-i18n-name="TranslatorConfig"></label>
             <div class="row">
-                <div class="column">
-                    <div class="selection">
-                        <label for="main-translator" class="checked-label">
-                            主翻译源：
-                            <select id="main-translator" class="translator-setting" data-affected="originalText mainMeaning tPronunciation sPronunciation"></select>
+                    <div class="column">
+                        <label for="main-translator" class="checked-label i18n" data-i18n-name="MainTranslator" data-insert-pos="afterBegin">
+                            <select id="main-translator" class="translator-config" data-affected="originalText mainMeaning tPronunciation sPronunciation"></select>
                         </label>
                     </div>
-                    <div class="selection">
-                        <label for="detailed-translator" class="checked-label">
-                            单词详解：
-                            <select id="detailed-translator" class="translator-setting" data-affected="detailedMeanings"></select>
+                    <div class="column">
+                        <label for="detailed-translator" class="checked-label i18n" data-i18n-name="DetailedTranslator" data-insert-pos="afterBegin">
+                            <select id="detailed-translator" class="translator-config" data-affected="detailedMeanings"></select>
                         </label>
                     </div>
-                </div>
             </div>
             <div class="row">
-                <div class="column">
-                    <div class="selection">
-                        <label for="definition-translator" class="checked-label">
-                            单词定义：
-                            <select id="definition-translator" class="translator-setting" data-affected="definitions"></select>
+                    <div class="column">
+                        <label for="definition-translator" class="checked-label i18n" data-i18n-name="DefinitionTranslator" data-insert-pos="afterBegin">
+                            <select id="definition-translator" class="translator-config" data-affected="definitions"></select>
                         </label>
                     </div>
-                    <div class="selection">
-                        <label for="example-translator" class="checked-label">
-                            典型例句：
-                            <select id="example-translator" class="translator-setting" data-affected="examples"></select>
+                    <div class="column">
+                        <label for="example-translator" class="checked-label i18n" data-i18n-name="ExampleTranslator" data-insert-pos="afterBegin">
+                            <select id="example-translator" class="translator-config" data-affected="examples"></select>
                         </label>
                     </div>
-                </div>
             </div>
 
             <label class="setting-title i18n" data-i18n-name="DefaultPageTranslator"></label>            

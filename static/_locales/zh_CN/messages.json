@@ -255,6 +255,42 @@
         "message": "展开语言设置",
         "description": "将语言设置选项展开"
     },
+    "TranslatorConfig": {
+        "message": "翻译源设置",
+        "description": "设置翻译结果各个部分使用的翻译源。"
+    },
+    "MainTranslator": {
+        "message": "主翻译源：",
+        "description": "设置主翻译源。"
+    },
+    "DetailedTranslator": {
+        "message": "单词详解：",
+        "description": "设置单词详解翻译源。"
+    },
+    "DefinitionTranslator": {
+        "message": "单词定义：",
+        "description": "设置单词定义翻译源。"
+    },
+    "ExampleTranslator": {
+        "message": "典型例句：",
+        "description": "设置典型例句翻译源。"
+    },
+    "BaiduTranslate": {
+        "message": "百度翻译",
+        "description": "百度翻译翻译源。"
+    },
+    "BingTranslate": {
+        "message": "必应翻译",
+        "description": "必应翻译翻译源。"
+    },
+    "GoogleTranslate": {
+        "message": "谷歌翻译",
+        "description": "谷歌翻译翻译源。"
+    },
+    "TencentTranslate": {
+        "message": "腾讯翻译",
+        "description": "腾讯翻译翻译源。"
+    },
     "NETERR": {
         "message": "网络错误！请检查您的网络连接。",
         "description": "网络错误信息。"

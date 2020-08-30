@@ -255,6 +255,42 @@
         "message": "展開語言設置",
         "description": "將語言設置選項展開"
     },
+    "TranslatorConfig": {
+        "message": "翻譯源設置",
+        "description": "設置翻譯結果各個部分使用的翻譯源。"
+    },
+    "MainTranslator": {
+        "message": "主翻譯源：",
+        "description": "設置主翻譯源。"
+    },
+    "DetailedTranslator": {
+        "message": "單詞詳解：",
+        "description": "設置單詞詳解翻譯源。"
+    },
+    "DefinitionTranslator": {
+        "message": "單詞定義：",
+        "description": "設置單詞定義翻譯源。"
+    },
+    "ExampleTranslator": {
+        "message": "典型例句：",
+        "description": "設置典型例句翻譯源。"
+    },
+    "BaiduTranslate": {
+        "message": "百度翻譯",
+        "description": "百度翻譯翻譯源。"
+    },
+    "BingTranslate": {
+        "message": "必應翻譯",
+        "description": "必應翻譯翻譯源。"
+    },
+    "GoogleTranslate": {
+        "message": "谷歌翻譯",
+        "description": "谷歌翻譯翻譯源。"
+    },
+    "TencentTranslate": {
+        "message": "騰訊翻譯",
+        "description": "騰訊翻譯翻譯源。"
+    },
     "NETERR": {
         "message": "網絡錯誤！請檢查您的網絡連接。",
         "description": "網絡錯誤信息。"

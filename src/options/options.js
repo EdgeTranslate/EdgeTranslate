@@ -6,9 +6,15 @@ import TRANSLATOR from "../translators/hybrid.js";
 window.onload = () => {
     var i18nElements = document.getElementsByClassName("i18n");
     for (let i = 0; i < i18nElements.length; i++) {
+        // Default "beforeEnd".
+        let pos = "beforeEnd";
+        if (i18nElements[i].hasAttribute("data-insert-pos")) {
+            pos = i18nElements[i].getAttribute("data-insert-pos");
+        }
+
         // 跟随浏览器的语言设置显示内容
         i18nElements[i].insertAdjacentText(
-            "beforeEnd",
+            pos,
             chrome.i18n.getMessage(i18nElements[i].getAttribute("data-i18n-name"))
         );
     }
@@ -79,23 +85,23 @@ window.onload = () => {
 
 /**
  * Set up hybrid translate config.
- *
- * TODO: Finish i18n.
  */
 function setUpTranslateConfig() {
     chrome.storage.sync.get("HybridTranslateConfig", result => {
         let config = result.HybridTranslateConfig;
-        let translatorSettingEles = document.getElementsByClassName("translator-setting");
+        let translatorConfigEles = document.getElementsByClassName("translator-config");
 
-        for (let ele of translatorSettingEles) {
+        for (let ele of translatorConfigEles) {
             // data-affected indicates items affected by this element in config.selections, they always have the same value.
             let affected = ele.getAttribute("data-affected").split(/\s/g);
             let selected = config.selections[affected[0]];
             for (let translator in TRANSLATOR.TRANSLATORS) {
                 if (translator === selected) {
-                    ele.options.add(new Option(translator, translator, true, true));
+                    ele.options.add(
+                        new Option(chrome.i18n.getMessage(translator), translator, true, true)
+                    );
                 } else {
-                    ele.options.add(new Option(translator, translator));
+                    ele.options.add(new Option(chrome.i18n.getMessage(translator), translator));
                 }
             }
 

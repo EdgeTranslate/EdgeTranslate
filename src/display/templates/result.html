@@ -58,6 +58,7 @@
                     </ul>
                 <% } %>
             </div>
+            <hr/>
             <div class="detailed-meanings">
                 <% if (this.detailedMeanings && this.detailedMeanings.length > 0) { %>
                     <span class="content-title"><% chrome.i18n.getMessage("DetailedMeanings") %>: </span>
@@ -71,7 +72,8 @@
                         </p>
                     <% } %>  
                 <% } %>  
-            </div>  
+            </div>
+            <hr/>
             <div class="definitions">  
                 <% if (this.definitions && this.definitions.length > 0) { %>  
                     <p class="content-title"><% chrome.i18n.getMessage("Definitions") %>: </p>  
@@ -92,6 +94,7 @@
                     <% } %>  
                 <% } %>  
             </div>
+            <hr/>
             <div class="examples">  
                 <% if (this.examples && this.examples.length > 0) { %>  
                     <p class="content-title"><% chrome.i18n.getMessage("Examples") %>: </p>  
