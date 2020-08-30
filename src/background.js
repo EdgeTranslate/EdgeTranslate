@@ -407,6 +407,26 @@ chrome.commands.onCommand.addListener(function(command) {
     }
 });
 
+/**
+ * Modify the origin header of translate requests.
+ */
+chrome.webRequest.onBeforeSendHeaders.addListener(
+    details => {
+        // console.log("requesting " + details.url);
+        for (let header of details.requestHeaders) {
+            // console.log(header);
+            if (header.name.toLowerCase() === "origin") {
+                // console.log("changed origin: " + header.value);
+                header.value = "https://fanyi.qq.com";
+                break;
+            }
+        }
+        return { requestHeaders: details.requestHeaders };
+    },
+    { urls: ["*://fanyi.qq.com/*"] },
+    ["blocking", "requestHeaders", "extraHeaders"]
+);
+
 // send basic hit data to google analytics
 setTimeout(() => {
     sendHitRequest("background", "pageview", null);
