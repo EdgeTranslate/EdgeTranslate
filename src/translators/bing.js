@@ -438,7 +438,7 @@ class BingTranslator {
      *
      * @returns {Promise<String>} detected language Promise
      */
-    detect(text) {
+    async detect(text) {
         let url =
                 "ttranslatev3?isVertical=1&IG=" +
                 this.IG +
@@ -448,16 +448,15 @@ class BingTranslator {
                 this.count.toString(),
             data = "&fromLang=auto-detect&to=zh-Hans&text=" + encodeURIComponent(text);
 
-        return this.request({
+        const response = await this.request({
             method: "POST",
             baseURL: this.HOST,
             url: url,
             headers: this.HEADERS,
             data: data
-        }).then(response => {
-            let result = response[0].detectedLanguage.language;
-            return this.CODE_TO_LAN.get(result);
         });
+        let result = response[0].detectedLanguage.language;
+        return this.CODE_TO_LAN.get(result);
     }
 
     /**
