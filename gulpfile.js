@@ -192,9 +192,15 @@ function buildJS() {
         environment === "production"
             ? "./config/webpack.prod.config.js"
             : "./config/webpack.dev.config.js"; // webpack 配置文件路径
+
+    // Insert plugins.
+    let webpack_config = require(webpack_path);
+    webpack_config.plugins = webpack_config.plugins || [];
+    webpack_config.plugins.push(new webpack.DefinePlugin({ BROWSER_ENV: JSON.stringify(browser) }));
+
     return gulp
         .src("./src/**/*.js", { base: "src" })
-        .pipe(webpack_stream(require(webpack_path), webpack))
+        .pipe(webpack_stream(webpack_config, webpack))
         .pipe(gulp.dest(output_dir))
         .on("error", error => log(error));
 }

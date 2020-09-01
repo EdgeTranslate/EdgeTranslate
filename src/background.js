@@ -435,7 +435,7 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
     },
     { urls: ["*://fanyi.qq.com/*"] },
     // Browser compatibility.
-    navigator.userAgent.indexOf("Chrome") >= 0
+    BROWSER_ENV === "chrome"
         ? ["blocking", "requestHeaders", "extraHeaders"]
         : ["blocking", "requestHeaders"]
 );

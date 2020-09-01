@@ -125,7 +125,7 @@ function showTranslate(content, tab, callback) {
                 return;
             }
 
-            if (isChrome()) {
+            if (BROWSER_ENV === "chrome") {
                 // 判断浏览器的类型 chrome的情况
                 chrome.tabs.sendMessage(
                     tab_id,
@@ -164,7 +164,7 @@ function showTranslate(content, tab, callback) {
             } else {
                 // 是firefox的情况
                 // resultPromise是返回的一个promise对象
-                var resultPromise = browser.tabs.sendMessage(tab_id, {
+                let resultPromise = browser.tabs.sendMessage(tab_id, {
                     type: "translateResult",
                     translateResult: content
                 });
@@ -185,13 +185,6 @@ function showTranslate(content, tab, callback) {
             }
         });
     }
-}
-
-/**
- * 判断浏览器是否为Chrome。
- */
-function isChrome() {
-    return navigator.userAgent.indexOf("Chrome") >= 0;
 }
 
 /**

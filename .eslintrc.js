@@ -16,7 +16,8 @@ module.exports = {
         document: false,
         window: false,
         chrome: false,
-        browser: false
+        browser: false,
+        BROWSER_ENV: false
     },
     // required to lint *.vue files
     plugins: ["html", "prettier"],
