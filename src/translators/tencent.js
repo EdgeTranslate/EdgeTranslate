@@ -58,6 +58,11 @@ class TencentTranslator {
          * Translator language code to language.
          */
         this.CODE_TO_LAN = new Map(LANGUAGES.map(([lan, code]) => [code, lan]));
+
+        /**
+         * TTS audio instance.
+         */
+        this.AUDIO = new Audio();
     }
 
     /**
@@ -222,20 +227,28 @@ class TencentTranslator {
      *
      * @returns {Promise<void>} pronounce finished
      */
-    /* eslint-disable */
+    // eslint-disable-next-line no-unused-vars
     pronounce(text, language, speed) {
-        // TODO: Implement pronounce of Baidu API.
-        return new Promise((resolve, reject) => {
-            resolve();
-        });
+        // Pause audio in case that it's playing.
+        this.stopPronounce();
+
+        this.AUDIO.src =
+            this.BASE_URL +
+            "/api/tts?platform=PC_Website&lang=" +
+            this.LAN_TO_CODE.get(language) +
+            "&text=" +
+            encodeURIComponent(text);
+
+        return this.AUDIO.play();
     }
-    /* eslint-enable */
 
     /**
      * Pause pronounce.
      */
     stopPronounce() {
-        // TODO: Implement stopPronounce of Baidu API.
+        if (!this.AUDIO.paused) {
+            this.AUDIO.pause();
+        }
     }
 }
 
