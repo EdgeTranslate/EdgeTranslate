@@ -7,7 +7,7 @@ const LANGUAGES = [
     ["auto", "auto"],
     ["zh-CN", "zh"],
     ["en", "en"],
-    ["jp", "jp"],
+    ["ja", "jp"],
     ["ko", "kr"],
     ["fr", "fr"],
     ["es", "es"],
@@ -201,7 +201,11 @@ class TencentTranslator {
                     })
                 })
                     .then(response => {
-                        if (response.status === 200 && response.data.dict) {
+                        if (
+                            response.status === 200 &&
+                            (response.data.dict ||
+                                (response.data.translate && retryCount >= this.MAX_RETRY))
+                        ) {
                             let result = this.parseResult(response.data);
                             resolve(result);
                         } else if (retryCount < this.MAX_RETRY) {
