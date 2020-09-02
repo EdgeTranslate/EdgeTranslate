@@ -1,4 +1,4 @@
-import TRANSLATOR from "../../translators/hybrid.js";
+import TRANSLATOR from "../../translators/proxy.js";
 import { sendMessageToCurrentTab } from "./common.js";
 
 export {

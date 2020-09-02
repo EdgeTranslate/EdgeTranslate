@@ -1,4 +1,4 @@
-import TRANSLATOR from "../translators/hybrid.js";
+import TRANSLATOR from "../translators/proxy.js";
 
 /**
  * 初始化设置列表
@@ -87,15 +87,20 @@ window.onload = () => {
  * Set up hybrid translate config.
  */
 function setUpTranslateConfig() {
-    chrome.storage.sync.get("HybridTranslateConfig", result => {
-        let config = result.HybridTranslateConfig;
+    chrome.storage.sync.get(["languageSetting", "TranslatorConfig"], result => {
+        let config = result.TranslatorConfig;
+        let languageSetting = result.languageSetting;
+        let availableTranslators = TRANSLATOR.getAvailableTranslatorsFor(
+            languageSetting.sl,
+            languageSetting.tl
+        );
         let translatorConfigEles = document.getElementsByClassName("translator-config");
 
         for (let ele of translatorConfigEles) {
             // data-affected indicates items affected by this element in config.selections, they always have the same value.
             let affected = ele.getAttribute("data-affected").split(/\s/g);
             let selected = config.selections[affected[0]];
-            for (let translator in TRANSLATOR.TRANSLATORS) {
+            for (let translator of availableTranslators) {
                 if (translator === selected) {
                     ele.options.add(
                         new Option(chrome.i18n.getMessage(translator), translator, true, true)
@@ -109,16 +114,16 @@ function setUpTranslateConfig() {
                 let value = ele.options[ele.selectedIndex].value;
                 // Update every affected item.
                 for (let item of affected) {
-                    result.HybridTranslateConfig.selections[item] = value;
+                    result.TranslatorConfig.selections[item] = value;
                 }
 
                 // Get the new selected translator set.
                 let translators = new Set();
-                result.HybridTranslateConfig.translators = [];
-                for (let item in result.HybridTranslateConfig.selections) {
-                    let translator = result.HybridTranslateConfig.selections[item];
+                result.TranslatorConfig.translators = [];
+                for (let item in result.TranslatorConfig.selections) {
+                    let translator = result.TranslatorConfig.selections[item];
                     if (!translators.has(translator)) {
-                        result.HybridTranslateConfig.translators.push(translator);
+                        result.TranslatorConfig.translators.push(translator);
                         translators.add(translator);
                     }
                 }

@@ -3,7 +3,7 @@ import BING from "./bing.js";
 import GOOGLE from "./google.js";
 import TENCENT from "./tencent.js";
 
-class HybridTranslator {
+class TranslatorProxy {
     constructor() {
         /**
          * Supported translators.
@@ -20,11 +20,17 @@ class HybridTranslator {
          */
         this.CONFIG = {};
         this.MAIN_TRANSLATOR = "GoogleTranslate";
+
+        /**
+         * Update config cache on config changed.
+         */
         chrome.storage.onChanged.addListener(
             ((changes, area) => {
-                if (area === "sync" && changes["HybridTranslateConfig"]) {
-                    this.CONFIG = changes["HybridTranslateConfig"].newValue;
-                    this.MAIN_TRANSLATOR = this.CONFIG.selections.mainMeaning;
+                if (area === "sync" && changes["TranslatorConfig"]) {
+                    if (changes["TranslatorConfig"]) {
+                        this.CONFIG = changes["TranslatorConfig"].newValue;
+                        this.MAIN_TRANSLATOR = this.CONFIG.selections.mainMeaning;
+                    }
                 }
             }).bind(this)
         );
@@ -38,13 +44,13 @@ class HybridTranslator {
     loadConfigIfNotLoaded() {
         return new Promise((resolve, reject) => {
             if (!(this.CONFIG.translators && this.CONFIG.selections)) {
-                chrome.storage.sync.get("HybridTranslateConfig", res => {
+                chrome.storage.sync.get("TranslatorConfig", res => {
                     if (chrome.runtime.lastError) {
                         reject(chrome.runtime.lastError);
                         return;
                     }
 
-                    this.CONFIG = res.HybridTranslateConfig;
+                    this.CONFIG = res.TranslatorConfig;
                     this.MAIN_TRANSLATOR = this.CONFIG.selections.mainMeaning;
                     resolve();
                 });
@@ -53,12 +59,22 @@ class HybridTranslator {
     }
 
     /**
-     * Get supported languages.
+     * Get translators that support given source language and target language.
      *
-     * @returns {Set<String>} supported languages
+     * @param {String} from source language
+     * @param {String} to target language
+     *
+     * @returns {Array<String>} available translators
      */
-    supportedLanguages() {
-        return this.TRANSLATORS[this.MAIN_TRANSLATOR].supportedLanguages();
+    getAvailableTranslatorsFor(from, to) {
+        let translators = [];
+        for (let translator in this.TRANSLATORS) {
+            let languages = this.TRANSLATORS[translator].supportedLanguages();
+            if (languages.has(from) && languages.has(to)) {
+                translators.push(translator);
+            }
+        }
+        return translators.sort();
     }
 
     /**
@@ -161,5 +177,5 @@ class HybridTranslator {
 /**
  * Create and export default translator instance.
  */
-const TRANSLATOR = new HybridTranslator();
+const TRANSLATOR = new TranslatorProxy();
 export default TRANSLATOR;

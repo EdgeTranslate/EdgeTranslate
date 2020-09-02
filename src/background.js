@@ -51,7 +51,7 @@ const DEFAULT_SETTINGS = {
         UsePDFjs: true
     },
     DefaultPageTranslator: "YouDaoPageTranslate",
-    HybridTranslateConfig: {
+    TranslatorConfig: {
         translators: ["BaiduTranslate", "BingTranslate", "GoogleTranslate"],
         selections: {
             originalText: "GoogleTranslate",
