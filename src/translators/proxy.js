@@ -27,10 +27,8 @@ class TranslatorProxy {
         chrome.storage.onChanged.addListener(
             ((changes, area) => {
                 if (area === "sync" && changes["TranslatorConfig"]) {
-                    if (changes["TranslatorConfig"]) {
-                        this.CONFIG = changes["TranslatorConfig"].newValue;
-                        this.MAIN_TRANSLATOR = this.CONFIG.selections.mainMeaning;
-                    }
+                    this.CONFIG = changes["TranslatorConfig"].newValue;
+                    this.MAIN_TRANSLATOR = this.CONFIG.selections.mainMeaning;
                 }
             }).bind(this)
         );
@@ -75,6 +73,51 @@ class TranslatorProxy {
             }
         }
         return translators.sort();
+    }
+
+    /**
+     * Update translator config when language setting changed.
+     *
+     * @param {String} from new source language
+     * @param {String} to new target language
+     *
+     * @returns {void} nothing
+     */
+    async updateConfigFor(from, to) {
+        // Load config if not loaded.
+        await this.loadConfigIfNotLoaded();
+
+        let newConfig = { translators: new Set(), selections: {} };
+
+        // Get translators that support new language setting.
+        let availableTranslators = this.getAvailableTranslatorsFor(from, to);
+
+        // Replace translators that don't support new language setting with a default translator.
+        let defaultTranslator = availableTranslators[0];
+
+        // Use this set to check if a translator in the old config should be replaced.
+        let availableTranslatorSet = new Set(availableTranslators);
+
+        for (let item in this.CONFIG.selections) {
+            let newTranslator,
+                oldTranslator = this.CONFIG.selections[item];
+
+            if (availableTranslatorSet.has(oldTranslator)) {
+                newConfig.selections[item] = oldTranslator;
+                newTranslator = oldTranslator;
+            } else {
+                newConfig.selections[item] = defaultTranslator;
+                newTranslator = defaultTranslator;
+            }
+
+            newConfig.translators.add(newTranslator);
+        }
+
+        // Update used translator set.
+        newConfig.translators = Array.from(newConfig.translators);
+
+        // Update config.
+        chrome.storage.sync.set({ TranslatorConfig: newConfig });
     }
 
     /**

@@ -1,4 +1,5 @@
 import { LANGUAGES } from "./languages.js";
+import TRANSLATOR from "../translators/proxy.js";
 import {
     translate,
     showTranslate,
@@ -133,6 +134,9 @@ chrome.commands.onCommand.addListener(function(command) {
  * @param {*} targetLanguage 目标语言
  */
 function updateLanguageSetting(sourceLanguage, targetLanguage) {
+    // Update translator config.
+    TRANSLATOR.updateConfigFor(sourceLanguage, targetLanguage);
+
     saveOption("languageSetting", { sl: sourceLanguage, tl: targetLanguage });
     if (sourceLanguage === "auto") {
         mutualTranslate.checked = false;
