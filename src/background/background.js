@@ -384,7 +384,7 @@ async function messageHandler(message, sender) {
         case "language_setting_update":
             return onLanguageSettingUpdated(message.detail);
         case "get_available_translators":
-            return getAvailableTranslators();
+            return getAvailableTranslators(message.detail);
         default:
             // eslint-disable-next-line no-console
             console.log("Unknown message title: " + message.title);
