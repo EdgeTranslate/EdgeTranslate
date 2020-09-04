@@ -7,16 +7,16 @@ import {
     youdaoPageTranslate,
     executeYouDaoScript,
     executeGoogleScript
-} from "./lib/scripts/translate.js";
+} from "./library/translate.js";
 import {
     addUrlBlacklist,
     addDomainBlacklist,
     removeUrlBlacklist,
     removeDomainBlacklist,
     updateBLackListMenu
-} from "./lib/scripts/blacklist.js";
-import { sendHitRequest } from "./lib/scripts/analytics.js";
-import { getDomain, sendMessageToCurrentTab } from "./lib/scripts/common.js";
+} from "../common/scripts/blacklist.js.js";
+import { sendHitRequest } from "./library/analytics.js";
+import { getDomain, sendMessageToCurrentTab } from "../common/scripts/common.js";
 
 /**
  * 选中文本TTS语速

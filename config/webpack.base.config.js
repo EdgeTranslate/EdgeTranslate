@@ -3,12 +3,12 @@ const path = require("path");
 
 module.exports = {
     entry: {
-        background: "./src/background.js",
-        "/contents/pdf": "./src/contents/pdf.js",
-        "/contents/select": "./src/contents/select.js",
+        "/background/background": "./src/background/background.js",
+        "/content/pdf": "./src/content/pdf.js",
+        "/content/select/select": "./src/content/select/select.js",
+        "/content/display/display": "./src/content/display/display.js",
         "/popup/popup": "./src/popup/popup.js",
-        "/options/options": "./src/options/options.js",
-        "/display/display": "./src/display/display.js"
+        "/options/options": "./src/options/options.js"
     },
     output: {
         filename: "[name].js",

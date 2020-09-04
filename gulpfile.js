@@ -200,7 +200,7 @@ function html() {
 function styl() {
     let output_dir = "./build/" + browser + "/";
     return gulp
-        .src("./src/!(lib)/**/*.styl", { base: "src" })
+        .src("./src/!(common)/**/*.styl", { base: "src" })
         .pipe(
             stylus({
                 compress: true // 需要压缩

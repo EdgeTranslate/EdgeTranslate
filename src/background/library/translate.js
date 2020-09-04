@@ -1,5 +1,5 @@
 import TRANSLATOR from "../../translators/proxy.js";
-import { sendMessageToCurrentTab } from "./common.js";
+import { sendMessageToCurrentTab } from "../../common/scripts/common.js";
 
 export {
     translate,
