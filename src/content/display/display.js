@@ -1,6 +1,6 @@
-import render from "../../lib/scripts/render.js";
-import Resizable from "../../lib/scripts/resizable.js";
-import { isChromePDFViewer } from "../../lib/scripts/common.js";
+import render from "./library/render.js";
+import Resizable from "./library/resizable.js";
+import { isChromePDFViewer } from "../../common/scripts/common.js";
 
 /**
  * load templates

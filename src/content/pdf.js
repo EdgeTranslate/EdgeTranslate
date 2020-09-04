@@ -1,4 +1,4 @@
-import { isChromePDFViewer } from "../lib/scripts/common.js"; // judge if this page is a pdf file
+import { isChromePDFViewer } from "../common/scripts/common.js"; // judge if this page is a pdf file
 /**
  * 处理PDF文件链接
  *
