@@ -1,11 +1,11 @@
 import { LANGUAGES } from "./languages.js";
-import EVENT_MANAGER from "../lib/scripts/event.js";
+import EVENT_MANAGER from "../background/library/event.js";
 import {
     translate,
     showTranslate,
     executeGoogleScript,
     executeYouDaoScript
-} from "../lib/scripts/translate.js";
+} from "../background/library/translate.js";
 
 // 获取下拉列表元素
 var sourceLanguage = document.getElementById("sl");

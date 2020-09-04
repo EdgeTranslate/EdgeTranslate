@@ -15,14 +15,14 @@
     "content_scripts": [
         {
             "matches": ["<all_urls>"],
-            "js": ["./display/display.js", "./contents/pdf.js"],
-            "css": ["./display/display.css"]
+            "js": ["./content/display/display.js", "./content/pdf.js"],
+            "css": ["./content/display/style/display.css"]
         },
         {
             "matches": ["<all_urls>"],
             "run_at": "document_start",
-            "js": ["./contents/select.js"],
-            "css": ["./contents/select.css"],
+            "js": ["./content/select/select.js"],
+            "css": ["./content/select/select.css"],
             "all_frames": true
         }
     ],

@@ -17,14 +17,14 @@
     "content_scripts": [
         {
             "matches": ["<all_urls>"],
-            "js": ["./display/display.js"],
-            "css": ["./display/display.css"]
+            "js": ["./content/display.js"],
+            "css": ["./content/display/style/display.css"]
         },
         {
             "matches": ["<all_urls>"],
             "run_at": "document_start",
             "js": ["./contents/select.js"],
-            "css": ["./contents/select.css"],
+            "css": ["./content/select.css"],
             "all_frames": true
         }
     ]

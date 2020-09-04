@@ -4,7 +4,7 @@
     "version": "1.9.1",
     "default_locale": "en",
     "background": {
-        "scripts": ["background.js"]
+        "scripts": ["./background/background.js"]
     },
     "browser_action": {
         "default_popup": "./popup/popup.html",
@@ -67,9 +67,9 @@
         }
     },
     "web_accessible_resources": [
-        "display/style/result.css",
-        "display/style/loading.css",
-        "display/style/error.css",
+        "content/display/style/result.css",
+        "content/display/style/loading.css",
+        "content/display/style/error.css",
         "youdao/*",
         "google/*"
     ],
