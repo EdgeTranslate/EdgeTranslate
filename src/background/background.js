@@ -376,6 +376,12 @@ async function messageHandler(message, sender) {
         }
         case "youdao_page_translate":
             return youdaoPageTranslate(message.detail.request);
+        case "translate_page_youdao":
+            executeYouDaoScript();
+            return Promise.resolve();
+        case "translate_page_google":
+            executeGoogleScript();
+            return Promise.resolve();
         case "get_lang":
             return Promise.resolve({ lang: chrome.i18n.getUILanguage() });
         case "frame_closed":
