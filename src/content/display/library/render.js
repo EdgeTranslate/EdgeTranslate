@@ -8,23 +8,30 @@ export default render;
  */
 function render(template, contents) {
     // process the template in advance
-    template = template.toString().replace(/\n|\s{2,}|\r/g, "");
+    template = template.toString().replace(/\n+|\s{2,}|\r+/g, " ");
+
     // 匹配模板中的待填充部分
     const CONTENT_REGEX = /<%\s*(.*?)\s*%>/g;
+
+    // 匹配空白串
+    const SPACE_REGEX = /^(\s+)$/g;
 
     // 匹配模板中的逻辑表达式
     const EXPRESSION_REGEX = /(if|while|for)\s*\(.+\)\s*\{|else(\s+if\s*\(.+\))?\s*\{|}/;
 
     // 上次匹配结束后剩余子串在template中的起始位置
     var lastIndex = 0;
-    var code = ["var result = new Array();"];
+    var code = ["let result = new Array();"];
     var match;
 
     // 依次匹配所有待填充项
     while ((match = CONTENT_REGEX.exec(template))) {
-        // 从当前剩余子串的起始位置到本次匹配到的待填充项的起始位置之间的部分，直接保留。
+        // 从当前剩余子串的起始位置到本次匹配到的待填充项的起始位置之间的部分，若不是空白串，直接保留。
         if (match.index > lastIndex) {
-            code.push("result.push('" + template.substring(lastIndex, match.index) + "');");
+            let str = template.substring(lastIndex, match.index);
+            if (!SPACE_REGEX.test(str)) {
+                code.push("result.push('" + str + "');");
+            }
         }
 
         var expression = match[1];
