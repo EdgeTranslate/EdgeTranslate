@@ -26,12 +26,12 @@
     "scripts": {
         "test": "jest",
         "format": "eslint 'src/**/*.js' 'config/**/*.js' --fix",
-        "dev:chrome": "gulp dev:chrome & gulp buildJS:chrome",
-        "dev:firefox": " gulp dev:firefox & gulp buildJS:firefox",
-        "build:chrome": "gulp build:chrome",
-        "build:firefox": "gulp build:firefox",
-        "pack:chrome": "gulp pack:chrome",
-        "pack:firefox": "gulp pack:firefox"
+        "dev:chrome": "gulp dev --browser chrome",
+        "dev:firefox": "gulp dev --browser firefox",
+        "build:chrome": "gulp build --browser chrome",
+        "build:firefox": "gulp build --browser firefox",
+        "pack:chrome": "gulp pack --browser chrome",
+        "pack:firefox": "gulp pack --browser firefox"
     },
     "devDependencies": {
         "acorn": "^7.4.0",
@@ -54,6 +54,7 @@
         "jest": "^26.4.0",
         "lodash": "^4.17.20",
         "merge-stream": "^2.0.0",
+        "minimist": "^1.2.5",
         "prettier": "^1.19.1",
         "raw-loader": "^0.5.1",
         "webpack": "^4.44.1",

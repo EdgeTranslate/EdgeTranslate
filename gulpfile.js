@@ -9,8 +9,11 @@ const zip = require("gulp-zip");
 const terser = require("gulp-terser");
 const eslint = require("gulp-eslint");
 const mergeStream = require("merge-stream");
+const minimist = require("minimist");
+const spawn = require("child_process").spawn;
 
-var browser; // store the name of browser
+var args = minimist(process.argv.slice(2));
+var browser = args.browser || "chrome"; // store the name of browser: enum{chrome,firefox}
 var environment; // store the type of environment: enum{production,development}
 
 /**
@@ -19,100 +22,40 @@ var environment; // store the type of environment: enum{production,development}
 
 /**
  *
- * A public task to build JS of Chrome version in development mode
+ * A public task to build JS in development mode
  *
- * Hint: The watch mode of webpack in development mode will block the current gulp task. So this task need to to be run independently
- *
- * @param {Function} callback execute callback to inform gulp that the task is finished
+ * Hint: The watch mode of webpack in development mode will block the current gulp task. So this task need to to be run independently in command line in another process
  */
-exports["buildJS:chrome"] = callback => {
-    browser = "chrome";
-    environment = "development";
-    buildJS();
-    callback();
-};
+exports.buildJS = gulp.series(setDevelopEnvironment, buildJS);
+
 /**
- *
- * A public task to build JS of Firefox version in development mode
- *
- * Hint: The watch mode of webpack in development mode will block the current gulp task. So this task need to to be run independently
- *
- * @param {Function} callback execute callback to inform gulp that the task is finished
+ * A public task to build a package in development mode and watch code changes.
  */
-exports["buildJS:firefox"] = callback => {
-    browser = "firefox";
-    environment = "development";
-    buildJS();
-    callback();
-};
+exports.dev = gulp.series(
+    setDevelopEnvironment,
+    clean,
+    gulp.parallel(eslintJS, buildJSDev, manifest, html, styl, packStatic),
+    watcher
+);
+
 /**
- * A public task to build a Chrome package in development mode and watch code changes.
- * @param {Function} callback execute callback to inform gulp that the task is finished
+ * A public task to build a package in production mode
  */
-exports["dev:chrome"] = callback => {
-    browser = "chrome";
-    environment = "development";
-    gulp.series(clean, gulp.parallel(eslintJS, manifest, html, styl, packStatic), watcher)();
-    callback();
-};
+exports.build = gulp.series(
+    setProductEnvironment,
+    clean,
+    gulp.parallel(eslintJS, buildJS, manifest, html, styl, packStatic)
+);
+
 /**
- * A public task to build a Firefox package in development mode and watch code changes.
- * @param {Function} callback execute callback to inform gulp that the task is finished
+ * A public task to build and zip a package in production mode
  */
-exports["dev:firefox"] = callback => {
-    browser = "firefox";
-    environment = "development";
-    gulp.series(clean, gulp.parallel(eslintJS, manifest, html, styl, packStatic), watcher)();
-    callback();
-};
-/**
- * A public task to build a Chrome package in production mode
- * @param {Function} callback execute callback to inform gulp that the task is finished
- */
-exports["build:chrome"] = callback => {
-    browser = "chrome";
-    environment = "production";
-    gulp.series(clean, gulp.parallel(eslintJS, buildJS, manifest, html, styl, packStatic))();
-    callback();
-};
-/**
- * A public task to build a Firefox package in production mode
- * @param {Function} callback execute callback to inform gulp that the task is finished
- */
-exports["build:firefox"] = callback => {
-    browser = "firefox";
-    environment = "production";
-    gulp.series(clean, gulp.parallel(eslintJS, buildJS, manifest, html, styl, packStatic))();
-    callback();
-};
-/**
- * A public task to build and zip a Chrome package in production mode
- * @param {Function} callback execute callback to inform gulp that the task is finished
- */
-exports["pack:chrome"] = callback => {
-    browser = "chrome";
-    environment = "production";
-    gulp.series(
-        clean,
-        gulp.parallel(eslintJS, buildJS, manifest, html, styl, packStatic),
-        packToZip
-    )();
-    callback();
-};
-/**
- * A public task to build and zip a Firefox package in production mode
- * @param {Function} callback execute callback to inform gulp that the task is finished
- */
-exports["pack:firefox"] = callback => {
-    browser = "firefox";
-    environment = "production";
-    gulp.series(
-        clean,
-        gulp.parallel(eslintJS, buildJS, manifest, html, styl, packStatic),
-        packToZip
-    )();
-    callback();
-};
+exports.pack = gulp.series(
+    setProductEnvironment,
+    clean,
+    gulp.parallel(eslintJS, buildJS, manifest, html, styl, packStatic),
+    packToZip
+);
 /**
  * End public tasks' definition
  */
@@ -120,53 +63,59 @@ exports["pack:firefox"] = callback => {
 /**
  * Define private tasks of gulp
  */
+
+/**
+ * A private task to set development execution environment
+ */
+function setDevelopEnvironment(done) {
+    environment = "development";
+    done();
+}
+
+/**
+ * A private task to set production execution environment
+ */
+function setProductEnvironment(done) {
+    environment = "production";
+    done();
+}
+
 /**
  * A private task to clean old packages before building new ones
- * @param {Function} callback execute callback to inform gulp that the task is finished
  */
-async function clean(callback) {
+function clean() {
     let output_dir = "./build/" + browser + "/";
     let packageName = "edge_translate_" + browser + ".zip";
-    await del([output_dir, output_dir + packageName]);
-    callback();
+    return del([output_dir, output_dir + packageName]);
 }
 
 /**
  * 将build的扩展打包成zip文件以备发布
  */
-function packToZip(callback) {
+function packToZip() {
     let match_dir = "./build/" + browser + "/**/*";
     let packageName = "edge_translate_" + browser + ".zip";
-    gulp.src(match_dir)
+    return gulp
+        .src(match_dir)
         .pipe(zip(packageName))
         .pipe(gulp.dest("./build/"));
-    callback();
 }
 
 /**
  * A private task to watch change of code and update the package immediately
- * @param {Function} callback execute callback to inform gulp that the task is finished
+ * @param {Function} done execute done to inform gulp that the task is finished
  */
-function watcher(callback) {
-    gulp.watch("./src/**/*.js").on("change", function() {
-        eslintJS();
-    });
-    gulp.watch("./src/display/templates/*.html").on("change", function() {
-        eslintJS();
-    });
-    gulp.watch("./src/(manifest|manifest_chrome|manifest_firefox).json").on("change", function() {
-        manifest();
-    });
-    gulp.watch("./src/**/!(result|loading|error).html").on("change", function() {
-        html();
-    });
-    gulp.watch("./static/**/*").on("change", function() {
-        packStatic();
-    });
-    gulp.watch("./src/**/*.styl").on("change", function() {
-        styl();
-    });
-    callback();
+function watcher(done) {
+    gulp.watch("./src/**/*.js").on("change", gulp.series(eslintJS));
+    gulp.watch("./src/display/templates/*.html").on("change", gulp.series(eslintJS));
+    gulp.watch("./src/(manifest|manifest_chrome|manifest_firefox).json").on(
+        "change",
+        gulp.series(manifest)
+    );
+    gulp.watch("./src/**/!(result|loading|error).html").on("change", gulp.series(html));
+    gulp.watch("./static/**/*").on("change", gulp.series(packStatic));
+    gulp.watch("./src/**/*.styl").on("change", gulp.series(styl));
+    done();
 }
 
 /**
@@ -203,6 +152,24 @@ function buildJS() {
         .pipe(webpack_stream(webpack_config, webpack))
         .pipe(gulp.dest(output_dir))
         .on("error", error => log(error));
+}
+
+/**
+ * A private task to build js files in a child process in development mode with watch mode of webpack
+ *
+ * Hint: The watch mode of webpack in development mode will block the current gulp task. So the buildJS task need to to be run independently in command line in another process
+ *
+ * @param {Function} done execute done to inform gulp that the task is finished
+ */
+function buildJSDev(done) {
+    let result = spawn("gulp", ["buildJS", "--browser", browser, "--color"]);
+    result.stdout.on("data", data => {
+        log(data);
+    });
+    result.stderr.on("data", data => {
+        log(data);
+    });
+    done();
 }
 
 /**
@@ -250,14 +217,20 @@ function packStatic() {
     if (browser === "chrome") {
         // static JS files except google JS
         let staticJSFiles = gulp
-            .src("./static/**/!(element_main).js", { base: "static" })
+            .src("./static/**/!(element_main).js", {
+                base: "static",
+                since: gulp.lastRun(packStatic)
+            })
             .pipe(terser().on("error", error => log(error)))
             .pipe(gulp.dest(output_dir));
 
         // google page translation files
         // Do not uglify element_main.js
         let googleJS = gulp
-            .src("./static/google/element_main.js", { base: "static" })
+            .src("./static/google/element_main.js", {
+                base: "static",
+                since: gulp.lastRun(packStatic)
+            })
             .pipe(gulp.dest(output_dir));
 
         // non-js static files
