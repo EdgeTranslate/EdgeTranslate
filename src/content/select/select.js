@@ -335,27 +335,25 @@ function cancelPageTranslate() {
 /**
  *  实现快捷键翻译
  */
-Messager.receive("content", (message, sender) => {
-    if (!sender || !sender.tab) {
-        switch (message.type) {
-            case "command":
-                switch (message.command) {
-                    case "translate_selected":
-                        translateSubmit();
-                        break;
-                    case "pronounce_selected":
-                        pronounceSubmit();
-                        break;
-                    case "cancel_page_translate":
-                        cancelPageTranslate();
-                        break;
-                    default:
-                        break;
-                }
-                break;
-            default:
-                Promise.reject("Unrecognized message type");
-        }
-        return Promise.resolve();
+Messager.receive("content", message => {
+    switch (message.title) {
+        case "command":
+            switch (message.detail.command) {
+                case "translate_selected":
+                    translateSubmit();
+                    break;
+                case "pronounce_selected":
+                    pronounceSubmit();
+                    break;
+                case "cancel_page_translate":
+                    cancelPageTranslate();
+                    break;
+                default:
+                    break;
+            }
+            break;
+        default:
+            break;
     }
+    return Promise.resolve();
 });

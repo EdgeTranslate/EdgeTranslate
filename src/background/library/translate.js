@@ -71,7 +71,8 @@ function translate(text) {
                             tl = languageSetting.tl;
                     }
                 } catch (error) {
-                    sendMessageToCurrentTab("error", {
+                    sendMessageToCurrentTab("info", {
+                        info: "network_error",
                         error: error
                     });
                     reject(error);
@@ -87,7 +88,8 @@ function translate(text) {
                 result.targetLanguage = tl;
                 resolve(result);
             } catch (error) {
-                sendMessageToCurrentTab("error", {
+                sendMessageToCurrentTab("info", {
+                    info: "network_error",
                     error: error
                 });
                 reject(error);

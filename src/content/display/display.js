@@ -40,65 +40,63 @@ const transitionDuration = 500; // 侧边栏出现动画的持续事件 单位:m
  * @param {Object} message 后台发送的消息
  * @param {Object} sender 返送消息者的具体信息 如果sender是content module，会有tab属性，如果是background，则没有tab属性
  */
-Messager.receive("content", (message, sender) => {
-    if (!sender || !sender.tab) {
-        // 避免从file://跳转到pdf viewer的消息传递对此的影响
-        switch (message.type) {
-            // 发送的是翻译结果
-            case "translateResult":
-                translateResult = message.translateResult;
-                sourceTTSSpeed = "fast";
-                targetTTSSpeed = "fast";
-                createBlock(message.translateResult, result);
-                break;
-            // 发送的是翻译状态信息
-            case "info":
-                switch (message.info) {
-                    case "start_translating":
-                        createBlock(message, loading);
-                        break;
-                    case "network_error":
-                        createBlock(message, error);
-                        break;
-                    default:
-                        break;
-                }
-                break;
-            // 发送的是快捷键命令
-            case "command":
-                switch (message.command) {
-                    case "fix_result_frame":
-                        chrome.storage.sync.get("fixSetting", function(result) {
-                            if (!result.fixSetting) {
-                                fixOn();
-                            } else {
-                                fixOff();
-                            }
-                        });
-                        break;
-                    case "close_result_frame":
-                        removeSlider();
-                        break;
-                    case "pronounce_original":
-                        sourcePronounce();
-                        break;
-                    case "pronounce_translated":
-                        targetPronounce();
-                        break;
-                    case "copy_result":
-                        if (translateResult) {
-                            copyContent();
+Messager.receive("content", message => {
+    // 避免从file://跳转到pdf viewer的消息传递对此的影响
+    switch (message.title) {
+        // 发送的是翻译结果
+        case "translateResult":
+            translateResult = message.detail.translateResult;
+            sourceTTSSpeed = "fast";
+            targetTTSSpeed = "fast";
+            createBlock(message.detail.translateResult, result);
+            break;
+        // 发送的是翻译状态信息
+        case "info":
+            switch (message.detail.info) {
+                case "start_translating":
+                    createBlock(message.detail, loading);
+                    break;
+                case "error":
+                    createBlock(message.detail, error);
+                    break;
+                default:
+                    break;
+            }
+            break;
+        // 发送的是快捷键命令
+        case "command":
+            switch (message.detail.command) {
+                case "fix_result_frame":
+                    chrome.storage.sync.get("fixSetting", function(result) {
+                        if (!result.fixSetting) {
+                            fixOn();
+                        } else {
+                            fixOff();
                         }
-                        break;
-                    default:
-                        break;
-                }
-                break;
-            default:
-                return Promise.reject("Unrecognized message type");
-        }
-        return Promise.resolve();
+                    });
+                    break;
+                case "close_result_frame":
+                    removeSlider();
+                    break;
+                case "pronounce_original":
+                    sourcePronounce();
+                    break;
+                case "pronounce_translated":
+                    targetPronounce();
+                    break;
+                case "copy_result":
+                    if (translateResult) {
+                        copyContent();
+                    }
+                    break;
+                default:
+                    break;
+            }
+            break;
+        default:
+            break;
     }
+    return Promise.resolve();
 });
 
 /**
