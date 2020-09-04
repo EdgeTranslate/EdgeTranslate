@@ -14,9 +14,10 @@ import {
     removeUrlBlacklist,
     removeDomainBlacklist,
     updateBLackListMenu
-} from "../common/scripts/blacklist.js.js";
+} from "./library/blacklist.js";
 import { sendHitRequest } from "./library/analytics.js";
-import { getDomain, sendMessageToCurrentTab } from "../common/scripts/common.js";
+import { sendMessageToCurrentTab } from "./library/common.js";
+import { getDomain } from "../common/scripts/common.js";
 
 /**
  * 选中文本TTS语速

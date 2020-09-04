@@ -1,4 +1,4 @@
-import { getDomain } from "./common.js";
+import { getDomain } from "../../common/scripts/common.js";
 
 export {
     addUrlBlacklist,
