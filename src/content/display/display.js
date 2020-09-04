@@ -1,6 +1,6 @@
 import render from "./library/render.js";
 import Resizable from "./library/resizable.js";
-import { isChromePDFViewer } from "../../common/scripts/common.js";
+import { isChromePDFViewer } from "../common.js";
 import Messager from "../../common/scripts/messager.js";
 
 /**

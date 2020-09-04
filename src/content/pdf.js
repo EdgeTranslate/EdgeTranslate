@@ -1,4 +1,4 @@
-import { isChromePDFViewer } from "../common/scripts/common.js"; // judge if this page is a pdf file
+import { isChromePDFViewer } from "./common.js"; // judge if this page is a pdf file
 import Messager from "../common/scripts/messager.js";
 /**
  * 处理PDF文件链接
