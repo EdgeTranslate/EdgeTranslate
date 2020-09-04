@@ -1,4 +1,4 @@
-import { getDomain, isPDFjsPDFViewer } from "../../lib/scripts/common.js";
+import { getDomain, isPDFjsPDFViewer } from "../../common/scripts/common.js";
 
 // 记录下mousedown事件，只有在mousedown事件发生后再发生mouseup事件才会尝试进行划词翻译
 var HasMouseDown = false;
