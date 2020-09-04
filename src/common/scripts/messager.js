@@ -3,39 +3,6 @@
  */
 class Messager {
     /**
-     * Construct Messager instance.
-     *
-     * @param {String} owner owner of this messager
-     * @param {Function} messageHandler message handler
-     */
-    constructor(owner, messageHandler) {
-        /**
-         * @type {String} Messager owner
-         */
-        this.owner = owner;
-
-        /**
-         * @type {Function} Message handler
-         */
-        this.messageHandler = messageHandler;
-
-        /**
-         * Add the default listener.
-         */
-        chrome.runtime.onMessage.addListener(
-            ((message, sender, callback) => {
-                if (message.to && message.to === this.owner) {
-                    this.messageHandler(message, sender).then(result => {
-                        if (callback) callback(result);
-                    });
-                }
-
-                return true;
-            }).bind(this)
-        );
-    }
-
-    /**
      * Send message to "to" module.
      *
      * @param {String} to module name
@@ -44,7 +11,7 @@ class Messager {
      *
      * @returns {Promise<Object>} receiver reply Promise
      */
-    send(to, title, detail) {
+    static send(to, title, detail) {
         return new Promise((resolve, reject) => {
             chrome.runtime.sendMessage({ to: to, title: title, detail: detail }, result => {
                 if (chrome.runtime.lastError) {
@@ -66,7 +33,7 @@ class Messager {
      *
      * @returns {Promise<Object>} receiver reply Promise
      */
-    sendToTab(tabId, to, title, detail) {
+    static sendToTab(tabId, to, title, detail) {
         if (BROWSER_ENV === "chrome") {
             // Chrome is using callback.
             return new Promise((resolve, reject) => {
@@ -82,6 +49,26 @@ class Messager {
             // Firefox is using Promise.
             return browser.tabs.sendMessage(tabId, { to: to, title: title, detail: detail });
         }
+    }
+
+    /**
+     * Start to receive messages.
+     *
+     * @param {String} receiver message receiver
+     * @param {Function} messageHandler message handler
+     *
+     * @returns {void} nothing
+     */
+    static receive(receiver, messageHandler) {
+        chrome.runtime.onMessage.addListener((message, sender, callback) => {
+            if (message.to && message.to === receiver) {
+                messageHandler(message, sender).then(result => {
+                    if (callback) callback(result);
+                });
+            }
+
+            return true;
+        });
     }
 }
 
