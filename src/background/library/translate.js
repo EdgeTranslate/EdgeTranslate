@@ -1,5 +1,6 @@
 import TRANSLATOR from "./translators/proxy.js";
 import { sendMessageToCurrentTab } from "./common.js";
+import Messager from "../../common/scripts/messager.js";
 
 export {
     translate,
@@ -18,10 +19,11 @@ export {
  * 检测给定文本的语言。
  *
  * @param {string} text 需要检测的文本
- * @param {function} callback 回调函数，参数为检测结果
+ *
+ * @returns {Promise<String>} detected language Promise
  */
-function detect(text, callback) {
-    TRANSLATOR.detect(text).then(result => callback(result));
+function detect(text) {
+    return TRANSLATOR.detect(text);
 }
 
 /**
@@ -30,53 +32,64 @@ function detect(text, callback) {
  * 1. get language settings
  * 2. if source language is "auto", use normal translation mode
  * 3. else use mutual translation mode(auto translate from both sides)
- * 4. send request, get result and execute callback(result)
+ * 4. send request, get result
  *
  * @param {String} text original text to be translated
- * @param {Function(Object)} callback Used to get translation results after translation
+ *
+ * @returns {Promise<Object>} translate result Promise
  */
-function translate(text, callback) {
+function translate(text) {
     // Start showing loading animation.
-    sendMessageToCurrentTab({
-        type: "info",
+    sendMessageToCurrentTab("info", {
         info: "start_translating"
     });
 
     // get language settings from chrome storage
-    chrome.storage.sync.get(["languageSetting", "OtherSettings"], result => {
-        var OtherSettings = result.OtherSettings;
-        var languageSetting = result.languageSetting;
+    return new Promise((resolve, reject) => {
+        chrome.storage.sync.get(["languageSetting", "OtherSettings"], async result => {
+            let OtherSettings = result.OtherSettings;
+            let languageSetting = result.languageSetting;
+            let sl = languageSetting.sl,
+                tl = languageSetting.tl;
 
-        if (languageSetting.sl === "auto" || !OtherSettings.MutualTranslate) {
-            // normal translation mode
-            TRANSLATOR.translate(text, languageSetting.sl, languageSetting.tl).then(result => {
-                result.sourceLanguage = languageSetting.sl;
-                result.targetLanguage = languageSetting.tl;
-                callback(result);
-            });
-        } else {
-            // Mutual translation mode
-            detect(text, result => {
-                let sl = result,
-                    tl;
-                switch (sl) {
-                    case languageSetting.sl:
-                        tl = languageSetting.tl;
-                        break;
-                    case languageSetting.tl:
-                        tl = languageSetting.sl;
-                        break;
-                    default:
-                        sl = "auto";
-                        tl = languageSetting.tl;
+            if (sl !== "auto" && OtherSettings.MutualTranslate) {
+                // mutual translate mode, detect language first.
+                try {
+                    sl = await detect(text);
+                    switch (sl) {
+                        case languageSetting.sl:
+                            tl = languageSetting.tl;
+                            break;
+                        case languageSetting.tl:
+                            tl = languageSetting.sl;
+                            break;
+                        default:
+                            sl = "auto";
+                            tl = languageSetting.tl;
+                    }
+                } catch (error) {
+                    sendMessageToCurrentTab("error", {
+                        error: error
+                    });
+                    reject(error);
+                    return;
                 }
-                TRANSLATOR.translate(text, sl, tl).then(result => {
-                    result.sourceLanguage = sl;
-                    result.targetLanguage = tl;
-                    callback(result);
+            }
+
+            // Do translate.
+            try {
+                let result = await TRANSLATOR.translate(text, sl, tl);
+
+                result.sourceLanguage = sl;
+                result.targetLanguage = tl;
+                resolve(result);
+            } catch (error) {
+                sendMessageToCurrentTab("error", {
+                    error: error
                 });
-            });
-        }
+                reject(error);
+            }
+        });
     });
 }
 
@@ -86,16 +99,15 @@ function translate(text, callback) {
  * @param {String} text The text.
  * @param {String} language The language of the text.
  * @param {String} speed The speed of the speech.
- * @param {Function} callback The callback function.
+ *
+ * @returns {Promise<void>} pronounce finished Promise
  */
-function pronounce(text, language, speed, callback) {
+async function pronounce(text, language, speed) {
+    let lang = language;
     if (language == "auto") {
-        TRANSLATOR.detect(text).then(lan => {
-            TRANSLATOR.pronounce(text, lan, speed).then(callback);
-        });
-    } else {
-        TRANSLATOR.pronounce(text, language, speed).then(callback);
+        lang = await TRANSLATOR.detect(text);
     }
+    return TRANSLATOR.pronounce(text, lang, speed);
 }
 
 /**
@@ -108,82 +120,33 @@ function stopPronounce() {
 /**
  * 展示翻译结果。
  *
- * @param {Object} content 翻译结果。
- * @param {Function} callback 展示完页面后执行的回调函数
+ * @param {Object} content 翻译结果
+ * @param {Object} tab 展示翻译结果的页面
+ *
+ * @returns {Promise<Object>} show translate result Promise
  */
-function showTranslate(content, tab, callback) {
-    if (content) {
-        if (chrome.runtime.lastError) {
-            // eslint-disable-next-line no-console
-            console.log("Chrome runtime error: " + chrome.runtime.lastError.message);
-            alert(content.mainMeaning);
-            return;
-        }
-        getCurrentTabId(tab, function(tab_id) {
-            if (tab_id < 0) {
-                alert(content.mainMeaning);
-                return;
-            }
+async function showTranslate(content, tab) {
+    if (!content) {
+        return Promise.resolve();
+    }
 
-            if (BROWSER_ENV === "chrome") {
-                // 判断浏览器的类型 chrome的情况
-                chrome.tabs.sendMessage(
-                    tab_id,
-                    { type: "translateResult", translateResult: content },
-                    function() {
-                        if (chrome.runtime.lastError) {
-                            // the url is extension:// page, can't send message or using the popup page to translate
-                            chrome.extension.isAllowedFileSchemeAccess(function(isAllowedAccess) {
-                                if (isAllowedAccess) {
-                                    // 查询当前的tab，在该tab上展示结果。
-                                    // maybe the user have just set the permission but don't refresh the page
-                                    alert(content.mainMeaning);
-                                } else {
-                                    // 打开管理页面，由用户开启权限
-                                    if (confirm(chrome.i18n.getMessage("PermissionRemind"))) {
-                                        // 为管理页面创建一个新的标签
-                                        chrome.tabs.create({
-                                            url: "chrome://extensions/?id=" + chrome.runtime.id
-                                        });
-                                    } else {
-                                        // 用户拒绝开启，则直接展示翻译结果
-                                        // eslint-disable-next-line no-console
-                                        console.log("Permission denied.");
-                                        alert(content.mainMeaning);
-                                        callback();
-                                    }
-                                }
-                            });
-                        }
-                    }
-                );
-                // 当翻译结果展示完后，执行此回调函数
-                if (callback) {
-                    callback();
-                }
-            } else {
-                // 是firefox的情况
-                // resultPromise是返回的一个promise对象
-                let resultPromise = browser.tabs.sendMessage(tab_id, {
-                    type: "translateResult",
-                    translateResult: content
-                });
-                resultPromise
-                    .then(function() {
-                        // 成功接收信息
-                        // 当翻译结果展示完后，执行此回调函数
-                        if (callback) {
-                            callback();
-                        }
-                    })
-                    .catch(function(error) {
-                        // 出现错误的回调
-                        // eslint-disable-next-line no-console
-                        console.log(error);
-                        alert(content.mainMeaning);
-                    });
-            }
+    if (chrome.runtime.lastError) {
+        // eslint-disable-next-line no-console
+        console.log("Chrome runtime error: " + chrome.runtime.lastError.message);
+        alert(content.mainMeaning);
+        return Promise.resolve();
+    }
+
+    try {
+        let tab_id = await getCurrentTabId(tab);
+        return await Messager.sendToTab(tab_id, "content", "translateResult", {
+            translateResult: content
         });
+    } catch (e) {
+        // eslint-disable-next-line no-console
+        console.log("Chrome runtime error: " + e);
+        alert(content.mainMeaning);
+        return Promise.resolve();
     }
 }
 
@@ -191,26 +154,23 @@ function showTranslate(content, tab, callback) {
  * 找出应该用于展示翻译结果的tab。
  *
  * @param {chrome.tabs.Tab} tab 传入给showTranslate的tab
- * @param {Function} callback 用于展示翻译结果的函数。
+ *
+ * @returns {Promise<Number>} tab id Promise
  */
-function getCurrentTabId(tab, callback) {
+function getCurrentTabId(tab) {
     if (tab && tab.id >= 0) {
-        callback(tab.id);
-    } else if (tab) {
-        // 检查是否拥有访问文件链接的权限。
-        chrome.extension.isAllowedFileSchemeAccess(function(isAllowedAccess) {
-            if (isAllowedAccess) {
-                // 查询当前的tab，在该tab上展示结果。
-                chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
-                    if (chrome.runtime.lastError) {
-                        // eslint-disable-next-line no-console
-                        console.log("Chrome runtime error: " + chrome.runtime.lastError.message);
-                        callback(chrome.tabs.TAB_ID_NONE);
-                    } else {
-                        callback(tabs[0] && tabs[0].id >= 0 ? tabs[0].id : chrome.tabs.TAB_ID_NONE);
-                    }
-                });
-            } else {
+        return Promise.resolve(tab.id);
+    } else if (!tab) {
+        // 没有tab，说明该页面无法访问
+        // eslint-disable-next-line no-console
+        console.log("Unsupported page.");
+        return Promise.reject(chrome.tabs.TAB_ID_NONE);
+    }
+
+    // 检查是否拥有访问文件链接的权限。
+    return new Promise((resolve, reject) => {
+        chrome.extension.isAllowedFileSchemeAccess(isAllowedAccess => {
+            if (!isAllowedAccess) {
                 // 打开管理页面，由用户开启权限
                 if (confirm(chrome.i18n.getMessage("PermissionRemind"))) {
                     // 为管理页面创建一个新的标签
@@ -219,16 +179,24 @@ function getCurrentTabId(tab, callback) {
                     // 用户拒绝开启，则直接展示翻译结果
                     // eslint-disable-next-line no-console
                     console.log("Permission denied.");
-                    callback(chrome.tabs.TAB_ID_NONE);
                 }
+                reject(chrome.tabs.TAB_ID_NONE);
+                return;
             }
+
+            // 查询当前的tab，在该tab上展示结果。
+            chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
+                if (chrome.runtime.lastError || !tabs[0] || tabs[0].id < 0) {
+                    // eslint-disable-next-line no-console
+                    console.log("Chrome runtime error: " + chrome.runtime.lastError.message);
+                    reject(chrome.tabs.TAB_ID_NONE);
+                    return;
+                }
+
+                resolve(tabs[0].id);
+            });
         });
-    } else {
-        // 没有tab，说明该页面无法访问
-        // eslint-disable-next-line no-console
-        console.log("Unsupported page.");
-        callback(chrome.tabs.TAB_ID_NONE);
-    }
+    });
 }
 
 /**
@@ -253,28 +221,31 @@ function translatePage() {
 
 /**
  * 有道翻译接口
- * @param {Any} request request
- * @param {Any} callback callback
+ * @param {Object} request request
+ *
+ * @returns {Promise<Object>} response Promise
  */
-function youdaoPageTranslate(request, callback) {
-    const xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function() {
-        if (xhr.readyState === 4) {
-            const data = xhr.status === 200 ? xhr.responseText : null;
-            callback({
-                response: data,
-                index: request.index
-            });
-        }
-    };
-    xhr.open(request.type, request.url, true);
+function youdaoPageTranslate(request) {
+    return new Promise(resolve => {
+        const xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4) {
+                const data = xhr.status === 200 ? xhr.responseText : null;
+                resolve({
+                    response: data,
+                    index: request.index
+                });
+            }
+        };
+        xhr.open(request.type, request.url, true);
 
-    if (request.type === "POST") {
-        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-        xhr.send(request.data);
-    } else {
-        xhr.send(null);
-    }
+        if (request.type === "POST") {
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.send(request.data);
+        } else {
+            xhr.send(null);
+        }
+    });
 }
 
 /**
