@@ -86,7 +86,7 @@ function setProductEnvironment(done) {
 function clean() {
     let output_dir = "./build/" + browser + "/";
     let packageName = "edge_translate_" + browser + ".zip";
-    return del([output_dir, output_dir + packageName]);
+    return del([output_dir, "./build/" + packageName]);
 }
 
 /**
