@@ -1,11 +1,14 @@
+import Messager from "../../common/scripts/messager.js";
+
 export { sendMessageToCurrentTab, escapeHTML };
 
 /**
  * Send a message to current tab if accessible.
  *
- * @param {Object} message message to send.
+ * @param {String} title message title
+ * @param {Object} detail message detail
  */
-function sendMessageToCurrentTab(message) {
+function sendMessageToCurrentTab(title, detail) {
     chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
         if (chrome.runtime.lastError) {
             // eslint-disable-next-line no-console
@@ -14,11 +17,9 @@ function sendMessageToCurrentTab(message) {
             // eslint-disable-next-line no-console
             console.log("No tabs or tabs not accessible.");
         } else {
-            chrome.tabs.sendMessage(tabs[0].id, message, function() {
-                if (chrome.runtime.lastError) {
-                    // eslint-disable-next-line no-console
-                    console.log("Chrome runtime error: " + chrome.runtime.lastError.message);
-                }
+            Messager.sendToTab(tabs[0].id, "content", title, detail).catch(error => {
+                // eslint-disable-next-line no-console
+                console.log("Chrome runtime error: " + error.message);
             });
         }
     });

@@ -369,15 +369,16 @@ window.onload = function() {
              * @param request 请求数据
              */
             translate: function(request) {
-                chrome.runtime.sendMessage({ type: "youdao_page_translate", request: request }, function(
-                    response
-                ) {
-                    Response.sendMessage({
-                        response: response.response,
-                        index: response.index,
-                        handler: BACKFLAG
-                    });
-                });
+                chrome.runtime.sendMessage(
+                    {to: "background", title: "youdao_page_translate", detail: { request: request } },
+                    function(response) {
+                        Response.sendMessage({
+                            response: response.response,
+                            index: response.index,
+                            handler: BACKFLAG
+                        });
+                    }
+                );
             },
             /**
              * 本地存储

@@ -1,13 +1,16 @@
+import axios from "axios";
 import TRANSLATOR from "./translators/proxy.js";
 import { sendMessageToCurrentTab } from "./common.js";
 import Messager from "../../common/scripts/messager.js";
 
 export {
-    translate,
     detect,
-    showTranslate,
+    translate,
     pronounce,
     stopPronounce,
+    onLanguageSettingUpdated,
+    getAvailableTranslators,
+    showTranslate,
     translatePage,
     youdaoPageTranslate,
     executeYouDaoScript,
@@ -118,6 +121,28 @@ function stopPronounce() {
 }
 
 /**
+ * Language setting update event listener.
+ *
+ * @param {Object} detail updated language setting, detail.from is source language, detail.to is target language
+ *
+ * @returns {Promise<void>} finished Promise
+ */
+function onLanguageSettingUpdated(detail) {
+    return TRANSLATOR.updateConfigFor(detail);
+}
+
+/**
+ * Get translators that support given source language and target language.
+ *
+ * @param {Object} detail current language setting, detail.from is source language, detail.to is target language
+ *
+ * @returns {Promise<Array<String>>} available translators Promise.
+ */
+function getAvailableTranslators(detail) {
+    return TRANSLATOR.getAvailableTranslatorsFor(detail.from, detail.to);
+}
+
+/**
  * 展示翻译结果。
  *
  * @param {Object} content 翻译结果
@@ -225,27 +250,19 @@ function translatePage() {
  *
  * @returns {Promise<Object>} response Promise
  */
-function youdaoPageTranslate(request) {
-    return new Promise(resolve => {
-        const xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState === 4) {
-                const data = xhr.status === 200 ? xhr.responseText : null;
-                resolve({
-                    response: data,
-                    index: request.index
-                });
-            }
-        };
-        xhr.open(request.type, request.url, true);
-
-        if (request.type === "POST") {
-            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-            xhr.send(request.data);
-        } else {
-            xhr.send(null);
-        }
+async function youdaoPageTranslate(request) {
+    let isPost = request.type === "POST";
+    let response = await axios({
+        method: request.type,
+        baseURL: request.url,
+        headers: isPost ? { "Content-Type": "application/x-www-form-urlencoded" } : {},
+        data: isPost ? request.data : null
     });
+
+    return {
+        response: response.status === 200 ? response.data : null,
+        index: request.index
+    };
 }
 
 /**
