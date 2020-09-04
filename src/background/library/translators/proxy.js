@@ -2,7 +2,6 @@ import BAIDU from "./baidu.js";
 import BING from "./bing.js";
 import GOOGLE from "./google.js";
 import TENCENT from "./tencent.js";
-import EVENT_MANAGER from "../event.js";
 
 class TranslatorProxy {
     constructor() {
@@ -32,14 +31,6 @@ class TranslatorProxy {
                     this.MAIN_TRANSLATOR = this.CONFIG.selections.mainMeaning;
                 }
             }).bind(this)
-        );
-
-        /**
-         * Add listener for language setting changing.
-         */
-        EVENT_MANAGER.addEventListener(
-            EVENT_MANAGER.EVENTS.LANGUAGE_SETTING_CHANGED,
-            this.updateConfigFor.bind(this)
         );
     }
 

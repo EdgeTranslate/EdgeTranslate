@@ -1,8 +1,9 @@
 import {
     translate,
-    showTranslate,
     pronounce,
     stopPronounce,
+    onLanguageSettingUpdated,
+    showTranslate,
     translatePage,
     youdaoPageTranslate,
     executeYouDaoScript,
@@ -17,6 +18,7 @@ import {
 } from "./library/blacklist.js";
 import { sendHitRequest } from "./library/analytics.js";
 import { sendMessageToCurrentTab } from "./library/common.js";
+import Messager from "../common/scripts/messager.js";
 import { getDomain } from "../common/scripts/common.js";
 
 /**
@@ -279,12 +281,10 @@ chrome.contextMenus.onClicked.addListener(function(info, tab) {
     switch (info.menuItemId) {
         case "translate":
             var text = info.selectionText;
-            translate(text, function(result) {
-                showTranslate(result, tab);
-            }); // 此api位于 translate.js中
+            translate(text).then(result => showTranslate(result, tab));
             break;
         case "pronounce":
-            pronounce(info.selectionText, "auto", selectedTTSSpeed, null);
+            pronounce(info.selectionText, "auto", selectedTTSSpeed);
             if (selectedTTSSpeed === "fast") {
                 selectedTTSSpeed = "slow";
             } else {
@@ -342,54 +342,57 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
     }
 });
 
-/*
- * 处理content scripts发送的消息。
+/**
+ * Background message handler.
+ *
+ * @param {Object} message message
+ * @param {object} sender sender
+ *
+ * @returns {Promise} handle Promise
  */
-chrome.runtime.onMessage.addListener(function(message, sender, callback) {
-    if (message.type && sender.tab) {
-        switch (message.type) {
-            case "redirect":
-                chrome.tabs.update(sender.tab.id, { url: message.url });
-                if (callback) {
-                    callback();
-                }
-                break;
-            case "translate":
-                translate(message.text, function(result) {
-                    showTranslate(result, sender.tab, callback);
-                });
-                break;
-            case "pronounce":
-                if (message.speed) {
-                    pronounce(message.text, message.language, message.speed, callback);
-                } else {
-                    pronounce(message.text, message.language, selectedTTSSpeed, callback);
-                    if (selectedTTSSpeed === "fast") {
-                        selectedTTSSpeed = "slow";
-                    } else {
-                        selectedTTSSpeed = "fast";
-                    }
-                }
-                break;
-            case "youdao_page_translate":
-                youdaoPageTranslate(message.request, callback);
-                break;
-            case "get_lang":
-                callback({ lang: chrome.i18n.getUILanguage() });
-                break;
-            case "frame_closed":
-                stopPronounce();
-                break;
-            default:
-                // eslint-disable-next-line no-console
-                console.log("Unknown message type: " + message.type);
-                if (callback) {
-                    callback();
-                }
+async function messageHandler(message, sender) {
+    switch (message.title) {
+        case "redirect":
+            chrome.tabs.update(sender.tab.id, { url: message.url });
+            return Promise.resolve();
+        case "translate": {
+            let result = await translate(message.detail.text);
+            return await showTranslate(result, sender.tab);
         }
-        return true;
+        case "pronounce": {
+            let speed = message.detail.speed;
+            if (!speed) {
+                speed = selectedTTSSpeed;
+                if (selectedTTSSpeed === "fast") {
+                    selectedTTSSpeed = "slow";
+                } else {
+                    selectedTTSSpeed = "fast";
+                }
+            }
+
+            let result = await pronounce(message.detail.text, message.detail.language, speed);
+            return result;
+        }
+        case "youdao_page_translate":
+            return youdaoPageTranslate(message.detail.request);
+        case "get_lang":
+            return Promise.resolve({ lang: chrome.i18n.getUILanguage() });
+        case "frame_closed":
+            stopPronounce();
+            return Promise.resolve();
+        case "language_setting_update":
+            return onLanguageSettingUpdated(message.detail);
+        default:
+            // eslint-disable-next-line no-console
+            console.log("Unknown message title: " + message.title);
+            return Promise.reject();
     }
-});
+}
+
+/**
+ * Start to receive messages.
+ */
+Messager.receive("background", messageHandler);
 
 /**
  *  将快捷键消息转发给content_scripts
@@ -400,8 +403,7 @@ chrome.commands.onCommand.addListener(function(command) {
             translatePage();
             break;
         default:
-            sendMessageToCurrentTab({
-                type: "command",
+            sendMessageToCurrentTab("command", {
                 command: command
             });
             break;

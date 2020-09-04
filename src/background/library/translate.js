@@ -3,11 +3,12 @@ import { sendMessageToCurrentTab } from "./common.js";
 import Messager from "../../common/scripts/messager.js";
 
 export {
-    translate,
     detect,
-    showTranslate,
+    translate,
     pronounce,
     stopPronounce,
+    onLanguageSettingUpdated,
+    showTranslate,
     translatePage,
     youdaoPageTranslate,
     executeYouDaoScript,
@@ -115,6 +116,17 @@ async function pronounce(text, language, speed) {
  */
 function stopPronounce() {
     TRANSLATOR.stopPronounce();
+}
+
+/**
+ * Language setting update event listener.
+ *
+ * @param {Object} detail updated language setting, detail.from is source language, detail.to is target language
+ *
+ * @returns {Promise<void>} finished Promise
+ */
+function onLanguageSettingUpdated(detail) {
+    return TRANSLATOR.updateConfigFor(detail);
 }
 
 /**
