@@ -1,4 +1,4 @@
-import TRANSLATOR from "../background/library/translators/proxy.js";
+import Messager from "../common/scripts/messager.js";
 
 /**
  * 初始化设置列表
@@ -87,13 +87,13 @@ window.onload = () => {
  * Set up hybrid translate config.
  */
 function setUpTranslateConfig() {
-    chrome.storage.sync.get(["languageSetting", "TranslatorConfig"], result => {
+    chrome.storage.sync.get(["languageSetting", "TranslatorConfig"], async result => {
         let config = result.TranslatorConfig;
         let languageSetting = result.languageSetting;
-        let availableTranslators = TRANSLATOR.getAvailableTranslatorsFor(
-            languageSetting.sl,
-            languageSetting.tl
-        );
+        let availableTranslators = await Messager.send("background", "get_available_translators", {
+            from: languageSetting.sl,
+            to: languageSetting.tl
+        });
         let translatorConfigEles = document.getElementsByClassName("translator-config");
 
         for (let ele of translatorConfigEles) {

@@ -9,6 +9,7 @@ export {
     pronounce,
     stopPronounce,
     onLanguageSettingUpdated,
+    getAvailableTranslators,
     showTranslate,
     translatePage,
     youdaoPageTranslate,
@@ -128,6 +129,17 @@ function stopPronounce() {
  */
 function onLanguageSettingUpdated(detail) {
     return TRANSLATOR.updateConfigFor(detail);
+}
+
+/**
+ * Get translators that support given source language and target language.
+ *
+ * @param {Object} detail current language setting, detail.from is source language, detail.to is target language
+ *
+ * @returns {Promise<Array<String>>} available translators Promise.
+ */
+function getAvailableTranslators(detail) {
+    return TRANSLATOR.getAvailableTranslatorsFor(detail.from, detail.to);
 }
 
 /**

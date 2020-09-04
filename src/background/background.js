@@ -3,6 +3,7 @@ import {
     pronounce,
     stopPronounce,
     onLanguageSettingUpdated,
+    getAvailableTranslators,
     showTranslate,
     translatePage,
     youdaoPageTranslate,
@@ -382,6 +383,8 @@ async function messageHandler(message, sender) {
             return Promise.resolve();
         case "language_setting_update":
             return onLanguageSettingUpdated(message.detail);
+        case "get_available_translators":
+            return getAvailableTranslators();
         default:
             // eslint-disable-next-line no-console
             console.log("Unknown message title: " + message.title);
