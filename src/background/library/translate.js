@@ -262,7 +262,7 @@ async function youdaoPageTranslate(request) {
     });
 
     return {
-        response: response.status === 200 ? response.data : null,
+        response: response.status === 200 ? JSON.stringify(response.data) : null,
         index: request.index
     };
 }
