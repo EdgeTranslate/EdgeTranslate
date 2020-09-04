@@ -16,20 +16,21 @@
     ],
     "VSCodeCounter.outputDirectory": "build/counter/",
     "cSpell.words": [
-        "Bing",
-        "IGIID",
-        "Messager",
-        "Tencent",
-        "contenteditable",
-        "objs",
-        "pageview",
-        "srcdoc",
-        "ssel",
-        "styl",
-        "tsel",
-        "ttsspeed",
-        "tuding",
-        "webapp",
-        "youdao"
-    ]
+		"Bing",
+		"IGIID",
+		"Messager",
+		"Tencent",
+		"contenteditable",
+		"fanyi",
+		"objs",
+		"pageview",
+		"srcdoc",
+		"ssel",
+		"styl",
+		"tsel",
+		"ttsspeed",
+		"tuding",
+		"webapp",
+		"youdao"
+	]
 }
