@@ -1,4 +1,4 @@
-import TRANSLATOR from "../translators/proxy.js";
+import TRANSLATOR from "../background/library/translators/proxy.js";
 
 /**
  * 初始化设置列表
