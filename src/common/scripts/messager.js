@@ -25,7 +25,9 @@ class Messager {
         chrome.runtime.onMessage.addListener(
             ((message, sender, callback) => {
                 if (message.to && message.to === this.owner) {
-                    this.messageHandler(message, sender, callback);
+                    this.messageHandler(message, sender).then(result => {
+                        if (callback) callback(result);
+                    });
                 }
 
                 return true;
