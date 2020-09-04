@@ -2,7 +2,7 @@ import BAIDU from "./baidu.js";
 import BING from "./bing.js";
 import GOOGLE from "./google.js";
 import TENCENT from "./tencent.js";
-import EVENT_MANAGER from "../lib/scripts/event.js";
+import EVENT_MANAGER from "../event.js";
 
 class TranslatorProxy {
     constructor() {

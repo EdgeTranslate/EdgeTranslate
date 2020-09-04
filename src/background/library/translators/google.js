@@ -1,5 +1,5 @@
 import axios from "axios";
-import { escapeHTML } from "../lib/scripts/common.js";
+import { escapeHTML } from "../common.js";
 
 /**
  * Language maps.
