@@ -24,11 +24,11 @@ class Messager {
          */
         chrome.runtime.onMessage.addListener(
             ((message, sender, callback) => {
-                if (!message.to || message.to !== this.owner) {
-                    return;
+                if (message.to && message.to === this.owner) {
+                    this.messageHandler(message, sender, callback);
                 }
 
-                this.messageHandler(message, sender, callback);
+                return true;
             }).bind(this)
         );
     }
@@ -38,33 +38,41 @@ class Messager {
      *
      * @param {String} to module name
      * @param {String} title message title
-     * @param {Object} detail message detail, if to === "content", detail.tab_id should be the id of the tab to send to.
+     * @param {Object} detail message detail
      *
      * @returns {Promise<Object>} receiver reply Promise
      */
     send(to, title, detail) {
         return new Promise((resolve, reject) => {
-            if (to === "content") {
-                chrome.tabs.sendMessage(
-                    detail.tab_id,
-                    { to: to, title: title, detail: detail },
-                    result => {
-                        if (chrome.runtime.lastError) {
-                            reject(chrome.runtime.lastError);
-                        } else {
-                            resolve(result);
-                        }
-                    }
-                );
-            } else {
-                chrome.runtime.sendMessage({ to: to, title: title, detail: detail }, result => {
-                    if (chrome.runtime.lastError) {
-                        reject(chrome.runtime.lastError);
-                    } else {
-                        resolve(result);
-                    }
-                });
-            }
+            chrome.runtime.sendMessage({ to: to, title: title, detail: detail }, result => {
+                if (chrome.runtime.lastError) {
+                    reject(chrome.runtime.lastError);
+                } else {
+                    resolve(result);
+                }
+            });
+        });
+    }
+
+    /**
+     * Send message to "to" module.
+     *
+     * @param {Number} tabId id of tab to send to
+     * @param {String} to module name
+     * @param {String} title message title
+     * @param {Object} detail message detail
+     *
+     * @returns {Promise<Object>} receiver reply Promise
+     */
+    sendToTab(tabId, to, title, detail) {
+        return new Promise((resolve, reject) => {
+            chrome.tabs.sendMessage(tabId, { to: to, title: title, detail: detail }, result => {
+                if (chrome.runtime.lastError) {
+                    reject(chrome.runtime.lastError);
+                } else {
+                    resolve(result);
+                }
+            });
         });
     }
 }
