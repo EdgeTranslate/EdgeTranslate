@@ -1,5 +1,5 @@
 import { LANGUAGES } from "./languages.js";
-import TRANSLATOR from "../translators/proxy.js";
+import EVENT_MANAGER from "../lib/scripts/event.js";
 import {
     translate,
     showTranslate,
@@ -135,7 +135,10 @@ chrome.commands.onCommand.addListener(function(command) {
  */
 function updateLanguageSetting(sourceLanguage, targetLanguage) {
     // Update translator config.
-    TRANSLATOR.updateConfigFor(sourceLanguage, targetLanguage);
+    EVENT_MANAGER.triggerEvent(EVENT_MANAGER.EVENTS.LANGUAGE_SETTING_CHANGED, {
+        from: sourceLanguage,
+        to: targetLanguage
+    });
 
     saveOption("languageSetting", { sl: sourceLanguage, tl: targetLanguage });
     if (sourceLanguage === "auto") {

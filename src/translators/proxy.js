@@ -2,6 +2,7 @@ import BAIDU from "./baidu.js";
 import BING from "./bing.js";
 import GOOGLE from "./google.js";
 import TENCENT from "./tencent.js";
+import EVENT_MANAGER from "../lib/scripts/event.js";
 
 class TranslatorProxy {
     constructor() {
@@ -31,6 +32,14 @@ class TranslatorProxy {
                     this.MAIN_TRANSLATOR = this.CONFIG.selections.mainMeaning;
                 }
             }).bind(this)
+        );
+
+        /**
+         * Add listener for language setting changing.
+         */
+        EVENT_MANAGER.addEventListener(
+            EVENT_MANAGER.EVENTS.LANGUAGE_SETTING_CHANGED,
+            this.updateConfigFor.bind(this)
         );
     }
 
@@ -78,19 +87,18 @@ class TranslatorProxy {
     /**
      * Update translator config when language setting changed.
      *
-     * @param {String} from new source language
-     * @param {String} to new target language
+     * @param {Object} detail language setting detail, detail.from is the new source language and detail.to is the new target language.
      *
      * @returns {void} nothing
      */
-    async updateConfigFor(from, to) {
+    async updateConfigFor(detail) {
         // Load config if not loaded.
         await this.loadConfigIfNotLoaded();
 
         let newConfig = { translators: new Set(), selections: {} };
 
         // Get translators that support new language setting.
-        let availableTranslators = this.getAvailableTranslatorsFor(from, to);
+        let availableTranslators = this.getAvailableTranslatorsFor(detail.from, detail.to);
 
         // Replace translators that don't support new language setting with a default translator.
         let defaultTranslator = availableTranslators[0];
