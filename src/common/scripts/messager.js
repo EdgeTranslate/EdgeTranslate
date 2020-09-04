@@ -65,15 +65,21 @@ class Messager {
      * @returns {Promise<Object>} receiver reply Promise
      */
     sendToTab(tabId, to, title, detail) {
-        return new Promise((resolve, reject) => {
-            chrome.tabs.sendMessage(tabId, { to: to, title: title, detail: detail }, result => {
-                if (chrome.runtime.lastError) {
-                    reject(chrome.runtime.lastError);
-                } else {
-                    resolve(result);
-                }
+        if (BROWSER_ENV === "chrome") {
+            // Chrome is using callback.
+            return new Promise((resolve, reject) => {
+                chrome.tabs.sendMessage(tabId, { to: to, title: title, detail: detail }, result => {
+                    if (chrome.runtime.lastError) {
+                        reject(chrome.runtime.lastError);
+                    } else {
+                        resolve(result);
+                    }
+                });
             });
-        });
+        } else {
+            // Firefox is using Promise.
+            return browser.tabs.sendMessage(tabId, { to: to, title: title, detail: detail });
+        }
     }
 }
 
