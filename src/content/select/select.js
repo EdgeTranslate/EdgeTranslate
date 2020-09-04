@@ -1,4 +1,5 @@
 import { getDomain, isPDFjsPDFViewer } from "../../common/scripts/common.js";
+import Messager from "../../common/scripts/messager.js";
 
 // 记录下mousedown事件，只有在mousedown事件发生后再发生mouseup事件才会尝试进行划词翻译
 var HasMouseDown = false;
@@ -190,12 +191,8 @@ function translateSubmit() {
             .toString()
             .trim()
     ) {
-        chrome.runtime.sendMessage(
-            {
-                type: "translate",
-                text: window.getSelection().toString()
-            },
-            function() {
+        Messager.send("background", "translate", { text: window.getSelection().toString() }).then(
+            () => {
                 chrome.storage.sync.get("OtherSettings", result => {
                     // to check whether user need to cancel text selection after translation finished
                     if (result.OtherSettings && result.OtherSettings["CancelTextSelection"]) {
@@ -230,8 +227,7 @@ function pronounceSubmit() {
             .toString()
             .trim()
     ) {
-        chrome.runtime.sendMessage({
-            type: "pronounce",
+        Messager.send("background", "pronounce", {
             text: window.getSelection().toString(),
             language: "auto"
         });
@@ -338,7 +334,7 @@ function cancelPageTranslate() {
 /**
  *  实现快捷键翻译
  */
-chrome.runtime.onMessage.addListener(function(message, sender, callback) {
+Messager.receive("content", (message, sender) => {
     if (!sender || !sender.tab) {
         switch (message.type) {
             case "command":
@@ -357,12 +353,8 @@ chrome.runtime.onMessage.addListener(function(message, sender, callback) {
                 }
                 break;
             default:
-                break;
+                Promise.reject("Unrecognized message type");
         }
-
-        if (callback) {
-            callback();
-        }
-        return true;
+        return Promise.resolve();
     }
 });

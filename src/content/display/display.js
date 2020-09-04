@@ -1,6 +1,7 @@
 import render from "./library/render.js";
 import Resizable from "./library/resizable.js";
 import { isChromePDFViewer } from "../../common/scripts/common.js";
+import Messager from "../../common/scripts/messager.js";
 
 /**
  * load templates
@@ -37,9 +38,9 @@ const transitionDuration = 500; // 侧边栏出现动画的持续事件 单位:m
  * 负责处理后台发送给页面的消息
  *
  * @param {Object} message 后台发送的消息
- * @param {Object} sender 返送消息者的具体信息 如何发送者、是content_script，会有tab属性，如果是background，则没有tab属性
+ * @param {Object} sender 返送消息者的具体信息 如果sender是content module，会有tab属性，如果是background，则没有tab属性
  */
-chrome.runtime.onMessage.addListener(function(message, sender, callback) {
+Messager.receive("content", (message, sender) => {
     if (!sender || !sender.tab) {
         // 避免从file://跳转到pdf viewer的消息传递对此的影响
         switch (message.type) {
@@ -94,11 +95,9 @@ chrome.runtime.onMessage.addListener(function(message, sender, callback) {
                 }
                 break;
             default:
-                break;
+                return Promise.reject("Unrecognized message type");
         }
-
-        if (callback) callback();
-        return true;
+        return Promise.resolve();
     }
 });
 
@@ -361,9 +360,7 @@ function removeSlider() {
         resizeDivFrame.disableResize();
 
         // 告诉background.js翻译框已关闭
-        chrome.runtime.sendMessage({
-            type: "frame_closed"
-        });
+        Messager.send("background", "frame_closed");
     }
 }
 
@@ -400,41 +397,33 @@ function fixOff() {
  */
 function sourcePronounce() {
     if (isChildNode(divFrame, document.documentElement)) {
-        chrome.runtime.sendMessage(
-            {
-                type: "pronounce",
-                text: translateResult.originalText,
-                language: translateResult.sourceLanguage,
-                speed: sourceTTSSpeed
-            },
-            function() {
-                if (sourceTTSSpeed === "fast") {
-                    sourceTTSSpeed = "slow";
-                } else {
-                    sourceTTSSpeed = "fast";
-                }
+        Messager.send("background", "pronounce", {
+            text: translateResult.originalText,
+            language: translateResult.sourceLanguage,
+            speed: sourceTTSSpeed
+        }).then(() => {
+            if (sourceTTSSpeed === "fast") {
+                sourceTTSSpeed = "slow";
+            } else {
+                sourceTTSSpeed = "fast";
             }
-        );
+        });
     }
 }
 
 function targetPronounce() {
     if (isChildNode(divFrame, document.documentElement)) {
-        chrome.runtime.sendMessage(
-            {
-                type: "pronounce",
-                text: translateResult.mainMeaning,
-                language: translateResult.targetLanguage,
-                speed: targetTTSSpeed
-            },
-            function() {
-                if (targetTTSSpeed === "fast") {
-                    targetTTSSpeed = "slow";
-                } else {
-                    targetTTSSpeed = "fast";
-                }
+        Messager.send("background", "pronounce", {
+            text: translateResult.mainMeaning,
+            language: translateResult.targetLanguage,
+            speed: targetTTSSpeed
+        }).then(() => {
+            if (targetTTSSpeed === "fast") {
+                targetTTSSpeed = "slow";
+            } else {
+                targetTTSSpeed = "fast";
             }
-        );
+        });
     }
 }
 

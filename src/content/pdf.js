@@ -1,4 +1,5 @@
 import { isChromePDFViewer } from "../common/scripts/common.js"; // judge if this page is a pdf file
+import Messager from "../common/scripts/messager.js";
 /**
  * 处理PDF文件链接
  *
@@ -36,8 +37,7 @@ function redirect() {
     chrome.storage.sync.get("OtherSettings", function(result) {
         var OtherSettings = result.OtherSettings;
         if (OtherSettings && OtherSettings["UsePDFjs"]) {
-            chrome.runtime.sendMessage({
-                type: "redirect",
+            Messager.send("background", "redirect", {
                 url: chrome.runtime.getURL(
                     "pdf/viewer.html?file=" + encodeURIComponent(window.location.href)
                 )
