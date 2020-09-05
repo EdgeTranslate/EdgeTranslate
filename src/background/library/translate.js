@@ -166,7 +166,8 @@ async function showTranslate(content, tab) {
             tab
         );
     } catch (error) {
-        if (!(error && error.tab)) {
+        // Filter out tabs that are not file://.
+        if (!(error && error.tab && error.tab.url && error.tab.url.startsWith("file://"))) {
             alert(content.mainMeaning);
             log(error.error);
             return Promise.resolve();
@@ -175,7 +176,7 @@ async function showTranslate(content, tab) {
         return checkAndRequestFileAccess()
             .then(allowed => {
                 if (allowed) {
-                    // file:// allowed but still can not access the tab.
+                    // file:// access allowed but still can not access the tab.
                     alert(content.mainMeaning);
                 }
             })
