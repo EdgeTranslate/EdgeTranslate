@@ -2,6 +2,7 @@ import axios from "axios";
 import TRANSLATOR from "./translators/proxy.js";
 import { sendMessageToCurrentTab } from "./common.js";
 import { log } from "../../common/scripts/common.js";
+import Messager from "../../common/scripts/messager.js";
 
 export {
     detect,
@@ -130,7 +131,12 @@ function stopPronounce() {
  * @returns {Promise<void>} finished Promise
  */
 function onLanguageSettingUpdated(detail) {
-    return TRANSLATOR.updateConfigFor(detail);
+    return TRANSLATOR.updateConfigFor(detail).then(newConfig =>
+        Messager.send("options", "update_translator_config_options", {
+            config: newConfig,
+            availableTranslators: TRANSLATOR.getAvailableTranslatorsFor(detail.from, detail.to)
+        }).catch(() => {})
+    );
 }
 
 /**

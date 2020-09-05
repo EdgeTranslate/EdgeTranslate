@@ -1,4 +1,5 @@
 import Messager from "../common/scripts/messager.js";
+import { log } from "../common/scripts/common.js";
 
 /**
  * 初始化设置列表
@@ -26,7 +27,29 @@ window.onload = () => {
     /**
      * Set up hybrid translate config.
      */
-    setUpTranslateConfig();
+    chrome.storage.sync.get(["languageSetting", "TranslatorConfig"], async result => {
+        let config = result.TranslatorConfig;
+        let languageSetting = result.languageSetting;
+        let availableTranslators = await Messager.send("background", "get_available_translators", {
+            from: languageSetting.sl,
+            to: languageSetting.tl
+        });
+        setUpTranslateConfig(config, availableTranslators);
+    });
+
+    /**
+     * Update translator config options on translator config update.
+     */
+    Messager.receive("options", message => {
+        switch (message.title) {
+            case "update_translator_config_options":
+                setUpTranslateConfig(message.detail.config, message.detail.availableTranslators);
+                break;
+            default:
+                log("Unknown message title: " + message.title);
+                break;
+        }
+    });
 
     /**
      * initiate and update settings
@@ -85,53 +108,55 @@ window.onload = () => {
 
 /**
  * Set up hybrid translate config.
+ *
+ * @param {Object} config translator config
+ * @param {Array<String>} availableTranslators available translators for current language setting
+ *
+ * @returns {void} nothing
  */
-function setUpTranslateConfig() {
-    chrome.storage.sync.get(["languageSetting", "TranslatorConfig"], async result => {
-        let config = result.TranslatorConfig;
-        let languageSetting = result.languageSetting;
-        let availableTranslators = await Messager.send("background", "get_available_translators", {
-            from: languageSetting.sl,
-            to: languageSetting.tl
-        });
-        let translatorConfigEles = document.getElementsByClassName("translator-config");
+function setUpTranslateConfig(config, availableTranslators) {
+    let translatorConfigEles = document.getElementsByClassName("translator-config");
 
-        for (let ele of translatorConfigEles) {
-            // data-affected indicates items affected by this element in config.selections, they always have the same value.
-            let affected = ele.getAttribute("data-affected").split(/\s/g);
-            let selected = config.selections[affected[0]];
-            for (let translator of availableTranslators) {
-                if (translator === selected) {
-                    ele.options.add(
-                        new Option(chrome.i18n.getMessage(translator), translator, true, true)
-                    );
-                } else {
-                    ele.options.add(new Option(chrome.i18n.getMessage(translator), translator));
+    for (let ele of translatorConfigEles) {
+        // Remove existed options.
+        for (let i = ele.options.length; i > 0; i--) {
+            ele.options.remove(i - 1);
+        }
+
+        // data-affected indicates items affected by this element in config.selections, they always have the same value.
+        let affected = ele.getAttribute("data-affected").split(/\s/g);
+        let selected = config.selections[affected[0]];
+        for (let translator of availableTranslators) {
+            if (translator === selected) {
+                ele.options.add(
+                    new Option(chrome.i18n.getMessage(translator), translator, true, true)
+                );
+            } else {
+                ele.options.add(new Option(chrome.i18n.getMessage(translator), translator));
+            }
+        }
+
+        ele.onchange = () => {
+            let value = ele.options[ele.selectedIndex].value;
+            // Update every affected item.
+            for (let item of affected) {
+                config.selections[item] = value;
+            }
+
+            // Get the new selected translator set.
+            let translators = new Set();
+            config.translators = [];
+            for (let item in config.selections) {
+                let translator = config.selections[item];
+                if (!translators.has(translator)) {
+                    config.translators.push(translator);
+                    translators.add(translator);
                 }
             }
 
-            ele.onchange = () => {
-                let value = ele.options[ele.selectedIndex].value;
-                // Update every affected item.
-                for (let item of affected) {
-                    result.TranslatorConfig.selections[item] = value;
-                }
-
-                // Get the new selected translator set.
-                let translators = new Set();
-                result.TranslatorConfig.translators = [];
-                for (let item in result.TranslatorConfig.selections) {
-                    let translator = result.TranslatorConfig.selections[item];
-                    if (!translators.has(translator)) {
-                        result.TranslatorConfig.translators.push(translator);
-                        translators.add(translator);
-                    }
-                }
-
-                chrome.storage.sync.set(result);
-            };
-        }
-    });
+            chrome.storage.sync.set({ TranslatorConfig: config });
+        };
+    }
 }
 
 /**
