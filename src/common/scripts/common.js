@@ -1,4 +1,4 @@
-export { getDomain };
+export { getDomain, log };
 
 /**
  * 提取给定的url的域名
@@ -14,4 +14,14 @@ function getDomain(url) {
         }
     }
     return "";
+}
+
+/**
+ * console.log wrapper.
+ *
+ * @param {Any} message message to log.
+ */
+function log(message) {
+    // eslint-disable-next-line no-console
+    console.log(message);
 }

@@ -1,7 +1,7 @@
 import axios from "axios";
 import TRANSLATOR from "./translators/proxy.js";
 import { sendMessageToCurrentTab } from "./common.js";
-import Messager from "../../common/scripts/messager.js";
+import { log } from "../../common/scripts/common.js";
 
 export {
     detect,
@@ -45,7 +45,7 @@ function translate(text) {
     // Start showing loading animation.
     sendMessageToCurrentTab("info", {
         info: "start_translating"
-    });
+    }).catch(error => log(error));
 
     // get language settings from chrome storage
     return new Promise((resolve, reject) => {
@@ -74,7 +74,7 @@ function translate(text) {
                     sendMessageToCurrentTab("info", {
                         info: "network_error",
                         error: error
-                    });
+                    }).catch(e => log(e));
                     reject(error);
                     return;
                 }
@@ -91,7 +91,7 @@ function translate(text) {
                 sendMessageToCurrentTab("info", {
                     info: "network_error",
                     error: error
-                });
+                }).catch(e => log(e));
                 reject(error);
             }
         });
@@ -165,65 +165,19 @@ async function showTranslate(content, tab) {
     }
 
     try {
-        let tab_id = await getCurrentTabId(tab);
-        return await Messager.sendToTab(tab_id, "content", "translateResult", {
-            translateResult: content
-        });
+        return await sendMessageToCurrentTab(
+            "translateResult",
+            {
+                translateResult: content
+            },
+            tab
+        );
     } catch (e) {
         // eslint-disable-next-line no-console
         console.log("Chrome runtime error: " + e);
         alert(content.mainMeaning);
         return Promise.resolve();
     }
-}
-
-/**
- * 找出应该用于展示翻译结果的tab。
- *
- * @param {chrome.tabs.Tab} tab 传入给showTranslate的tab
- *
- * @returns {Promise<Number>} tab id Promise
- */
-function getCurrentTabId(tab) {
-    if (tab && tab.id >= 0) {
-        return Promise.resolve(tab.id);
-    } else if (!tab) {
-        // 没有tab，说明该页面无法访问
-        // eslint-disable-next-line no-console
-        console.log("Unsupported page.");
-        return Promise.reject(chrome.tabs.TAB_ID_NONE);
-    }
-
-    // 检查是否拥有访问文件链接的权限。
-    return new Promise((resolve, reject) => {
-        chrome.extension.isAllowedFileSchemeAccess(isAllowedAccess => {
-            if (!isAllowedAccess) {
-                // 打开管理页面，由用户开启权限
-                if (confirm(chrome.i18n.getMessage("PermissionRemind"))) {
-                    // 为管理页面创建一个新的标签
-                    chrome.tabs.create({ url: "chrome://extensions/?id=" + chrome.runtime.id });
-                } else {
-                    // 用户拒绝开启，则直接展示翻译结果
-                    // eslint-disable-next-line no-console
-                    console.log("Permission denied.");
-                }
-                reject(chrome.tabs.TAB_ID_NONE);
-                return;
-            }
-
-            // 查询当前的tab，在该tab上展示结果。
-            chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
-                if (chrome.runtime.lastError || !tabs[0] || tabs[0].id < 0) {
-                    // eslint-disable-next-line no-console
-                    console.log("Chrome runtime error: " + chrome.runtime.lastError.message);
-                    reject(chrome.tabs.TAB_ID_NONE);
-                    return;
-                }
-
-                resolve(tabs[0].id);
-            });
-        });
-    });
 }
 
 /**

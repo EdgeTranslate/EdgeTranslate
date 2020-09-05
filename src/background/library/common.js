@@ -7,21 +7,22 @@ export { sendMessageToCurrentTab, escapeHTML };
  *
  * @param {String} title message title
  * @param {Object} detail message detail
+ * @param {chrome.tabs.Tab} tab optional tab
  */
-function sendMessageToCurrentTab(title, detail) {
-    chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
-        if (chrome.runtime.lastError) {
-            // eslint-disable-next-line no-console
-            console.log("Chrome runtime error: " + chrome.runtime.lastError.message);
-        } else if (!tabs[0] || tabs[0].id < 0) {
-            // eslint-disable-next-line no-console
-            console.log("No tabs or tabs not accessible.");
-        } else {
-            Messager.sendToTab(tabs[0].id, "content", title, detail).catch(error => {
-                // eslint-disable-next-line no-console
-                console.log("Chrome runtime error: " + error.message);
-            });
-        }
+function sendMessageToCurrentTab(title, detail, tab = null) {
+    if (tab && tab.id && tab.id >= 0) {
+        return Messager.sendToTab(tab.id, "content", title, detail);
+    }
+
+    return new Promise((resolve, reject) => {
+        chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+            if (chrome.runtime.lastError || !tabs[0] || tabs[0].id < 0) {
+                reject(chrome.runtime.lastError || "No tabs available to send message to.");
+                return;
+            }
+            resolve(Messager.sendToTab(tabs[0].id, "content", title, detail));
+            return;
+        });
     });
 }
 

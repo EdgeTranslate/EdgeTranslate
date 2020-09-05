@@ -414,7 +414,8 @@ chrome.commands.onCommand.addListener(function(command) {
         default:
             sendMessageToCurrentTab("command", {
                 command: command
-            });
+                // eslint-disable-next-line no-console
+            }).catch(error => console.log(error));
             break;
     }
 });
