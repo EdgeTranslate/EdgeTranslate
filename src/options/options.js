@@ -49,6 +49,7 @@ window.onload = () => {
                 log("Unknown message title: " + message.title);
                 break;
         }
+        return Promise.resolve();
     });
 
     /**
