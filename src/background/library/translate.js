@@ -157,12 +157,6 @@ async function showTranslate(content, tab) {
         return Promise.resolve();
     }
 
-    if (chrome.runtime.lastError) {
-        log("Chrome runtime error: " + chrome.runtime.lastError.message);
-        alert(content.mainMeaning);
-        return Promise.resolve();
-    }
-
     try {
         return await sendMessageToCurrentTab(
             "translateResult",
@@ -171,11 +165,47 @@ async function showTranslate(content, tab) {
             },
             tab
         );
-    } catch (e) {
-        log("Chrome runtime error: " + e);
-        alert(content.mainMeaning);
-        return Promise.resolve();
+    } catch (error) {
+        if (!(error && error.tab)) {
+            alert(content.mainMeaning);
+            log(error.error);
+            return Promise.resolve();
+        }
+
+        return checkAndRequestFileAccess()
+            .then(allowed => {
+                if (allowed) {
+                    // file:// allowed but still can not access the tab.
+                    alert(content.mainMeaning);
+                }
+            })
+            .catch(() => {
+                alert(content.mainMeaning);
+                log("Permission denied.");
+            });
     }
+}
+
+/**
+ * Check if the extension is allowed to access file://. If not allowed, try to request the permission.
+ *
+ * @returns {Promise<boolean>} allowed Promise
+ */
+function checkAndRequestFileAccess() {
+    return new Promise((resolve, reject) => {
+        chrome.extension.isAllowedFileSchemeAccess(allowed => {
+            if (allowed) {
+                resolve(allowed);
+            } else if (confirm(chrome.i18n.getMessage("PermissionRemind"))) {
+                chrome.tabs.create({
+                    url: "chrome://extensions/?id=" + chrome.runtime.id
+                });
+                resolve(allowed);
+            } else {
+                reject(allowed);
+            }
+        });
+    });
 }
 
 /**
