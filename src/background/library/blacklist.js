@@ -1,4 +1,4 @@
-import { getDomain } from "../../common/scripts/common.js";
+import { getDomain, log } from "../../common/scripts/common.js";
 
 export {
     addUrlBlacklist,
@@ -177,8 +177,7 @@ function enableItems(items) {
             },
             function() {
                 if (chrome.runtime.lastError) {
-                    // eslint-disable-next-line no-console
-                    console.log("Chrome runtime error: " + chrome.runtime.lastError);
+                    log("Chrome runtime error: " + chrome.runtime.lastError);
                 }
             }
         );
@@ -200,8 +199,7 @@ function disableItems(items) {
             },
             function() {
                 if (chrome.runtime.lastError) {
-                    // eslint-disable-next-line no-console
-                    console.log("Chrome runtime error: " + chrome.runtime.lastError);
+                    log("Chrome runtime error: " + chrome.runtime.lastError);
                 }
             }
         );

@@ -1,5 +1,6 @@
 import axios from "axios";
 import { escapeHTML } from "../common.js";
+import { log } from "../../../common/scripts/common.js";
 
 /**
  * Language maps.
@@ -282,10 +283,9 @@ class GoogleTranslator {
                                 }
                             }
                         } catch (error) {
-                            // eslint-disable-next-line no-console
-                            console.log(error);
+                            log(error);
                         }
-                        // console.log("text: " + result.originalText + "\nmeaning: " + result.mainMeaning);
+                        // log("text: " + result.originalText + "\nmeaning: " + result.mainMeaning);
                         break;
                     }
                     // 单词的所有词性及对应的意思
@@ -297,11 +297,11 @@ class GoogleTranslator {
                                 meaning: item[1].join(", ")
                             })
                         );
-                        // console.log("detailedMeanings: " + JSON.stringify(result.detailedMeanings));
+                        // log("detailedMeanings: " + JSON.stringify(result.detailedMeanings));
                         break;
                     case 2:
                         result.from = items;
-                        // console.log(result.from);
+                        // log(result.from);
                         break;
                     // 单词的定义及对应例子
                     case 12:
@@ -315,7 +315,7 @@ class GoogleTranslator {
                                 });
                             });
                         });
-                        // console.log("definitions: " + JSON.stringify(result.definitions));
+                        // log("definitions: " + JSON.stringify(result.definitions));
                         break;
                     // 单词的例句
                     case 13:
@@ -325,7 +325,7 @@ class GoogleTranslator {
                                 result.examples.push({ source: null, target: element[0] })
                             )
                         );
-                        // console.log("examples: " + JSON.stringify(result.examples));
+                        // log("examples: " + JSON.stringify(result.examples));
                         break;
                     default:
                         break;

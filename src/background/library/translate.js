@@ -158,8 +158,7 @@ async function showTranslate(content, tab) {
     }
 
     if (chrome.runtime.lastError) {
-        // eslint-disable-next-line no-console
-        console.log("Chrome runtime error: " + chrome.runtime.lastError.message);
+        log("Chrome runtime error: " + chrome.runtime.lastError.message);
         alert(content.mainMeaning);
         return Promise.resolve();
     }
@@ -173,8 +172,7 @@ async function showTranslate(content, tab) {
             tab
         );
     } catch (e) {
-        // eslint-disable-next-line no-console
-        console.log("Chrome runtime error: " + e);
+        log("Chrome runtime error: " + e);
         alert(content.mainMeaning);
         return Promise.resolve();
     }
@@ -227,10 +225,8 @@ async function youdaoPageTranslate(request) {
 function executeYouDaoScript() {
     chrome.tabs.executeScript({ file: "/youdao/main.js" }, function(result) {
         if (chrome.runtime.lastError) {
-            // eslint-disable-next-line no-console
-            console.log("Chrome runtime error: " + chrome.runtime.lastError);
-            // eslint-disable-next-line no-console
-            console.log("Detail: " + result);
+            log("Chrome runtime error: " + chrome.runtime.lastError);
+            log("Detail: " + result);
         }
     });
 }
@@ -241,10 +237,8 @@ function executeYouDaoScript() {
 function executeGoogleScript() {
     chrome.tabs.executeScript({ file: "/google/injection.js" }, function(result) {
         if (chrome.runtime.lastError) {
-            // eslint-disable-next-line no-console
-            console.log("Chrome runtime error: " + chrome.runtime.lastError);
-            // eslint-disable-next-line no-console
-            console.log("Detail: " + result);
+            log("Chrome runtime error: " + chrome.runtime.lastError);
+            log("Detail: " + result);
         }
     });
 }

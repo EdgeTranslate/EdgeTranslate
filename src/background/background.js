@@ -20,7 +20,7 @@ import {
 import { sendHitRequest } from "./library/analytics.js";
 import { sendMessageToCurrentTab } from "./library/common.js";
 import Messager from "../common/scripts/messager.js";
-import { getDomain } from "../common/scripts/common.js";
+import { getDomain, log } from "../common/scripts/common.js";
 
 /**
  * 选中文本TTS语速
@@ -392,8 +392,7 @@ async function messageHandler(message, sender) {
         case "get_available_translators":
             return getAvailableTranslators(message.detail);
         default:
-            // eslint-disable-next-line no-console
-            console.log("Unknown message title: " + message.title);
+            log("Unknown message title: " + message.title);
             return Promise.reject();
     }
 }
@@ -414,8 +413,7 @@ chrome.commands.onCommand.addListener(function(command) {
         default:
             sendMessageToCurrentTab("command", {
                 command: command
-                // eslint-disable-next-line no-console
-            }).catch(error => console.log(error));
+            }).catch(error => log(error));
             break;
     }
 });
@@ -428,11 +426,11 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
         let modified = false;
         let origin = "https://" + getDomain(details.url);
 
-        // console.log("requesting " + details.url);
+        // log("requesting " + details.url);
         for (let header of details.requestHeaders) {
-            // console.log(header);
+            // log(header);
             if (header.name.toLowerCase() === "origin") {
-                // console.log("changed origin: " + header.value);
+                // log("changed origin: " + header.value);
                 header.value = origin;
                 modified = true;
                 break;

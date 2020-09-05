@@ -2,6 +2,7 @@ import BAIDU from "./baidu.js";
 import BING from "./bing.js";
 import GOOGLE from "./google.js";
 import TENCENT from "./tencent.js";
+import { log } from "../../../common/scripts/common.js";
 
 class TranslatorProxy {
     constructor() {
@@ -172,10 +173,8 @@ class TranslatorProxy {
                             let selectedTranslator = config.selections[item];
                             translation[item] = results[selectedTranslator][item];
                         } catch (error) {
-                            // eslint-disable-next-line no-console
-                            console.log(item + " " + config.selections[item]);
-                            // eslint-disable-next-line no-console
-                            console.log(error);
+                            log(item + " " + config.selections[item]);
+                            log(error);
                         }
                     }
                     resolve(translation);
