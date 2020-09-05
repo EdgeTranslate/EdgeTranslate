@@ -354,7 +354,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
 async function messageHandler(message, sender) {
     switch (message.title) {
         case "redirect":
-            chrome.tabs.update(sender.tab.id, { url: message.url });
+            chrome.tabs.update(sender.tab.id, { url: message.detail.url });
             return Promise.resolve();
         case "translate": {
             let result = await translate(message.detail.text);
