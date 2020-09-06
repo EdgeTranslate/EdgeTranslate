@@ -9,6 +9,7 @@
         "notifications",
         "contextMenus",
         "storage",
+        "cookies",
         "tabs",
         "<all_urls>",
         "webRequest",

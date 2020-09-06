@@ -81,7 +81,7 @@ class TranslatorProxy {
      *
      * @param {Object} detail language setting detail, detail.from is the new source language and detail.to is the new target language.
      *
-     * @returns {void} nothing
+     * @returns {Promise<Object>} new config Promise
      */
     async updateConfigFor(detail) {
         // Load config if not loaded.
@@ -118,6 +118,9 @@ class TranslatorProxy {
 
         // Update config.
         chrome.storage.sync.set({ TranslatorConfig: newConfig });
+
+        // Provide new config.
+        return Promise.resolve(newConfig);
     }
 
     /**

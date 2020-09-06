@@ -6,6 +6,7 @@
         "notifications",
         "contextMenus",
         "storage",
+        "cookies",
         "tabs",
         "activeTab",
         "*://fanyi.qq.com/*",

@@ -236,14 +236,28 @@ class TencentTranslator {
         // Pause audio in case that it's playing.
         this.stopPronounce();
 
-        this.AUDIO.src =
-            this.BASE_URL +
-            "/api/tts?platform=PC_Website&lang=" +
-            this.LAN_TO_CODE.get(language) +
-            "&text=" +
-            encodeURIComponent(text);
+        return new Promise((resolve, reject) => {
+            /**
+             * Get guid from cookies firstly.
+             */
+            chrome.cookies.get({ url: this.BASE_URL, name: "fy_guid" }, cookie => {
+                if (!cookie || !cookie.value) {
+                    reject("Tencent guid not found!");
+                    return;
+                }
 
-        return this.AUDIO.play();
+                this.AUDIO.src =
+                    this.BASE_URL +
+                    "/api/tts?platform=PC_Website&lang=" +
+                    this.LAN_TO_CODE.get(language) +
+                    "&text=" +
+                    encodeURIComponent(text) +
+                    "&guid=" +
+                    cookie.value;
+
+                resolve(this.AUDIO.play());
+            });
+        });
     }
 
     /**
