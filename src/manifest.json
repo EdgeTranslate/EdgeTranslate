@@ -67,6 +67,7 @@
         }
     },
     "web_accessible_resources": [
+        "content/display/style/display.css",
         "content/display/style/result.css",
         "content/display/style/loading.css",
         "content/display/style/error.css",

@@ -1,7 +1,7 @@
 /*
  * 翻译结果展示页框架样式
  */
-#translate_div {
+// #translate_div {
     // height: 100%;    
     // // background-color: white;
     // position: fixed;
@@ -12,12 +12,34 @@
     // z-index: 10000000;
     // transition: left 300ms;
     // transition: right 300ms;
-}
+// }
 
-#translate_frame {
+// #translate_frame {
     // height: 100%;
     // width: 100%;
     // border: none;
     // overflow-y: scroll;
     // display: block;
+// }
+
+.moveable-control {    
+    background: rgba(255,255,255,0) !important;	
+	z-index: 10000000 !important;
+}
+
+.moveable-line {        
+    background: rgba(255,255,255,0) !important;    
+	z-index: 10000000 !important;
+}
+
+#edge-translate-panel{	        
+    position: fixed;
+    top: 0;
+    border: none;
+    box-sizing: border-box;    
+    z-index: 10000000;
+    // transition: left 300ms;
+    // transition: right 300ms;
+	overflow-y: scroll;
+    display: block;
 }

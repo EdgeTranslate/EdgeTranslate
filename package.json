@@ -55,6 +55,7 @@
         "lodash": "^4.17.20",
         "merge-stream": "^2.0.0",
         "minimist": "^1.2.5",
+        "moveable": "^0.17.10",
         "prettier": "^1.19.1",
         "raw-loader": "^0.5.1",
         "webpack": "^4.44.1",
