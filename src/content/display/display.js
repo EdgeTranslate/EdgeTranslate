@@ -32,59 +32,68 @@ const FIX_ON = true; // 侧边栏固定的值
 const FIX_OFF = false; // 侧边栏不固定的值
 const transitionDuration = 500; // 侧边栏出现动画的持续事件 单位:ms
 
-initiate();
-function initiate() {
+/**
+ * initiate panel elements to display translation result
+ * create a shadow dom to contain panel elements
+ * add moveable feature to ${resultPanel}
+ */
+(function initiate() {
+    /* create elements */
     panelContainer = document.createElement("div");
     shadowDom = panelContainer.attachShadow({ mode: "open" });
     resultPanel = document.createElement("div");
-    resultPanel.id = "edge-translate-panel";
     let styleLink = document.createElement("link");
+
+    /* set attributes of elements */
+    resultPanel.id = "edge-translate-panel";
     styleLink.type = "text/css";
     styleLink.rel = "stylesheet";
     styleLink.href = chrome.runtime.getURL("content/display/style/display.css");
+
+    resultPanel.style.backgroundColor = "white"; // set style dynamically to be compatible with chrome extension "Dark Reader"
+    resultPanel.style.boxShadow = "0px 0px 50px rgb(200,200,200,0.5)"; // set style dynamically to be compatible with chrome extension "Dark Reader"
+
+    /* add elements to the document tree */
     shadowDom.appendChild(styleLink);
     shadowDom.appendChild(resultPanel);
 
-    resultPanel.style.backgroundColor = "white"; // 动态设置样式以兼容Dark Reader
-    resultPanel.style.boxShadow = "0px 0px 50px rgb(200,200,200,0.5)"; // 动态设置样式以兼容Dark Reader
-    // resultPanel.style.transform = "translate(100px,100px)";
-    // resultPanel.style.height = `${screen.height}px`;
-    // resultPanel.style.width = 0.2 * 100 + "%";
-
-    setTimeout(() => {
-        moveablePanel = new Moveable(shadowDom, {
-            target: resultPanel,
-            // If the container is null, the position is fixed. (default: parentElement(document.body))
-            container: null,
-            draggable: true,
-            resizable: true,
-            edge: true
+    moveablePanel = new Moveable(shadowDom, {
+        target: resultPanel,
+        // If the container is null, the position is fixed. (default: parentElement(document.body))
+        container: null,
+        draggable: true,
+        resizable: true,
+        // snappable: true,
+        // bounds: { left: 0, top: 0, right: window.innerWidth - 7, bottom: window.innerHeight - 7 },
+        edge: true,
+        origin: false,
+        // Add padding around the target to increase the drag area.
+        padding: { left: 5, top: 5, right: 5, bottom: 5 }
+    });
+    let startTranslate = [0, 0];
+    /* draggable events*/
+    moveablePanel
+        .on("dragStart", ({ set }) => {
+            set(startTranslate);
+        })
+        .on("drag", ({ target, beforeTranslate }) => {
+            startTranslate = beforeTranslate;
+            target.style.transform = `translate(${beforeTranslate[0]}px, ${beforeTranslate[1]}px)`;
         });
-        let startTranslate = [0, 0];
-        /* draggable */
-        moveablePanel
-            .on("dragStart", ({ set }) => {
-                set(startTranslate);
-            })
-            .on("drag", ({ target, beforeTranslate }) => {
-                startTranslate = beforeTranslate;
-                target.style.transform = `translate(${beforeTranslate[0]}px, ${beforeTranslate[1]}px)`;
-            });
-        /* resizable */
-        moveablePanel
-            .on("resizeStart", ({ setOrigin, dragStart }) => {
-                setOrigin(["%", "%"]);
-                dragStart && dragStart.set(startTranslate);
-            })
-            .on("resize", ({ target, width, height, drag }) => {
-                const beforeTranslate = drag.beforeTranslate;
-                startTranslate = beforeTranslate;
-                target.style.width = `${width}px`;
-                target.style.height = `${height}px`;
-                target.style.transform = `translate(${beforeTranslate[0]}px, ${beforeTranslate[1]}px)`;
-            });
-    }, 0);
-}
+    /* resizable  events*/
+    moveablePanel
+        .on("resizeStart", ({ setOrigin, dragStart }) => {
+            setOrigin(["%", "%"]);
+            dragStart && dragStart.set(startTranslate);
+        })
+        .on("resize", ({ target, width, height, drag }) => {
+            const beforeTranslate = drag.beforeTranslate;
+            startTranslate = beforeTranslate;
+            target.style.width = `${width}px`;
+            target.style.height = `${height}px`;
+            target.style.transform = `translate(${beforeTranslate[0]}px, ${beforeTranslate[1]}px)`;
+        });
+})();
 // showPanel({}, loading);
 
 /**
@@ -167,14 +176,6 @@ function showPanel(content, template) {
         // Write contents into iframe.
         resultPanel.innerHTML = render(template, content);
         document.documentElement.appendChild(panelContainer);
-        setTimeout(() => {
-            moveablePanel.request("resizable", {
-                direction: [1, 1],
-                offsetWidth: 0.2 * screen.width,
-                offsetHeight: screen.height,
-                isInstant: true
-            });
-        }, 0);
 
         // 获取用户上次通过resize设定的侧边栏宽度
         chrome.storage.sync.get("sideWidth", function(result) {
@@ -184,13 +185,12 @@ function showPanel(content, template) {
             }
             // var resizeFlag = layoutSettings["Resize"]; // 保存侧边栏展示的位置
             // resultPanel.style.width = sideWidth * 100 + "%";
-
-            // moveablePanel.request("resizable", {
-            //     direction: [1, 0],
-            //     offsetWidth: screen.width,
-            //     offsetHeight: screen.height,
-            //     isInstant: true
-            // });
+            move(
+                sideWidth * window.innerWidth,
+                window.innerHeight - 7,
+                (1 - sideWidth) * window.innerWidth - 7,
+                document.documentElement.scrollTop || document.body.scrollTop
+            );
 
             // if (resizeFlag) {
             //     // 用户设置 收缩页面
@@ -273,6 +273,45 @@ function showPanel(content, template) {
         //     addEventListener();
         // };
     });
+}
+
+function hasScrollbar() {
+    return (
+        document.body.scrollHeight > (window.innerHeight || document.documentElement.clientHeight)
+    );
+}
+
+//计算滚动条宽度的方法
+// 新建一个带有滚动条的 div 元素，通过该元素的 offsetWidth 和 clientWidth 的差值即可获得
+function getScrollbarWidth() {
+    var scrollDiv = document.createElement("div");
+    scrollDiv.style.cssText =
+        "width: 99px; height: 99px; overflow: scroll; position: absolute; top: -9999px;";
+    document.body.appendChild(scrollDiv);
+    var scrollbarWidth = scrollDiv.offsetWidth - scrollDiv.clientWidth;
+    document.body.removeChild(scrollDiv);
+    return scrollbarWidth;
+}
+
+function move(width, height, left, top) {
+    moveablePanel.request("resizable", {
+        offsetWidth: width,
+        offsetHeight: height,
+        isInstant: true
+    });
+    setTimeout(() => {
+        moveablePanel.request("resizable", {
+            offsetWidth: width,
+            offsetHeight: height,
+            isInstant: true
+        });
+
+        moveablePanel.request("draggable", {
+            x: left,
+            y: top,
+            isInstant: true
+        });
+    }, 100);
 }
 
 /**
