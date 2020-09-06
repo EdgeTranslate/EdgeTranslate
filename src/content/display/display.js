@@ -1,5 +1,4 @@
 import render from "./library/render.js";
-import Resizable from "./library/resizable.js";
 import { isChromePDFViewer } from "../common.js";
 import Messager from "../../common/scripts/messager.js";
 
@@ -16,15 +15,11 @@ import error from "./templates/error.html"; // template of error message
  */
 
 // 用于存储div, div 中包含一个 iframe元素，这个iframe元素用来在页面的右侧展示翻译结果
-var divFrame;
+var panelContainer;
 // 用于存储一个iframe元素，这个元素用来在页面的右侧展示翻译结果
-var frame;
+var shadowDom;
 // iframe中的 document
-var frameDocument;
-
-var resizeBody;
-
-var resizeDivFrame;
+var resultPanel;
 
 var translateResult; // 保存翻译结果
 var sourceTTSSpeed, targetTTSSpeed;
@@ -112,96 +107,47 @@ function createBlock(content, template) {
         popupPosition = layoutSettings["PopupPosition"]; // 保存侧边栏展示的位置
 
         // 判断frame是否已经添加到了页面中
-        if (!isChildNode(divFrame, document.documentElement)) {
+        if (!isChildNode(panelContainer, document.documentElement)) {
             // frame不在页面中，创建新的frame
-            divFrame = document.createElement("div");
-            divFrame.id = "translate_div";
-            divFrame.style.backgroundColor = "white"; // 动态设置样式以兼容Dark Reader
-            divFrame.style.boxShadow = "0px 0px 50px rgb(200,200,200,0.5)"; // 动态设置样式以兼容Dark Reader
-            frame = document.createElement("iframe");
-            frame.id = "translate_frame";
-            frame.sandbox = "allow-same-origin allow-scripts";
-            startSlider(layoutSettings);
-            divFrame.appendChild(frame);
-            document.documentElement.appendChild(divFrame);
+            panelContainer = document.createElement("div");
+            panelContainer.id = "translate_div";
+            shadowDom = panelContainer.attachShadow({ mode: "open" });
+            resultPanel = document.createElement("div");
+            resultPanel.id = "edge-translate-panel";
+            // shadowDom.style.backgroundColor = "white"; // 动态设置样式以兼容Dark Reader
+            // shadowDom.style.boxShadow = "0px 0px 50px rgb(200,200,200,0.5)"; // 动态设置样式以兼容Dark Reader
+            shadowDom.appendChild(resultPanel);
 
-            if (popupPosition == "left") {
-                resizeBody = new Resizable(document.body, "left", {
-                    parentElement: document.documentElement,
-                    dragSensitivity: dragSensitivity,
-                    preFunction: function(element) {
-                        element.style.transition = "none";
-                    },
-                    callback(element) {
-                        element.style.transition = "width " + transitionDuration + "ms";
-                    }
-                });
-                resizeBody.enableResize();
-                resizeDivFrame = new Resizable(divFrame, "right", {
-                    parentElement: document.documentElement,
-                    dragSensitivity: dragSensitivity,
-                    callback: function(element) {
-                        // if user resize the width of side block, calculate the new width value(range from 0 to 1)
-                        let newSideWidth =
-                            element.clientWidth / document.documentElement.clientWidth;
-                        // update the value to the chrome storage
-                        if (newSideWidth > 0 && newSideWidth <= 1)
-                            chrome.storage.sync.set({
-                                sideWidth: newSideWidth
-                            });
-                    }
-                });
-                resizeDivFrame.enableResize();
-            } else {
-                resizeBody = new Resizable(document.body, "right", {
-                    parentElement: document.documentElement,
-                    dragSensitivity: dragSensitivity,
-                    preFunction: function(element) {
-                        element.style.transition = "none";
-                    },
-                    callback(element) {
-                        element.style.transition = "width " + transitionDuration + "ms";
-                    }
-                });
-                resizeBody.enableResize();
-                resizeDivFrame = new Resizable(divFrame, "left", {
-                    parentElement: document.documentElement,
-                    dragSensitivity: dragSensitivity,
-                    callback(element) {
-                        element.style.position = "fixed";
-                        // if user resize the width of side block, calculate the new width value(range from 0 to 1)
-                        let newSideWidth =
-                            element.clientWidth / document.documentElement.clientWidth;
-                        // update the value to the chrome storage
-                        if (newSideWidth > 0 && newSideWidth <= 1)
-                            chrome.storage.sync.set({
-                                sideWidth: newSideWidth
-                            });
-                    }
-                });
-                resizeDivFrame.enableResize();
-            }
+            resultPanel.style.backgroundColor = "white"; // 动态设置样式以兼容Dark Reader
+            resultPanel.style.boxShadow = "0px 0px 50px rgb(200,200,200,0.5)"; // 动态设置样式以兼容Dark Reader
+            document.documentElement.appendChild(panelContainer);
+
+            // if (popupPosition == "left") {
+            // } else {
+            // }
         }
 
         // Write contents into iframe.
-        frame.srcdoc = render(template, content);
+        resultPanel.innerHTML = render(template, content);
+        startSlider(layoutSettings);
+        addEventListener();
 
         // iframe 一加载完成添加事件监听
-        frame.onload = function() {
-            frameDocument = frame.contentDocument;
+        // shadowDom.onload = function() {
+        //     // resultPanel = shadowDom.contentDocument;
 
-            // 根据用户设定决定是否采用从右到左布局（用于阿拉伯语等从右到左书写的语言）
-            chrome.storage.sync.get("LayoutSettings", result => {
-                if (result.LayoutSettings.RTL) {
-                    let contents = frameDocument.getElementsByClassName("may-need-rtl");
-                    for (let i = 0; i < contents.length; i++) {
-                        contents[i].dir = "rtl";
-                    }
-                }
-            });
-            // 添加事件监听
-            addEventListener();
-        };
+        //     // 根据用户设定决定是否采用从右到左布局（用于阿拉伯语等从右到左书写的语言）
+        //     chrome.storage.sync.get("LayoutSettings", result => {
+        //         if (result.LayoutSettings.RTL) {
+        //             let contents = resultPanel.getElementsByClassName("may-need-rtl");
+        //             for (let i = 0; i < contents.length; i++) {
+        //                 contents[i].dir = "rtl";
+        //             }
+        //         }
+        //     });
+        //     // 添加事件监听
+        //     addEventListener();
+        // };
     });
 }
 
@@ -210,24 +156,24 @@ function createBlock(content, template) {
  */
 function addEventListener() {
     // 给关闭按钮添加点击事件监听，用于关闭侧边栏
-    frameDocument.getElementById("icon-close").addEventListener("click", removeSlider);
+    resultPanel.getElementById("icon-close").addEventListener("click", removeSlider);
     // 如果渲染的是result.html或error.html，则有icon-tuding-fix图标， 可以添加点击事件监听
-    if (frameDocument.getElementById("icon-tuding-fix")) {
+    if (resultPanel.getElementById("icon-tuding-fix")) {
         // 给固定侧边栏的按钮添加点击事件监听，用户侧边栏的固定与取消固定
-        frameDocument.getElementById("icon-tuding-fix").addEventListener("click", fixOn);
-        frameDocument.getElementById("icon-tuding-full").addEventListener("click", fixOff);
+        resultPanel.getElementById("icon-tuding-fix").addEventListener("click", fixOn);
+        resultPanel.getElementById("icon-tuding-full").addEventListener("click", fixOff);
     }
     // 如果渲染的是result.html，则有icon-copy图标， 可以添加点击事件监听
-    if (frameDocument.getElementById("icon-copy")) {
+    if (resultPanel.getElementById("icon-copy")) {
         // copy the translation result to the copy board
-        frameDocument.getElementById("icon-copy").addEventListener("click", copyContent);
+        resultPanel.getElementById("icon-copy").addEventListener("click", copyContent);
 
-        let sourcePronounceIcon = frameDocument.getElementById("source-pronounce");
+        let sourcePronounceIcon = resultPanel.getElementById("source-pronounce");
         if (sourcePronounceIcon) {
             sourcePronounceIcon.addEventListener("click", sourcePronounce);
         }
 
-        let targetPronounceIcon = frameDocument.getElementById("target-pronounce");
+        let targetPronounceIcon = resultPanel.getElementById("target-pronounce");
         if (targetPronounceIcon) {
             targetPronounceIcon.addEventListener("click", targetPronounce);
         }
@@ -242,12 +188,12 @@ function addEventListener() {
     });
 
     // 将iframe内部的事件转发到document里，以实现更好的拖动效果。
-    frameDocument.addEventListener("mousemove", function(event) {
+    resultPanel.addEventListener("mousemove", function(event) {
         let new_event = new event.constructor(event.type, event);
         document.documentElement.dispatchEvent(new_event);
     });
 
-    frameDocument.addEventListener("mouseup", function(event) {
+    resultPanel.addEventListener("mouseup", function(event) {
         let new_event = new event.constructor(event.type, event);
         document.documentElement.dispatchEvent(new_event);
     });
@@ -271,43 +217,44 @@ function isChildNode(node1, node2) {
 }
 
 /**
- * change CSS style of body element and the frame element
+ * change CSS style of body element and the shadowDom element
  * the body size will be contracted
  */
-function startSlider(layoutSettings) {
+function startSlider() {
     // 获取用户上次通过resize设定的侧边栏宽度
     chrome.storage.sync.get("sideWidth", function(result) {
         let sideWidth = 0.2;
         if (result.sideWidth) {
             sideWidth = result.sideWidth;
         }
-        var resizeFlag = layoutSettings["Resize"]; // 保存侧边栏展示的位置
-        divFrame.style.width = sideWidth * 100 + "%";
-        if (resizeFlag) {
-            // 用户设置 收缩页面
-            document.body.style.transition = "width " + transitionDuration + "ms";
-            document.body.style.width = (1 - sideWidth) * 100 + "%";
-        }
+        // var resizeFlag = layoutSettings["Resize"]; // 保存侧边栏展示的位置
+        resultPanel.style.width = sideWidth * 100 + "%";
+        // if (resizeFlag) {
+        //     // 用户设置 收缩页面
+        //     document.body.style.transition = "width " + transitionDuration + "ms";
+        //     document.body.style.width = (1 - sideWidth) * 100 + "%";
+        // }
         if (popupPosition === "left") {
             // 用户设置 在页面左侧显示侧边栏
-            if (resizeFlag) {
-                // 用户设置 收缩页面
-                document.body.style.position = "absolute";
-                // document.body.style.marginLeft = 0.2 * originOriginWidth + "px";
-                document.body.style.right = "0";
-                document.body.style.left = "";
-            }
-            divFrame.style.left = "0";
-            divFrame.style["padding-right"] = dragSensitivity + "px";
+            // if (resizeFlag) {
+            //     // 用户设置 收缩页面
+            //     document.body.style.position = "absolute";
+            //     // document.body.style.marginLeft = 0.2 * originOriginWidth + "px";
+            //     document.body.style.right = "0";
+            //     document.body.style.left = "";
+            // }
+            // panelContainer.style.left = "0";
+            // panelContainer.style["padding-right"] = dragSensitivity + "px";
         } else {
-            if (resizeFlag) {
-                // 用户设置 收缩页面
-                document.body.style.margin = "0";
-                document.body.style.right = "";
-                document.body.style.left = "0";
-            }
-            divFrame.style.right = "0";
-            divFrame.style["padding-left"] = dragSensitivity + "px";
+            // if (resizeFlag) {
+            //     // 用户设置 收缩页面
+            //     document.body.style.margin = "0";
+            //     document.body.style.right = "";
+            //     document.body.style.left = "0";
+            // }
+            resultPanel.style.right = "0";
+            // panelContainer.style.right = "0";
+            // panelContainer.style["padding-left"] = dragSensitivity + "px";
         }
     });
 }
@@ -325,11 +272,11 @@ function startSlider(layoutSettings) {
  */
 function clickListener(event) {
     let node = event.target;
-    if (!isChildNode(node, divFrame)) {
+    if (!isChildNode(node, panelContainer)) {
         var boundary =
             popupPosition === "left"
-                ? divFrame.offsetLeft + divFrame.clientWidth
-                : divFrame.offsetLeft; // 根据侧边栏的位置确定拖拽的起点
+                ? panelContainer.offsetLeft + panelContainer.clientWidth
+                : panelContainer.offsetLeft; // 根据侧边栏的位置确定拖拽的起点
         if (Math.abs(event.x - boundary) > dragSensitivity) {
             removeSlider();
         }
@@ -340,8 +287,8 @@ function clickListener(event) {
  * 将侧边栏元素从页面中除去，即将frame从document中删除
  */
 function removeSlider() {
-    if (isChildNode(divFrame, document.documentElement)) {
-        document.documentElement.removeChild(divFrame);
+    if (isChildNode(panelContainer, document.documentElement)) {
+        document.documentElement.removeChild(panelContainer);
         document.body.style.width = 100 + "%";
         setTimeout(function() {
             document.body.style.margin = "auto";
@@ -354,8 +301,8 @@ function removeSlider() {
         if (isChromePDFViewer()) {
             document.body.children[0].focus();
         }
-        resizeBody.disableResize();
-        resizeDivFrame.disableResize();
+        // resizeBody.disableResize();
+        // resizeDivFrame.disableResize();
 
         // 告诉background.js翻译框已关闭
         Messager.send("background", "frame_closed");
@@ -369,9 +316,9 @@ function fixOn() {
     chrome.storage.sync.set({
         fixSetting: FIX_ON
     });
-    if (frameDocument.getElementById("icon-tuding-full")) {
-        frameDocument.getElementById("icon-tuding-full").style.display = "inline";
-        frameDocument.getElementById("icon-tuding-fix").style.display = "none";
+    if (resultPanel.getElementById("icon-tuding-full")) {
+        resultPanel.getElementById("icon-tuding-full").style.display = "inline";
+        resultPanel.getElementById("icon-tuding-fix").style.display = "none";
     }
     document.documentElement.removeEventListener("mousedown", clickListener);
 }
@@ -383,9 +330,9 @@ function fixOff() {
     chrome.storage.sync.set({
         fixSetting: FIX_OFF
     });
-    if (frameDocument.getElementById("icon-tuding-full")) {
-        frameDocument.getElementById("icon-tuding-full").style.display = "none";
-        frameDocument.getElementById("icon-tuding-fix").style.display = "inline";
+    if (resultPanel.getElementById("icon-tuding-full")) {
+        resultPanel.getElementById("icon-tuding-full").style.display = "none";
+        resultPanel.getElementById("icon-tuding-fix").style.display = "inline";
     }
     document.documentElement.addEventListener("mousedown", clickListener);
 }
@@ -394,7 +341,7 @@ function fixOff() {
  * Send message to background to pronounce the translating text.
  */
 function sourcePronounce() {
-    if (isChildNode(divFrame, document.documentElement)) {
+    if (isChildNode(panelContainer, document.documentElement)) {
         Messager.send("background", "pronounce", {
             text: translateResult.originalText,
             language: translateResult.sourceLanguage,
@@ -410,7 +357,7 @@ function sourcePronounce() {
 }
 
 function targetPronounce() {
-    if (isChildNode(divFrame, document.documentElement)) {
+    if (isChildNode(panelContainer, document.documentElement)) {
         Messager.send("background", "pronounce", {
             text: translateResult.mainMeaning,
             language: translateResult.targetLanguage,
@@ -427,17 +374,17 @@ function targetPronounce() {
 
 function copyContent() {
     // the node of translation result
-    translateResult = frameDocument.getElementsByClassName("main-meaning")[0].firstChild;
+    translateResult = resultPanel.getElementsByClassName("main-meaning")[0].firstChild;
     translateResult.setAttribute("contenteditable", "true");
     translateResult.focus();
     // select all content automatically
-    var range = frameDocument.createRange();
-    var frameWindow = frame.contentWindow;
+    var range = resultPanel.createRange();
+    var frameWindow = shadowDom.contentWindow;
     if (frameWindow) {
         range.selectNodeContents(translateResult);
         frameWindow.getSelection().removeAllRanges();
         frameWindow.getSelection().addRange(range);
-        frameDocument.execCommand("copy");
+        resultPanel.execCommand("copy");
 
         // on focus out, set the node to unedible
         translateResult.addEventListener("blur", function() {
