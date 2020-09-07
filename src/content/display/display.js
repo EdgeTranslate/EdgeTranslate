@@ -63,8 +63,7 @@ const transitionDuration = 500; // 侧边栏出现动画的持续事件 单位:m
         container: null,
         draggable: true,
         resizable: true,
-        // snappable: true,
-        // bounds: { left: 0, top: 0, right: window.innerWidth - 7, bottom: window.innerHeight - 7 },
+        snappable: false,
         edge: true,
         origin: false,
         // Add padding around the target to increase the drag area.
@@ -94,6 +93,7 @@ const transitionDuration = 500; // 侧边栏出现动画的持续事件 单位:m
             target.style.transform = `translate(${beforeTranslate[0]}px, ${beforeTranslate[1]}px)`;
         });
 })();
+// TEMP
 // showPanel({}, loading);
 
 /**
@@ -185,6 +185,33 @@ function showPanel(content, template) {
             }
             // var resizeFlag = layoutSettings["Resize"]; // 保存侧边栏展示的位置
             // resultPanel.style.width = sideWidth * 100 + "%";
+            moveablePanel.snappable = true;
+            updateBounds();
+            window.addEventListener("scroll", updateBounds);
+            window.addEventListener("resize", () => {
+                let width = window.innerWidth;
+                let height = window.innerHeight;
+                let scrollLeft = document.documentElement.scrollLeft || document.body.scrollLeft;
+                let scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+                moveablePanel.bounds = {
+                    left: scrollLeft,
+                    right: scrollLeft + width - 7,
+                    top: scrollTop,
+                    bottom: scrollTop + height - 7
+                };
+                move(
+                    sideWidth * width,
+                    height - 7,
+                    (1 - sideWidth) * width - 7,
+                    document.documentElement.scrollTop || document.body.scrollTop
+                );
+                move(
+                    sideWidth * width,
+                    height - 7,
+                    (1 - sideWidth) * width - 7,
+                    document.documentElement.scrollTop || document.body.scrollTop
+                );
+            });
             move(
                 sideWidth * window.innerWidth,
                 window.innerHeight - 7,
@@ -291,6 +318,17 @@ function getScrollbarWidth() {
     var scrollbarWidth = scrollDiv.offsetWidth - scrollDiv.clientWidth;
     document.body.removeChild(scrollDiv);
     return scrollbarWidth;
+}
+
+function updateBounds() {
+    let scrollLeft = document.documentElement.scrollLeft || document.body.scrollLeft;
+    let scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+    moveablePanel.bounds = {
+        left: scrollLeft,
+        right: scrollLeft + window.innerWidth - 7,
+        top: scrollTop,
+        bottom: scrollTop + window.innerHeight - 7
+    };
 }
 
 function move(width, height, left, top) {
