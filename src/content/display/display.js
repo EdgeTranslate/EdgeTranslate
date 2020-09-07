@@ -10,6 +10,12 @@ import result from "./templates/result.html"; // template of translate result
 import loading from "./templates/loading.html"; // template of loading icon
 import error from "./templates/error.html"; // template of error message
 
+const Template = {
+    result: result,
+    loading: loading,
+    error: error
+};
+
 /**
  * end load
  */
@@ -30,7 +36,8 @@ var sourceTTSSpeed, targetTTSSpeed;
 var popupPosition; // 保存侧边栏展示的位置
 const FIX_ON = true; // 侧边栏固定的值
 const FIX_OFF = false; // 侧边栏不固定的值
-const transitionDuration = 500; // 侧边栏出现动画的持续事件 单位:ms
+// TEMP
+// const transitionDuration = 500; // 侧边栏出现动画的持续事件 单位:ms
 
 /**
  * initiate panel elements to display translation result
@@ -72,7 +79,13 @@ const transitionDuration = 500; // 侧边栏出现动画的持续事件 单位:m
     let startTranslate = [0, 0];
     /* draggable events*/
     moveablePanel
-        .on("dragStart", ({ set }) => {
+        .on("dragStart", ({ set, stop, inputEvent }) => {
+            if (inputEvent) {
+                const path =
+                    inputEvent.path || (inputEvent.composedPath && inputEvent.composedPath());
+                // if drag element isn't the head element, stop the drag event
+                if (!path || path[0] !== shadowDom.getElementById("head")) stop();
+            }
             set(startTranslate);
         })
         .on("drag", ({ target, beforeTranslate }) => {
@@ -94,7 +107,18 @@ const transitionDuration = 500; // 侧边栏出现动画的持续事件 单位:m
         });
 })();
 // TEMP
-// showPanel({}, loading);
+// showPanel({}, "loading");
+// showPanel(
+//     {
+//         detailedMeanings: [{ pos: "形容词", meaning: "fine, happy, glorious" }],
+//         mainMeaning: "Beautiful",
+//         originalText: "美好",
+//         sPronunciation: "Měihǎo",
+//         sourceLanguage: "auto",
+//         targetLanguage: "en"
+//     },
+//     "result"
+// );
 
 /**
  * 负责处理后台发送给页面的消息
@@ -110,16 +134,16 @@ Messager.receive("content", message => {
             translateResult = message.detail.translateResult;
             sourceTTSSpeed = "fast";
             targetTTSSpeed = "fast";
-            showPanel(message.detail.translateResult, result);
+            showPanel(message.detail.translateResult, "result");
             break;
         // 发送的是翻译状态信息
         case "info":
             switch (message.detail.info) {
                 case "start_translating":
-                    showPanel(message.detail, loading);
+                    showPanel(message.detail, "loading");
                     break;
                 case "error":
-                    showPanel(message.detail, error);
+                    showPanel(message.detail, "error");
                     break;
                 default:
                     break;
@@ -138,7 +162,7 @@ Messager.receive("content", message => {
                     });
                     break;
                 case "close_result_frame":
-                    removeSlider();
+                    removePanel();
                     break;
                 case "pronounce_original":
                     sourcePronounce();
@@ -174,7 +198,7 @@ function showPanel(content, template) {
         popupPosition = layoutSettings["PopupPosition"]; // 保存侧边栏展示的位置
 
         // Write contents into iframe.
-        resultPanel.innerHTML = render(template, content);
+        resultPanel.innerHTML = render(Template[template], content);
         document.documentElement.appendChild(panelContainer);
 
         // 获取用户上次通过resize设定的侧边栏宽度
@@ -218,6 +242,7 @@ function showPanel(content, template) {
                 (1 - sideWidth) * window.innerWidth - 7,
                 document.documentElement.scrollTop || document.body.scrollTop
             );
+            addEventListener(template);
 
             // if (resizeFlag) {
             //     // 用户设置 收缩页面
@@ -355,49 +380,49 @@ function move(width, height, left, top) {
 /**
  * 需要对侧边栏中的元素添加事件监听时，请在此函数中添加
  */
-function addEventListener() {
-    // 给关闭按钮添加点击事件监听，用于关闭侧边栏
-    resultPanel.getElementById("icon-close").addEventListener("click", removeSlider);
-    // 如果渲染的是result.html或error.html，则有icon-tuding-fix图标， 可以添加点击事件监听
-    if (resultPanel.getElementById("icon-tuding-fix")) {
-        // 给固定侧边栏的按钮添加点击事件监听，用户侧边栏的固定与取消固定
-        resultPanel.getElementById("icon-tuding-fix").addEventListener("click", fixOn);
-        resultPanel.getElementById("icon-tuding-full").addEventListener("click", fixOff);
+function addEventListener(template) {
+    switch (template) {
+        case "result": {
+            // 给关闭按钮添加点击事件监听，用于关闭侧边栏
+            shadowDom.getElementById("icon-close").addEventListener("click", removePanel);
+            // 给固定侧边栏的按钮添加点击事件监听，用户侧边栏的固定与取消固定
+            shadowDom.getElementById("icon-tuding-fix").addEventListener("click", fixOn);
+            shadowDom.getElementById("icon-tuding-full").addEventListener("click", fixOff);
+            // 给点击侧边栏之外区域事件添加监听，点击侧边栏之外的部分就会让侧边栏关闭
+            chrome.storage.sync.get("fixSetting", function(result) {
+                if (!result.fixSetting) {
+                    fixOff();
+                } else {
+                    fixOn();
+                }
+            });
+            // copy the translation result to the copy board
+            shadowDom.getElementById("icon-copy").addEventListener("click", copyContent);
+            let sourcePronounceIcon = shadowDom.getElementById("source-pronounce");
+            if (sourcePronounceIcon) {
+                sourcePronounceIcon.addEventListener("click", sourcePronounce);
+            }
+
+            let targetPronounceIcon = shadowDom.getElementById("target-pronounce");
+            if (targetPronounceIcon) {
+                targetPronounceIcon.addEventListener("click", targetPronounce);
+            }
+            break;
+        }
+        case "loading":
+            // 给关闭按钮添加点击事件监听，用于关闭侧边栏
+            shadowDom.getElementById("icon-close").addEventListener("click", removePanel);
+            break;
+        case "error":
+            // 给关闭按钮添加点击事件监听，用于关闭侧边栏
+            shadowDom.getElementById("icon-close").addEventListener("click", removePanel);
+            // 给固定侧边栏的按钮添加点击事件监听，用户侧边栏的固定与取消固定
+            shadowDom.getElementById("icon-tuding-fix").addEventListener("click", fixOn);
+            shadowDom.getElementById("icon-tuding-full").addEventListener("click", fixOff);
+            break;
+        default:
+            break;
     }
-    // 如果渲染的是result.html，则有icon-copy图标， 可以添加点击事件监听
-    if (resultPanel.getElementById("icon-copy")) {
-        // copy the translation result to the copy board
-        resultPanel.getElementById("icon-copy").addEventListener("click", copyContent);
-
-        let sourcePronounceIcon = resultPanel.getElementById("source-pronounce");
-        if (sourcePronounceIcon) {
-            sourcePronounceIcon.addEventListener("click", sourcePronounce);
-        }
-
-        let targetPronounceIcon = resultPanel.getElementById("target-pronounce");
-        if (targetPronounceIcon) {
-            targetPronounceIcon.addEventListener("click", targetPronounce);
-        }
-    }
-    // 给点击侧边栏之外区域事件添加监听，点击侧边栏之外的部分就会让侧边栏关闭
-    chrome.storage.sync.get("fixSetting", function(result) {
-        if (!result.fixSetting) {
-            fixOff();
-        } else {
-            fixOn();
-        }
-    });
-
-    // // 将iframe内部的事件转发到document里，以实现更好的拖动效果。
-    // frameDocument.addEventListener("mousemove", function(event) {
-    //     let new_event = new event.constructor(event.type, event);
-    //     document.documentElement.dispatchEvent(new_event);
-    // });
-
-    // frameDocument.addEventListener("mouseup", function(event) {
-    //     let new_event = new event.constructor(event.type, event);
-    //     document.documentElement.dispatchEvent(new_event);
-    // });
 }
 
 /**
@@ -446,36 +471,23 @@ function getElementLeft(element) {
 function clickListener(event) {
     let node = event.target;
     if (!isChildNode(node, panelContainer)) {
-        var boundary =
-            popupPosition === "left"
-                ? panelContainer.offsetLeft + panelContainer.clientWidth
-                : panelContainer.offsetLeft; // 根据侧边栏的位置确定拖拽的起点
-        if (Math.abs(event.x - boundary) > dragSensitivity) {
-            removeSlider();
-        }
+        removePanel();
     }
 }
 
 /**
  * 将侧边栏元素从页面中除去，即将frame从document中删除
  */
-function removeSlider() {
+function removePanel() {
     if (isChildNode(panelContainer, document.documentElement)) {
         document.documentElement.removeChild(panelContainer);
-        document.body.style.width = 100 + "%";
-        setTimeout(function() {
-            document.body.style.margin = "auto";
-            document.body.style.position = "static";
-            document.body.style.right = "";
-            document.body.style.left = "";
-        }, transitionDuration);
+        moveablePanel.snappable = false;
+
         document.documentElement.removeEventListener("mousedown", clickListener);
         // handle the click event exception when using chrome's original pdf viewer
         if (isChromePDFViewer()) {
             document.body.children[0].focus();
         }
-        // resizeBody.disableResize();
-        // resizeDivFrame.disableResize();
 
         // 告诉background.js翻译框已关闭
         Messager.send("background", "frame_closed");
@@ -489,9 +501,9 @@ function fixOn() {
     chrome.storage.sync.set({
         fixSetting: FIX_ON
     });
-    if (resultPanel.getElementById("icon-tuding-full")) {
-        resultPanel.getElementById("icon-tuding-full").style.display = "inline";
-        resultPanel.getElementById("icon-tuding-fix").style.display = "none";
+    if (shadowDom.getElementById("icon-tuding-full")) {
+        shadowDom.getElementById("icon-tuding-full").style.display = "inline";
+        shadowDom.getElementById("icon-tuding-fix").style.display = "none";
     }
     document.documentElement.removeEventListener("mousedown", clickListener);
 }
@@ -503,9 +515,9 @@ function fixOff() {
     chrome.storage.sync.set({
         fixSetting: FIX_OFF
     });
-    if (resultPanel.getElementById("icon-tuding-full")) {
-        resultPanel.getElementById("icon-tuding-full").style.display = "none";
-        resultPanel.getElementById("icon-tuding-fix").style.display = "inline";
+    if (shadowDom.getElementById("icon-tuding-full")) {
+        shadowDom.getElementById("icon-tuding-full").style.display = "none";
+        shadowDom.getElementById("icon-tuding-fix").style.display = "inline";
     }
     document.documentElement.addEventListener("mousedown", clickListener);
 }

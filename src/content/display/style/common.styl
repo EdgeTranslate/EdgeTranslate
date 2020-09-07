@@ -1,6 +1,18 @@
 icon-size = 1em;
 color-primary = #4a8cf7;
 
+#head {
+	// height: 2%;
+	width: 100%;
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	background: color-primary;
+	&:hover{
+		cursor: grabbing;
+	}	
+}
+
 /**
  * start icon style
  */
@@ -8,10 +20,11 @@ color-primary = #4a8cf7;
     font-style: normal;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    fill: #aaa;
+    fill: white;
     cursor: pointer;
     font-size: larger;
-    position: relative;
+	padding: 1%; 
+	display: block;   
 
     svg {
         width: icon-size;
@@ -26,19 +39,19 @@ color-primary = #4a8cf7;
 
 /* 关闭页面的图标 */
 #icon-close {
-    left: 92%;
+    // right: 0;
 }
 
 .icon-fix {
-    left: 87%;
+    // right: 10%;
     display: none;
 }
 
 .icon-pronounce {
     position: static;
 
-    svg{
-        padding-bottom: 1%; 
+    svg {
+		padding-bottom: 1%; 
     }
 
     :hover {
@@ -46,11 +59,12 @@ color-primary = #4a8cf7;
     }
 }
 
-.icon-copy
+.icon-copy {
     position: absolute;
     font-size: x-large;
     right: -10%;
     top: 0;    
+}
 
 /**
  * end icon style
