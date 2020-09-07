@@ -1,13 +1,14 @@
 icon-size = 1em;
 color-primary = #4a8cf7;
 
-#head {
-	// height: 2%;
-	width: 100%;
+#head {		 
 	display: flex;
 	justify-content: flex-end;
 	align-items: center;
 	background: color-primary;
+	flex-grow: 0;
+	flex-shrink: 0;
+	overflow: hidden;
 	&:hover{
 		cursor: grabbing;
 	}	
@@ -62,7 +63,7 @@ color-primary = #4a8cf7;
 .icon-copy {
     position: absolute;
     font-size: x-large;
-    right: -10%;
+    // right: -10%;
     top: 0;    
 }
 

@@ -58,7 +58,7 @@ const FIX_OFF = false; // 侧边栏不固定的值
     styleLink.href = chrome.runtime.getURL("content/display/style/display.css");
 
     resultPanel.style.backgroundColor = "white"; // set style dynamically to be compatible with chrome extension "Dark Reader"
-    resultPanel.style.boxShadow = "0px 0px 50px rgb(200,200,200,0.5)"; // set style dynamically to be compatible with chrome extension "Dark Reader"
+    resultPanel.style.boxShadow = "0px 4px 23px -6px rgb(64,64,64,0.8)"; // set style dynamically to be compatible with chrome extension "Dark Reader"
 
     /* add elements to the document tree */
     shadowDom.appendChild(styleLink);

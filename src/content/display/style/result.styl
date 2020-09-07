@@ -3,11 +3,17 @@
 /**
  * start content style
  */
-.translate {
+.translate {		
+	box-sizing: border-box;
 	padding: 5% 10%;
 	font-weight: medium;
 	font-size: medium;
-    position: relative;		
+    position: relative;	
+	flex-grow: 1;
+	flex-shrink: 1;
+	overflow-x: hidden;
+	overflow-y: scroll;		
+	overscroll-behavior: contain;
 
 	.content-title { // 标题样式
 		color: gray;
@@ -63,8 +69,7 @@
 	.phonetic-symbol {
 		.phonetic-symbol-content {
 			font-weight: lighter;
-			position: relative;
-			left: 12%;
+			margin-left: 12%;
 		}
 	}
 
