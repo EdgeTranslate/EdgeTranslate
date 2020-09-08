@@ -1,6 +1,7 @@
 import render from "./library/render.js";
 import { isChromePDFViewer } from "../common.js";
 import Messager from "../../common/scripts/messager.js";
+import { delayPromise } from "../../common/scripts/promise.js";
 import Moveable from "moveable";
 
 /**
@@ -105,12 +106,6 @@ const FIX_OFF = false; // 侧边栏不固定的值
             target.style.height = `${height}px`;
             target.style.transform = `translate(${beforeTranslate[0]}px, ${beforeTranslate[1]}px)`;
         });
-    move(
-        0.2 * window.innerWidth,
-        window.innerHeight - 7,
-        0.8 * window.innerWidth - 7,
-        document.documentElement.scrollTop || document.body.scrollTop
-    );
 })();
 // TEMP
 // showPanel({}, "loading");
@@ -127,71 +122,6 @@ const FIX_OFF = false; // 侧边栏不固定的值
 // );
 
 /**
- * 负责处理后台发送给页面的消息
- *
- * @param {Object} message 后台发送的消息
- * @param {Object} sender 返送消息者的具体信息 如果sender是content module，会有tab属性，如果是background，则没有tab属性
- */
-Messager.receive("content", message => {
-    // 避免从file://跳转到pdf viewer的消息传递对此的影响
-    switch (message.title) {
-        // 发送的是翻译结果
-        case "translateResult":
-            translateResult = message.detail.translateResult;
-            sourceTTSSpeed = "fast";
-            targetTTSSpeed = "fast";
-            showPanel(message.detail.translateResult, "result");
-            break;
-        // 发送的是翻译状态信息
-        case "info":
-            switch (message.detail.info) {
-                case "start_translating":
-                    showPanel(message.detail, "loading");
-                    break;
-                case "error":
-                    showPanel(message.detail, "error");
-                    break;
-                default:
-                    break;
-            }
-            break;
-        // 发送的是快捷键命令
-        case "command":
-            switch (message.detail.command) {
-                case "fix_result_frame":
-                    chrome.storage.sync.get("fixSetting", function(result) {
-                        if (!result.fixSetting) {
-                            fixOn();
-                        } else {
-                            fixOff();
-                        }
-                    });
-                    break;
-                case "close_result_frame":
-                    removePanel();
-                    break;
-                case "pronounce_original":
-                    sourcePronounce();
-                    break;
-                case "pronounce_translated":
-                    targetPronounce();
-                    break;
-                case "copy_result":
-                    if (translateResult) {
-                        copyContent();
-                    }
-                    break;
-                default:
-                    break;
-            }
-            break;
-        default:
-            break;
-    }
-    return Promise.resolve();
-});
-
-/**
  * render panel content using translation result and templates and show the panel in the current web page
  *
  * @param {Object} content translation result
@@ -204,19 +134,19 @@ function showPanel(content, template) {
     // if panel hasn't been displayed, locate the panel and show it
     if (!isChildNode(panelContainer, document.documentElement)) {
         // 获取用户对侧边栏展示位置的设定
-        chrome.storage.sync.get("LayoutSettings", function(result) {
+        chrome.storage.sync.get("LayoutSettings", async function(result) {
             var layoutSettings = result.LayoutSettings;
             popupPosition = layoutSettings["PopupPosition"]; // 保存侧边栏展示的位置
-            document.documentElement.appendChild(panelContainer);
+            // document.documentElement.appendChild(panelContainer);
             if (content.position) {
                 let position = content.position;
                 moveablePanel.snappable = true;
                 updateBounds();
                 window.addEventListener("scroll", updateBounds);
-                move(450, 700, position.XPosition, position.YPosition);
+                move(300, 600, position.XPosition, position.YPosition);
             } else {
                 // 获取用户上次通过resize设定的侧边栏宽度
-                chrome.storage.sync.get("sideWidth", function(result) {
+                chrome.storage.sync.get("sideWidth", async function(result) {
                     let sideWidth = 0.2;
                     if (result.sideWidth) {
                         sideWidth = result.sideWidth;
@@ -252,7 +182,7 @@ function showPanel(content, template) {
                             document.documentElement.scrollTop || document.body.scrollTop
                         );
                     });
-                    move(
+                    await move(
                         sideWidth * window.innerWidth,
                         window.innerHeight - 7,
                         (1 - sideWidth) * window.innerWidth - 7,
@@ -321,6 +251,9 @@ function showPanel(content, template) {
                     }
                 });
             }
+            document.documentElement.appendChild(panelContainer);
+            await delayPromise(100);
+            resultPanel.style.visibility = "visible";
             // startSlider(layoutSettings);
             // addEventListener();
 
@@ -343,6 +276,71 @@ function showPanel(content, template) {
         });
     }
 }
+
+/**
+ * 负责处理后台发送给页面的消息
+ *
+ * @param {Object} message 后台发送的消息
+ * @param {Object} sender 返送消息者的具体信息 如果sender是content module，会有tab属性，如果是background，则没有tab属性
+ */
+Messager.receive("content", message => {
+    // 避免从file://跳转到pdf viewer的消息传递对此的影响
+    switch (message.title) {
+        // 发送的是翻译结果
+        case "translateResult":
+            translateResult = message.detail.translateResult;
+            sourceTTSSpeed = "fast";
+            targetTTSSpeed = "fast";
+            showPanel(message.detail.translateResult, "result");
+            break;
+        // 发送的是翻译状态信息
+        case "info":
+            switch (message.detail.info) {
+                case "start_translating":
+                    showPanel(message.detail, "loading");
+                    break;
+                case "error":
+                    showPanel(message.detail, "error");
+                    break;
+                default:
+                    break;
+            }
+            break;
+        // 发送的是快捷键命令
+        case "command":
+            switch (message.detail.command) {
+                case "fix_result_frame":
+                    chrome.storage.sync.get("fixSetting", function(result) {
+                        if (!result.fixSetting) {
+                            fixOn();
+                        } else {
+                            fixOff();
+                        }
+                    });
+                    break;
+                case "close_result_frame":
+                    removePanel();
+                    break;
+                case "pronounce_original":
+                    sourcePronounce();
+                    break;
+                case "pronounce_translated":
+                    targetPronounce();
+                    break;
+                case "copy_result":
+                    if (translateResult) {
+                        copyContent();
+                    }
+                    break;
+                default:
+                    break;
+            }
+            break;
+        default:
+            break;
+    }
+    return Promise.resolve();
+});
 
 function hasScrollbar() {
     return (
@@ -373,49 +371,52 @@ function updateBounds() {
     };
 }
 
-function move(width, height, left, top) {
+async function move(width, height, left, top) {
+    await resize(width, height);
+    drag(left, top);
+}
+
+function drag(left, top) {
+    moveablePanel.request("draggable", {
+        x: left,
+        y: top,
+        isInstant: true
+    });
+}
+
+async function resize(width, height) {
+    await delayPromise(100);
     moveablePanel.request("resizable", {
         offsetWidth: width,
         offsetHeight: height,
         isInstant: true
     });
-    setTimeout(() => {
-        moveablePanel.request("resizable", {
-            offsetWidth: width,
-            offsetHeight: height,
-            isInstant: true
-        });
-
-        moveablePanel.request("draggable", {
-            x: left,
-            y: top,
-            isInstant: true
-        });
-        setTimeout(() => {
-            resultPanel.style.display = "flex";
-        }, 100);
-    }, 100);
+    moveablePanel.request("resizable", {
+        offsetWidth: width,
+        offsetHeight: height,
+        isInstant: true
+    });
 }
 
 /**
  * 需要对侧边栏中的元素添加事件监听时，请在此函数中添加
  */
 function addEventListener(template) {
+    // 给关闭按钮添加点击事件监听，用于关闭侧边栏
+    shadowDom.getElementById("icon-close").addEventListener("click", removePanel);
+    // 给固定侧边栏的按钮添加点击事件监听，用户侧边栏的固定与取消固定
+    shadowDom.getElementById("icon-tuding-fix").addEventListener("click", fixOn);
+    shadowDom.getElementById("icon-tuding-full").addEventListener("click", fixOff);
+    // 给点击侧边栏之外区域事件添加监听，点击侧边栏之外的部分就会让侧边栏关闭
+    chrome.storage.sync.get("fixSetting", function(result) {
+        if (!result.fixSetting) {
+            fixOff();
+        } else {
+            fixOn();
+        }
+    });
     switch (template) {
         case "result": {
-            // 给关闭按钮添加点击事件监听，用于关闭侧边栏
-            shadowDom.getElementById("icon-close").addEventListener("click", removePanel);
-            // 给固定侧边栏的按钮添加点击事件监听，用户侧边栏的固定与取消固定
-            shadowDom.getElementById("icon-tuding-fix").addEventListener("click", fixOn);
-            shadowDom.getElementById("icon-tuding-full").addEventListener("click", fixOff);
-            // 给点击侧边栏之外区域事件添加监听，点击侧边栏之外的部分就会让侧边栏关闭
-            chrome.storage.sync.get("fixSetting", function(result) {
-                if (!result.fixSetting) {
-                    fixOff();
-                } else {
-                    fixOn();
-                }
-            });
             // copy the translation result to the copy board
             shadowDom.getElementById("icon-copy").addEventListener("click", copyContent);
             let sourcePronounceIcon = shadowDom.getElementById("source-pronounce");
@@ -495,7 +496,7 @@ function clickListener(event) {
 }
 
 /**
- * 将侧边栏元素从页面中除去，即将frame从document中删除
+ * remove the panel from the page
  */
 function removePanel() {
     if (isChildNode(panelContainer, document.documentElement)) {
