@@ -4,9 +4,11 @@ export default render;
  *
  * @param {String} template 待渲染的HTML模板。
  * @param {Object} contents 用于填充模板的数据。
- * @returns 渲染完成的HTML文本。
+ * @param {Object} includes template中可能引用到的其他模板。
+ *
+ * @returns {String} 渲染完成的HTML文本。
  */
-function render(template, contents) {
+function render(template, contents, includes) {
     // process the template in advance
     template = template.toString().replace(/\n+|\s{2,}|\r+/g, " ");
 
@@ -19,10 +21,13 @@ function render(template, contents) {
     // 匹配模板中的逻辑表达式
     const EXPRESSION_REGEX = /(if|while|for)\s*\(.+\)\s*\{|else(\s+if\s*\(.+\))?\s*\{|}/;
 
+    // match include instruction
+    const INCLUDE_REGEX = /include\s*(\w+)\s*/;
+
     // 上次匹配结束后剩余子串在template中的起始位置
-    var lastIndex = 0;
-    var code = ["let result = new Array();"];
-    var match;
+    let lastIndex = 0;
+    let code = ["let result = new Array();"];
+    let match;
 
     // 依次匹配所有待填充项
     while ((match = CONTENT_REGEX.exec(template))) {
@@ -34,12 +39,16 @@ function render(template, contents) {
             }
         }
 
-        var expression = match[1];
+        let expression = match[1];
         // 如果是逻辑表达式，将其作为一行代码插入到渲染函数中。
         if (EXPRESSION_REGEX.test(expression)) {
             code.push(expression);
-            // 如果是一个变量，获取它的值用于填充它所在的位置
+        } else if (INCLUDE_REGEX.test(expression)) {
+            // 如果是include，获取并渲染相应的模板，然后填充到所在的位置
+            let include = INCLUDE_REGEX.exec(expression)[1];
+            code.push("result.push('" + render(includes[include], contents, includes) + "');");
         } else {
+            // 如果是一个变量，获取它的值用于填充它所在的位置
             code.push("result.push(" + expression + ");");
         }
 
