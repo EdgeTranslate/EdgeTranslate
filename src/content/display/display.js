@@ -63,8 +63,13 @@ const FIX_OFF = false; // 侧边栏不固定的值
     resultPanel.style.backgroundColor = "white"; // set style dynamically to be compatible with chrome extension "Dark Reader"
     resultPanel.style.boxShadow = "0px 4px 23px -6px rgb(64,64,64,0.8)"; // set style dynamically to be compatible with chrome extension "Dark Reader"
 
-    /* add event listeners to the panel- head elements */
+    /* add event listeners */
+    // add event listeners to the panel- head elements
     addHeadEventListener();
+    // update drag bounds when users scroll the page
+    window.addEventListener("scroll", updateBounds);
+    // update the drag bounds and size when the size of window has changed
+    window.addEventListener("resize", windowResizeHandler);
 
     /* make the resultPanel resizable and draggable */
     moveablePanel = new Moveable(shadowDom, {
@@ -144,7 +149,9 @@ function showPanel(content, template) {
                 moveablePanel.snappable = true;
                 updateBounds();
                 window.addEventListener("scroll", updateBounds);
-                move(300, 600, position.XPosition, position.YPosition);
+                let scrollLeft = document.documentElement.scrollLeft || document.body.scrollLeft;
+                let scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+                move(300, 600, position.XPosition + scrollLeft, position.YPosition + scrollTop);
             } else {
                 // 获取用户上次通过resize设定的侧边栏宽度
                 chrome.storage.sync.get("sideWidth", async function(result) {
@@ -156,37 +163,10 @@ function showPanel(content, template) {
                     // resultPanel.style.width = sideWidth * 100 + "%";
                     moveablePanel.snappable = true;
                     updateBounds();
-                    window.addEventListener("scroll", updateBounds);
-                    window.addEventListener("resize", () => {
-                        let width = window.innerWidth;
-                        let height = window.innerHeight;
-                        let scrollLeft =
-                            document.documentElement.scrollLeft || document.body.scrollLeft;
-                        let scrollTop =
-                            document.documentElement.scrollTop || document.body.scrollTop;
-                        moveablePanel.bounds = {
-                            left: scrollLeft,
-                            right: scrollLeft + width - 7,
-                            top: scrollTop,
-                            bottom: scrollTop + height - 7
-                        };
-                        move(
-                            sideWidth * width,
-                            height - 7,
-                            (1 - sideWidth) * width - 7,
-                            document.documentElement.scrollTop || document.body.scrollTop
-                        );
-                        move(
-                            sideWidth * width,
-                            height - 7,
-                            (1 - sideWidth) * width - 7,
-                            document.documentElement.scrollTop || document.body.scrollTop
-                        );
-                    });
                     await move(
                         sideWidth * window.innerWidth,
-                        window.innerHeight - 7,
-                        (1 - sideWidth) * window.innerWidth - 7,
+                        window.innerHeight,
+                        (1 - sideWidth) * window.innerWidth,
                         document.documentElement.scrollTop || document.body.scrollTop
                     );
 
@@ -276,6 +256,40 @@ function showPanel(content, template) {
     }
 }
 
+function windowResizeHandler() {
+    // 获取用户上次通过resize设定的侧边栏宽度
+    chrome.storage.sync.get("sideWidth", function(result) {
+        let sideWidth = 0.2;
+        if (result.sideWidth) {
+            sideWidth = result.sideWidth;
+        }
+        let width = window.innerWidth;
+        let height = window.innerHeight;
+        let scrollLeft = document.documentElement.scrollLeft || document.body.scrollLeft;
+        let scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        let rightBound;
+        if (hasScrollbar()) rightBound = scrollLeft + window.innerWidth - getScrollbarWidth();
+        moveablePanel.bounds = {
+            left: scrollLeft,
+            right: rightBound,
+            top: scrollTop,
+            bottom: Number.MAX_VALUE
+        };
+        move(
+            sideWidth * width,
+            height,
+            (1 - sideWidth) * width,
+            document.documentElement.scrollTop || document.body.scrollTop
+        );
+        move(
+            sideWidth * width,
+            height,
+            (1 - sideWidth) * width,
+            document.documentElement.scrollTop || document.body.scrollTop
+        );
+    });
+}
+
 /**
  * 负责处理后台发送给页面的消息
  *
@@ -362,11 +376,13 @@ function getScrollbarWidth() {
 function updateBounds() {
     let scrollLeft = document.documentElement.scrollLeft || document.body.scrollLeft;
     let scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+    let rightBound;
+    if (hasScrollbar()) rightBound = scrollLeft + window.innerWidth - getScrollbarWidth();
     moveablePanel.bounds = {
         left: scrollLeft,
-        right: scrollLeft + window.innerWidth - 7,
+        right: rightBound,
         top: scrollTop,
-        bottom: scrollTop + window.innerHeight - 7
+        bottom: Number.MAX_VALUE
     };
 }
 
