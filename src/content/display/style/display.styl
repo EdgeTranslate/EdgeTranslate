@@ -33,7 +33,7 @@ transparent-color = rgba(255,255,255,0);
 	overflow: auto;
 }
 
-#panel-head {		 
+#panel-head{		 
 	display: flex;
 	justify-content: flex-end;
 	align-items: center;
@@ -44,4 +44,12 @@ transparent-color = rgba(255,255,255,0);
 	&:hover{
 		cursor: grabbing;
 	}	
+}
+
+#panel-body{
+	overflow-x: hidden;
+	overflow-y: scroll;		
+	overscroll-behavior: contain;
+	flex-grow: 1;
+	flex-shrink: 1;	
 }
