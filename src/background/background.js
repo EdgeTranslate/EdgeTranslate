@@ -357,6 +357,14 @@ async function messageHandler(message, sender) {
             chrome.tabs.update(sender.tab.id, { url: message.detail.url });
             return Promise.resolve();
         case "translate": {
+            // Start showing loading animation.
+            let infoMessage = {
+                info: "start_translating"
+            };
+            // send the position of selection icon.
+            if (message.detail.position) infoMessage.position = message.detail.position;
+            sendMessageToCurrentTab("info", infoMessage).catch(error => log(error));
+
             let result = await translate(message.detail.text);
             return await showTranslate(result, sender.tab);
         }

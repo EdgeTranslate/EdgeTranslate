@@ -7,6 +7,13 @@ var HasMouseDown = false;
 // to indicate whether the translation button has been shown
 var HasButtonShown = false;
 
+// store the position of selection icon
+// to help locate the result panel
+var Position = {
+    XPosition: -1,
+    YPosition: -1
+};
+
 /**
  * 创建翻译按钮的图标元素
  */
@@ -176,6 +183,8 @@ function showButton(event) {
         originScrollY = scrollingElement.scrollTop;
         originPositionX = XPosition;
         originPositionY = YPosition;
+        Position.XPosition = XPosition;
+        Position.YPosition = YPosition;
         HasButtonShown = true;
     }
 }
@@ -192,17 +201,20 @@ function translateSubmit() {
             .toString()
             .trim()
     ) {
-        Messager.send("background", "translate", { text: window.getSelection().toString() }).then(
-            () => {
-                chrome.storage.sync.get("OtherSettings", result => {
-                    // to check whether user need to cancel text selection after translation finished
-                    if (result.OtherSettings && result.OtherSettings["CancelTextSelection"]) {
-                        cancelTextSelection();
-                    }
-                });
-                disappearButton();
-            }
-        );
+        Messager.send("background", "translate", {
+            text: window.getSelection().toString(),
+            // send the position of selection icon to background
+            // to help locate the result panel
+            position: Position
+        }).then(() => {
+            chrome.storage.sync.get("OtherSettings", result => {
+                // to check whether user need to cancel text selection after translation finished
+                if (result.OtherSettings && result.OtherSettings["CancelTextSelection"]) {
+                    cancelTextSelection();
+                }
+            });
+            disappearButton();
+        });
     }
 }
 

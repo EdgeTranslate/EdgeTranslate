@@ -105,6 +105,12 @@ const FIX_OFF = false; // 侧边栏不固定的值
             target.style.height = `${height}px`;
             target.style.transform = `translate(${beforeTranslate[0]}px, ${beforeTranslate[1]}px)`;
         });
+    move(
+        0.2 * window.innerWidth,
+        window.innerHeight - 7,
+        0.8 * window.innerWidth - 7,
+        document.documentElement.scrollTop || document.body.scrollTop
+    );
 })();
 // TEMP
 // showPanel({}, "loading");
@@ -192,139 +198,150 @@ Messager.receive("content", message => {
  * @param {String} template the name of render template
  */
 function showPanel(content, template) {
-    // 获取用户对侧边栏展示位置的设定
-    chrome.storage.sync.get("LayoutSettings", function(result) {
-        var layoutSettings = result.LayoutSettings;
-        popupPosition = layoutSettings["PopupPosition"]; // 保存侧边栏展示的位置
-
-        // Write contents into iframe.
-        resultPanel.innerHTML = render(Template[template], content);
-        document.documentElement.appendChild(panelContainer);
-
-        // 获取用户上次通过resize设定的侧边栏宽度
-        chrome.storage.sync.get("sideWidth", function(result) {
-            let sideWidth = 0.2;
-            if (result.sideWidth) {
-                sideWidth = result.sideWidth;
-            }
-            // var resizeFlag = layoutSettings["Resize"]; // 保存侧边栏展示的位置
-            // resultPanel.style.width = sideWidth * 100 + "%";
-            moveablePanel.snappable = true;
-            updateBounds();
-            window.addEventListener("scroll", updateBounds);
-            window.addEventListener("resize", () => {
-                let width = window.innerWidth;
-                let height = window.innerHeight;
-                let scrollLeft = document.documentElement.scrollLeft || document.body.scrollLeft;
-                let scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-                moveablePanel.bounds = {
-                    left: scrollLeft,
-                    right: scrollLeft + width - 7,
-                    top: scrollTop,
-                    bottom: scrollTop + height - 7
-                };
-                move(
-                    sideWidth * width,
-                    height - 7,
-                    (1 - sideWidth) * width - 7,
-                    document.documentElement.scrollTop || document.body.scrollTop
-                );
-                move(
-                    sideWidth * width,
-                    height - 7,
-                    (1 - sideWidth) * width - 7,
-                    document.documentElement.scrollTop || document.body.scrollTop
-                );
-            });
-            move(
-                sideWidth * window.innerWidth,
-                window.innerHeight - 7,
-                (1 - sideWidth) * window.innerWidth - 7,
-                document.documentElement.scrollTop || document.body.scrollTop
-            );
-            addEventListener(template);
-
-            // if (resizeFlag) {
-            //     // 用户设置 收缩页面
-            //     document.body.style.transition = "width " + transitionDuration + "ms";
-            //     document.body.style.width = (1 - sideWidth) * 100 + "%";
-            // }
-            if (popupPosition === "left") {
-                // 用户设置 在页面左侧显示侧边栏
-                // if (resizeFlag) {
-                //     // 用户设置 收缩页面
-                //     document.body.style.position = "absolute";
-                //     // document.body.style.marginLeft = 0.2 * originOriginWidth + "px";
-                //     document.body.style.right = "0";
-                //     document.body.style.left = "";
-                // }
-                // panelContainer.style.left = "0";
-                // panelContainer.style["padding-right"] = dragSensitivity + "px";
+    // Write contents into iframe.
+    resultPanel.innerHTML = render(Template[template], content);
+    addEventListener(template);
+    // if panel hasn't been displayed, locate the panel and show it
+    if (!isChildNode(panelContainer, document.documentElement)) {
+        // 获取用户对侧边栏展示位置的设定
+        chrome.storage.sync.get("LayoutSettings", function(result) {
+            var layoutSettings = result.LayoutSettings;
+            popupPosition = layoutSettings["PopupPosition"]; // 保存侧边栏展示的位置
+            document.documentElement.appendChild(panelContainer);
+            if (content.position) {
+                let position = content.position;
+                moveablePanel.snappable = true;
+                updateBounds();
+                window.addEventListener("scroll", updateBounds);
+                move(450, 700, position.XPosition, position.YPosition);
             } else {
-                // if (resizeFlag) {
-                //     // 用户设置 收缩页面
-                //     document.body.style.margin = "0";
-                //     document.body.style.right = "";
-                //     document.body.style.left = "0";
-                // }
-                // setTimeout(() => {
-                //     console.log(getElementLeft(shadowDom.getElementById("translate-test")));
-                //     moveablePanel = new Moveable(shadowDom, {
-                //         target: resultPanel,
-                //         // If the container is null, the position is fixed. (default: parentElement(document.body))
-                //         container: null,
-                //         draggable: true,
-                //         resizable: true,
-                //         edge: true
-                //     });
-                //     let startTranslate = [0, 0];
-                //     /* draggable */
-                //     moveablePanel
-                //         .on("dragStart", ({ set }) => {
-                //             set(startTranslate);
-                //         })
-                //         .on("drag", ({ target, beforeTranslate }) => {
-                //             startTranslate = beforeTranslate;
-                //             target.style.transform = `translate(${beforeTranslate[0]}px, ${beforeTranslate[1]}px)`;
-                //         });
-                //     /* resizable */
-                //     moveablePanel
-                //         .on("resizeStart", ({ setOrigin, dragStart }) => {
-                //             setOrigin(["%", "%"]);
-                //             dragStart && dragStart.set(startTranslate);
-                //         })
-                //         .on("resize", ({ target, width, height, drag }) => {
-                //             const beforeTranslate = drag.beforeTranslate;
-                //             startTranslate = beforeTranslate;
-                //             target.style.width = `${width}px`;
-                //             target.style.height = `${height}px`;
-                //             target.style.transform = `translate(${beforeTranslate[0]}px, ${beforeTranslate[1]}px)`;
-                //         });
-                // }, 0);
-                // panelContainer.style.right = "0";
-                // panelContainer.style["padding-left"] = dragSensitivity + "px";
+                // 获取用户上次通过resize设定的侧边栏宽度
+                chrome.storage.sync.get("sideWidth", function(result) {
+                    let sideWidth = 0.2;
+                    if (result.sideWidth) {
+                        sideWidth = result.sideWidth;
+                    }
+                    // var resizeFlag = layoutSettings["Resize"]; // 保存侧边栏展示的位置
+                    // resultPanel.style.width = sideWidth * 100 + "%";
+                    moveablePanel.snappable = true;
+                    updateBounds();
+                    window.addEventListener("scroll", updateBounds);
+                    window.addEventListener("resize", () => {
+                        let width = window.innerWidth;
+                        let height = window.innerHeight;
+                        let scrollLeft =
+                            document.documentElement.scrollLeft || document.body.scrollLeft;
+                        let scrollTop =
+                            document.documentElement.scrollTop || document.body.scrollTop;
+                        moveablePanel.bounds = {
+                            left: scrollLeft,
+                            right: scrollLeft + width - 7,
+                            top: scrollTop,
+                            bottom: scrollTop + height - 7
+                        };
+                        move(
+                            sideWidth * width,
+                            height - 7,
+                            (1 - sideWidth) * width - 7,
+                            document.documentElement.scrollTop || document.body.scrollTop
+                        );
+                        move(
+                            sideWidth * width,
+                            height - 7,
+                            (1 - sideWidth) * width - 7,
+                            document.documentElement.scrollTop || document.body.scrollTop
+                        );
+                    });
+                    move(
+                        sideWidth * window.innerWidth,
+                        window.innerHeight - 7,
+                        (1 - sideWidth) * window.innerWidth - 7,
+                        document.documentElement.scrollTop || document.body.scrollTop
+                    );
+
+                    // if (resizeFlag) {
+                    //     // 用户设置 收缩页面
+                    //     document.body.style.transition = "width " + transitionDuration + "ms";
+                    //     document.body.style.width = (1 - sideWidth) * 100 + "%";
+                    // }
+                    if (popupPosition === "left") {
+                        // 用户设置 在页面左侧显示侧边栏
+                        // if (resizeFlag) {
+                        //     // 用户设置 收缩页面
+                        //     document.body.style.position = "absolute";
+                        //     // document.body.style.marginLeft = 0.2 * originOriginWidth + "px";
+                        //     document.body.style.right = "0";
+                        //     document.body.style.left = "";
+                        // }
+                        // panelContainer.style.left = "0";
+                        // panelContainer.style["padding-right"] = dragSensitivity + "px";
+                    } else {
+                        // if (resizeFlag) {
+                        //     // 用户设置 收缩页面
+                        //     document.body.style.margin = "0";
+                        //     document.body.style.right = "";
+                        //     document.body.style.left = "0";
+                        // }
+                        // setTimeout(() => {
+                        //     console.log(getElementLeft(shadowDom.getElementById("translate-test")));
+                        //     moveablePanel = new Moveable(shadowDom, {
+                        //         target: resultPanel,
+                        //         // If the container is null, the position is fixed. (default: parentElement(document.body))
+                        //         container: null,
+                        //         draggable: true,
+                        //         resizable: true,
+                        //         edge: true
+                        //     });
+                        //     let startTranslate = [0, 0];
+                        //     /* draggable */
+                        //     moveablePanel
+                        //         .on("dragStart", ({ set }) => {
+                        //             set(startTranslate);
+                        //         })
+                        //         .on("drag", ({ target, beforeTranslate }) => {
+                        //             startTranslate = beforeTranslate;
+                        //             target.style.transform = `translate(${beforeTranslate[0]}px, ${beforeTranslate[1]}px)`;
+                        //         });
+                        //     /* resizable */
+                        //     moveablePanel
+                        //         .on("resizeStart", ({ setOrigin, dragStart }) => {
+                        //             setOrigin(["%", "%"]);
+                        //             dragStart && dragStart.set(startTranslate);
+                        //         })
+                        //         .on("resize", ({ target, width, height, drag }) => {
+                        //             const beforeTranslate = drag.beforeTranslate;
+                        //             startTranslate = beforeTranslate;
+                        //             target.style.width = `${width}px`;
+                        //             target.style.height = `${height}px`;
+                        //             target.style.transform = `translate(${beforeTranslate[0]}px, ${beforeTranslate[1]}px)`;
+                        //         });
+                        // }, 0);
+                        // panelContainer.style.right = "0";
+                        // panelContainer.style["padding-left"] = dragSensitivity + "px";
+                    }
+                });
             }
+            // startSlider(layoutSettings);
+            // addEventListener();
+
+            // iframe 一加载完成添加事件监听
+            // shadowDom.onload = function() {
+            //     // resultPanel = shadowDom.contentDocument;
+
+            //     // 根据用户设定决定是否采用从右到左布局（用于阿拉伯语等从右到左书写的语言）
+            //     chrome.storage.sync.get("LayoutSettings", result => {
+            //         if (result.LayoutSettings.RTL) {
+            //             let contents = resultPanel.getElementsByClassName("may-need-rtl");
+            //             for (let i = 0; i < contents.length; i++) {
+            //                 contents[i].dir = "rtl";
+            //             }
+            //         }
+            //     });
+            //     // 添加事件监听
+            //     addEventListener();
+            // };
         });
-        // startSlider(layoutSettings);
-        // addEventListener();
-
-        // iframe 一加载完成添加事件监听
-        // shadowDom.onload = function() {
-        //     // resultPanel = shadowDom.contentDocument;
-
-        //     // 根据用户设定决定是否采用从右到左布局（用于阿拉伯语等从右到左书写的语言）
-        //     chrome.storage.sync.get("LayoutSettings", result => {
-        //         if (result.LayoutSettings.RTL) {
-        //             let contents = resultPanel.getElementsByClassName("may-need-rtl");
-        //             for (let i = 0; i < contents.length; i++) {
-        //                 contents[i].dir = "rtl";
-        //             }
-        //         }
-        //     });
-        //     // 添加事件监听
-        //     addEventListener();
-        // };
-    });
+    }
 }
 
 function hasScrollbar() {
@@ -374,6 +391,9 @@ function move(width, height, left, top) {
             y: top,
             isInstant: true
         });
+        setTimeout(() => {
+            resultPanel.style.display = "flex";
+        }, 100);
     }, 100);
 }
 
@@ -446,7 +466,6 @@ function isChildNode(node1, node2) {
  * change CSS style of body element and the shadowDom element
  * the body size will be contracted
  */
-function startSlider() {}
 function getElementLeft(element) {
     var actualLeft = element.offsetLeft;
     var current = element.offsetParent;

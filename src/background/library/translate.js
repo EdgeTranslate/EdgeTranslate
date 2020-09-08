@@ -43,11 +43,6 @@ function detect(text) {
  * @returns {Promise<Object>} translate result Promise
  */
 function translate(text) {
-    // Start showing loading animation.
-    sendMessageToCurrentTab("info", {
-        info: "start_translating"
-    }).catch(error => log(error));
-
     // get language settings from chrome storage
     return new Promise((resolve, reject) => {
         chrome.storage.sync.get(["languageSetting", "OtherSettings"], async result => {
