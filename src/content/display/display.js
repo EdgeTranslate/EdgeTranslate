@@ -7,6 +7,7 @@ import Moveable from "moveable";
 /**
  * load templates
  */
+import common from "./templates/common.html"; // template of panel's structure(common part of the result panel)
 import result from "./templates/result.html"; // template of translate result
 import loading from "./templates/loading.html"; // template of loading icon
 import error from "./templates/error.html"; // template of error message
@@ -30,6 +31,9 @@ var shadowDom;
 // the first child element of shadow dom. It contains all of the panel content elements
 var resultPanel;
 
+// store the panel body element
+var bodyPanel;
+
 var moveablePanel;
 
 var translateResult; // 保存翻译结果
@@ -37,8 +41,6 @@ var sourceTTSSpeed, targetTTSSpeed;
 var popupPosition; // 保存侧边栏展示的位置
 const FIX_ON = true; // 侧边栏固定的值
 const FIX_OFF = false; // 侧边栏不固定的值
-// TEMP
-// const transitionDuration = 500; // 侧边栏出现动画的持续事件 单位:ms
 
 /**
  * initiate panel elements to display translation result
@@ -47,24 +49,24 @@ const FIX_OFF = false; // 侧边栏不固定的值
  */
 (function initiate() {
     /* create elements */
+    // the container of translation panel. the root element of panel
     panelContainer = document.createElement("div");
+    // store a shadow dom which is used to attach panel elements
     shadowDom = panelContainer.attachShadow({ mode: "open" });
-    resultPanel = document.createElement("div");
-    let styleLink = document.createElement("link");
+    shadowDom.innerHTML = render(common);
+    // the first child element of shadow dom. It contains all of the panel content elements
+    resultPanel = shadowDom.firstChild;
+    // store the panel body element
+    bodyPanel = shadowDom.getElementById("panel-body");
 
     /* set attributes of elements */
-    resultPanel.id = "edge-translate-panel";
-    styleLink.type = "text/css";
-    styleLink.rel = "stylesheet";
-    styleLink.href = chrome.runtime.getURL("content/display/style/display.css");
-
     resultPanel.style.backgroundColor = "white"; // set style dynamically to be compatible with chrome extension "Dark Reader"
     resultPanel.style.boxShadow = "0px 4px 23px -6px rgb(64,64,64,0.8)"; // set style dynamically to be compatible with chrome extension "Dark Reader"
 
-    /* add elements to the document tree */
-    shadowDom.appendChild(styleLink);
-    shadowDom.appendChild(resultPanel);
+    /* add event listeners to the panel- head elements */
+    addHeadEventListener();
 
+    /* make the resultPanel resizable and draggable */
     moveablePanel = new Moveable(shadowDom, {
         target: resultPanel,
         // If the container is null, the position is fixed. (default: parentElement(document.body))
@@ -85,7 +87,7 @@ const FIX_OFF = false; // 侧边栏不固定的值
                 const path =
                     inputEvent.path || (inputEvent.composedPath && inputEvent.composedPath());
                 // if drag element isn't the head element, stop the drag event
-                if (!path || path[0] !== shadowDom.getElementById("head")) stop();
+                if (!path || !shadowDom.getElementById("panel-head").isSameNode(path[0])) stop();
             }
             set(startTranslate);
         })
@@ -129,15 +131,14 @@ const FIX_OFF = false; // 侧边栏不固定的值
  */
 function showPanel(content, template) {
     // Write contents into iframe.
-    resultPanel.innerHTML = render(Template[template], content);
-    addEventListener(template);
+    bodyPanel.innerHTML = render(Template[template], content);
+    addBodyEventListener(template);
     // if panel hasn't been displayed, locate the panel and show it
     if (!isChildNode(panelContainer, document.documentElement)) {
         // 获取用户对侧边栏展示位置的设定
         chrome.storage.sync.get("LayoutSettings", async function(result) {
             var layoutSettings = result.LayoutSettings;
             popupPosition = layoutSettings["PopupPosition"]; // 保存侧边栏展示的位置
-            // document.documentElement.appendChild(panelContainer);
             if (content.position) {
                 let position = content.position;
                 moveablePanel.snappable = true;
@@ -252,8 +253,6 @@ function showPanel(content, template) {
                 });
             }
             document.documentElement.appendChild(panelContainer);
-            await delayPromise(100);
-            resultPanel.style.visibility = "visible";
             // startSlider(layoutSettings);
             // addEventListener();
 
@@ -399,9 +398,9 @@ async function resize(width, height) {
 }
 
 /**
- * 需要对侧边栏中的元素添加事件监听时，请在此函数中添加
+ * add event listeners to the panel-head elements
  */
-function addEventListener(template) {
+function addHeadEventListener() {
     // 给关闭按钮添加点击事件监听，用于关闭侧边栏
     shadowDom.getElementById("icon-close").addEventListener("click", removePanel);
     // 给固定侧边栏的按钮添加点击事件监听，用户侧边栏的固定与取消固定
@@ -415,6 +414,13 @@ function addEventListener(template) {
             fixOn();
         }
     });
+}
+
+/**
+ * add event listeners to panel body elements
+ * @param {String} template the name of the current using template
+ */
+function addBodyEventListener(template) {
     switch (template) {
         case "result": {
             // copy the translation result to the copy board
@@ -431,15 +437,8 @@ function addEventListener(template) {
             break;
         }
         case "loading":
-            // 给关闭按钮添加点击事件监听，用于关闭侧边栏
-            shadowDom.getElementById("icon-close").addEventListener("click", removePanel);
             break;
         case "error":
-            // 给关闭按钮添加点击事件监听，用于关闭侧边栏
-            shadowDom.getElementById("icon-close").addEventListener("click", removePanel);
-            // 给固定侧边栏的按钮添加点击事件监听，用户侧边栏的固定与取消固定
-            shadowDom.getElementById("icon-tuding-fix").addEventListener("click", fixOn);
-            shadowDom.getElementById("icon-tuding-full").addEventListener("click", fixOff);
             break;
         default:
             break;
