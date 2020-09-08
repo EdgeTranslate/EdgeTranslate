@@ -1,5 +1,5 @@
 import axios from "axios";
-import TRANSLATOR from "../../src/translators/google.js";
+import TRANSLATOR from "../../src/background/library/translators/google.js";
 
 describe("google translator api", () => {
     beforeEach(() => {

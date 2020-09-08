@@ -1,5 +1,5 @@
 import axios from "axios";
-import TRANSLATOR from "../../src/translators/tencent.js";
+import TRANSLATOR from "../../src/background/library/translators/tencent.js";
 
 describe("tencent translator api", () => {
     beforeAll(() => {

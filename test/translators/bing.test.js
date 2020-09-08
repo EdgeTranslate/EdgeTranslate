@@ -1,5 +1,5 @@
 import axios from "axios";
-import TRANSLATOR from "../../src/translators/bing.js";
+import TRANSLATOR from "../../src/background/library/translators/bing.js";
 
 describe("bing translator api", () => {
     beforeAll(() => {

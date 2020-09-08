@@ -1,7 +1,7 @@
 import axios from "axios";
 import fs from "fs";
 import mockAdapter from "axios-mock-adapter";
-import TRANSLATOR from "../../src/translators/baidu.js";
+import TRANSLATOR from "../../src/background/library/translators/baidu.js";
 
 describe("baidu translator api", () => {
     beforeEach(() => {
