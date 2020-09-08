@@ -134,7 +134,7 @@ function showPanel(content, template) {
     bodyPanel.innerHTML = render(Template[template], content);
     addBodyEventListener(template);
     // if panel hasn't been displayed, locate the panel and show it
-    if (!isChildNode(panelContainer, document.documentElement)) {
+    if (!document.documentElement.contains(panelContainer)) {
         // 获取用户对侧边栏展示位置的设定
         chrome.storage.sync.get("LayoutSettings", async function(result) {
             var layoutSettings = result.LayoutSettings;
@@ -446,23 +446,6 @@ function addBodyEventListener(template) {
 }
 
 /**
- *
- * 一个工具api,判断传入的第一个元素是否是传入的第二个元素的子节点
- *
- * @param {Element} node1 第一个document Element 元素,非空
- * @param {Element} node2 第二个document Element 元素，非空
- */
-function isChildNode(node1, node2) {
-    // 判断传入的参数是否合法
-    if (!(node1 && node2)) return false;
-    while (node1 && !node1.isSameNode(document.body)) {
-        if (node1.isSameNode(node2)) return true;
-        else node1 = node1.parentNode;
-    }
-    return false;
-}
-
-/**
  * change CSS style of body element and the shadowDom element
  * the body size will be contracted
  */
@@ -489,7 +472,7 @@ function getElementLeft(element) {
  */
 function clickListener(event) {
     let node = event.target;
-    if (!isChildNode(node, panelContainer)) {
+    if (!panelContainer.contains(node)) {
         removePanel();
     }
 }
@@ -498,7 +481,7 @@ function clickListener(event) {
  * remove the panel from the page
  */
 function removePanel() {
-    if (isChildNode(panelContainer, document.documentElement)) {
+    if (document.documentElement.contains(panelContainer)) {
         document.documentElement.removeChild(panelContainer);
         moveablePanel.snappable = false;
 
@@ -545,7 +528,7 @@ function fixOff() {
  * Send message to background to pronounce the translating text.
  */
 function sourcePronounce() {
-    if (isChildNode(panelContainer, document.documentElement)) {
+    if (document.documentElement.contains(panelContainer)) {
         Messager.send("background", "pronounce", {
             text: translateResult.originalText,
             language: translateResult.sourceLanguage,
@@ -561,7 +544,7 @@ function sourcePronounce() {
 }
 
 function targetPronounce() {
-    if (isChildNode(panelContainer, document.documentElement)) {
+    if (document.documentElement.contains(panelContainer)) {
         Messager.send("background", "pronounce", {
             text: translateResult.mainMeaning,
             language: translateResult.targetLanguage,
