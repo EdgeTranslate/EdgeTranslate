@@ -1,5 +1,5 @@
 import css from "css";
-import style from "./moveable.css";
+// import style from "./moveable.css";
 // const style = require("./moveable.css");
 
 export default class moveable {
@@ -14,7 +14,37 @@ export default class moveable {
         this.dragging = false;
         // store some drag status value
         this.dragSore = {};
+
+        // store the activated resizable direction of the target element
+        // all valid directions: [s, se, e, ne, n, nw, w, sw]
+        this.directions = [];
+        this.parseDirection();
         this.resizeInitiate();
+    }
+
+    /**
+     * parse the direction option in this.options to an array
+     * all valid directions: [s, se, e, ne, n, nw, w, sw]
+     */
+    parseDirection() {
+        switch (getVarType(this.options.directions)) {
+            case "Array":
+                this.directions = this.options.directions;
+                break;
+            case "string": {
+                let arr = this.options.directions.match(/([swne]+)/g);
+                for (let i in arr) {
+                    this.directions.push(arr[i]);
+                }
+                break;
+            }
+            case "Object": {
+                for (let d in this.options.directions) this.directions.push(d);
+                break;
+            }
+            case "undefined":
+                this.directions = ["s", "se", "e", "ne", "n", "nw", "w", "sw"];
+        }
     }
 
     /**
@@ -99,7 +129,32 @@ export default class moveable {
         });
     }
 
+    /**
+     *  valid directions: s, se, e, ne, n, nw, w, sw
+     */
     resizeInitiate() {
+        if (this.options.resizable) {
+            for (let direction of this.options.direction) {
+                switch (direction) {
+                    case "s":
+                        break;
+                    case "se":
+                        break;
+                    case "e":
+                        break;
+                    case "ne":
+                        break;
+                    case "n":
+                        break;
+                    case "nw":
+                        break;
+                    case "w":
+                        break;
+                    case "sw":
+                        break;
+                }
+            }
+        }
         // TODO
     }
 
@@ -237,4 +292,16 @@ function cssPreProcess(style) {
         return text;
     };
     return result;
+}
+
+function getVarType(val) {
+    let type = typeof val;
+    // object need to be judged by Object.prototype.toString.call
+    if (type === "object") {
+        let typeStr = Object.prototype.toString.call(val);
+        // parse [object String]
+        typeStr = typeStr.split(" ")[1];
+        type = typeStr.substring(0, typeStr.length - 1);
+    }
+    return type;
 }
