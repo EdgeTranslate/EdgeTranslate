@@ -1,4 +1,5 @@
 import render from "./library/render.js";
+import myMoveable from "./library/moveable.js";
 import { isChromePDFViewer } from "../common.js";
 import Messager from "../../common/scripts/messager.js";
 import { delayPromise } from "../../common/scripts/promise.js";
@@ -76,6 +77,16 @@ const FIX_OFF = false; // 侧边栏不固定的值
         target: resultPanel,
         // If the container is null, the position is fixed. (default: parentElement(document.body))
         container: null,
+        draggable: false,
+        resizable: true,
+        snappable: false,
+        edge: true,
+        origin: false,
+        // Add padding around the target to increase the drag area.
+        padding: { left: 5, top: 5, right: 5, bottom: 5 }
+    });
+
+    let myMoveableTest = new myMoveable(resultPanel, {
         draggable: true,
         resizable: true,
         snappable: false,
@@ -85,8 +96,7 @@ const FIX_OFF = false; // 侧边栏不固定的值
         padding: { left: 5, top: 5, right: 5, bottom: 5 }
     });
     let startTranslate = [0, 0];
-    /* draggable events*/
-    moveablePanel
+    myMoveableTest
         .on("dragStart", ({ set, stop, inputEvent }) => {
             if (inputEvent) {
                 const path =
@@ -96,10 +106,27 @@ const FIX_OFF = false; // 侧边栏不固定的值
             }
             set(startTranslate);
         })
-        .on("drag", ({ target, beforeTranslate }) => {
-            startTranslate = beforeTranslate;
-            target.style.transform = `translate(${beforeTranslate[0]}px, ${beforeTranslate[1]}px)`;
+        .on("drag", ({ target, translate }) => {
+            startTranslate = translate;
+            target.style.transform = `translate(${translate[0]}px,${translate[1]}px)`;
         });
+
+    // let startTranslate = [0, 0];
+    // /* draggable events*/
+    // moveablePanel
+    //     .on("dragStart", ({ set, stop, inputEvent }) => {
+    //         if (inputEvent) {
+    //             const path =
+    //                 inputEvent.path || (inputEvent.composedPath && inputEvent.composedPath());
+    //             // if drag element isn't the head element, stop the drag event
+    //             if (!path || !shadowDom.getElementById("panel-head").isSameNode(path[0])) stop();
+    //         }
+    //         set(startTranslate);
+    //     })
+    //     .on("drag", ({ target, beforeTranslate }) => {
+    //         startTranslate = beforeTranslate;
+    //         target.style.transform = `translate(${beforeTranslate[0]}px, ${beforeTranslate[1]}px)`;
+    //     });
     /* resizable  events*/
     moveablePanel
         .on("resizeStart", ({ setOrigin, dragStart }) => {
@@ -459,20 +486,6 @@ function addBodyEventListener(template) {
         default:
             break;
     }
-}
-
-/**
- * change CSS style of body element and the shadowDom element
- * the body size will be contracted
- */
-function getElementLeft(element) {
-    var actualLeft = element.offsetLeft;
-    var current = element.offsetParent;
-    while (current !== null) {
-        actualLeft += current.offsetLeft + current.clientLeft;
-        current = current.offsetParent;
-    }
-    return actualLeft;
 }
 
 /**
