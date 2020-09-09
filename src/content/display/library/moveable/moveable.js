@@ -15,45 +15,14 @@ export default class moveable {
         this.dragSore = {};
         // store some resize status value
         this.resizeStore = {};
+        // flag if the element is resizing
+        this.resizing = false;
 
         this.resizeThreshold = this.options.threshold || 10;
         // store the activated resizable direction of the target element
         // all valid directions: [s, se, e, ne, n, nw, w, sw]
         this.directions = {};
-        this.parseDirection();
         this.resizeInitiate();
-    }
-
-    /**
-     * parse the direction option in this.options to an array
-     * all valid directions: [s, se, e, ne, n, nw, w, sw]
-     */
-    parseDirection() {
-        switch (getVarType(this.options.directions)) {
-            case "Array":
-                for (let d of this.options.directions) this.directions[d] = null;
-                break;
-            case "string": {
-                let arr = this.options.directions.match(/([swne]+)/g);
-                for (let i in arr) this.directions[arr[i]] = null;
-                break;
-            }
-            case "Object": {
-                this.directions = this.options.directions;
-                break;
-            }
-            case "undefined":
-                this.directions = {
-                    s: null,
-                    se: null,
-                    e: null,
-                    ne: null,
-                    n: null,
-                    nw: null,
-                    w: null,
-                    sw: null
-                };
-        }
     }
 
     /**
@@ -139,10 +108,15 @@ export default class moveable {
     }
 
     /**
-     *  valid directions: s, se, e, ne, n, nw, w, sw
+     * do some initial thing for resizable function:
+     * 1. add resizable div elements to the target element
+     * 2. add mouse down event listener to the resizable div element
      */
     resizeInitiate() {
         if (this.options.resizable) {
+            // parse the direction parameter given by users
+            this.parseDirection();
+
             let cssObject = cssPreProcess(style);
             /* create a container for resizable div elements */
             let divContainer = document.createElement("div");
@@ -191,14 +165,83 @@ export default class moveable {
                 div.id = `resizable-${direction}`;
                 div.style.cssText = cssObject.stringifyItems(divCss);
                 divContainer.appendChild(div);
+                divContainer.addEventListener("mousedown", this.dragStart);
                 this.directions[direction] = div;
             }
         }
-        // TODO
     }
 
-    resizeStart() {
-        // TODO
+    /**
+     * parse the direction option in this.options to an array
+     * all valid directions: [s, se, e, ne, n, nw, w, sw]
+     * support array(e.g.: [s,se]), string(e.g.: "s,se") and object(e.g.: {s:null,se:null}) these types of parameter
+     */
+    parseDirection() {
+        this.directions = {};
+        switch (getVarType(this.options.directions)) {
+            case "Array":
+                for (let d of this.options.directions) this.directions[d] = null;
+                break;
+            case "string": {
+                let arr = this.options.directions.match(/([swne]+)/g);
+                for (let i in arr) this.directions[arr[i]] = null;
+                break;
+            }
+            case "Object": {
+                this.directions = this.options.directions;
+                break;
+            }
+            case "undefined":
+                this.directions = {
+                    s: null,
+                    se: null,
+                    e: null,
+                    ne: null,
+                    n: null,
+                    nw: null,
+                    w: null,
+                    sw: null
+                };
+        }
+    }
+
+    /**
+     * the resize start event handler(mouse down event handler)
+     * store some status value of resize start event
+     * @param {event} e the mouse down event
+     */
+    resizeStart(e) {
+        this.resizing = true;
+        // store the start css translate value. [x,y]
+        // this.resizeStore.startTranslate
+        // store the start mouse absolute position. [x,y]
+        this.resizeStore.startMouse = [e.pageX, e.pageY];
+        // store the start element absolute position. [x,y]
+        this.resizeStore.startElement = [
+            this.targetElement.getBoundingClientRect().left + document.documentElement.scrollLeft,
+            this.targetElement.getBoundingClientRect().top + document.documentElement.scrollTop
+        ];
+        // store the activated resizable div elements
+        this.resizeStore.target = event.target;
+
+        /* call the drag start handler written by the user */
+        this.handlers.resizeStart &&
+            this.handlers.resizable({
+                // set the start position
+                set: position => {
+                    this.resizeStore.startTranslate = position;
+                    this.targetElement.style.transform = `translate(${position[0]}px,${position[1]}px)`;
+                },
+                // stop the following drag and dragEnd events
+                stop: () => {
+                    this.resizing = false;
+                },
+                clientX: e.clientX,
+                clientY: e.clientY,
+                pageX: e.pageX,
+                pageY: e.pageY
+            });
+        if (this.resizing) document.documentElement.addEventListener("mousemove", this.resize);
     }
 
     resize() {

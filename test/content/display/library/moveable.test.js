@@ -2,7 +2,9 @@ import moveable from "../../../../src/content/display/library/moveable/moveable.
 
 describe("moveable api in content module", () => {
     it("to parse the direction option", done => {
-        expect(new moveable(document.body, {}).directions).toEqual({
+        let moveableE = new moveable(document.body, {});
+        moveableE.parseDirection();
+        expect(moveableE.directions).toEqual({
             s: null,
             se: null,
             e: null,
@@ -12,23 +14,33 @@ describe("moveable api in content module", () => {
             w: null,
             sw: null
         });
+
+        moveableE.options.directions = [];
+        moveableE.parseDirection();
+        expect(moveableE.directions).toEqual({});
+
         let directionTarget = {
             se: null,
             ne: null,
             nw: null,
             sw: null
         };
-        expect(new moveable(document.body, { directions: [] }).directions).toEqual({});
-        expect(
-            new moveable(document.body, { directions: ["se", "ne", "nw", "sw"] }).directions
-        ).toEqual(directionTarget);
-        expect(new moveable(document.body, { directions: "" }).directions).toEqual({});
-        expect(new moveable(document.body, { directions: "se,ne,nw,sw" }).directions).toEqual(
-            directionTarget
-        );
-        expect(new moveable(document.body, { directions: directionTarget }).directions).toEqual(
-            directionTarget
-        );
+        moveableE.options.directions = ["se", "ne", "nw", "sw"];
+        moveableE.parseDirection();
+        expect(moveableE.directions).toEqual(directionTarget);
+
+        moveableE.options.directions = "";
+        moveableE.parseDirection();
+        expect(moveableE.directions).toEqual({});
+
+        moveableE.options.directions = "se,ne,nw,sw";
+        moveableE.parseDirection();
+        expect(moveableE.directions).toEqual(directionTarget);
+
+        moveableE.options.directions = directionTarget;
+        moveableE.parseDirection();
+        expect(moveableE.directions).toEqual(directionTarget);
+
         done();
     });
 });
