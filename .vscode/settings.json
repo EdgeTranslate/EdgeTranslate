@@ -1,37 +1,32 @@
 {
     "spellright.language": [],
-    "spellright.documentTypes": [
-        "markdown",
-        "latex",
-        "plaintext"
-    ],
+    "spellright.documentTypes": ["markdown", "latex", "plaintext"],
     "spellright.parserByClass": {
         "stylus": {
             "parser": "plain"
         }
     },
-    "VSCodeCounter.include": [
-        "**/src/**",
-        "**/static/_locales/**"
-    ],
+    "VSCodeCounter.include": ["**/src/**", "**/static/_locales/**"],
     "VSCodeCounter.outputDirectory": "build/counter/",
     "cSpell.words": [
-		"Bing",
-		"IGIID",
-		"Messager",
-		"Tencent",
-		"contenteditable",
-		"fanyi",
-		"objs",
-		"pageview",
-		"snappable",
-		"srcdoc",
-		"ssel",
-		"styl",
-		"tsel",
-		"ttsspeed",
-		"tuding",
-		"webapp",
-		"youdao"
-	]
+        "Bing",
+        "IGIID",
+        "Messager",
+        "Tencent",
+        "contenteditable",
+        "fanyi",
+        "nesw",
+        "nwse",
+        "objs",
+        "pageview",
+        "snappable",
+        "srcdoc",
+        "ssel",
+        "styl",
+        "tsel",
+        "ttsspeed",
+        "tuding",
+        "webapp",
+        "youdao"
+    ]
 }

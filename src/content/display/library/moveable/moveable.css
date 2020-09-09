@@ -1,17 +1,68 @@
-#resizable-bottom {
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    cursor: n-resize;
+#resizable-container {
     overflow: hidden;
     opacity: 0;
 }
 
-#resizable-right {
+#resizable-s {
+    width: 100%;
     position: absolute;
     left: 0;
     bottom: 0;
-    cursor: n-resize;
-    overflow: hidden;
-    opacity: 0;
+    cursor: ns-resize;
+}
+
+#resizable-se {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    cursor: nwse-resize;
+    z-index: 1;
+}
+
+#resizable-e {
+    height: 100%;
+    position: absolute;
+    right: 0;
+    top: 0;
+    cursor: ew-resize;
+}
+
+#resizable-ne {
+    position: absolute;
+    right: 0;
+    top: 0;
+    cursor: nesw-resize;
+    z-index: 1;
+}
+
+#resizable-n {
+    width: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    cursor: ns-resize;
+}
+
+#resizable-nw {
+    position: absolute;
+    left: 0;
+    top: 0;
+    cursor: nwse-resize;
+    z-index: 1;
+}
+
+#resizable-w {
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    cursor: ew-resize;
+}
+
+#resizable-sw {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    cursor: nesw-resize;
+    z-index: 1;
 }

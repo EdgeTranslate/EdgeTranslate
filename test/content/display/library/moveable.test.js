@@ -2,28 +2,33 @@ import moveable from "../../../../src/content/display/library/moveable/moveable.
 
 describe("moveable api in content module", () => {
     it("to parse the direction option", done => {
-        expect(new moveable(document.body, {}).directions).toEqual([
-            "s",
-            "se",
-            "e",
-            "ne",
-            "n",
-            "nw",
-            "w",
-            "sw"
-        ]);
-        let arrayTarget = ["se", "ne", "nw", "sw"];
-        expect(new moveable(document.body, { directions: arrayTarget }).directions).toEqual(
-            arrayTarget
-        );
-        expect(new moveable(document.body, { directions: "" }).directions).toEqual([]);
-        expect(new moveable(document.body, { directions: "se,ne,nw,sw" }).directions).toEqual(
-            arrayTarget
-        );
+        expect(new moveable(document.body, {}).directions).toEqual({
+            s: null,
+            se: null,
+            e: null,
+            ne: null,
+            n: null,
+            nw: null,
+            w: null,
+            sw: null
+        });
+        let directionTarget = {
+            se: null,
+            ne: null,
+            nw: null,
+            sw: null
+        };
+        expect(new moveable(document.body, { directions: [] }).directions).toEqual({});
         expect(
-            new moveable(document.body, { directions: { se: null, ne: null, nw: null, sw: null } })
-                .directions
-        ).toEqual(arrayTarget);
+            new moveable(document.body, { directions: ["se", "ne", "nw", "sw"] }).directions
+        ).toEqual(directionTarget);
+        expect(new moveable(document.body, { directions: "" }).directions).toEqual({});
+        expect(new moveable(document.body, { directions: "se,ne,nw,sw" }).directions).toEqual(
+            directionTarget
+        );
+        expect(new moveable(document.body, { directions: directionTarget }).directions).toEqual(
+            directionTarget
+        );
         done();
     });
 });

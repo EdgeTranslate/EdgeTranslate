@@ -1,6 +1,5 @@
-// import css from "css";
-// import style from "./moveable.css";
-// const style = require("./moveable.css");
+import css from "css";
+import style from "./moveable.css"; // read plain content from css file
 
 export default class moveable {
     constructor(targetElement, options) {
@@ -20,7 +19,7 @@ export default class moveable {
         this.resizeThreshold = this.options.threshold || 10;
         // store the activated resizable direction of the target element
         // all valid directions: [s, se, e, ne, n, nw, w, sw]
-        this.directions = [];
+        this.directions = {};
         this.parseDirection();
         this.resizeInitiate();
     }
@@ -32,21 +31,28 @@ export default class moveable {
     parseDirection() {
         switch (getVarType(this.options.directions)) {
             case "Array":
-                this.directions = this.options.directions;
+                for (let d of this.options.directions) this.directions[d] = null;
                 break;
             case "string": {
                 let arr = this.options.directions.match(/([swne]+)/g);
-                for (let i in arr) {
-                    this.directions.push(arr[i]);
-                }
+                for (let i in arr) this.directions[arr[i]] = null;
                 break;
             }
             case "Object": {
-                for (let d in this.options.directions) this.directions.push(d);
+                this.directions = this.options.directions;
                 break;
             }
             case "undefined":
-                this.directions = ["s", "se", "e", "ne", "n", "nw", "w", "sw"];
+                this.directions = {
+                    s: null,
+                    se: null,
+                    e: null,
+                    ne: null,
+                    n: null,
+                    nw: null,
+                    w: null,
+                    sw: null
+                };
         }
     }
 
@@ -137,28 +143,56 @@ export default class moveable {
      */
     resizeInitiate() {
         if (this.options.resizable) {
-            this.targetElement.addEventListener("mousemove", () => {
-                for (let direction of this.directions) {
-                    switch (direction) {
-                        case "s":
-                            break;
-                        case "se":
-                            break;
-                        case "e":
-                            break;
-                        case "ne":
-                            break;
-                        case "n":
-                            break;
-                        case "nw":
-                            break;
-                        case "w":
-                            break;
-                        case "sw":
-                            break;
-                    }
+            let cssObject = cssPreProcess(style);
+            /* create a container for resizable div elements */
+            let divContainer = document.createElement("div");
+            let divContainerID = "resizable-container";
+            divContainer.id = divContainerID;
+            divContainer.style.cssText = cssObject.stringifyItems(cssObject[`#${divContainerID}`]);
+            this.targetElement.appendChild(divContainer);
+            /* create resizable div elements according to direction settings */
+            for (let direction in this.directions) {
+                // css setting of the specific div
+                let divCss = cssObject[`#resizable-${direction}`];
+                let thresholdCSSValue = `${this.resizeThreshold}px`;
+                /* change css setting according to direction */
+                switch (direction) {
+                    case "s":
+                        divCss.height = thresholdCSSValue;
+                        break;
+                    case "se":
+                        divCss.width = thresholdCSSValue;
+                        divCss.height = thresholdCSSValue;
+                        break;
+                    case "e":
+                        divCss.width = thresholdCSSValue;
+                        break;
+                    case "ne":
+                        divCss.width = thresholdCSSValue;
+                        divCss.height = thresholdCSSValue;
+                        break;
+                    case "n":
+                        divCss.height = thresholdCSSValue;
+                        break;
+                    case "nw":
+                        divCss.width = thresholdCSSValue;
+                        divCss.height = thresholdCSSValue;
+                        break;
+                    case "w":
+                        divCss.width = thresholdCSSValue;
+                        break;
+                    case "sw":
+                        divCss.width = thresholdCSSValue;
+                        divCss.height = thresholdCSSValue;
+                        break;
                 }
-            });
+                /* create resizable div elements and append to the container */
+                let div = document.createElement("div");
+                div.id = `resizable-${direction}`;
+                div.style.cssText = cssObject.stringifyItems(divCss);
+                divContainer.appendChild(div);
+                this.directions[direction] = div;
+            }
         }
         // TODO
     }
@@ -297,43 +331,43 @@ export default class moveable {
     }
 }
 
-// /**
-//  * pre precess a css string to an object
-//  * @param {String} style css style string
-//  * @returns {Object} {selectorName:{property:value},...,stringifyItems:function,toString:function}
-//  */
-// function cssPreProcess(style) {
-//     let ast = css.parse(style);
-//     let result = {};
-//     for (let rule of ast.stylesheet.rules) {
-//         let item = {};
-//         let selector = rule.selectors[0];
-//         for (let declaration of rule.declarations) {
-//             item[declaration.property] = declaration.value;
-//         }
-//         result[selector] = item;
-//     }
-//     /**
-//      * stringify css entries of property and value
-//      * @param {Object} items {cssProperty: value}
-//      */
-//     result.stringifyItems = function(items) {
-//         let text = "";
-//         for (let key in items) {
-//             text += `${key}: ${items[key]};\n`;
-//         }
-//         return text;
-//     };
-//     result.toString = function() {
-//         let text = "";
-//         for (let selector in this) {
-//             if (typeof this[selector] !== "function")
-//                 text += `${selector}{\n${this.stringifyItems(this[selector])}}\n`;
-//         }
-//         return text;
-//     };
-//     return result;
-// }
+/**
+ * pre precess a css string to an object
+ * @param {String} style css style string
+ * @returns {Object} {selectorName:{property:value},...,stringifyItems:function,toString:function}
+ */
+function cssPreProcess(style) {
+    let ast = css.parse(style);
+    let result = {};
+    for (let rule of ast.stylesheet.rules) {
+        let item = {};
+        let selector = rule.selectors[0];
+        for (let declaration of rule.declarations) {
+            item[declaration.property] = declaration.value;
+        }
+        result[selector] = item;
+    }
+    /**
+     * stringify css entries of property and value
+     * @param {Object} items {cssProperty: value}
+     */
+    result.stringifyItems = function(items) {
+        let text = "";
+        for (let key in items) {
+            text += `${key}: ${items[key]};\n`;
+        }
+        return text;
+    };
+    result.toString = function() {
+        let text = "";
+        for (let selector in this) {
+            if (typeof this[selector] !== "function")
+                text += `${selector}{\n${this.stringifyItems(this[selector])}}\n`;
+        }
+        return text;
+    };
+    return result;
+}
 
 function getVarType(val) {
     let type = typeof val;
