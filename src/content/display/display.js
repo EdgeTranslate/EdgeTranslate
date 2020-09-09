@@ -73,20 +73,10 @@ const FIX_OFF = false; // 侧边栏不固定的值
     window.addEventListener("resize", windowResizeHandler);
 
     /* make the resultPanel resizable and draggable */
-    moveablePanel = new Moveable(shadowDom, {
+    moveablePanel = new myMoveable(resultPanel, {
         target: resultPanel,
         // If the container is null, the position is fixed. (default: parentElement(document.body))
         container: null,
-        draggable: false,
-        resizable: true,
-        snappable: false,
-        edge: true,
-        origin: false,
-        // Add padding around the target to increase the drag area.
-        padding: { left: 5, top: 5, right: 5, bottom: 5 }
-    });
-
-    let myMoveableTest = new myMoveable(resultPanel, {
         draggable: true,
         resizable: true,
         snappable: false,
@@ -95,8 +85,10 @@ const FIX_OFF = false; // 侧边栏不固定的值
         // Add padding around the target to increase the drag area.
         padding: { left: 5, top: 5, right: 5, bottom: 5 }
     });
+
     let startTranslate = [0, 0];
-    myMoveableTest
+    /* draggable events*/
+    moveablePanel
         .on("dragStart", ({ set, stop, inputEvent }) => {
             if (inputEvent) {
                 const path =
@@ -108,25 +100,8 @@ const FIX_OFF = false; // 侧边栏不固定的值
         })
         .on("drag", ({ target, translate }) => {
             startTranslate = translate;
-            target.style.transform = `translate(${translate[0]}px,${translate[1]}px)`;
+            target.style.transform = `translate(${translate[0]}px, ${translate[1]}px)`;
         });
-
-    // let startTranslate = [0, 0];
-    // /* draggable events*/
-    // moveablePanel
-    //     .on("dragStart", ({ set, stop, inputEvent }) => {
-    //         if (inputEvent) {
-    //             const path =
-    //                 inputEvent.path || (inputEvent.composedPath && inputEvent.composedPath());
-    //             // if drag element isn't the head element, stop the drag event
-    //             if (!path || !shadowDom.getElementById("panel-head").isSameNode(path[0])) stop();
-    //         }
-    //         set(startTranslate);
-    //     })
-    //     .on("drag", ({ target, beforeTranslate }) => {
-    //         startTranslate = beforeTranslate;
-    //         target.style.transform = `translate(${beforeTranslate[0]}px, ${beforeTranslate[1]}px)`;
-    //     });
     /* resizable  events*/
     moveablePanel
         .on("resizeStart", ({ setOrigin, dragStart }) => {
@@ -178,7 +153,7 @@ function showPanel(content, template) {
                 window.addEventListener("scroll", updateBounds);
                 let scrollLeft = document.documentElement.scrollLeft || document.body.scrollLeft;
                 let scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-                move(300, 600, position.XPosition + scrollLeft, position.YPosition + scrollTop);
+                move(300, 600, position.XPosition, position.YPosition);
             } else {
                 // 获取用户上次通过resize设定的侧边栏宽度
                 chrome.storage.sync.get("sideWidth", async function(result) {

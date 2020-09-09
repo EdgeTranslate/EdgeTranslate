@@ -101,4 +101,56 @@ export default class moveable {
         }
         return this;
     }
+
+    /**
+     * make the target movable element to do the request movement
+     * @param {String} moveableType "draggable": do drag movement. "resizable": do resize movement
+     * @param {Object} moveableParameter the specific moveable parameters
+     */
+    request(moveableType, moveableParameter) {
+        switch (moveableType) {
+            case "draggable":
+                this.dragRequest(moveableParameter);
+                break;
+            case "resizable":
+                break;
+        }
+    }
+
+    /**
+     *	drag the target draggable element to the request position
+     * @param {Object} draggableParameter {x:absolute x value,y:absolute y value,deltaX: delta x value, deltaY: delta y value}
+     */
+    dragRequest(draggableParameter) {
+        if (this.options.draggable) {
+            if (draggableParameter) {
+                this.dragging = true;
+                // store the start css translate value. [x,y]
+                this.dragSore.startTranslate = [];
+
+                this.handlers.dragStart({
+                    set: position => {
+                        this.dragSore.startTranslate = position;
+                    },
+                    stop: () => {
+                        this.dragging = false;
+                    }
+                });
+                let translate;
+                if (draggableParameter.x && draggableParameter.y)
+                    translate = [draggableParameter.x, draggableParameter.y];
+                else if (draggableParameter.deltaX && draggableParameter.deltaY) {
+                    translate = [
+                        this.dragSore.startTranslate[0] + draggableParameter.deltaX,
+                        this.dragSore.startTranslate[1] + draggableParameter.deltaY
+                    ];
+                }
+                this.handlers.drag({
+                    target: this.targetElement,
+                    transform: `translate(${translate[0]}px,${translate[1]}px)`,
+                    translate: translate
+                });
+            }
+        }
+    }
 }
