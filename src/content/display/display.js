@@ -81,6 +81,7 @@ const FIX_OFF = false; // 侧边栏不固定的值
         snappable: false,
         edge: true,
         origin: false,
+        threshold: 1,
         // Add padding around the target to increase the drag area.
         padding: { left: 5, top: 5, right: 5, bottom: 5 }
     });

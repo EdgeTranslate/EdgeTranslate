@@ -9,15 +9,20 @@ export default class moveable {
         this.targetElement = targetElement;
         // store the options the user set
         this.options = options;
+
+        /* draggable part */
         // flag if the element is dragging
         this.dragging = false;
         // store some drag status value
         this.dragSore = {};
+        this.dragInitiate();
+
+        /* resizable part */
         // store some resize status value
         this.resizeStore = {};
         // flag if the element is resizing
         this.resizing = false;
-
+        // store the threshold value for resizable function
         this.resizeThreshold = this.options.threshold || 10;
         // store the activated resizable direction of the target element
         // all valid directions: [s, se, e, ne, n, nw, w, sw]
@@ -26,68 +31,79 @@ export default class moveable {
     }
 
     /**
-     * add mouse down event listener
-     * set drag start status
+     * do some initial thing for draggable function
+     * 1. generate drag start and drag event handlers by wrapping this.dragStart and this.drag
+     * 2. add mouse down event listener to the target draggable element
      */
-    dragStart() {
+    dragInitiate() {
         if (this.options.draggable) {
             this.dragEnd();
-            this.targetElement.addEventListener("mousedown", e => {
-                this.dragging = true;
-                // store the start css translate value. [x,y]
-                this.dragSore.startTranslate = [];
-                // store the start mouse absolute position. [x,y]
-                this.dragSore.startMouse = [e.pageX, e.pageY];
-                // store the start element absolute position. [x,y]
-                this.dragSore.startElement = [
-                    this.targetElement.getBoundingClientRect().left +
-                        document.documentElement.scrollLeft,
-                    this.targetElement.getBoundingClientRect().top +
-                        document.documentElement.scrollTop
-                ];
-
-                this.handlers.dragStart({
-                    inputEvent: e,
-                    set: position => {
-                        this.dragSore.startTranslate = position;
-                        this.targetElement.style.transform = `translate(${position[0]}px,${position[1]}px)`;
-                    },
-                    stop: () => {
-                        this.dragging = false;
-                    },
-                    clientX: e.clientX,
-                    clientY: e.clientY,
-                    pageX: e.pageX,
-                    pageY: e.pageY
-                });
-                if (this.dragging) this.drag();
-            });
+            // wrap a drag start event handler
+            this.dragStartHandler = function(e) {
+                this.dragStart(e);
+            }.bind(this);
+            // wrap a drag(dragging) event handler
+            this.dragHandler = function(e) {
+                this.drag(e);
+            }.bind(this);
+            this.targetElement.addEventListener("mousedown", this.dragStartHandler);
         }
     }
 
     /**
-     * add mouse move event listener
-     * calculate the current translate value
+     * the drag start event handler(mouse down event handler)
+     * store some status value of drag start event
+     * @param {event} e the mouse down event
      */
-    drag() {
-        this.dragSore.dragHandler = function(e) {
-            if (this.handlers.drag) {
-                // calculate the current translate value
-                let translate = [
-                    e.pageX - this.dragSore.startMouse[0] + this.dragSore.startTranslate[0],
-                    e.pageY - this.dragSore.startMouse[1] + this.dragSore.startTranslate[1]
-                ];
-                this.handlers.drag({
-                    inputEvent: e,
-                    target: this.targetElement,
-                    transform: `translate(${translate[0]}px,${translate[1]}px)`,
-                    translate: translate
-                });
-            }
-        }.bind(this);
-        if (this.dragging) {
-            document.documentElement.addEventListener("mousemove", this.dragSore.dragHandler);
-        }
+    dragStart(e) {
+        this.dragging = true;
+        // store the start css translate value. [x,y]
+        this.dragSore.startTranslate = [];
+        // store the start mouse absolute position. [x,y]
+        this.dragSore.startMouse = [e.pageX, e.pageY];
+        // store the start element absolute position. [x,y]
+        this.dragSore.startElement = [
+            this.targetElement.getBoundingClientRect().left + document.documentElement.scrollLeft,
+            this.targetElement.getBoundingClientRect().top + document.documentElement.scrollTop
+        ];
+
+        this.handlers.dragStart &&
+            this.handlers.dragStart({
+                inputEvent: e,
+                set: position => {
+                    this.dragSore.startTranslate = position;
+                    this.targetElement.style.transform = `translate(${position[0]}px,${position[1]}px)`;
+                },
+                stop: () => {
+                    this.dragging = false;
+                },
+                clientX: e.clientX,
+                clientY: e.clientY,
+                pageX: e.pageX,
+                pageY: e.pageY
+            });
+        if (this.dragging) document.documentElement.addEventListener("mousemove", this.dragHandler);
+    }
+
+    /**
+     * the drag(dragging) event handler(mouse move event handler)
+     * calculate the current translate value
+     * call the drag event handler given by users
+     * @param {event} e the mouse move event
+     */
+    drag(e) {
+        // calculate the current translate value
+        let translate = [
+            e.pageX - this.dragSore.startMouse[0] + this.dragSore.startTranslate[0],
+            e.pageY - this.dragSore.startMouse[1] + this.dragSore.startTranslate[1]
+        ];
+        this.handlers.drag &&
+            this.handlers.drag({
+                inputEvent: e,
+                target: this.targetElement,
+                transform: `translate(${translate[0]}px,${translate[1]}px)`,
+                translate: translate
+            });
     }
 
     /**
@@ -98,10 +114,7 @@ export default class moveable {
         document.documentElement.addEventListener("mouseup", () => {
             if (this.dragging) {
                 this.dragging = false;
-                document.documentElement.removeEventListener(
-                    "mousemove",
-                    this.dragSore.dragHandler
-                );
+                document.documentElement.removeEventListener("mousemove", this.dragHandler);
                 if (this.handlers.dragEnd) this.handlers.dragEnd();
             }
         });
@@ -109,11 +122,22 @@ export default class moveable {
 
     /**
      * do some initial thing for resizable function:
-     * 1. add resizable div elements to the target element
-     * 2. add mouse down event listener to the resizable div element
+     * 1. generate resize start and resize event handlers by wrapping this.resizeStart and this.resize
+     * 2. add resizable div elements to the target element
+     * 3. add mouse down event listener to the resizable div element
      */
     resizeInitiate() {
         if (this.options.resizable) {
+            this.resizeEnd();
+            // wrap a resize start event handler
+            this.resizeStartHandler = function(e) {
+                this.resizeStart(e);
+            }.bind(this);
+            // wrap a resize(resizing) event handler
+            this.resizeHandler = function(e) {
+                this.resize(e);
+            }.bind(this);
+
             // parse the direction parameter given by users
             this.parseDirection();
 
@@ -165,7 +189,8 @@ export default class moveable {
                 div.id = `resizable-${direction}`;
                 div.style.cssText = cssObject.stringifyItems(divCss);
                 divContainer.appendChild(div);
-                divContainer.addEventListener("mousedown", this.dragStart);
+                divContainer.addEventListener("mousedown", this.resizeStartHandler);
+                // store the div resizable element
                 this.directions[direction] = div;
             }
         }
@@ -222,11 +247,11 @@ export default class moveable {
             this.targetElement.getBoundingClientRect().top + document.documentElement.scrollTop
         ];
         // store the activated resizable div elements
-        this.resizeStore.target = event.target;
+        this.resizeStore.target = e.target;
 
         /* call the drag start handler written by the user */
         this.handlers.resizeStart &&
-            this.handlers.resizable({
+            this.handlers.resizeStart({
                 // set the start position
                 set: position => {
                     this.resizeStore.startTranslate = position;
@@ -241,7 +266,8 @@ export default class moveable {
                 pageX: e.pageX,
                 pageY: e.pageY
             });
-        if (this.resizing) document.documentElement.addEventListener("mousemove", this.resize);
+        if (this.resizing)
+            document.documentElement.addEventListener("mousemove", this.resizeHandler);
     }
 
     resize() {
@@ -253,19 +279,12 @@ export default class moveable {
     }
 
     /**
-     * add event handler to the movable object
+     * add an event handler to the movable object
      * @param {String} eventType the name of event type. enum:{dragStart,drag,dragEnd,resizeStart,resize,resizeEnd}
      * @param {function} handler the handler function of the corresponding event type
      */
     on(eventType, handler) {
         this.handlers[eventType] = handler;
-        switch (eventType) {
-            case "dragStart":
-                this.dragStart();
-                break;
-            case "drag":
-                break;
-        }
         return this;
     }
 
