@@ -137,9 +137,12 @@ export default class moveable {
                     }
                 });
                 let translate;
-                if (draggableParameter.x && draggableParameter.y)
+                if (draggableParameter.x !== undefined && draggableParameter.y !== undefined)
                     translate = [draggableParameter.x, draggableParameter.y];
-                else if (draggableParameter.deltaX && draggableParameter.deltaY) {
+                else if (
+                    draggableParameter.deltaX !== undefined &&
+                    draggableParameter.deltaY !== undefined
+                ) {
                     translate = [
                         this.dragSore.startTranslate[0] + draggableParameter.deltaX,
                         this.dragSore.startTranslate[1] + draggableParameter.deltaY

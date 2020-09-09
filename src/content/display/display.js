@@ -3,7 +3,7 @@ import myMoveable from "./library/moveable.js";
 import { isChromePDFViewer } from "../common.js";
 import Messager from "../../common/scripts/messager.js";
 import { delayPromise } from "../../common/scripts/promise.js";
-import Moveable from "moveable";
+// import Moveable from "moveable";
 
 /**
  * load templates
@@ -151,8 +151,6 @@ function showPanel(content, template) {
                 moveablePanel.snappable = true;
                 updateBounds();
                 window.addEventListener("scroll", updateBounds);
-                let scrollLeft = document.documentElement.scrollLeft || document.body.scrollLeft;
-                let scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
                 move(300, 600, position.XPosition, position.YPosition);
             } else {
                 // 获取用户上次通过resize设定的侧边栏宽度
@@ -169,7 +167,7 @@ function showPanel(content, template) {
                         sideWidth * window.innerWidth,
                         window.innerHeight,
                         (1 - sideWidth) * window.innerWidth,
-                        document.documentElement.scrollTop || document.body.scrollTop
+                        0
                     );
 
                     // if (resizeFlag) {
@@ -396,8 +394,7 @@ async function move(width, height, left, top) {
 function drag(left, top) {
     moveablePanel.request("draggable", {
         x: left,
-        y: top,
-        isInstant: true
+        y: top
     });
 }
 
