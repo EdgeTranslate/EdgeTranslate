@@ -17,9 +17,12 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /\.html$/,
+                test: [/\.html$/, /\.css$/],
                 use: "raw-loader"
             }
         ]
+    },
+    node: {
+        fs: "empty"
     }
 };

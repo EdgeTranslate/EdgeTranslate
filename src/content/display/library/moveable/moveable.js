@@ -1,3 +1,7 @@
+import css from "css";
+import style from "./moveable.css";
+// const style = require("./moveable.css");
+
 export default class moveable {
     constructor(targetElement, options) {
         // store all event handlers the user set
@@ -10,6 +14,7 @@ export default class moveable {
         this.dragging = false;
         // store some drag status value
         this.dragSore = {};
+        this.resizeInitiate();
     }
 
     /**
@@ -92,6 +97,10 @@ export default class moveable {
                 if (this.handlers.dragEnd) this.handlers.dragEnd();
             }
         });
+    }
+
+    resizeInitiate() {
+        // TODO
     }
 
     resizeStart() {
@@ -186,4 +195,46 @@ export default class moveable {
             }
         }
     }
+
+    resizeRequest(resizeParameter) {
+        // TODO
+    }
+}
+
+/**
+ * pre precess a css string to an object
+ * @param {String} style css style string
+ * @returns {Object} {selectorName:{property:value},...,stringifyItems:function,toString:function}
+ */
+function cssPreProcess(style) {
+    let ast = css.parse(style);
+    let result = {};
+    for (let rule of ast.stylesheet.rules) {
+        let item = {};
+        let selector = rule.selectors[0];
+        for (let declaration of rule.declarations) {
+            item[declaration.property] = declaration.value;
+        }
+        result[selector] = item;
+    }
+    /**
+     * stringify css entries of property and value
+     * @param {Object} items {cssProperty: value}
+     */
+    result.stringifyItems = function(items) {
+        let text = "";
+        for (let key in items) {
+            text += `${key}: ${items[key]};\n`;
+        }
+        return text;
+    };
+    result.toString = function() {
+        let text = "";
+        for (let selector in this) {
+            if (typeof this[selector] !== "function")
+                text += `${selector}{\n${this.stringifyItems(this[selector])}}\n`;
+        }
+        return text;
+    };
+    return result;
 }

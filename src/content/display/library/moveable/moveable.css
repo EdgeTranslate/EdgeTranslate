@@ -1,0 +1,17 @@
+#resizable-bottom {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    cursor: n-resize;
+    overflow: hidden;
+    opacity: 0;
+}
+
+#resizable-right {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    cursor: n-resize;
+    overflow: hidden;
+    opacity: 0;
+}

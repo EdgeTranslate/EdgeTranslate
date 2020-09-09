@@ -65,5 +65,8 @@
     "jest": {
         "verbose": true,
         "testTimeout": 10000
+    },
+    "dependencies": {
+        "css": "^3.0.0"
     }
 }
