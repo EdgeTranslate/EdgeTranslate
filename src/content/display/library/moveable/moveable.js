@@ -1,4 +1,4 @@
-import css from "css";
+// import css from "css";
 // import style from "./moveable.css";
 // const style = require("./moveable.css");
 
@@ -14,7 +14,10 @@ export default class moveable {
         this.dragging = false;
         // store some drag status value
         this.dragSore = {};
+        // store some resize status value
+        this.resizeStore = {};
 
+        this.resizeThreshold = this.options.threshold || 10;
         // store the activated resizable direction of the target element
         // all valid directions: [s, se, e, ne, n, nw, w, sw]
         this.directions = [];
@@ -134,26 +137,28 @@ export default class moveable {
      */
     resizeInitiate() {
         if (this.options.resizable) {
-            for (let direction of this.options.direction) {
-                switch (direction) {
-                    case "s":
-                        break;
-                    case "se":
-                        break;
-                    case "e":
-                        break;
-                    case "ne":
-                        break;
-                    case "n":
-                        break;
-                    case "nw":
-                        break;
-                    case "w":
-                        break;
-                    case "sw":
-                        break;
+            this.targetElement.addEventListener("mousemove", () => {
+                for (let direction of this.directions) {
+                    switch (direction) {
+                        case "s":
+                            break;
+                        case "se":
+                            break;
+                        case "e":
+                            break;
+                        case "ne":
+                            break;
+                        case "n":
+                            break;
+                        case "nw":
+                            break;
+                        case "w":
+                            break;
+                        case "sw":
+                            break;
+                    }
                 }
-            }
+            });
         }
         // TODO
     }
@@ -191,108 +196,144 @@ export default class moveable {
      * make the target movable element to do the request movement
      * @param {String} moveableType "draggable": do drag movement. "resizable": do resize movement
      * @param {Object} moveableParameter the specific moveable parameters
+     * @returns {boolean} if the request has been executed successfully
      */
     request(moveableType, moveableParameter) {
         switch (moveableType) {
             case "draggable":
-                this.dragRequest(moveableParameter);
-                break;
+                return this.dragRequest(moveableParameter);
             case "resizable":
-                break;
+                return this.resizeRequest(moveableParameter);
+            default:
+                return false;
         }
     }
 
     /**
      *	drag the target draggable element to the request position
      * @param {Object} draggableParameter {x:absolute x value,y:absolute y value,deltaX: delta x value, deltaY: delta y value}
+     * @returns {boolean} if the drag request has been executed successfully
      */
     dragRequest(draggableParameter) {
-        if (this.options.draggable) {
-            if (draggableParameter) {
-                /* drag start */
-                this.dragging = true;
-                // store the start css translate value. [x,y]
-                this.dragSore.startTranslate = [];
+        if (!this.options.draggable || !draggableParameter) return false;
+        /* calculate the translate value according to parameters */
+        let translate;
+        if (draggableParameter.x !== undefined && draggableParameter.y !== undefined)
+            translate = [draggableParameter.x, draggableParameter.y];
+        else if (
+            draggableParameter.deltaX !== undefined &&
+            draggableParameter.deltaY !== undefined
+        ) {
+            translate = [
+                this.dragSore.startTranslate[0] + draggableParameter.deltaX,
+                this.dragSore.startTranslate[1] + draggableParameter.deltaY
+            ];
+        } else return false;
 
-                this.handlers.dragStart &&
-                    this.handlers.dragStart({
-                        set: position => {
-                            this.dragSore.startTranslate = position;
-                        },
-                        stop: () => {
-                            this.dragging = false;
-                        }
-                    });
+        /* drag start */
+        this.dragging = true;
+        // store the start css translate value. [x,y]
+        this.dragSore.startTranslate = [];
 
-                /* dragging event */
-                let translate;
-                if (draggableParameter.x !== undefined && draggableParameter.y !== undefined)
-                    translate = [draggableParameter.x, draggableParameter.y];
-                else if (
-                    draggableParameter.deltaX !== undefined &&
-                    draggableParameter.deltaY !== undefined
-                ) {
-                    translate = [
-                        this.dragSore.startTranslate[0] + draggableParameter.deltaX,
-                        this.dragSore.startTranslate[1] + draggableParameter.deltaY
-                    ];
+        this.handlers.dragStart &&
+            this.handlers.dragStart({
+                set: position => {
+                    this.dragSore.startTranslate = position;
+                },
+                stop: () => {
+                    this.dragging = false;
                 }
-                this.handlers.drag &&
-                    this.handlers.drag({
-                        target: this.targetElement,
-                        transform: `translate(${translate[0]}px,${translate[1]}px)`,
-                        translate: translate
-                    });
+            });
 
-                /* dragging end */
-                this.dragging = false;
-                this.handlers.dragEnd && this.handlers.dragEnd();
-            }
-        }
+        /* dragging event */
+        this.handlers.drag &&
+            this.handlers.drag({
+                target: this.targetElement,
+                transform: `translate(${translate[0]}px,${translate[1]}px)`,
+                translate: translate
+            });
+
+        /* dragging end */
+        this.dragging = false;
+        this.handlers.dragEnd && this.handlers.dragEnd();
+        return true;
     }
 
-    resizeRequest(resizeParameter) {
-        // TODO
-    }
-}
-
-/**
- * pre precess a css string to an object
- * @param {String} style css style string
- * @returns {Object} {selectorName:{property:value},...,stringifyItems:function,toString:function}
- */
-function cssPreProcess(style) {
-    let ast = css.parse(style);
-    let result = {};
-    for (let rule of ast.stylesheet.rules) {
-        let item = {};
-        let selector = rule.selectors[0];
-        for (let declaration of rule.declarations) {
-            item[declaration.property] = declaration.value;
-        }
-        result[selector] = item;
-    }
     /**
-     * stringify css entries of property and value
-     * @param {Object} items {cssProperty: value}
+     * resize the target resizable element to the request size
+     * @param {Object} resizeParameter {width: resize to the ${width} value, height: resize to the ${height} value}
+     * @returns {boolean} if the resize request has been executed successfully
      */
-    result.stringifyItems = function(items) {
-        let text = "";
-        for (let key in items) {
-            text += `${key}: ${items[key]};\n`;
-        }
-        return text;
-    };
-    result.toString = function() {
-        let text = "";
-        for (let selector in this) {
-            if (typeof this[selector] !== "function")
-                text += `${selector}{\n${this.stringifyItems(this[selector])}}\n`;
-        }
-        return text;
-    };
-    return result;
+    resizeRequest(resizeParameter) {
+        /* judge resizable condition */
+        if (
+            !this.options.resizable ||
+            !resizeParameter ||
+            resizeParameter.width === undefined ||
+            resizeParameter.height === undefined
+        )
+            return false;
+        /* start resize */
+        // store the start css translate value. [x,y]
+        this.resizeStore.startTranslate = [];
+        this.handlers.resizeStart &&
+            this.handlers.resizeStart({
+                set: position => {
+                    this.resizeStore.startTranslate = position;
+                }
+            });
+
+        /* resize the element */
+        this.handlers.resize &&
+            this.handlers.resize({
+                target: this.targetElement,
+                width: resizeParameter.width,
+                height: resizeParameter.height,
+                translate: this.resizeStore.startTranslate
+            });
+        /* resize end */
+        this.handlers.resizeEnd && this.handlers.resizeEnd();
+        return true;
+    }
 }
+
+// /**
+//  * pre precess a css string to an object
+//  * @param {String} style css style string
+//  * @returns {Object} {selectorName:{property:value},...,stringifyItems:function,toString:function}
+//  */
+// function cssPreProcess(style) {
+//     let ast = css.parse(style);
+//     let result = {};
+//     for (let rule of ast.stylesheet.rules) {
+//         let item = {};
+//         let selector = rule.selectors[0];
+//         for (let declaration of rule.declarations) {
+//             item[declaration.property] = declaration.value;
+//         }
+//         result[selector] = item;
+//     }
+//     /**
+//      * stringify css entries of property and value
+//      * @param {Object} items {cssProperty: value}
+//      */
+//     result.stringifyItems = function(items) {
+//         let text = "";
+//         for (let key in items) {
+//             text += `${key}: ${items[key]};\n`;
+//         }
+//         return text;
+//     };
+//     result.toString = function() {
+//         let text = "";
+//         for (let selector in this) {
+//             if (typeof this[selector] !== "function")
+//                 text += `${selector}{\n${this.stringifyItems(this[selector])}}\n`;
+//         }
+//         return text;
+//     };
+//     return result;
+// }
 
 function getVarType(val) {
     let type = typeof val;

@@ -2,7 +2,6 @@ import render from "./library/render.js";
 import myMoveable from "./library/moveable/moveable.js";
 import { isChromePDFViewer } from "../common.js";
 import Messager from "../../common/scripts/messager.js";
-import { delayPromise } from "../../common/scripts/promise.js";
 // import Moveable from "moveable";
 
 /**
@@ -104,31 +103,16 @@ const FIX_OFF = false; // 侧边栏不固定的值
         });
     /* resizable  events*/
     moveablePanel
-        .on("resizeStart", ({ setOrigin, dragStart }) => {
-            setOrigin(["%", "%"]);
-            dragStart && dragStart.set(startTranslate);
+        .on("resizeStart", ({ set }) => {
+            set(startTranslate);
         })
-        .on("resize", ({ target, width, height, drag }) => {
-            const beforeTranslate = drag.beforeTranslate;
-            startTranslate = beforeTranslate;
+        .on("resize", ({ target, width, height, translate }) => {
             target.style.width = `${width}px`;
             target.style.height = `${height}px`;
-            target.style.transform = `translate(${beforeTranslate[0]}px, ${beforeTranslate[1]}px)`;
+            startTranslate = translate;
+            target.style.transform = `translate(${translate[0]}px, ${translate[1]}px)`;
         });
 })();
-// TEMP
-// showPanel({}, "loading");
-// showPanel(
-//     {
-//         detailedMeanings: [{ pos: "形容词", meaning: "fine, happy, glorious" }],
-//         mainMeaning: "Beautiful",
-//         originalText: "美好",
-//         sPronunciation: "Měihǎo",
-//         sourceLanguage: "auto",
-//         targetLanguage: "en"
-//     },
-//     "result"
-// );
 
 /**
  * render panel content using translation result and templates and show the panel in the current web page
@@ -143,7 +127,7 @@ function showPanel(content, template) {
     // if panel hasn't been displayed, locate the panel and show it
     if (!document.documentElement.contains(panelContainer)) {
         // 获取用户对侧边栏展示位置的设定
-        chrome.storage.sync.get("LayoutSettings", async function(result) {
+        chrome.storage.sync.get("LayoutSettings", function(result) {
             var layoutSettings = result.LayoutSettings;
             popupPosition = layoutSettings["PopupPosition"]; // 保存侧边栏展示的位置
             if (content.position) {
@@ -154,7 +138,7 @@ function showPanel(content, template) {
                 move(300, 600, position.XPosition, position.YPosition);
             } else {
                 // 获取用户上次通过resize设定的侧边栏宽度
-                chrome.storage.sync.get("sideWidth", async function(result) {
+                chrome.storage.sync.get("sideWidth", function(result) {
                     let sideWidth = 0.2;
                     if (result.sideWidth) {
                         sideWidth = result.sideWidth;
@@ -163,7 +147,7 @@ function showPanel(content, template) {
                     // resultPanel.style.width = sideWidth * 100 + "%";
                     moveablePanel.snappable = true;
                     updateBounds();
-                    await move(
+                    move(
                         sideWidth * window.innerWidth,
                         window.innerHeight,
                         (1 - sideWidth) * window.innerWidth,
@@ -275,18 +259,7 @@ function windowResizeHandler() {
             top: scrollTop,
             bottom: Number.MAX_VALUE
         };
-        move(
-            sideWidth * width,
-            height,
-            (1 - sideWidth) * width,
-            document.documentElement.scrollTop || document.body.scrollTop
-        );
-        move(
-            sideWidth * width,
-            height,
-            (1 - sideWidth) * width,
-            document.documentElement.scrollTop || document.body.scrollTop
-        );
+        move(sideWidth * width, height, (1 - sideWidth) * width, 0);
     });
 }
 
@@ -386,29 +359,21 @@ function updateBounds() {
     };
 }
 
-async function move(width, height, left, top) {
-    await resize(width, height);
-    drag(left, top);
-}
-
-function drag(left, top) {
+/**
+ * drag the target element to the position and resize it to the size
+ * @param {number} width width
+ * @param {number} height height value
+ * @param {number} left x-axis coordinate of the target position
+ * @param {number} top y-axis coordinate of the target position
+ */
+function move(width, height, left, top) {
+    moveablePanel.request("resizable", {
+        width: width,
+        height: height
+    });
     moveablePanel.request("draggable", {
         x: left,
         y: top
-    });
-}
-
-async function resize(width, height) {
-    await delayPromise(100);
-    moveablePanel.request("resizable", {
-        offsetWidth: width,
-        offsetHeight: height,
-        isInstant: true
-    });
-    moveablePanel.request("resizable", {
-        offsetWidth: width,
-        offsetHeight: height,
-        isInstant: true
     });
 }
 
