@@ -52,6 +52,10 @@ export default class moveable {
         }
     }
 
+    /**
+     * add mouse move event listener
+     * calculate the current translate value
+     */
     drag() {
         this.dragSore.dragHandler = function(e) {
             if (this.handlers.drag) {
@@ -90,6 +94,23 @@ export default class moveable {
         });
     }
 
+    resizeStart() {
+        // TODO
+    }
+
+    resize() {
+        // TODO
+    }
+
+    resizeEnd() {
+        // TODO
+    }
+
+    /**
+     * add event handler to the movable object
+     * @param {String} eventType the name of event type. enum:{dragStart,drag,dragEnd,resizeStart,resize,resizeEnd}
+     * @param {function} handler the handler function of the corresponding event type
+     */
     on(eventType, handler) {
         this.handlers[eventType] = handler;
         switch (eventType) {
@@ -124,18 +145,22 @@ export default class moveable {
     dragRequest(draggableParameter) {
         if (this.options.draggable) {
             if (draggableParameter) {
+                /* drag start */
                 this.dragging = true;
                 // store the start css translate value. [x,y]
                 this.dragSore.startTranslate = [];
 
-                this.handlers.dragStart({
-                    set: position => {
-                        this.dragSore.startTranslate = position;
-                    },
-                    stop: () => {
-                        this.dragging = false;
-                    }
-                });
+                this.handlers.dragStart &&
+                    this.handlers.dragStart({
+                        set: position => {
+                            this.dragSore.startTranslate = position;
+                        },
+                        stop: () => {
+                            this.dragging = false;
+                        }
+                    });
+
+                /* dragging event */
                 let translate;
                 if (draggableParameter.x !== undefined && draggableParameter.y !== undefined)
                     translate = [draggableParameter.x, draggableParameter.y];
@@ -148,11 +173,16 @@ export default class moveable {
                         this.dragSore.startTranslate[1] + draggableParameter.deltaY
                     ];
                 }
-                this.handlers.drag({
-                    target: this.targetElement,
-                    transform: `translate(${translate[0]}px,${translate[1]}px)`,
-                    translate: translate
-                });
+                this.handlers.drag &&
+                    this.handlers.drag({
+                        target: this.targetElement,
+                        transform: `translate(${translate[0]}px,${translate[1]}px)`,
+                        translate: translate
+                    });
+
+                /* dragging end */
+                this.dragging = false;
+                this.handlers.dragEnd && this.handlers.dragEnd();
             }
         }
     }
