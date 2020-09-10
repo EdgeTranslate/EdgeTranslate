@@ -291,6 +291,7 @@ export default class moveable {
             sw: defaultThreshold
         };
         switch (getVarType(this.options.threshold)) {
+            // set all directions to the given number
             case "number":
                 for (let t in this.resizeThreshold)
                     this.resizeThreshold[t] = this.options.threshold;
@@ -298,12 +299,15 @@ export default class moveable {
             case "Object": {
                 for (let t in this.options.threshold) {
                     let value = this.options.threshold[t];
+                    // set all div elements' threshold in four corners to the given value
                     if (t === "corner") {
                         this.resizeThreshold.se = value;
                         this.resizeThreshold.ne = value;
                         this.resizeThreshold.nw = value;
                         this.resizeThreshold.sw = value;
-                    } else if (t === "edge") {
+                    }
+                    // set all div elements' threshold on edges to the given value
+                    else if (t === "edge") {
                         this.resizeThreshold.e = value;
                         this.resizeThreshold.n = value;
                         this.resizeThreshold.s = value;
@@ -312,9 +316,21 @@ export default class moveable {
                 }
                 break;
             }
+            // use default resize threshold value
             case "undefined":
                 break;
         }
+    }
+
+    /**
+     * set new resize threshold value for the target resizable elements
+     * and recreate div resizable elements
+     * @param {Object} thresholdOptions new threshold options
+     */
+    setThreshold(thresholdOptions) {
+        this.options.threshold = thresholdOptions;
+        this.parseThreshold();
+        if (this.options.resizable) this.createResizableDivElements();
     }
 
     /**

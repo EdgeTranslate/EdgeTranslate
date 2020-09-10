@@ -167,4 +167,93 @@ describe("moveable api in content module", () => {
 
         done();
     });
+
+    it("to set a new resize threshold option", done => {
+        // test undefined type
+        let moveableE = new moveable(document.body, {});
+        moveableE.setThreshold();
+        let thresholdValue = 10;
+        expect(moveableE.resizeThreshold).toEqual({
+            s: thresholdValue,
+            se: thresholdValue,
+            e: thresholdValue,
+            ne: thresholdValue,
+            n: thresholdValue,
+            nw: thresholdValue,
+            w: thresholdValue,
+            sw: thresholdValue
+        });
+
+        // test number type
+        thresholdValue = 5;
+        moveableE.setThreshold(thresholdValue); // set a number
+        expect(moveableE.resizeThreshold).toEqual({
+            s: thresholdValue,
+            se: thresholdValue,
+            e: thresholdValue,
+            ne: thresholdValue,
+            n: thresholdValue,
+            nw: thresholdValue,
+            w: thresholdValue,
+            sw: thresholdValue
+        });
+
+        // test object type
+        let edgeValue = 5,
+            cornerValue = 3;
+        moveableE.setThreshold({
+            edge: edgeValue,
+            corner: cornerValue
+        }); // set an object
+        expect(moveableE.resizeThreshold).toEqual({
+            s: edgeValue,
+            se: cornerValue,
+            e: edgeValue,
+            ne: cornerValue,
+            n: edgeValue,
+            nw: cornerValue,
+            w: edgeValue,
+            sw: cornerValue
+        });
+
+        edgeValue = 5;
+        cornerValue = 3;
+        thresholdValue = 10;
+        moveableE.setThreshold({
+            edge: edgeValue,
+            s: 1,
+            e: 2,
+            sw: 7
+        }); // set an object
+        expect(moveableE.resizeThreshold).toEqual({
+            s: 1,
+            se: thresholdValue,
+            e: 2,
+            ne: thresholdValue,
+            n: edgeValue,
+            nw: thresholdValue,
+            w: edgeValue,
+            sw: 7
+        });
+
+        moveableE.setThreshold({
+            se: 1,
+            ne: 2,
+            n: 3,
+            nw: 4,
+            w: 6
+        }); // set an object
+        expect(moveableE.resizeThreshold).toEqual({
+            s: thresholdValue,
+            se: 1,
+            e: thresholdValue,
+            ne: 2,
+            n: 3,
+            nw: 4,
+            w: 6,
+            sw: thresholdValue
+        });
+
+        done();
+    });
 });
