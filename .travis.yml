@@ -9,4 +9,3 @@ script:
     - npm run build:firefox
     - npm run pack:chrome
     - npm run pack:firefox
-    - npm test

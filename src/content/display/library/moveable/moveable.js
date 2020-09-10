@@ -98,6 +98,7 @@ export default class moveable {
      * @param {event} e the mouse move event
      */
     drag(e) {
+        e.preventDefault();
         // calculate the current translate value
         this.dragStore.currentTranslate = [
             e.pageX - this.dragStore.startMouse[0] + this.dragStore.startTranslate[0],
@@ -319,6 +320,7 @@ export default class moveable {
      * @param {event} e the mouse move event
      */
     resize(e) {
+        e.preventDefault();
         // the delta position of mouse
         let delta = [
             e.pageX - this.dragStore.startMouse[0],
