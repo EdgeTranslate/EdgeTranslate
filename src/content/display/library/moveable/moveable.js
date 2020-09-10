@@ -1,3 +1,9 @@
+/**
+ * module: content
+ * part: display
+ * function: add moveable(draggable and resizable) function to a specific element
+ */
+
 import css from "css";
 import style from "./moveable.css"; // read plain content from css file
 
@@ -108,7 +114,7 @@ export default class moveable {
 
     /**
      * add mouse up event listener
-     * remove dragging event
+     * remove the dragging event listener
      */
     dragEnd() {
         document.documentElement.addEventListener("mouseup", () => {
@@ -280,14 +286,24 @@ export default class moveable {
             document.documentElement.addEventListener("mousemove", this.resizeHandler);
     }
 
+    /**
+     * the resize(resizing) event handler(mouse move event handler)
+     * calculate the current translate value and the size of target element
+     * call the resize event handler given by users
+     * @param {event} e the mouse move event
+     */
     resize(e) {
+        // the delta position of mouse
         let delta = [
             e.pageX - this.dragStore.startMouse[0],
             e.pageY - this.dragStore.startMouse[1]
         ];
+        // store updated width, height, translate value
         let width = this.resizeStore.startWidth,
             height = this.resizeStore.startHeight,
             translate = [this.resizeStore.startTranslate[0], this.resizeStore.startTranslate[1]]; // deep copy
+
+        /* calculate width, height, translate value according to different activated resizable div elements*/
         switch (this.resizeStore.target) {
             case this.directions["s"]:
                 height += delta[1];
@@ -323,16 +339,22 @@ export default class moveable {
                 translate[0] += delta[0];
                 break;
         }
+        // store the current translate value. used in resize end handler
         this.resizeStore.currentTranslate = translate;
+        /* call the resize event handler given by users */
         this.handlers.resize &&
             this.handlers.resize({
                 target: this.targetElement,
                 width: width,
                 height: height,
-                translate: [translate[0], translate[1]] // deep copy
+                translate: [translate[0], translate[1]] // the target translate(deep copied) value the element should move
             });
     }
 
+    /**
+     * add mouse up event listener
+     * remove the resizing event listener
+     */
     resizeEnd() {
         document.documentElement.addEventListener("mouseup", () => {
             if (this.resizing) {
@@ -343,7 +365,7 @@ export default class moveable {
                         translate: [
                             this.resizeStore.currentTranslate[0],
                             this.resizeStore.currentTranslate[1]
-                        ]
+                        ] // deep copy
                     });
             }
         });
@@ -508,6 +530,10 @@ function cssPreProcess(style) {
     return result;
 }
 
+/**
+ * detect the type of the given variable
+ * @param {Object} val any type of variable
+ */
 function getVarType(val) {
     let type = typeof val;
     // object need to be judged by Object.prototype.toString.call
