@@ -73,14 +73,23 @@ const FIX_OFF = false; // 侧边栏不固定的值
 
     /* make the resultPanel resizable and draggable */
     moveablePanel = new myMoveable(resultPanel, {
-        target: resultPanel,
-        // If the container is null, the position is fixed. (default: parentElement(document.body))
         draggable: true,
         resizable: true,
-        // set threshold value to increase the resize area
+        /* set threshold value to increase the resize area */
         // threshold: { s: 5, se: 5, e: 5, ne: 5, n: 5, nw: 5, w: 5, sw: 5 },
         // threshold: { edge:5, corner:5 },
-        threshold: 10
+        threshold: 10,
+        /**
+         * set thresholdPosition to decide where the resizable area is
+         * "in": the activated resizable area is within the target element
+         * "center": the activated resizable area is half within the target element and half out of the it
+         * "out": the activated resizable area is out of the target element
+         * a number(0~1): a ratio which determines the how much the the activated resizable area beyond the element
+         */
+        // thresholdPosition: "in",
+        // thresholdPosition: "center",
+        // thresholdPosition: "out",
+        thresholdPosition: 0.9
     });
 
     let startTranslate = [0, 0];

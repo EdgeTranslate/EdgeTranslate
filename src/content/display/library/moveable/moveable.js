@@ -188,7 +188,31 @@ export default class moveable {
             // store the css size value (used for width height properties)
             let sizeThresholdCSSValue = `${this.resizeThreshold[direction]}px`;
             // store the css position value ((used for left right top bottom properties))
-            let positionThresholdCSSValue = `-${this.resizeThreshold[direction]}px`;
+            let positionThresholdCSSValue;
+            /**
+             * set thresholdPosition to decide where the resizable area is
+             * "in": the activated resizable area is within the target element
+             * "center": the activated resizable area is half within the target element and half out of the it
+             * "out": the activated resizable area is out of the target element
+             * a number(0~1): a ratio which determines the how much the the activated resizable area beyond the element
+             */
+            switch (this.options.thresholdPosition) {
+                case undefined:
+                case "in":
+                    positionThresholdCSSValue = "0";
+                    break;
+                case "center":
+                    positionThresholdCSSValue = `-${0.5 * this.resizeThreshold[direction]}px`;
+                    break;
+                case "out":
+                    positionThresholdCSSValue = `-${this.resizeThreshold[direction]}px`;
+                    break;
+                default:
+                    if (getVarType(this.options.thresholdPosition) === "number")
+                        positionThresholdCSSValue = `-${this.options.thresholdPosition *
+                            this.resizeThreshold[direction]}px`;
+                    break;
+            }
             /* change css setting according to direction */
             switch (direction) {
                 case "s":
