@@ -75,13 +75,9 @@ const FIX_OFF = false; // 侧边栏不固定的值
     moveablePanel = new myMoveable(resultPanel, {
         target: resultPanel,
         // If the container is null, the position is fixed. (default: parentElement(document.body))
-        container: null,
         draggable: true,
         resizable: true,
-        snappable: false,
-        edge: true,
-        origin: false,
-        threshold: 1,
+        threshold: 5,
         // Add padding around the target to increase the drag area.
         padding: { left: 5, top: 5, right: 5, bottom: 5 }
     });

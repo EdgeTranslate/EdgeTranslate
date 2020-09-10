@@ -153,59 +153,85 @@ export default class moveable {
             // parse the direction parameter given by users
             this.parseDirection();
 
-            let cssObject = cssPreProcess(style);
-            /* create a container for resizable div elements */
+            // create resizable div elements
+            this.createResizableDivElements();
+        }
+    }
+
+    /**
+     * create resizable div elements and their div container according to direction settings
+     */
+    createResizableDivElements() {
+        let cssObject = cssPreProcess(style);
+        /* create a container for resizable div elements */
+        // if the container has not been created
+        if (!this.resizeStore.divContainer) {
             let divContainer = document.createElement("div");
             let divContainerID = "resizable-container";
             divContainer.id = divContainerID;
             divContainer.style.cssText = cssObject.stringifyItems(cssObject[`#${divContainerID}`]);
             this.targetElement.appendChild(divContainer);
-            /* create resizable div elements according to direction settings */
-            for (let direction in this.directions) {
-                // css setting of the specific div
-                let divCss = cssObject[`#resizable-${direction}`];
-                let thresholdCSSValue = `${this.resizeThreshold}px`;
-                /* change css setting according to direction */
-                switch (direction) {
-                    case "s":
-                        divCss.height = thresholdCSSValue;
-                        break;
-                    case "se":
-                        divCss.width = thresholdCSSValue;
-                        divCss.height = thresholdCSSValue;
-                        break;
-                    case "e":
-                        divCss.width = thresholdCSSValue;
-                        break;
-                    case "ne":
-                        divCss.width = thresholdCSSValue;
-                        divCss.height = thresholdCSSValue;
-                        break;
-                    case "n":
-                        divCss.height = thresholdCSSValue;
-                        break;
-                    case "nw":
-                        divCss.width = thresholdCSSValue;
-                        divCss.height = thresholdCSSValue;
-                        break;
-                    case "w":
-                        divCss.width = thresholdCSSValue;
-                        break;
-                    case "sw":
-                        divCss.width = thresholdCSSValue;
-                        divCss.height = thresholdCSSValue;
-                        break;
-                }
-                /* create resizable div elements and append to the container */
-                let div = document.createElement("div");
-                div.id = `resizable-${direction}`;
-                div.style.cssText = cssObject.stringifyItems(divCss);
-                divContainer.appendChild(div);
-                divContainer.addEventListener("mousedown", this.resizeStartHandler);
-                // store the div resizable element
-                this.directions[direction] = div;
-            }
+            this.resizeStore.divContainer = divContainer;
+            this.resizeStore.divContainer.addEventListener("mousedown", this.resizeStartHandler);
         }
+        // clear all existed div elements
+        else this.resizeStore.divContainer.innerHTML = "";
+
+        /* create resizable div elements according to direction settings */
+        for (let direction in this.directions) {
+            // css setting of the specific div
+            let divCss = cssObject[`#resizable-${direction}`];
+            let thresholdCSSValue = `${this.resizeThreshold}px`;
+            /* change css setting according to direction */
+            switch (direction) {
+                case "s":
+                    divCss.height = thresholdCSSValue;
+                    break;
+                case "se":
+                    divCss.width = thresholdCSSValue;
+                    divCss.height = thresholdCSSValue;
+                    break;
+                case "e":
+                    divCss.width = thresholdCSSValue;
+                    break;
+                case "ne":
+                    divCss.width = thresholdCSSValue;
+                    divCss.height = thresholdCSSValue;
+                    break;
+                case "n":
+                    divCss.height = thresholdCSSValue;
+                    break;
+                case "nw":
+                    divCss.width = thresholdCSSValue;
+                    divCss.height = thresholdCSSValue;
+                    break;
+                case "w":
+                    divCss.width = thresholdCSSValue;
+                    break;
+                case "sw":
+                    divCss.width = thresholdCSSValue;
+                    divCss.height = thresholdCSSValue;
+                    break;
+            }
+            /* create resizable div elements and append to the container */
+            let div = document.createElement("div");
+            div.id = `resizable-${direction}`;
+            div.style.cssText = cssObject.stringifyItems(divCss);
+            this.resizeStore.divContainer.appendChild(div);
+            // store the div resizable element
+            this.directions[direction] = div;
+        }
+    }
+
+    /**
+     * set new directions for the target resizable elements
+     * and recreate div resizable elements
+     * @param {Object} directionsOptions new direction options
+     */
+    setDirections(directionsOptions) {
+        this.options.directions = directionsOptions;
+        this.parseDirection();
+        this.createResizableDivElements();
     }
 
     /**
