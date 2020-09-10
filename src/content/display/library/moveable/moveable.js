@@ -185,36 +185,51 @@ export default class moveable {
         for (let direction in this.directions) {
             // css setting of the specific div
             let divCss = cssObject[`#resizable-${direction}`];
-            let thresholdCSSValue = `${this.resizeThreshold[direction]}px`;
+            // store the css size value (used for width height properties)
+            let sizeThresholdCSSValue = `${this.resizeThreshold[direction]}px`;
+            // store the css position value ((used for left right top bottom properties))
+            let positionThresholdCSSValue = `-${this.resizeThreshold[direction]}px`;
             /* change css setting according to direction */
             switch (direction) {
                 case "s":
-                    divCss.height = thresholdCSSValue;
+                    divCss.bottom = positionThresholdCSSValue;
+                    divCss.height = sizeThresholdCSSValue;
                     break;
                 case "se":
-                    divCss.width = thresholdCSSValue;
-                    divCss.height = thresholdCSSValue;
+                    divCss.right = positionThresholdCSSValue;
+                    divCss.bottom = positionThresholdCSSValue;
+                    divCss.width = sizeThresholdCSSValue;
+                    divCss.height = sizeThresholdCSSValue;
                     break;
                 case "e":
-                    divCss.width = thresholdCSSValue;
+                    divCss.right = positionThresholdCSSValue;
+                    divCss.width = sizeThresholdCSSValue;
                     break;
                 case "ne":
-                    divCss.width = thresholdCSSValue;
-                    divCss.height = thresholdCSSValue;
+                    divCss.right = positionThresholdCSSValue;
+                    divCss.top = positionThresholdCSSValue;
+                    divCss.width = sizeThresholdCSSValue;
+                    divCss.height = sizeThresholdCSSValue;
                     break;
                 case "n":
-                    divCss.height = thresholdCSSValue;
+                    divCss.top = positionThresholdCSSValue;
+                    divCss.height = sizeThresholdCSSValue;
                     break;
                 case "nw":
-                    divCss.width = thresholdCSSValue;
-                    divCss.height = thresholdCSSValue;
+                    divCss.left = positionThresholdCSSValue;
+                    divCss.top = positionThresholdCSSValue;
+                    divCss.width = sizeThresholdCSSValue;
+                    divCss.height = sizeThresholdCSSValue;
                     break;
                 case "w":
-                    divCss.width = thresholdCSSValue;
+                    divCss.left = positionThresholdCSSValue;
+                    divCss.width = sizeThresholdCSSValue;
                     break;
                 case "sw":
-                    divCss.width = thresholdCSSValue;
-                    divCss.height = thresholdCSSValue;
+                    divCss.left = positionThresholdCSSValue;
+                    divCss.bottom = positionThresholdCSSValue;
+                    divCss.width = sizeThresholdCSSValue;
+                    divCss.height = sizeThresholdCSSValue;
                     break;
             }
             /* create resizable div elements and append to the container */

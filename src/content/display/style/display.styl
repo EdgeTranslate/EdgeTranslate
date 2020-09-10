@@ -5,19 +5,6 @@
  * style of translation result panel
  */
 
-transparent-color = rgba(255,255,255,0);
-
-.moveable-control {    
-    background: transparent-color !important;	
-	border-color: transparent-color !important;
-	z-index: 10000000 !important;
-}
-
-.moveable-line {        
-    background: transparent-color !important;    
-	z-index: 10000000 !important;
-}
-
 #edge-translate-panel{		
     position: fixed;	
     top: 0;    
@@ -30,7 +17,7 @@ transparent-color = rgba(255,255,255,0);
 	align-items: stretch;	
 	
 	border-radius: 6px;
-	overflow: auto;
+	overflow: visible;
 }
 
 #panel-head{		 
@@ -41,6 +28,8 @@ transparent-color = rgba(255,255,255,0);
 	flex-grow: 0;
 	flex-shrink: 0;
 	overflow: hidden;
+	border-radius: 6px 6px 0 0;
+
 	&:hover{
 		cursor: grabbing;
 	}	
@@ -52,4 +41,5 @@ transparent-color = rgba(255,255,255,0);
 	overscroll-behavior: contain;
 	flex-grow: 1;
 	flex-shrink: 1;	
+	border-radius: 0 0 6px 6px;
 }
