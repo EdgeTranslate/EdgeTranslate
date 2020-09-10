@@ -29,7 +29,7 @@ export default class moveable {
         // flag if the element is resizing
         this.resizing = false;
         // store the threshold value for resizable function
-        this.resizeThreshold = this.options.threshold || 10;
+        this.resizeThreshold = {};
         // store the activated resizable direction of the target element
         // all valid directions: [s, se, e, ne, n, nw, w, sw]
         this.directions = {};
@@ -154,6 +154,9 @@ export default class moveable {
             // parse the direction parameter given by users
             this.parseDirection();
 
+            // parse the resize threshold parameter given by users
+            this.parseThreshold();
+
             // create resizable div elements
             this.createResizableDivElements();
         }
@@ -182,7 +185,7 @@ export default class moveable {
         for (let direction in this.directions) {
             // css setting of the specific div
             let divCss = cssObject[`#resizable-${direction}`];
-            let thresholdCSSValue = `${this.resizeThreshold}px`;
+            let thresholdCSSValue = `${this.resizeThreshold[direction]}px`;
             /* change css setting according to direction */
             switch (direction) {
                 case "s":
@@ -232,11 +235,11 @@ export default class moveable {
     setDirections(directionsOptions) {
         this.options.directions = directionsOptions;
         this.parseDirection();
-        this.createResizableDivElements();
+        if (this.options.resizable) this.createResizableDivElements();
     }
 
     /**
-     * parse the direction option in this.options to an array
+     * parse the direction option in this.options to an object(e.g.: {s:null,se:null})
      * all valid directions: [s, se, e, ne, n, nw, w, sw]
      * support array(e.g.: [s,se]), string(e.g.: "s,se") and object(e.g.: {s:null,se:null}) these types of parameter
      */
@@ -266,6 +269,51 @@ export default class moveable {
                     w: null,
                     sw: null
                 };
+        }
+    }
+
+    /**
+     * parse the threshold option in this.options to an object(e.g.: {s:10,se:10})
+     * all valid directions: [s, se, e, ne, n, nw, w, sw]
+     * support number(e.g.: 10), object(e.g.: {s:5, se:3, edge: 5, corner: 2}) and undefined these types of parameter
+     * Hint: "corner" in object means value of directions:[s,e,n,w]."edge" in object means value of directions:[se,ne,nw,sw]
+     */
+    parseThreshold() {
+        let defaultThreshold = 10;
+        this.resizeThreshold = {
+            s: defaultThreshold,
+            se: defaultThreshold,
+            e: defaultThreshold,
+            ne: defaultThreshold,
+            n: defaultThreshold,
+            nw: defaultThreshold,
+            w: defaultThreshold,
+            sw: defaultThreshold
+        };
+        switch (getVarType(this.options.threshold)) {
+            case "number":
+                for (let t in this.resizeThreshold)
+                    this.resizeThreshold[t] = this.options.threshold;
+                break;
+            case "Object": {
+                for (let t in this.options.threshold) {
+                    let value = this.options.threshold[t];
+                    if (t === "corner") {
+                        this.resizeThreshold.se = value;
+                        this.resizeThreshold.ne = value;
+                        this.resizeThreshold.nw = value;
+                        this.resizeThreshold.sw = value;
+                    } else if (t === "edge") {
+                        this.resizeThreshold.e = value;
+                        this.resizeThreshold.n = value;
+                        this.resizeThreshold.s = value;
+                        this.resizeThreshold.w = value;
+                    } else this.resizeThreshold[t] = value;
+                }
+                break;
+            }
+            case "undefined":
+                break;
         }
     }
 
