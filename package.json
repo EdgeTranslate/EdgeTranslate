@@ -34,13 +34,13 @@
         "pack:firefox": "gulp pack --browser firefox"
     },
     "devDependencies": {
-        "acorn": "^7.4.0",
         "axios": "^0.19.2",
         "axios-mock-adapter": "^1.18.2",
         "babel-core": "^6.26.3",
         "babel-eslint": "^10.1.0",
         "babel-loader": "^7.1.5",
         "babel-preset-env": "^1.7.0",
+        "css": "^3.0.0",
         "del": "^3.0.0",
         "eslint": "^5.16.0",
         "eslint-config-prettier": "^4.3.0",
@@ -56,7 +56,6 @@
         "lodash": "^4.17.20",
         "merge-stream": "^2.0.0",
         "minimist": "^1.2.5",
-        "moveable": "^0.17.10",
         "prettier": "^1.19.1",
         "raw-loader": "^0.5.1",
         "webpack": "^4.44.1",
@@ -70,8 +69,5 @@
             "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.js",
             "\\.(css|less)$": "identity-obj-proxy"
         }
-    },
-    "dependencies": {
-        "css": "^3.0.0"
     }
 }
