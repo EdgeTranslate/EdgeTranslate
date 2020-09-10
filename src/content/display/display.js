@@ -99,8 +99,10 @@ const FIX_OFF = false; // 侧边栏不固定的值
             set(startTranslate);
         })
         .on("drag", ({ target, translate }) => {
-            startTranslate = translate;
             target.style.transform = `translate(${translate[0]}px, ${translate[1]}px)`;
+        })
+        .on("dragEnd", ({ translate }) => {
+            startTranslate = translate;
         });
     /* resizable  events*/
     moveablePanel
@@ -110,8 +112,10 @@ const FIX_OFF = false; // 侧边栏不固定的值
         .on("resize", ({ target, width, height, translate }) => {
             target.style.width = `${width}px`;
             target.style.height = `${height}px`;
-            startTranslate = translate;
             target.style.transform = `translate(${translate[0]}px, ${translate[1]}px)`;
+        })
+        .on("resizeEnd", ({ translate }) => {
+            startTranslate = translate;
         });
 })();
 

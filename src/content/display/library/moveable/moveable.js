@@ -14,7 +14,7 @@ export default class moveable {
         // flag if the element is dragging
         this.dragging = false;
         // store some drag status value
-        this.dragSore = {};
+        this.dragStore = {};
         this.dragInitiate();
 
         /* resizable part */
@@ -58,11 +58,11 @@ export default class moveable {
     dragStart(e) {
         this.dragging = true;
         // store the start css translate value. [x,y]
-        this.dragSore.startTranslate = [];
+        this.dragStore.startTranslate = [];
         // store the start mouse absolute position. [x,y]
-        this.dragSore.startMouse = [e.pageX, e.pageY];
+        this.dragStore.startMouse = [e.pageX, e.pageY];
         // store the start element absolute position. [x,y]
-        this.dragSore.startElement = [
+        this.dragStore.startElement = [
             this.targetElement.getBoundingClientRect().left + document.documentElement.scrollLeft,
             this.targetElement.getBoundingClientRect().top + document.documentElement.scrollTop
         ];
@@ -71,7 +71,7 @@ export default class moveable {
             this.handlers.dragStart({
                 inputEvent: e,
                 set: position => {
-                    this.dragSore.startTranslate = position;
+                    this.dragStore.startTranslate = [position[0], position[1]]; // deep copy
                     this.targetElement.style.transform = `translate(${position[0]}px,${position[1]}px)`;
                 },
                 stop: () => {
@@ -93,16 +93,16 @@ export default class moveable {
      */
     drag(e) {
         // calculate the current translate value
-        let translate = [
-            e.pageX - this.dragSore.startMouse[0] + this.dragSore.startTranslate[0],
-            e.pageY - this.dragSore.startMouse[1] + this.dragSore.startTranslate[1]
+        this.dragStore.currentTranslate = [
+            e.pageX - this.dragStore.startMouse[0] + this.dragStore.startTranslate[0],
+            e.pageY - this.dragStore.startMouse[1] + this.dragStore.startTranslate[1]
         ];
         this.handlers.drag &&
             this.handlers.drag({
                 inputEvent: e,
                 target: this.targetElement,
-                transform: `translate(${translate[0]}px,${translate[1]}px)`,
-                translate: translate
+                transform: `translate(${this.dragStore.currentTranslate[0]}px,${this.dragStore.currentTranslate[1]}px)`,
+                translate: [this.dragStore.currentTranslate[0], this.dragStore.currentTranslate[1]] // deep copy
             });
     }
 
@@ -115,7 +115,13 @@ export default class moveable {
             if (this.dragging) {
                 this.dragging = false;
                 document.documentElement.removeEventListener("mousemove", this.dragHandler);
-                if (this.handlers.dragEnd) this.handlers.dragEnd();
+                if (this.handlers.dragEnd)
+                    this.handlers.dragEnd({
+                        translate: [
+                            this.dragStore.currentTranslate[0],
+                            this.dragStore.currentTranslate[1]
+                        ]
+                    }); // deep copy
             }
         });
     }
@@ -239,6 +245,8 @@ export default class moveable {
         this.resizing = true;
         // store the start css translate value. [x,y]
         // this.resizeStore.startTranslate
+        // store the current css translate value. [x,y]
+        this.resizeStore.currentTranslate;
         // store the start mouse absolute position. [x,y]
         this.resizeStore.startMouse = [e.pageX, e.pageY];
         // store the start element absolute position. [x,y]
@@ -246,6 +254,8 @@ export default class moveable {
             this.targetElement.getBoundingClientRect().left + document.documentElement.scrollLeft,
             this.targetElement.getBoundingClientRect().top + document.documentElement.scrollTop
         ];
+        this.resizeStore.startWidth = this.targetElement.offsetWidth;
+        this.resizeStore.startHeight = this.targetElement.offsetHeight;
         // store the activated resizable div elements
         this.resizeStore.target = e.target;
 
@@ -254,7 +264,7 @@ export default class moveable {
             this.handlers.resizeStart({
                 // set the start position
                 set: position => {
-                    this.resizeStore.startTranslate = position;
+                    this.resizeStore.startTranslate = [position[0], position[1]]; // deep copy
                     this.targetElement.style.transform = `translate(${position[0]}px,${position[1]}px)`;
                 },
                 // stop the following drag and dragEnd events
@@ -270,12 +280,73 @@ export default class moveable {
             document.documentElement.addEventListener("mousemove", this.resizeHandler);
     }
 
-    resize() {
-        // TODO
+    resize(e) {
+        let delta = [
+            e.pageX - this.dragStore.startMouse[0],
+            e.pageY - this.dragStore.startMouse[1]
+        ];
+        let width = this.resizeStore.startWidth,
+            height = this.resizeStore.startHeight,
+            translate = [this.resizeStore.startTranslate[0], this.resizeStore.startTranslate[1]]; // deep copy
+        switch (this.resizeStore.target) {
+            case this.directions["s"]:
+                height += delta[1];
+                break;
+            case this.directions["se"]:
+                width += delta[0];
+                height += delta[1];
+                break;
+            case this.directions["e"]:
+                width += delta[0];
+                break;
+            case this.directions["ne"]:
+                width += delta[0];
+                height -= delta[1];
+                translate[1] += delta[1];
+                break;
+            case this.directions["n"]:
+                height -= delta[1];
+                translate[1] += delta[1];
+                break;
+            case this.directions["nw"]:
+                width -= delta[0];
+                height -= delta[1];
+                translate = [(translate[0] += delta[0]), (translate[1] += delta[1])];
+                break;
+            case this.directions["w"]:
+                width -= delta[0];
+                translate[0] += delta[0];
+                break;
+            case this.directions["sw"]:
+                width -= delta[0];
+                height += delta[1];
+                translate[0] += delta[0];
+                break;
+        }
+        this.resizeStore.currentTranslate = translate;
+        this.handlers.resize &&
+            this.handlers.resize({
+                target: this.targetElement,
+                width: width,
+                height: height,
+                translate: [translate[0], translate[1]] // deep copy
+            });
     }
 
     resizeEnd() {
-        // TODO
+        document.documentElement.addEventListener("mouseup", () => {
+            if (this.resizing) {
+                this.resizing = false;
+                document.documentElement.removeEventListener("mousemove", this.resizeHandler);
+                if (this.handlers.resizeEnd)
+                    this.handlers.resizeEnd({
+                        translate: [
+                            this.resizeStore.currentTranslate[0],
+                            this.resizeStore.currentTranslate[1]
+                        ]
+                    });
+            }
+        });
     }
 
     /**
@@ -321,20 +392,20 @@ export default class moveable {
             draggableParameter.deltaY !== undefined
         ) {
             translate = [
-                this.dragSore.startTranslate[0] + draggableParameter.deltaX,
-                this.dragSore.startTranslate[1] + draggableParameter.deltaY
+                this.dragStore.startTranslate[0] + draggableParameter.deltaX,
+                this.dragStore.startTranslate[1] + draggableParameter.deltaY
             ];
         } else return false;
 
         /* drag start */
         this.dragging = true;
         // store the start css translate value. [x,y]
-        this.dragSore.startTranslate = [];
+        this.dragStore.startTranslate = [];
 
         this.handlers.dragStart &&
             this.handlers.dragStart({
                 set: position => {
-                    this.dragSore.startTranslate = position;
+                    this.dragStore.startTranslate = position;
                 },
                 stop: () => {
                     this.dragging = false;
@@ -351,7 +422,10 @@ export default class moveable {
 
         /* dragging end */
         this.dragging = false;
-        this.handlers.dragEnd && this.handlers.dragEnd();
+        this.handlers.dragEnd &&
+            this.handlers.dragEnd({
+                translate: [translate[0], translate[1]] // deep copy
+            });
         return true;
     }
 
@@ -388,7 +462,10 @@ export default class moveable {
                 translate: this.resizeStore.startTranslate
             });
         /* resize end */
-        this.handlers.resizeEnd && this.handlers.resizeEnd();
+        this.handlers.resizeEnd &&
+            this.handlers.resizeEnd({
+                translate: this.resizeStore.startTranslate
+            });
         return true;
     }
 }
