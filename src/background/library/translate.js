@@ -27,7 +27,12 @@ export {
  * @returns {Promise<String>} detected language Promise
  */
 function detect(text) {
-    return TRANSLATOR.detect(text);
+    return TRANSLATOR.detect(text).catch(error => {
+        sendMessageToCurrentTab("info", {
+            info: "network_error",
+            error: error
+        }).catch(e => log(e));
+    });
 }
 
 /**
@@ -44,7 +49,7 @@ function detect(text) {
  */
 function translate(text) {
     // get language settings from chrome storage
-    return new Promise((resolve, reject) => {
+    return new Promise(resolve => {
         chrome.storage.sync.get(["languageSetting", "OtherSettings"], async result => {
             let OtherSettings = result.OtherSettings;
             let languageSetting = result.languageSetting;
@@ -71,8 +76,7 @@ function translate(text) {
                         info: "network_error",
                         error: error
                     }).catch(e => log(e));
-                    reject(error);
-                    return;
+                    return error;
                 }
             }
 
@@ -88,7 +92,7 @@ function translate(text) {
                     info: "network_error",
                     error: error
                 }).catch(e => log(e));
-                reject(error);
+                return error;
             }
         });
     });
@@ -105,10 +109,23 @@ function translate(text) {
  */
 async function pronounce(text, language, speed) {
     let lang = language;
-    if (language == "auto") {
-        lang = await TRANSLATOR.detect(text);
+    try {
+        if (language == "auto") {
+            lang = await TRANSLATOR.detect(text);
+        }
+    } catch (error) {
+        sendMessageToCurrentTab("info", {
+            info: "network_error",
+            error: error
+        });
     }
-    return TRANSLATOR.pronounce(text, lang, speed);
+
+    return TRANSLATOR.pronounce(text, lang, speed).catch(error => {
+        sendMessageToCurrentTab("info", {
+            info: "network_error",
+            error: error
+        });
+    });
 }
 
 /**

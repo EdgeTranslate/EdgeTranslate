@@ -292,7 +292,7 @@ Messager.receive("content", message => {
                 case "start_translating":
                     showPanel(message.detail, "loading");
                     break;
-                case "error":
+                case "network_error":
                     showPanel(message.detail, "error");
                     break;
                 default:

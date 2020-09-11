@@ -185,14 +185,19 @@ class TranslatorProxy {
             };
 
             // Initiate translation requests.
-            try {
-                config.translators.forEach(translator => {
-                    this.TRANSLATORS[translator]
-                        .translate(text, from, to)
-                        .then(result => receive(translator, result));
-                });
-            } catch (error) {
-                reject(error);
+            let errorEncountered = false;
+            for (let translator of config.translators) {
+                // Break if error encountered.
+                if (errorEncountered) break;
+
+                // Translate with a translator.
+                this.TRANSLATORS[translator]
+                    .translate(text, from, to)
+                    .then(result => receive(translator, result))
+                    .catch(error => {
+                        errorEncountered = true;
+                        reject(error);
+                    });
             }
         });
     }
