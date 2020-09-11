@@ -1,3 +1,9 @@
+/**
+ * module: content
+ * part: display.moveable
+ * function: add resizable function to a specific element
+ */
+
 import css from "css";
 import style from "./resizable.css"; // read plain content from css file
 
@@ -154,7 +160,7 @@ export default class resizable {
     /**
      * set new directions for the target resizable elements
      * and recreate div resizable elements
-     * @param {Object} directionsOptions new direction options
+     * @param {Array|string|Object|undefined} directionsOptions new direction options
      */
     setDirections(directionsOptions) {
         this.directions = resizable.parseDirection(directionsOptions);
@@ -201,7 +207,7 @@ export default class resizable {
     /**
      * parse new resize threshold value for the target resizable elements
      * and recreate div resizable elements
-     * @param {Object} thresholdOptions new threshold options
+     * @param {number|Object|undefined} thresholdOptions new threshold options
      */
     setThreshold(thresholdOptions) {
         this.resizeThreshold = resizable.parseThreshold(thresholdOptions);

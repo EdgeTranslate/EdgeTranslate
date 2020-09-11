@@ -1,6 +1,6 @@
 /**
  * module: content
- * part: display
+ * part: display.moveable
  * function: add moveable(draggable and resizable) function to a specific element
  */
 
@@ -20,6 +20,37 @@ export default class moveable {
             this.resizable = new resizable(this.targetElement, this.options, this.handlers);
         if (this.options.draggable)
             this.draggable = new draggable(this.targetElement, this.options, this.handlers);
+    }
+
+    /**
+     * set new directions for the target resizable elements
+     * all valid directions: [s, se, e, ne, n, nw, w, sw]
+     * support array(e.g.: [s,se]), string(e.g.: "s,se") and object(e.g.: {s:null,se:null}) these types of parameter
+     * @param {Array|string|Object|undefined} directionsOptions new direction options
+     * @returns {boolean} if you set value successfully
+     */
+    setDirections(directionsOptions) {
+        if (this.resizable) {
+            this.resizable.setDirections(directionsOptions);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * set a new resize threshold value for the target resizable elements
+     * all valid directions: [s, se, e, ne, n, nw, w, sw]
+     * support number(e.g.: 10), object(e.g.: {s:5, se:3, edge: 5, corner: 2}) and undefined these types of parameter
+     * Hint: "corner" in object means value of directions:[s,e,n,w]."edge" in object means value of directions:[se,ne,nw,sw]
+     * @param {number|Object|undefined} thresholdOptions new threshold options
+     * @returns {boolean} if you set value successfully
+     */
+    setThreshold(thresholdOptions) {
+        if (this.resizable) {
+            this.resizable.setThreshold(thresholdOptions);
+            return true;
+        }
+        return false;
     }
 
     /**

@@ -1,259 +1,49 @@
-import moveable from "../../../../src/content/display/library/moveable/moveable.js";
+import Moveable from "../../../../src/content/display/library/moveable/moveable.js";
 
-describe("moveable api in content module", () => {
-    it("to parse the direction option", done => {
-        let moveableE = new moveable(document.body, {});
-        moveableE.parseDirection();
-        expect(moveableE.directions).toEqual({
-            s: null,
-            se: null,
-            e: null,
-            ne: null,
-            n: null,
-            nw: null,
-            w: null,
-            sw: null
-        });
-
-        moveableE.options.directions = [];
-        moveableE.parseDirection();
-        expect(moveableE.directions).toEqual({});
-
-        let directionTarget = {
-            se: null,
-            ne: null,
-            nw: null,
-            sw: null
+describe("test moveable api in content module", () => {
+    it("to test on function(set event handlers)", done => {
+        let moveable = new Moveable(document.body, {});
+        let testFunction = function() {
+            let a = 1;
+            let b = 2;
+            return a + b;
         };
-        moveableE.options.directions = ["se", "ne", "nw", "sw"];
-        moveableE.parseDirection();
-        expect(moveableE.directions).toEqual(directionTarget);
+        // test return value
+        expect(moveable.on("dragStart")).toEqual(moveable);
 
-        moveableE.options.directions = "";
-        moveableE.parseDirection();
-        expect(moveableE.directions).toEqual({});
+        moveable.on("dragStart", testFunction);
+        expect(moveable.handlers.dragStart).toEqual(testFunction);
 
-        moveableE.options.directions = "se,ne,nw,sw";
-        moveableE.parseDirection();
-        expect(moveableE.directions).toEqual(directionTarget);
+        moveable.on("drag", testFunction);
+        expect(moveable.handlers.drag).toEqual(testFunction);
 
-        moveableE.options.directions = directionTarget;
-        moveableE.parseDirection();
-        expect(moveableE.directions).toEqual(directionTarget);
+        moveable.on("resize", testFunction);
+        expect(moveable.handlers.resize).toEqual(testFunction);
+
+        done();
+    });
+
+    it("to test moveable request api", done => {
+        let moveable = new Moveable(document.body, {});
+        // draggable is false
+        expect(moveable.request("drag", {})).toBeFalsy();
+        // resizable is false
+        expect(moveable.request("resize", {})).toBeFalsy();
+        // options is undefined
+        expect(moveable.request("resize")).toBeFalsy();
 
         done();
     });
 
     it("to set the the direction option", done => {
-        let moveableE = new moveable(document.body, {});
-        moveableE.parseDirection();
-        expect(moveableE.directions).toEqual({
-            s: null,
-            se: null,
-            e: null,
-            ne: null,
-            n: null,
-            nw: null,
-            w: null,
-            sw: null
-        });
-        moveableE.setDirections([]);
-        expect(moveableE.directions).toEqual({});
-
-        let directionTarget = {
-            se: null,
-            ne: null,
-            nw: null,
-            sw: null
-        };
-        moveableE.setDirections(["se", "ne", "nw", "sw"]);
-        expect(moveableE.directions).toEqual(directionTarget);
-
-        moveableE.setDirections(directionTarget);
-        expect(moveableE.directions).toEqual(directionTarget);
-
+        let moveable = new Moveable(document.body, {});
+        expect(moveable.setDirections({})).toBeFalsy();
         done();
     });
 
-    it("to parse the resize threshold option", done => {
-        // test undefined type
-        let moveableE = new moveable(document.body, {});
-        let thresholdValue = 10;
-        moveableE.parseThreshold();
-        expect(moveableE.resizeThreshold).toEqual({
-            s: thresholdValue,
-            se: thresholdValue,
-            e: thresholdValue,
-            ne: thresholdValue,
-            n: thresholdValue,
-            nw: thresholdValue,
-            w: thresholdValue,
-            sw: thresholdValue
-        });
-
-        // test number type
-        thresholdValue = 5;
-        moveableE.options.threshold = thresholdValue; // set a number
-        moveableE.parseThreshold();
-        expect(moveableE.resizeThreshold).toEqual({
-            s: thresholdValue,
-            se: thresholdValue,
-            e: thresholdValue,
-            ne: thresholdValue,
-            n: thresholdValue,
-            nw: thresholdValue,
-            w: thresholdValue,
-            sw: thresholdValue
-        });
-
-        // test object type
-        let edgeValue = 5,
-            cornerValue = 3;
-        moveableE.options.threshold = {
-            edge: edgeValue,
-            corner: cornerValue
-        }; // set an object
-        moveableE.parseThreshold();
-        expect(moveableE.resizeThreshold).toEqual({
-            s: edgeValue,
-            se: cornerValue,
-            e: edgeValue,
-            ne: cornerValue,
-            n: edgeValue,
-            nw: cornerValue,
-            w: edgeValue,
-            sw: cornerValue
-        });
-
-        edgeValue = 5;
-        cornerValue = 3;
-        thresholdValue = 10;
-        moveableE.options.threshold = {
-            edge: edgeValue,
-            s: 1,
-            e: 2,
-            sw: 7
-        }; // set an object
-        moveableE.parseThreshold();
-        expect(moveableE.resizeThreshold).toEqual({
-            s: 1,
-            se: thresholdValue,
-            e: 2,
-            ne: thresholdValue,
-            n: edgeValue,
-            nw: thresholdValue,
-            w: edgeValue,
-            sw: 7
-        });
-
-        moveableE.options.threshold = {
-            se: 1,
-            ne: 2,
-            n: 3,
-            nw: 4,
-            w: 6
-        }; // set an object
-        moveableE.parseThreshold();
-        expect(moveableE.resizeThreshold).toEqual({
-            s: thresholdValue,
-            se: 1,
-            e: thresholdValue,
-            ne: 2,
-            n: 3,
-            nw: 4,
-            w: 6,
-            sw: thresholdValue
-        });
-
-        done();
-    });
-
-    it("to set a new resize threshold option", done => {
-        // test undefined type
-        let moveableE = new moveable(document.body, {});
-        moveableE.setThreshold();
-        let thresholdValue = 10;
-        expect(moveableE.resizeThreshold).toEqual({
-            s: thresholdValue,
-            se: thresholdValue,
-            e: thresholdValue,
-            ne: thresholdValue,
-            n: thresholdValue,
-            nw: thresholdValue,
-            w: thresholdValue,
-            sw: thresholdValue
-        });
-
-        // test number type
-        thresholdValue = 5;
-        moveableE.setThreshold(thresholdValue); // set a number
-        expect(moveableE.resizeThreshold).toEqual({
-            s: thresholdValue,
-            se: thresholdValue,
-            e: thresholdValue,
-            ne: thresholdValue,
-            n: thresholdValue,
-            nw: thresholdValue,
-            w: thresholdValue,
-            sw: thresholdValue
-        });
-
-        // test object type
-        let edgeValue = 5,
-            cornerValue = 3;
-        moveableE.setThreshold({
-            edge: edgeValue,
-            corner: cornerValue
-        }); // set an object
-        expect(moveableE.resizeThreshold).toEqual({
-            s: edgeValue,
-            se: cornerValue,
-            e: edgeValue,
-            ne: cornerValue,
-            n: edgeValue,
-            nw: cornerValue,
-            w: edgeValue,
-            sw: cornerValue
-        });
-
-        edgeValue = 5;
-        cornerValue = 3;
-        thresholdValue = 10;
-        moveableE.setThreshold({
-            edge: edgeValue,
-            s: 1,
-            e: 2,
-            sw: 7
-        }); // set an object
-        expect(moveableE.resizeThreshold).toEqual({
-            s: 1,
-            se: thresholdValue,
-            e: 2,
-            ne: thresholdValue,
-            n: edgeValue,
-            nw: thresholdValue,
-            w: edgeValue,
-            sw: 7
-        });
-
-        moveableE.setThreshold({
-            se: 1,
-            ne: 2,
-            n: 3,
-            nw: 4,
-            w: 6
-        }); // set an object
-        expect(moveableE.resizeThreshold).toEqual({
-            s: thresholdValue,
-            se: 1,
-            e: thresholdValue,
-            ne: 2,
-            n: 3,
-            nw: 4,
-            w: 6,
-            sw: thresholdValue
-        });
-
+    it("to set the the threshold value option", done => {
+        let moveable = new Moveable(document.body, {});
+        expect(moveable.setThreshold({})).toBeFalsy();
         done();
     });
 });

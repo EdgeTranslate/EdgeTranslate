@@ -1,3 +1,9 @@
+/**
+ * module: content
+ * part: display.moveable
+ * function: add draggable function to a specific element
+ */
+
 export default class draggable {
     constructor(targetElement, options, handlers) {
         this.targetElement = targetElement;
