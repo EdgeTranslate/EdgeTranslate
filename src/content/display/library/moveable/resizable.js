@@ -38,10 +38,10 @@ export default class resizable {
         }.bind(this);
 
         // parse the direction parameter given by users
-        this.parseDirection();
+        this.directions = resizable.parseDirection(this.options.directions);
 
         // parse the resize threshold parameter given by users
-        this.parseThreshold();
+        this.resizeThreshold = resizable.parseThreshold(this.options.threshold);
 
         // create resizable div elements
         this.createResizableDivElements();
@@ -157,8 +157,7 @@ export default class resizable {
      * @param {Object} directionsOptions new direction options
      */
     setDirections(directionsOptions) {
-        this.options.directions = directionsOptions;
-        this.parseDirection();
+        this.directions = resizable.parseDirection(directionsOptions);
         this.createResizableDivElements();
     }
 
@@ -166,24 +165,26 @@ export default class resizable {
      * parse the direction option in this.options to an object(e.g.: {s:null,se:null})
      * all valid directions: [s, se, e, ne, n, nw, w, sw]
      * support array(e.g.: [s,se]), string(e.g.: "s,se") and object(e.g.: {s:null,se:null}) these types of parameter
+     * @param {Array|string|Object|undefined} option new direction option
+     * @returns {Object} a parsed direction option object(e.g.: {s:null,se:null})
      */
-    parseDirection() {
-        this.directions = {};
-        switch (getVarType(this.options.directions)) {
+    static parseDirection(option) {
+        let directions = {};
+        switch (getVarType(option)) {
             case "Array":
-                for (let d of this.options.directions) this.directions[d] = null;
+                for (let d of option) directions[d] = null;
                 break;
             case "string": {
-                let arr = this.options.directions.match(/([swne]+)/g);
-                for (let i in arr) this.directions[arr[i]] = null;
+                let arr = option.match(/([swne]+)/g);
+                for (let i in arr) directions[arr[i]] = null;
                 break;
             }
             case "Object": {
-                this.directions = this.options.directions;
+                directions = option;
                 break;
             }
             case "undefined":
-                this.directions = {
+                directions = {
                     s: null,
                     se: null,
                     e: null,
@@ -194,6 +195,17 @@ export default class resizable {
                     sw: null
                 };
         }
+        return directions;
+    }
+
+    /**
+     * parse new resize threshold value for the target resizable elements
+     * and recreate div resizable elements
+     * @param {Object} thresholdOptions new threshold options
+     */
+    setThreshold(thresholdOptions) {
+        this.resizeThreshold = resizable.parseThreshold(thresholdOptions);
+        this.createResizableDivElements();
     }
 
     /**
@@ -201,10 +213,12 @@ export default class resizable {
      * all valid directions: [s, se, e, ne, n, nw, w, sw]
      * support number(e.g.: 10), object(e.g.: {s:5, se:3, edge: 5, corner: 2}) and undefined these types of parameter
      * Hint: "corner" in object means value of directions:[s,e,n,w]."edge" in object means value of directions:[se,ne,nw,sw]
+     * @param {number|Object|undefined} option the threshold option
+     * @returns {Object} the parsed result object(e.g.: {s:10,se:10})
      */
-    parseThreshold() {
+    static parseThreshold(option) {
         let defaultThreshold = 10;
-        this.resizeThreshold = {
+        let resizeThreshold = {
             s: defaultThreshold,
             se: defaultThreshold,
             e: defaultThreshold,
@@ -214,29 +228,28 @@ export default class resizable {
             w: defaultThreshold,
             sw: defaultThreshold
         };
-        switch (getVarType(this.options.threshold)) {
+        switch (getVarType(option)) {
             // set all directions to the given number
             case "number":
-                for (let t in this.resizeThreshold)
-                    this.resizeThreshold[t] = this.options.threshold;
+                for (let t in resizeThreshold) resizeThreshold[t] = option;
                 break;
             case "Object": {
-                for (let t in this.options.threshold) {
-                    let value = this.options.threshold[t];
+                for (let t in option) {
+                    let value = option[t];
                     // set all div elements' threshold in four corners to the given value
                     if (t === "corner") {
-                        this.resizeThreshold.se = value;
-                        this.resizeThreshold.ne = value;
-                        this.resizeThreshold.nw = value;
-                        this.resizeThreshold.sw = value;
+                        resizeThreshold.se = value;
+                        resizeThreshold.ne = value;
+                        resizeThreshold.nw = value;
+                        resizeThreshold.sw = value;
                     }
                     // set all div elements' threshold on edges to the given value
                     else if (t === "edge") {
-                        this.resizeThreshold.e = value;
-                        this.resizeThreshold.n = value;
-                        this.resizeThreshold.s = value;
-                        this.resizeThreshold.w = value;
-                    } else this.resizeThreshold[t] = value;
+                        resizeThreshold.e = value;
+                        resizeThreshold.n = value;
+                        resizeThreshold.s = value;
+                        resizeThreshold.w = value;
+                    } else resizeThreshold[t] = value;
                 }
                 break;
             }
@@ -244,17 +257,7 @@ export default class resizable {
             case "undefined":
                 break;
         }
-    }
-
-    /**
-     * set new resize threshold value for the target resizable elements
-     * and recreate div resizable elements
-     * @param {Object} thresholdOptions new threshold options
-     */
-    setThreshold(thresholdOptions) {
-        this.options.threshold = thresholdOptions;
-        this.parseThreshold();
-        this.createResizableDivElements();
+        return resizeThreshold;
     }
 
     /**
