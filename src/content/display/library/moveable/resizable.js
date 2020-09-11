@@ -363,6 +363,8 @@ export default class resizable {
         }
         // store the current translate value. used in resize end handler
         this.store.currentTranslate = translate;
+        // store the current width and height of the element
+        this.store.currentSize = [width, height];
         /* call the resize event handler given by users */
         this.handlers.resize &&
             this.handlers.resize({
@@ -385,7 +387,9 @@ export default class resizable {
                 if (this.handlers.resizeEnd)
                     this.handlers.resizeEnd({
                         inputEvent: e,
-                        translate: [this.store.currentTranslate[0], this.store.currentTranslate[1]] // deep copy
+                        translate: [this.store.currentTranslate[0], this.store.currentTranslate[1]], // deep copy
+                        width: this.store.currentSize[0],
+                        height: this.store.currentSize[1]
                     });
             }
         });

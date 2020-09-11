@@ -171,8 +171,19 @@ const FIX_OFF = false; // 侧边栏不固定的值
             target.style.height = `${height}px`;
             target.style.transform = `translate(${translate[0]}px, ${translate[1]}px)`;
         })
-        .on("resizeEnd", ({ translate }) => {
+        .on("resizeEnd", ({ translate, width, height, inputEvent }) => {
             startTranslate = translate;
+
+            // update new size of the result panel
+            if (inputEvent) {
+                if (displaySetting.type === "floating") {
+                    displaySetting.floatingData.width = width / window.innerWidth;
+                    displaySetting.floatingData.height = height / window.innerHeight;
+                } else {
+                    displaySetting.fixedData.width = width / window.innerWidth;
+                }
+                updateDisplaySetting();
+            }
         });
 })();
 
