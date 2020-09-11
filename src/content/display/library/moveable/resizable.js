@@ -284,8 +284,10 @@ export default class resizable {
             this.targetElement.getBoundingClientRect().left + document.documentElement.scrollLeft,
             this.targetElement.getBoundingClientRect().top + document.documentElement.scrollTop
         ];
-        this.store.startWidth = this.targetElement.offsetWidth;
-        this.store.startHeight = this.targetElement.offsetHeight;
+        // store the start size(width and height) of the element
+        this.store.startSize = [this.targetElement.offsetWidth, this.targetElement.offsetHeight];
+        // store the current width and height of the element
+        this.store.currentSize = this.store.startSize;
         // store the activated resizable div elements
         this.store.target = e.target;
 
@@ -306,6 +308,10 @@ export default class resizable {
                 pageX: e.pageX,
                 pageY: e.pageY
             });
+
+        // store the current translate value. used in resize end handler
+        this.store.currentTranslate = this.store.startTranslate;
+
         if (this.resizing)
             document.documentElement.addEventListener("mousemove", this.resizeHandler);
     }
@@ -321,8 +327,8 @@ export default class resizable {
         // the delta position of mouse
         let delta = [e.pageX - this.store.startMouse[0], e.pageY - this.store.startMouse[1]];
         // store updated width, height, translate value
-        let width = this.store.startWidth,
-            height = this.store.startHeight,
+        let width = this.store.startSize[0],
+            height = this.store.startSize[1],
             translate = [this.store.startTranslate[0], this.store.startTranslate[1]]; // deep copy
 
         /* calculate width, height, translate value according to different activated resizable div elements*/

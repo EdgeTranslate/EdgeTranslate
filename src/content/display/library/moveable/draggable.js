@@ -104,6 +104,10 @@ export default class draggable {
                 pageX: e.pageX,
                 pageY: e.pageY
             });
+
+        // store the current translate value
+        this.store.currentTranslate = this.store.startTranslate;
+
         if (this.dragging) document.documentElement.addEventListener("mousemove", this.dragHandler);
     }
 

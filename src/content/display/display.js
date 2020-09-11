@@ -74,17 +74,6 @@ const FIX_OFF = false; // 侧边栏不固定的值
     // store the panel body element
     bodyPanel = shadowDom.getElementById("panel-body");
 
-    // Set up translator options.
-    chrome.storage.sync.get(["languageSetting", "TranslatorConfig"], async result => {
-        let config = result.TranslatorConfig;
-        let languageSetting = result.languageSetting;
-        let availableTranslators = await Messager.send("background", "get_available_translators", {
-            from: languageSetting.sl,
-            to: languageSetting.tl
-        });
-        setUpTranslateConfig(config, availableTranslators);
-    });
-
     /* set attributes of elements */
     resultPanel.style.backgroundColor = "white"; // set style dynamically to be compatible with chrome extension "Dark Reader"
     resultPanel.style.boxShadow = "0px 4px 23px -6px rgb(64,64,64,0.8)"; // set style dynamically to be compatible with chrome extension "Dark Reader"
@@ -99,6 +88,16 @@ const FIX_OFF = false; // 侧边栏不固定的值
 
     /* initiate setting value */
     updateDisplaySetting();
+    // Set up translator options.
+    chrome.storage.sync.get(["languageSetting", "TranslatorConfig"], async result => {
+        let config = result.TranslatorConfig;
+        let languageSetting = result.languageSetting;
+        let availableTranslators = await Messager.send("background", "get_available_translators", {
+            from: languageSetting.sl,
+            to: languageSetting.tl
+        });
+        setUpTranslateConfig(config, availableTranslators);
+    });
 
     /* make the resultPanel resizable and draggable */
     moveablePanel = new myMoveable(resultPanel, {
@@ -133,17 +132,20 @@ const FIX_OFF = false; // 侧边栏不固定的值
                     stop();
                     return;
                 }
+            }
+            set(startTranslate);
+        })
+        .on("drag", ({ target, translate, inputEvent }) => {
+            if (inputEvent) {
+                // change the display type from fixed to floating
                 if (displaySetting.type === "fixed") {
                     displaySetting.type = "floating";
                     showFloatingPanel();
                     updateDisplaySetting();
                 }
-            }
-            set(startTranslate);
-        })
-        .on("drag", ({ target, translate, inputEvent }) => {
-            if (inputEvent && inputEvent.clientX <= 0) {
-                // TODO add change effect
+                if (inputEvent.clientX <= 0) {
+                    // TODO add change effect
+                }
             }
             target.style.transform = `translate(${translate[0]}px, ${translate[1]}px)`;
         })
