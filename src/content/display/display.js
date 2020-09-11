@@ -34,11 +34,26 @@ var resultPanel;
 // store the panel body element
 var bodyPanel;
 
+// store the moveable object return by moveable.js
 var moveablePanel;
+
+// store the display type(floating or fixed)
+var displaySetting = {
+    type: "fixed",
+    fixedData: {
+        width: 0.2,
+        position: "right"
+    },
+    floatingData: {
+        width: 0.15,
+        height: 0.6
+    }
+};
 
 var translateResult; // 保存翻译结果
 var sourceTTSSpeed, targetTTSSpeed;
-var popupPosition; // 保存侧边栏展示的位置
+// store the width of scroll bar
+const scrollbarWidth = getScrollbarWidth();
 const FIX_ON = true; // 侧边栏固定的值
 const FIX_OFF = false; // 侧边栏不固定的值
 
@@ -70,6 +85,9 @@ const FIX_OFF = false; // 侧边栏不固定的值
     window.addEventListener("scroll", updateBounds);
     // update the drag bounds and size when the size of window has changed
     window.addEventListener("resize", windowResizeHandler);
+
+    /* initiate setting value */
+    updateDisplaySetting();
 
     /* make the resultPanel resizable and draggable */
     moveablePanel = new myMoveable(resultPanel, {
@@ -145,129 +163,92 @@ function showPanel(content, template) {
     addBodyEventListener(template);
     // if panel hasn't been displayed, locate the panel and show it
     if (!document.documentElement.contains(panelContainer)) {
-        // 获取用户对侧边栏展示位置的设定
-        chrome.storage.sync.get("LayoutSettings", function(result) {
-            var layoutSettings = result.LayoutSettings;
-            popupPosition = layoutSettings["PopupPosition"]; // 保存侧边栏展示的位置
-            if (content.position) {
-                let position = content.position;
-                moveablePanel.snappable = true;
-                updateBounds();
-                window.addEventListener("scroll", updateBounds);
-                move(300, 600, position.XPosition, position.YPosition);
-            } else {
-                // 获取用户上次通过resize设定的侧边栏宽度
-                chrome.storage.sync.get("sideWidth", function(result) {
-                    let sideWidth = 0.2;
-                    if (result.sideWidth) {
-                        sideWidth = result.sideWidth;
-                    }
-                    // var resizeFlag = layoutSettings["Resize"]; // 保存侧边栏展示的位置
-                    let leftOffset = (1 - sideWidth) * window.innerWidth;
-                    if (hasScrollbar()) leftOffset -= getScrollbarWidth();
-                    updateBounds();
-                    move(sideWidth * window.innerWidth, window.innerHeight, leftOffset, 0);
-
-                    // if (resizeFlag) {
-                    //     // 用户设置 收缩页面
-                    //     document.body.style.transition = "width " + transitionDuration + "ms";
-                    //     document.body.style.width = (1 - sideWidth) * 100 + "%";
-                    // }
-                    if (popupPosition === "left") {
-                        // 用户设置 在页面左侧显示侧边栏
-                        // if (resizeFlag) {
-                        //     // 用户设置 收缩页面
-                        //     document.body.style.position = "absolute";
-                        //     // document.body.style.marginLeft = 0.2 * originOriginWidth + "px";
-                        //     document.body.style.right = "0";
-                        //     document.body.style.left = "";
-                        // }
-                        // panelContainer.style.left = "0";
-                        // panelContainer.style["padding-right"] = dragSensitivity + "px";
-                    } else {
-                        // if (resizeFlag) {
-                        //     // 用户设置 收缩页面
-                        //     document.body.style.margin = "0";
-                        //     document.body.style.right = "";
-                        //     document.body.style.left = "0";
-                        // }
-                        // setTimeout(() => {
-                        //     console.log(getElementLeft(shadowDom.getElementById("translate-test")));
-                        //     moveablePanel = new Moveable(shadowDom, {
-                        //         target: resultPanel,
-                        //         // If the container is null, the position is fixed. (default: parentElement(document.body))
-                        //         container: null,
-                        //         draggable: true,
-                        //         resizable: true,
-                        //         edge: true
-                        //     });
-                        //     let startTranslate = [0, 0];
-                        //     /* draggable */
-                        //     moveablePanel
-                        //         .on("dragStart", ({ set }) => {
-                        //             set(startTranslate);
-                        //         })
-                        //         .on("drag", ({ target, beforeTranslate }) => {
-                        //             startTranslate = beforeTranslate;
-                        //             target.style.transform = `translate(${beforeTranslate[0]}px, ${beforeTranslate[1]}px)`;
-                        //         });
-                        //     /* resizable */
-                        //     moveablePanel
-                        //         .on("resizeStart", ({ setOrigin, dragStart }) => {
-                        //             setOrigin(["%", "%"]);
-                        //             dragStart && dragStart.set(startTranslate);
-                        //         })
-                        //         .on("resize", ({ target, width, height, drag }) => {
-                        //             const beforeTranslate = drag.beforeTranslate;
-                        //             startTranslate = beforeTranslate;
-                        //             target.style.width = `${width}px`;
-                        //             target.style.height = `${height}px`;
-                        //             target.style.transform = `translate(${beforeTranslate[0]}px, ${beforeTranslate[1]}px)`;
-                        //         });
-                        // }, 0);
-                        // panelContainer.style.right = "0";
-                        // panelContainer.style["padding-left"] = dragSensitivity + "px";
-                    }
-                });
-            }
-            document.documentElement.appendChild(panelContainer);
-            // startSlider(layoutSettings);
-            // addEventListener();
-
-            // iframe 一加载完成添加事件监听
-            // shadowDom.onload = function() {
-            //     // resultPanel = shadowDom.contentDocument;
-
-            //     // 根据用户设定决定是否采用从右到左布局（用于阿拉伯语等从右到左书写的语言）
-            //     chrome.storage.sync.get("LayoutSettings", result => {
-            //         if (result.LayoutSettings.RTL) {
-            //             let contents = resultPanel.getElementsByClassName("may-need-rtl");
-            //             for (let i = 0; i < contents.length; i++) {
-            //                 contents[i].dir = "rtl";
-            //             }
-            //         }
-            //     });
-            //     // 添加事件监听
-            //     addEventListener();
-            // };
-        });
-    }
-}
-
-function windowResizeHandler() {
-    // 获取用户上次通过resize设定的侧边栏宽度
-    chrome.storage.sync.get("sideWidth", function(result) {
-        let sideWidth = 0.2;
-        if (result.sideWidth) {
-            sideWidth = result.sideWidth;
+        if (displaySetting.type === "floating") {
+            /* show floating panel */
+            let position;
+            if (content.position)
+                position = [content.position.XPosition, content.position.YPosition];
+            else
+                position = [
+                    (1 - displaySetting.floatingData.width) * window.innerWidth -
+                        (hasScrollbar() ? scrollbarWidth : 0),
+                    0
+                ];
+            move(
+                displaySetting.floatingData.width * window.innerWidth,
+                displaySetting.floatingData.height * window.innerHeight,
+                position[0],
+                position[1]
+            );
+        } else {
+            showFixedPanel();
         }
-        let width = window.innerWidth;
-        let height = window.innerHeight;
-        let leftOffset = (1 - sideWidth) * width;
-        if (hasScrollbar()) leftOffset -= getScrollbarWidth();
         updateBounds();
-        move(sideWidth * width, height, leftOffset, 0);
-    });
+        document.documentElement.appendChild(panelContainer);
+        // 用户设置 在页面左侧显示侧边栏
+        // if (resizeFlag) {
+        //     // 用户设置 收缩页面
+        //     document.body.style.position = "absolute";
+        //     // document.body.style.marginLeft = 0.2 * originOriginWidth + "px";
+        //     document.body.style.right = "0";
+        //     document.body.style.left = "";
+        // }
+        // panelContainer.style.left = "0";
+        // panelContainer.style["padding-right"] = dragSensitivity + "px";
+
+        // if (resizeFlag) {
+        //     // 用户设置 收缩页面
+        //     document.body.style.margin = "0";
+        //     document.body.style.right = "";
+        //     document.body.style.left = "0";
+        // }
+        // setTimeout(() => {
+        //     console.log(getElementLeft(shadowDom.getElementById("translate-test")));
+        //     moveablePanel = new Moveable(shadowDom, {
+        //         target: resultPanel,
+        //         // If the container is null, the position is fixed. (default: parentElement(document.body))
+        //         container: null,
+        //         draggable: true,
+        //         resizable: true,
+        //         edge: true
+        //     });
+        //     let startTranslate = [0, 0];
+        //     /* draggable */
+        //     moveablePanel
+        //         .on("dragStart", ({ set }) => {
+        //             set(startTranslate);
+        //         })
+        //         .on("drag", ({ target, beforeTranslate }) => {
+        //             startTranslate = beforeTranslate;
+        //             target.style.transform = `translate(${beforeTranslate[0]}px, ${beforeTranslate[1]}px)`;
+        //         });
+        //     /* resizable */
+        //     moveablePanel
+        //         .on("resizeStart", ({ setOrigin, dragStart }) => {
+        //             setOrigin(["%", "%"]);
+        //             dragStart && dragStart.set(startTranslate);
+        //         })
+        //         .on("resize", ({ target, width, height, drag }) => {
+        //             const beforeTranslate = drag.beforeTranslate;
+        //             startTranslate = beforeTranslate;
+        //             target.style.width = `${width}px`;
+        //             target.style.height = `${height}px`;
+        //             target.style.transform = `translate(${beforeTranslate[0]}px, ${beforeTranslate[1]}px)`;
+        //         });
+        // }, 0);
+        // panelContainer.style.right = "0";
+        // panelContainer.style["padding-left"] = dragSensitivity + "px";
+
+        //     // 根据用户设定决定是否采用从右到左布局（用于阿拉伯语等从右到左书写的语言）
+        //     chrome.storage.sync.get("LayoutSettings", result => {
+        //         if (result.LayoutSettings.RTL) {
+        //             let contents = resultPanel.getElementsByClassName("may-need-rtl");
+        //             for (let i = 0; i < contents.length; i++) {
+        //                 contents[i].dir = "rtl";
+        //             }
+        //         }
+        //     });
+    }
 }
 
 /**
@@ -335,14 +316,38 @@ Messager.receive("content", message => {
     return Promise.resolve();
 });
 
+/**
+ * show the result panel in the fixed style
+ */
+function showFixedPanel() {
+    let width = displaySetting.fixedData.width * window.innerWidth;
+    let offsetLeft = 0;
+    if (displaySetting.fixedData.position === "right")
+        offsetLeft = window.innerWidth - width - (hasScrollbar() ? scrollbarWidth : 0);
+    move(width, window.innerHeight, offsetLeft, 0);
+}
+
+/**
+ * get or set the display setting in chrome.storage api
+ */
+function updateDisplaySetting() {
+    // TODO
+}
+
+/**
+ * judge whether the current page has a scroll bar
+ */
 function hasScrollbar() {
     return (
         document.body.scrollHeight > (window.innerHeight || document.documentElement.clientHeight)
     );
 }
 
-//计算滚动条宽度的方法
-// 新建一个带有滚动条的 div 元素，通过该元素的 offsetWidth 和 clientWidth 的差值即可获得
+/**
+ * calculate the width of scroll bar
+ * method: create a div element with a scroll bar and calculate the difference between offsetWidth and clientWidth
+ * @returns {number} the width of scroll bar
+ */
 function getScrollbarWidth() {
     var scrollDiv = document.createElement("div");
     scrollDiv.style.cssText =
@@ -353,16 +358,28 @@ function getScrollbarWidth() {
     return scrollbarWidth;
 }
 
+/**
+ *
+ */
 function updateBounds() {
-    let scrollLeft = document.documentElement.scrollLeft || document.body.scrollLeft;
     let scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-    let rightBound;
-    if (hasScrollbar()) rightBound = scrollLeft + window.innerWidth - getScrollbarWidth();
     moveablePanel.setBounds({
-        left: scrollLeft,
-        right: rightBound,
-        top: scrollTop
+        top: scrollTop - 5
     });
+}
+
+/**
+ * the handler for window resize event
+ * update drag bounds and the size or position of the result panel
+ */
+function windowResizeHandler() {
+    updateBounds();
+    if (displaySetting.type === "fixed") showFixedPanel();
+    else
+        moveablePanel.request("resizable", {
+            width: displaySetting.floatingData.width * window.innerWidth,
+            height: displaySetting.floatingData.height * window.innerHeight
+        });
 }
 
 /**
