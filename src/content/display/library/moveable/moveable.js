@@ -53,6 +53,11 @@ export default class moveable {
         return false;
     }
 
+    /**
+     * set a new bounds option(e.g.: {left:0, right:100,top:0,bottom:100}) given by users. If one direction is not defined, set an infinity value.
+     * @param {Object} boundsOption the given bounds option
+     * @returns {boolean} if you set value successfully
+     */
     setBounds(boundsOption) {
         if (this.draggable) {
             this.draggable.setBounds(boundsOption);

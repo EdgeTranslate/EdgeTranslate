@@ -46,4 +46,10 @@ describe("test moveable api in content module", () => {
         expect(moveable.setThreshold({})).toBeFalsy();
         done();
     });
+
+    it("to set the drag area bounds option", done => {
+        let moveable = new Moveable(document.body, {});
+        expect(moveable.setBounds()).toBeFalsy();
+        done();
+    });
 });

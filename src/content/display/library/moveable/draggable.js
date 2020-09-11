@@ -27,7 +27,7 @@ export default class draggable {
      */
     dragInitiate() {
         this.dragEnd();
-        this.bounds = this.setBounds(this.options.bounds);
+        this.setBounds(this.options.bounds);
         // wrap a drag start event handler
         this.dragStartHandler = function(e) {
             this.dragStart(e);
@@ -39,6 +39,10 @@ export default class draggable {
         this.targetElement.addEventListener("mousedown", this.dragStartHandler);
     }
 
+    /**
+     * parse the bounds option(e.g.: {left:0, right:100,top:0,bottom:100}) given by users. If one direction is not defined, set an infinity value.
+     * @param {Object} boundsOption the given bounds option
+     */
     static parseBounds(boundsOption) {
         let bounds = {};
         boundsOption = boundsOption || {};
@@ -52,6 +56,10 @@ export default class draggable {
         return bounds;
     }
 
+    /**
+     * set a new bounds option
+     * @param {Object} boundsOption the given bounds option
+     */
     setBounds(boundsOption) {
         this.bounds = draggable.parseBounds(boundsOption);
     }
