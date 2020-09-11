@@ -362,12 +362,11 @@ function updateBounds() {
     let scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
     let rightBound;
     if (hasScrollbar()) rightBound = scrollLeft + window.innerWidth - getScrollbarWidth();
-    moveablePanel.bounds = {
+    moveablePanel.setBounds({
         left: scrollLeft,
         right: rightBound,
-        top: scrollTop,
-        bottom: Number.MAX_VALUE
-    };
+        top: scrollTop
+    });
 }
 
 /**

@@ -160,10 +160,10 @@ export default class resizable {
     /**
      * set new directions for the target resizable elements
      * and recreate div resizable elements
-     * @param {Array|string|Object|undefined} directionsOptions new direction options
+     * @param {Array|string|Object|undefined} directionsOption new direction options
      */
-    setDirections(directionsOptions) {
-        this.directions = resizable.parseDirection(directionsOptions);
+    setDirections(directionsOption) {
+        this.directions = resizable.parseDirection(directionsOption);
         this.createResizableDivElements();
     }
 
@@ -207,10 +207,10 @@ export default class resizable {
     /**
      * parse new resize threshold value for the target resizable elements
      * and recreate div resizable elements
-     * @param {number|Object|undefined} thresholdOptions new threshold options
+     * @param {number|Object|undefined} thresholdOption new threshold options
      */
-    setThreshold(thresholdOptions) {
-        this.resizeThreshold = resizable.parseThreshold(thresholdOptions);
+    setThreshold(thresholdOption) {
+        this.resizeThreshold = resizable.parseThreshold(thresholdOption);
         this.createResizableDivElements();
     }
 

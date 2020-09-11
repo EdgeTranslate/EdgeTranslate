@@ -15,6 +15,8 @@ export default class draggable {
         this.dragging = false;
         // store some drag status value
         this.store = {};
+        // store the drag bounds setting
+        this.bounds = {};
         this.dragInitiate();
     }
 
@@ -25,6 +27,7 @@ export default class draggable {
      */
     dragInitiate() {
         this.dragEnd();
+        this.bounds = this.setBounds(this.options.bounds);
         // wrap a drag start event handler
         this.dragStartHandler = function(e) {
             this.dragStart(e);
@@ -34,6 +37,23 @@ export default class draggable {
             this.drag(e);
         }.bind(this);
         this.targetElement.addEventListener("mousedown", this.dragStartHandler);
+    }
+
+    static parseBounds(boundsOption) {
+        let bounds = {};
+        boundsOption = boundsOption || {};
+        bounds.left =
+            boundsOption.left !== undefined ? boundsOption.left : Number.NEGATIVE_INFINITY;
+        bounds.top = boundsOption.top !== undefined ? boundsOption.top : Number.NEGATIVE_INFINITY;
+        bounds.right =
+            boundsOption.right !== undefined ? boundsOption.right : Number.POSITIVE_INFINITY;
+        bounds.bottom =
+            boundsOption.bottom !== undefined ? boundsOption.bottom : Number.POSITIVE_INFINITY;
+        return bounds;
+    }
+
+    setBounds(boundsOption) {
+        this.bounds = draggable.parseBounds(boundsOption);
     }
 
     /**
@@ -48,10 +68,16 @@ export default class draggable {
         // store the start mouse absolute position. [x,y]
         this.store.startMouse = [e.pageX, e.pageY];
         // store the start element absolute position. [x,y]
-        this.store.startElement = [
+        let offset = [
             this.targetElement.getBoundingClientRect().left + document.documentElement.scrollLeft,
             this.targetElement.getBoundingClientRect().top + document.documentElement.scrollTop
         ];
+        this.store.startElement = {
+            left: offset[0],
+            top: offset[1],
+            right: offset[0] + this.targetElement.offsetWidth,
+            bottom: offset[1] + this.targetElement.offsetHeight
+        };
 
         this.handlers.dragStart &&
             this.handlers.dragStart({
@@ -79,17 +105,33 @@ export default class draggable {
      */
     drag(e) {
         e.preventDefault();
+        let delta = [e.pageX - this.store.startMouse[0], e.pageY - this.store.startMouse[1]];
         // calculate the current translate value
-        this.store.currentTranslate = [
-            e.pageX - this.store.startMouse[0] + this.store.startTranslate[0],
-            e.pageY - this.store.startMouse[1] + this.store.startTranslate[1]
+        let currentTranslate = [
+            delta[0] + this.store.startTranslate[0],
+            delta[1] + this.store.startTranslate[1]
         ];
+        let currentElement = {
+            left: this.bounds.left - (delta[0] + this.store.startElement.left),
+            top: this.bounds.top - (delta[1] + this.store.startElement.top),
+            right: delta[0] + this.store.startElement.right - this.bounds.right,
+            bottom: delta[1] + this.store.startElement.bottom - this.bounds.bottom
+        };
+        for (let direction in currentElement) {
+            if (currentElement[direction] >= 0) {
+                this.bound(direction, currentElement[direction]);
+                return;
+            }
+        }
+        this.store.currentTranslate = [currentTranslate[0], currentTranslate[1]];
+
         this.handlers.drag &&
             this.handlers.drag({
                 inputEvent: e,
                 target: this.targetElement,
                 transform: `translate(${this.store.currentTranslate[0]}px,${this.store.currentTranslate[1]}px)`,
-                translate: [this.store.currentTranslate[0], this.store.currentTranslate[1]] // deep copy
+                translate: this.store.currentTranslate,
+                delta: delta // delta position
             });
     }
 
@@ -108,6 +150,14 @@ export default class draggable {
                     }); // deep copy
             }
         });
+    }
+
+    bound() {
+        // TODO
+    }
+
+    unBound() {
+        // TODO
     }
 
     /**

@@ -26,12 +26,12 @@ export default class moveable {
      * set new directions for the target resizable elements
      * all valid directions: [s, se, e, ne, n, nw, w, sw]
      * support array(e.g.: [s,se]), string(e.g.: "s,se") and object(e.g.: {s:null,se:null}) these types of parameter
-     * @param {Array|string|Object|undefined} directionsOptions new direction options
+     * @param {Array|string|Object|undefined} directionsOption new direction options
      * @returns {boolean} if you set value successfully
      */
-    setDirections(directionsOptions) {
+    setDirections(directionsOption) {
         if (this.resizable) {
-            this.resizable.setDirections(directionsOptions);
+            this.resizable.setDirections(directionsOption);
             return true;
         }
         return false;
@@ -42,12 +42,20 @@ export default class moveable {
      * all valid directions: [s, se, e, ne, n, nw, w, sw]
      * support number(e.g.: 10), object(e.g.: {s:5, se:3, edge: 5, corner: 2}) and undefined these types of parameter
      * Hint: "corner" in object means value of directions:[s,e,n,w]."edge" in object means value of directions:[se,ne,nw,sw]
-     * @param {number|Object|undefined} thresholdOptions new threshold options
+     * @param {number|Object|undefined} thresholdOption new threshold options
      * @returns {boolean} if you set value successfully
      */
-    setThreshold(thresholdOptions) {
+    setThreshold(thresholdOption) {
         if (this.resizable) {
-            this.resizable.setThreshold(thresholdOptions);
+            this.resizable.setThreshold(thresholdOption);
+            return true;
+        }
+        return false;
+    }
+
+    setBounds(boundsOption) {
+        if (this.draggable) {
+            this.draggable.setBounds(boundsOption);
             return true;
         }
         return false;
