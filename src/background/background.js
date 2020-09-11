@@ -4,6 +4,7 @@ import {
     stopPronounce,
     onLanguageSettingUpdated,
     getAvailableTranslators,
+    updateTranslator,
     showTranslate,
     translatePage,
     youdaoPageTranslate,
@@ -56,6 +57,7 @@ const DEFAULT_SETTINGS = {
     },
     DefaultPageTranslator: "YouDaoPageTranslate",
     TranslatorConfig: {
+        single: "hybrid",
         translators: ["BaiduTranslate", "BingTranslate", "GoogleTranslate"],
         selections: {
             originalText: "GoogleTranslate",
@@ -399,6 +401,8 @@ async function messageHandler(message, sender) {
             return onLanguageSettingUpdated(message.detail);
         case "get_available_translators":
             return getAvailableTranslators(message.detail);
+        case "update_translator":
+            return updateTranslator(message.detail);
         default:
             log("Unknown message title: " + message.title);
             return Promise.reject();

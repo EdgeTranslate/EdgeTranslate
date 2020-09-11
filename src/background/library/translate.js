@@ -11,6 +11,7 @@ export {
     stopPronounce,
     onLanguageSettingUpdated,
     getAvailableTranslators,
+    updateTranslator,
     showTranslate,
     translatePage,
     youdaoPageTranslate,
@@ -160,6 +161,24 @@ function onLanguageSettingUpdated(detail) {
  */
 function getAvailableTranslators(detail) {
     return TRANSLATOR.getAvailableTranslatorsFor(detail.from, detail.to);
+}
+
+/**
+ * Update translator.
+ *
+ * @param {Object} detail message detail, detail.translator is the translator to set.
+ *
+ * @returns {Promise} set finished promise.
+ */
+function updateTranslator(detail) {
+    return TRANSLATOR.loadConfigIfNotLoaded().then(() => {
+        TRANSLATOR.CONFIG.single = detail.translator;
+        return new Promise(resolve => {
+            chrome.storage.sync.set({ TranslatorConfig: TRANSLATOR.CONFIG }, () => {
+                resolve(TRANSLATOR.CONFIG);
+            });
+        });
+    });
 }
 
 /**

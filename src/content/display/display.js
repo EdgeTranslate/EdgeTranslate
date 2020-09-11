@@ -59,6 +59,17 @@ const FIX_OFF = false; // 侧边栏不固定的值
     // store the panel body element
     bodyPanel = shadowDom.getElementById("panel-body");
 
+    // Set up translator options.
+    chrome.storage.sync.get(["languageSetting", "TranslatorConfig"], async result => {
+        let config = result.TranslatorConfig;
+        let languageSetting = result.languageSetting;
+        let availableTranslators = await Messager.send("background", "get_available_translators", {
+            from: languageSetting.sl,
+            to: languageSetting.tl
+        });
+        setUpTranslateConfig(config, availableTranslators);
+    });
+
     /* set attributes of elements */
     resultPanel.style.backgroundColor = "white"; // set style dynamically to be compatible with chrome extension "Dark Reader"
     resultPanel.style.boxShadow = "0px 4px 23px -6px rgb(64,64,64,0.8)"; // set style dynamically to be compatible with chrome extension "Dark Reader"
@@ -551,6 +562,52 @@ function copyContent() {
             frameWindow.getSelection().removeAllRanges();
         });
     }
+}
+
+/**
+ * Set up translator options.
+ *
+ * @param {Object} config translator config
+ * @param {Array<String>} availableTranslators available translators for current language setting
+ *
+ * @returns {void} nothing
+ */
+function setUpTranslateConfig(config, availableTranslators) {
+    let translatorsEle = shadowDom.getElementById("translators");
+
+    // Remove existed options.
+    for (let i = translatorsEle.options.length; i > 0; i--) {
+        translatorsEle.options.remove(i - 1);
+    }
+
+    // data-affected indicates items affected by this element in config.selections, they always have the same value.
+    let selected = config.single;
+
+    // Add hybrid translator alone.
+    if (selected === "hybrid") {
+        translatorsEle.options.add(new Option("Hybrid", "hybrid", true, true));
+    } else {
+        translatorsEle.options.add(new Option("Hybrid", "hybrid"));
+    }
+
+    // Add normal translators.
+    for (let translator of availableTranslators) {
+        if (translator === selected) {
+            translatorsEle.options.add(
+                new Option(chrome.i18n.getMessage(translator), translator, true, true)
+            );
+        } else {
+            translatorsEle.options.add(new Option(chrome.i18n.getMessage(translator), translator));
+        }
+    }
+
+    // Update and re-translate.
+    translatorsEle.onchange = () => {
+        let value = translatorsEle.options[translatorsEle.selectedIndex].value;
+        Messager.send("background", "update_translator", { translator: value }).then(() => {
+            Messager.send("background", "translate", { text: translateResult.originalText });
+        });
+    };
 }
 
 /**
