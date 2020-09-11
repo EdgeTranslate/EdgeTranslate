@@ -378,12 +378,13 @@ export default class resizable {
      * remove the resizing event listener
      */
     resizeEnd() {
-        document.documentElement.addEventListener("mouseup", () => {
+        document.documentElement.addEventListener("mouseup", e => {
             if (this.resizing) {
                 this.resizing = false;
                 document.documentElement.removeEventListener("mousemove", this.resizeHandler);
                 if (this.handlers.resizeEnd)
                     this.handlers.resizeEnd({
+                        inputEvent: e,
                         translate: [this.store.currentTranslate[0], this.store.currentTranslate[1]] // deep copy
                     });
             }

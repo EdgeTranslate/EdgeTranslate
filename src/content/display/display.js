@@ -118,15 +118,40 @@ const FIX_OFF = false; // 侧边栏不固定的值
                 const path =
                     inputEvent.path || (inputEvent.composedPath && inputEvent.composedPath());
                 // if drag element isn't the head element, stop the drag event
-                if (!path || !shadowDom.getElementById("panel-head").isSameNode(path[0])) stop();
+                if (!path || !shadowDom.getElementById("panel-head").isSameNode(path[0])) {
+                    stop();
+                    return;
+                }
+                if (displaySetting.type === "fixed") {
+                    displaySetting.type = "floating";
+                    showFloatingPanel();
+                    updateDisplaySetting();
+                }
             }
             set(startTranslate);
         })
-        .on("drag", ({ target, translate }) => {
+        .on("drag", ({ target, translate, inputEvent }) => {
+            if (inputEvent && inputEvent.clientX <= 0) {
+                // TODO add change effect
+            }
             target.style.transform = `translate(${translate[0]}px, ${translate[1]}px)`;
         })
-        .on("dragEnd", ({ translate }) => {
+        .on("dragEnd", ({ translate, inputEvent }) => {
             startTranslate = translate;
+
+            /* change the display type of result panel */
+            if (inputEvent && displaySetting.type === "floating") {
+                let threshold = 3;
+                // mouse is close to the left boundary
+                if (inputEvent.clientX <= threshold) displaySetting.fixedData.position = "left";
+                // mouse is close to the right boundary
+                else if (inputEvent.clientX >= window.innerWidth - threshold)
+                    displaySetting.fixedData.position = "right";
+                else return;
+                displaySetting.type = "fixed";
+                showFixedPanel();
+                updateDisplaySetting();
+            }
         });
     // // the result panel drag out of the drag area
     // .on("bound", ({ direction, distance }) => {
@@ -317,7 +342,17 @@ Messager.receive("content", message => {
 });
 
 /**
- * show the result panel in the fixed style
+ * show the result panel in the floating type
+ */
+function showFloatingPanel() {
+    moveablePanel.request("resizable", {
+        width: displaySetting.floatingData.width * window.innerWidth,
+        height: displaySetting.floatingData.height * window.innerHeight
+    });
+}
+
+/**
+ * show the result panel in the fixed type
  */
 function showFixedPanel() {
     let width = displaySetting.fixedData.width * window.innerWidth;

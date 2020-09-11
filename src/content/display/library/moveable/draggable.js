@@ -158,12 +158,13 @@ export default class draggable {
      * remove the dragging event listener
      */
     dragEnd() {
-        document.documentElement.addEventListener("mouseup", () => {
+        document.documentElement.addEventListener("mouseup", e => {
             if (this.dragging) {
                 this.dragging = false;
                 document.documentElement.removeEventListener("mousemove", this.dragHandler);
                 if (this.handlers.dragEnd)
                     this.handlers.dragEnd({
+                        inputEvent: e,
                         translate: [this.store.currentTranslate[0], this.store.currentTranslate[1]]
                     }); // deep copy
             }
