@@ -20,6 +20,7 @@ class TranslatorProxy {
          * Translate config.
          */
         this.CONFIG = {};
+        this.SINGLE = "hybrid";
         this.MAIN_TRANSLATOR = "GoogleTranslate";
 
         /**
@@ -29,6 +30,7 @@ class TranslatorProxy {
             ((changes, area) => {
                 if (area === "sync" && changes["TranslatorConfig"]) {
                     this.CONFIG = changes["TranslatorConfig"].newValue;
+                    this.SINGLE = this.CONFIG.single;
                     this.MAIN_TRANSLATOR = this.CONFIG.selections.mainMeaning;
                 }
             }).bind(this)
@@ -87,7 +89,7 @@ class TranslatorProxy {
         // Load config if not loaded.
         await this.loadConfigIfNotLoaded();
 
-        let newConfig = { translators: new Set(), selections: {} };
+        let newConfig = { single: this.CONFIG.single, translators: new Set(), selections: {} };
 
         // Get translators that support new language setting.
         let availableTranslators = this.getAvailableTranslatorsFor(detail.from, detail.to);
@@ -97,6 +99,11 @@ class TranslatorProxy {
 
         // Use this set to check if a translator in the old config should be replaced.
         let availableTranslatorSet = new Set(availableTranslators);
+
+        // Update config.single.
+        if (!availableTranslatorSet.has(newConfig.single)) {
+            newConfig.single = defaultTranslator;
+        }
 
         for (let item in this.CONFIG.selections) {
             let newTranslator,
@@ -131,6 +138,10 @@ class TranslatorProxy {
      * @returns {Promise<String>} Promise of language of given text
      */
     detect(text) {
+        if (this.SINGLE !== "hybrid") {
+            return this.TRANSLATORS[this.SINGLE].detect(text);
+        }
+
         return this.TRANSLATORS[this.MAIN_TRANSLATOR].detect(text);
     }
 
@@ -144,6 +155,10 @@ class TranslatorProxy {
      * @returns {Promise<Object>} result Promise
      */
     async translate(text, from, to) {
+        if (this.SINGLE !== "hybrid") {
+            return this.TRANSLATORS[this.SINGLE].translate(text, from, to);
+        }
+
         /**
          * Check config firstly.
          */
@@ -212,6 +227,10 @@ class TranslatorProxy {
      * @returns {Promise<void>} pronounce finished
      */
     pronounce(text, language, speed) {
+        if (this.SINGLE !== "hybrid") {
+            return this.TRANSLATORS[this.SINGLE].pronounce(text, language, speed);
+        }
+
         return this.TRANSLATORS[this.MAIN_TRANSLATOR].pronounce(text, language, speed);
     }
 
@@ -219,6 +238,10 @@ class TranslatorProxy {
      * Pause pronounce.
      */
     stopPronounce() {
+        if (this.SINGLE !== "hybrid") {
+            return this.TRANSLATORS[this.SINGLE].stopPronounce();
+        }
+
         this.TRANSLATORS[this.MAIN_TRANSLATOR].stopPronounce();
     }
 }
