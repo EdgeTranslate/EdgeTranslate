@@ -110,6 +110,14 @@ const FIX_OFF = false; // 侧边栏不固定的值
         .on("dragEnd", ({ translate }) => {
             startTranslate = translate;
         });
+    // // the result panel drag out of the drag area
+    // .on("bound", ({ direction, distance }) => {
+    //     if (direction === "left" || direction === "right") console.log(direction, distance);
+    // })
+    // // the result panel drag into drag area first time
+    // .on("unBound", () => {
+    //     console.log("unbound");
+    // });
     /* resizable  events*/
     moveablePanel
         .on("resizeStart", ({ set }) => {
@@ -155,15 +163,10 @@ function showPanel(content, template) {
                         sideWidth = result.sideWidth;
                     }
                     // var resizeFlag = layoutSettings["Resize"]; // 保存侧边栏展示的位置
-                    // resultPanel.style.width = sideWidth * 100 + "%";
-                    moveablePanel.snappable = true;
+                    let leftOffset = (1 - sideWidth) * window.innerWidth;
+                    if (hasScrollbar()) leftOffset -= getScrollbarWidth();
                     updateBounds();
-                    move(
-                        sideWidth * window.innerWidth,
-                        window.innerHeight,
-                        (1 - sideWidth) * window.innerWidth,
-                        0
-                    );
+                    move(sideWidth * window.innerWidth, window.innerHeight, leftOffset, 0);
 
                     // if (resizeFlag) {
                     //     // 用户设置 收缩页面
@@ -260,17 +263,10 @@ function windowResizeHandler() {
         }
         let width = window.innerWidth;
         let height = window.innerHeight;
-        let scrollLeft = document.documentElement.scrollLeft || document.body.scrollLeft;
-        let scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-        let rightBound;
-        if (hasScrollbar()) rightBound = scrollLeft + window.innerWidth - getScrollbarWidth();
-        moveablePanel.bounds = {
-            left: scrollLeft,
-            right: rightBound,
-            top: scrollTop,
-            bottom: Number.MAX_VALUE
-        };
-        move(sideWidth * width, height, (1 - sideWidth) * width, 0);
+        let leftOffset = (1 - sideWidth) * width;
+        if (hasScrollbar()) leftOffset -= getScrollbarWidth();
+        updateBounds();
+        move(sideWidth * width, height, leftOffset, 0);
     });
 }
 

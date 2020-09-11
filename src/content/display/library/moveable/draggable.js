@@ -17,6 +17,8 @@ export default class draggable {
         this.store = {};
         // store the drag bounds setting
         this.bounds = {};
+        // flag if the bound event activated
+        this.bounding = false;
         this.dragInitiate();
     }
 
@@ -129,9 +131,15 @@ export default class draggable {
         for (let direction in boundsDistance) {
             // the target element exceeds one direction's boundary
             if (boundsDistance[direction] >= 0) {
+                this.bounding = true;
                 this.bound(direction, boundsDistance[direction]);
                 return;
             }
+        }
+        // the target element is in the drag area
+        if (this.bounding) {
+            this.bounding = false;
+            this.unBound();
         }
         this.store.currentTranslate = [currentTranslate[0], currentTranslate[1]];
 
@@ -162,12 +170,25 @@ export default class draggable {
         });
     }
 
-    bound() {
-        // TODO
+    /**
+     * the event handler when the target element exceeds the boundary
+     * @param {string} direction in which direction the element exceeds the boundary
+     * @param {number} distance how far the element exceeds the boundary. distance>=0
+     */
+    bound(direction, distance) {
+        // if the user set the bound event handler, call it
+        this.handlers.bound &&
+            this.handlers.bound({
+                direction: direction,
+                distance: distance
+            });
     }
 
+    /**
+     * call unBound function when the target element is first within the drag area
+     */
     unBound() {
-        // TODO
+        this.handlers.unBound && this.handlers.unBound();
     }
 
     /**
