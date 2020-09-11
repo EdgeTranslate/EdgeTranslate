@@ -75,11 +75,11 @@ export default class draggable {
         this.store.startTranslate = [];
         // store the start mouse absolute position. [x,y]
         this.store.startMouse = [e.pageX, e.pageY];
-        // store the start element absolute position. [x,y]
         let offset = [
             this.targetElement.getBoundingClientRect().left + document.documentElement.scrollLeft,
             this.targetElement.getBoundingClientRect().top + document.documentElement.scrollTop
         ];
+        // store the start element absolute position. {left:leftOffset,top: topOffset,right:rightOffset,bottom:bottomOffset}
         this.store.startElement = {
             left: offset[0],
             top: offset[1],
@@ -119,15 +119,17 @@ export default class draggable {
             delta[0] + this.store.startTranslate[0],
             delta[1] + this.store.startTranslate[1]
         ];
-        let currentElement = {
+        // calculate the distance between the bounds and the current element position
+        let boundsDistance = {
             left: this.bounds.left - (delta[0] + this.store.startElement.left),
             top: this.bounds.top - (delta[1] + this.store.startElement.top),
             right: delta[0] + this.store.startElement.right - this.bounds.right,
             bottom: delta[1] + this.store.startElement.bottom - this.bounds.bottom
         };
-        for (let direction in currentElement) {
-            if (currentElement[direction] >= 0) {
-                this.bound(direction, currentElement[direction]);
+        for (let direction in boundsDistance) {
+            // the target element exceeds one direction's boundary
+            if (boundsDistance[direction] >= 0) {
+                this.bound(direction, boundsDistance[direction]);
                 return;
             }
         }
