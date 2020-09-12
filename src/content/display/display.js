@@ -94,7 +94,7 @@ const FIX_OFF = false; // 侧边栏不固定的值
     window.addEventListener("resize", windowResizeHandler);
 
     /* initiate setting value */
-    updateDisplaySetting();
+    getDisplaySetting();
     // Set up translator options.
     chrome.storage.sync.get(["languageSetting", "TranslatorConfig"], async result => {
         let config = result.TranslatorConfig;
@@ -194,6 +194,7 @@ const FIX_OFF = false; // 侧边栏不固定的值
     /* resizable  events*/
     moveablePanel
         .on("resizeStart", ({ set }) => {
+            getDisplaySetting();
             set(startTranslate);
         })
         .on("resize", ({ target, width, height, translate }) => {
@@ -227,12 +228,13 @@ const FIX_OFF = false; // 侧边栏不固定的值
  * @param {Object} content translation result
  * @param {String} template the name of render template
  */
-function showPanel(content, template) {
+async function showPanel(content, template) {
     // Write contents into iframe.
     bodyPanel.innerHTML = render(Template[template], content);
     addBodyEventListener(template);
     // if panel hasn't been displayed, locate the panel and show it
     if (!document.documentElement.contains(panelContainer)) {
+        await getDisplaySetting();
         updateBounds();
         document.documentElement.appendChild(panelContainer);
         if (displaySetting.type === "floating") {
@@ -427,10 +429,25 @@ function removeHighlightPart() {
 }
 
 /**
- * get or set the display setting in chrome.storage api
+ * get the display setting in chrome.storage api
+ * @returns {Promise{undefined}} null promise
+ */
+function getDisplaySetting() {
+    chrome.storage.sync.get("DisplaySetting", result => {
+        if (result.DisplaySetting) {
+            displaySetting = result.DisplaySetting;
+        } else {
+            updateDisplaySetting();
+        }
+        return Promise.resolve();
+    });
+}
+
+/**
+ * set the display setting in chrome.storage api
  */
 function updateDisplaySetting() {
-    // TODO
+    chrome.storage.sync.set({ DisplaySetting: displaySetting });
 }
 
 /**
@@ -460,7 +477,8 @@ function getScrollbarWidth() {
 /**
  * update the bounds value for draggable area
  */
-function updateBounds() {
+async function updateBounds() {
+    await getDisplaySetting();
     let scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
     moveablePanel.setBounds({
         top: scrollTop,
