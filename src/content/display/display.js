@@ -284,6 +284,9 @@ Messager.receive("content", message => {
                     break;
             }
             break;
+        case "update_translator_config_options":
+            setUpTranslateConfig(message.detail.config, message.detail.availableTranslators);
+            break;
         // 发送的是快捷键命令
         case "command":
             switch (message.detail.command) {
@@ -714,8 +717,14 @@ function setUpTranslateConfig(config, availableTranslators) {
     // Update and re-translate.
     translatorsEle.onchange = () => {
         let value = translatorsEle.options[translatorsEle.selectedIndex].value;
-        Messager.send("background", "update_translator", { translator: value }).then(() => {
-            Messager.send("background", "translate", { text: translateResult.originalText });
+        chrome.storage.sync.get("languageSetting", result => {
+            Messager.send("background", "update_translator", {
+                translator: value,
+                from: result.languageSetting.sl,
+                to: result.languageSetting.tl
+            }).then(() => {
+                Messager.send("background", "translate", { text: translateResult.originalText });
+            });
         });
     };
 }

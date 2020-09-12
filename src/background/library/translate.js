@@ -144,12 +144,19 @@ function stopPronounce() {
  * @returns {Promise<void>} finished Promise
  */
 function onLanguageSettingUpdated(detail) {
-    return TRANSLATOR.updateConfigFor(detail).then(newConfig =>
+    return TRANSLATOR.updateConfigFor(detail).then(newConfig => {
+        // Send message to options page to update options.
         Messager.send("options", "update_translator_config_options", {
             config: newConfig,
             availableTranslators: TRANSLATOR.getAvailableTranslatorsFor(detail.from, detail.to)
-        }).catch(() => {})
-    );
+        }).catch(() => {});
+
+        // Send message to result frame to update options.
+        sendMessageToCurrentTab("update_translator_config_options", {
+            config: newConfig,
+            availableTranslators: TRANSLATOR.getAvailableTranslatorsFor(detail.from, detail.to)
+        }).catch(() => {});
+    });
 }
 
 /**
@@ -177,6 +184,18 @@ function updateTranslator(detail) {
             chrome.storage.sync.set({ TranslatorConfig: TRANSLATOR.CONFIG }, () => {
                 resolve(TRANSLATOR.CONFIG);
             });
+        }).then(newConfig => {
+            // Send message to options page to update options.
+            Messager.send("options", "update_translator_config_options", {
+                config: newConfig,
+                availableTranslators: TRANSLATOR.getAvailableTranslatorsFor(detail.from, detail.to)
+            }).catch(() => {});
+
+            // Send message to result frame to update options.
+            sendMessageToCurrentTab("update_translator_config_options", {
+                config: newConfig,
+                availableTranslators: TRANSLATOR.getAvailableTranslatorsFor(detail.from, detail.to)
+            }).catch(() => {});
         });
     });
 }
