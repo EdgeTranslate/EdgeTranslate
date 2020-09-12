@@ -57,8 +57,13 @@ const DEFAULT_SETTINGS = {
     },
     DefaultPageTranslator: "YouDaoPageTranslate",
     TranslatorConfig: {
+        // The translator user selected in translating result frame.
         single: "GoogleTranslate",
+
+        // The translators used in current hybrid translate.
         translators: ["BaiduTranslate", "BingTranslate", "GoogleTranslate"],
+
+        // The translators for each item.
         selections: {
             originalText: "GoogleTranslate",
             mainMeaning: "BingTranslate",
