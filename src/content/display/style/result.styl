@@ -23,7 +23,32 @@
 	}
 
 	.main-meaning {
-		margin-right: 1em;
+		width: 100%;		
+		padding: 0;
+		margin: 0;
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		justify-items: flex-end;
+
+		p{
+			flex-grow: 3;
+			flex-shrink: 1;
+			padding: 0;
+			margin: 0;
+		}
+
+		.icon-copy {												
+			font-size: x-large;
+			fill: lightgray;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;	
+
+			&:hover{
+				fill: gray;
+			}		   
+		}
 
 		.main-meaning-content-larger {
 			font-size: 30px;
@@ -77,7 +102,7 @@
 		.icon-pronounce{						
 			padding: 0;
 			svg {				
-				fill: color-primary !important; 
+				fill: light-primary !important; 
 
 				&:hover{				
 					fill: orange !important;
