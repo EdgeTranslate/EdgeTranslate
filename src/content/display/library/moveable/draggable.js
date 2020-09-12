@@ -145,25 +145,25 @@ export default class draggable {
         if (boundsDistance.left >= 0) {
             flag = true;
             direction = "left";
-            currentTranslate[0] = this.bounds.left;
+            currentTranslate[0] += boundsDistance[direction];
         }
         // beyond the top boundary
         if (boundsDistance.top >= 0) {
             flag = true;
             direction = "top";
-            currentTranslate[1] = this.bounds.top;
+            currentTranslate[1] += boundsDistance[direction];
         }
         // beyond the right boundary
         if (boundsDistance.right >= 0) {
             flag = true;
             direction = "right";
-            currentTranslate[0] = this.bounds.right - this.targetElement.offsetWidth;
+            currentTranslate[0] -= boundsDistance[direction];
         }
         // beyond the bottom boundary
         if (boundsDistance.bottom >= 0) {
             flag = true;
             direction = "bottom";
-            currentTranslate[1] = this.bounds.bottom - this.targetElement.offsetHeight;
+            currentTranslate[1] -= boundsDistance[direction];
         }
 
         if (flag) {
