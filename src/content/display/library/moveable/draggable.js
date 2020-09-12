@@ -125,6 +125,11 @@ export default class draggable {
             delta[0] + this.store.startTranslate[0],
             delta[1] + this.store.startTranslate[1]
         ];
+        // update right and bottom value. cause the size of the target value might change
+        this.store.startElement.right =
+            this.store.startElement.left + this.targetElement.offsetWidth;
+        this.store.startElement.bottom =
+            this.store.startElement.top + this.targetElement.offsetHeight;
         // calculate the distance between the bounds and the current element position
         let boundsDistance = {
             left: this.bounds.left - (delta[0] + this.store.startElement.left),
@@ -132,18 +137,48 @@ export default class draggable {
             right: delta[0] + this.store.startElement.right - this.bounds.right,
             bottom: delta[1] + this.store.startElement.bottom - this.bounds.bottom
         };
-        for (let direction in boundsDistance) {
-            // the target element exceeds one direction's boundary
-            if (boundsDistance[direction] >= 0) {
-                this.bounding = true;
-                this.bound(direction, boundsDistance[direction]);
-                return;
-            }
+        // flag whether the current position beyond the drag area
+        let flag = false;
+        // store the direction in which the element is out of the boundary
+        let direction;
+        // beyond the left boundary
+        if (boundsDistance.left >= 0) {
+            flag = true;
+            direction = "left";
+            currentTranslate[0] = this.bounds.left;
         }
+        // beyond the top boundary
+        if (boundsDistance.top >= 0) {
+            flag = true;
+            direction = "top";
+            currentTranslate[1] = this.bounds.top;
+        }
+        // beyond the right boundary
+        if (boundsDistance.right >= 0) {
+            flag = true;
+            direction = "right";
+            currentTranslate[0] = this.bounds.right - this.targetElement.offsetWidth;
+        }
+        // beyond the bottom boundary
+        if (boundsDistance.bottom >= 0) {
+            flag = true;
+            direction = "bottom";
+            currentTranslate[1] = this.bounds.bottom - this.targetElement.offsetHeight;
+        }
+
+        if (flag) {
+            // drag out of the area first time
+            if (!this.bounding) {
+                this.bounding = true;
+                this.boundStart(direction);
+            }
+            this.bound(direction, boundsDistance[direction]);
+        }
+
         // the target element is in the drag area
-        if (this.bounding) {
+        if (this.bounding && !flag) {
             this.bounding = false;
-            this.unBound();
+            this.boundEnd();
         }
         this.store.currentTranslate = [currentTranslate[0], currentTranslate[1]];
 
@@ -176,6 +211,17 @@ export default class draggable {
     }
 
     /**
+     * the event handler when target element start to exceed the boundary
+     * @param {string} direction in which direction the element exceeds the boundary
+     */
+    boundStart(direction) {
+        this.handlers.boundStart &&
+            this.handlers.boundStart({
+                direction: direction
+            });
+    }
+
+    /**
      * the event handler when the target element exceeds the boundary
      * @param {string} direction in which direction the element exceeds the boundary
      * @param {number} distance how far the element exceeds the boundary. distance>=0
@@ -190,10 +236,10 @@ export default class draggable {
     }
 
     /**
-     * call unBound function when the target element is first within the drag area
+     * call boundEnd function when the target element is first within the drag area
      */
-    unBound() {
-        this.handlers.unBound && this.handlers.unBound();
+    boundEnd() {
+        this.handlers.boundEnd && this.handlers.boundEnd();
     }
 
     /**

@@ -152,6 +152,7 @@ const FIX_OFF = false; // 侧边栏不固定的值
                     // TODO add change effect
                 }
             }
+            startTranslate = translate;
             target.style.transform = `translate(${translate[0]}px, ${translate[1]}px)`;
         })
         .on("dragEnd", ({ translate, inputEvent }) => {
@@ -171,13 +172,17 @@ const FIX_OFF = false; // 侧边栏不固定的值
                 updateDisplaySetting();
             }
         });
+    // // the result panel start to drag out of the drag area
+    // .on("boundStart", ({ direction }) => {
+    //     console.log("boundStart" + direction);
+    // })
     // // the result panel drag out of the drag area
     // .on("bound", ({ direction, distance }) => {
-    //     if (direction === "left" || direction === "right") console.log(direction, distance);
+    //     console.log("bound", direction, distance);
     // })
     // // the result panel drag into drag area first time
-    // .on("unBound", () => {
-    //     console.log("unbound");
+    // .on("boundEnd", () => {
+    //     console.log("boundEnd");
     // });
     /* resizable  events*/
     moveablePanel
@@ -189,8 +194,9 @@ const FIX_OFF = false; // 侧边栏不固定的值
             target.style.height = `${height}px`;
             target.style.transform = `translate(${translate[0]}px, ${translate[1]}px)`;
         })
-        .on("resizeEnd", ({ translate, width, height, inputEvent }) => {
+        .on("resizeEnd", ({ translate, width, height, inputEvent, target }) => {
             startTranslate = translate;
+            target.style.transform = `translate(${translate[0]}px, ${translate[1]}px)`;
 
             // update new size of the result panel
             if (inputEvent) {
@@ -403,12 +409,13 @@ function getScrollbarWidth() {
 }
 
 /**
- *
+ * update the bounds value for draggable area
  */
 function updateBounds() {
     let scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
     moveablePanel.setBounds({
-        top: scrollTop - 5
+        top: scrollTop,
+        bottom: scrollTop + (1 + displaySetting.floatingData.height) * window.innerHeight - 64
     });
 }
 

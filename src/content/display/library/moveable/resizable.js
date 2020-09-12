@@ -392,6 +392,7 @@ export default class resizable {
                 document.documentElement.removeEventListener("mousemove", this.resizeHandler);
                 if (this.handlers.resizeEnd)
                     this.handlers.resizeEnd({
+                        target: this.targetElement,
                         inputEvent: e,
                         translate: [this.store.currentTranslate[0], this.store.currentTranslate[1]], // deep copy
                         width: this.store.currentSize[0],
@@ -417,6 +418,7 @@ export default class resizable {
             this.handlers.resizeStart({
                 set: position => {
                     this.store.startTranslate = position;
+                    this.targetElement.style.transform = `translate(${position[0]}px,${position[1]}px)`;
                 }
             });
 
@@ -431,7 +433,8 @@ export default class resizable {
         /* resize end */
         this.handlers.resizeEnd &&
             this.handlers.resizeEnd({
-                translate: this.store.startTranslate
+                translate: this.store.startTranslate,
+                target: this.targetElement
             });
         return true;
     }
