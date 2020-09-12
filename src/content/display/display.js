@@ -152,7 +152,7 @@ const FIX_OFF = false; // 侧边栏不固定的值
                     updateDisplaySetting();
                 }
                 /* whether to show hight part on the one side of the page*/
-                let threshold = 3;
+                let threshold = 10;
                 if (inputEvent.clientX <= threshold) showHighlightPart("left");
                 else if (inputEvent.clientX >= window.innerWidth - threshold)
                     showHighlightPart("right");
@@ -166,7 +166,7 @@ const FIX_OFF = false; // 侧边栏不固定的值
 
             /* change the display type of result panel */
             if (inputEvent && displaySetting.type === "floating") {
-                let threshold = 3;
+                let threshold = 10;
                 // mouse is close to the left boundary
                 if (inputEvent.clientX <= threshold) displaySetting.fixedData.position = "left";
                 // mouse is close to the right boundary
