@@ -56,8 +56,13 @@ const DEFAULT_SETTINGS = {
     },
     DefaultPageTranslator: "YouDaoPageTranslate",
     TranslatorConfig: {
+        // The translator user selected in translating result frame.
         single: "GoogleTranslate",
+
+        // The translators used in current hybrid translate.
         translators: ["BaiduTranslate", "BingTranslate", "GoogleTranslate"],
+
+        // The translators for each item.
         selections: {
             originalText: "GoogleTranslate",
             mainMeaning: "BingTranslate",
@@ -168,6 +173,22 @@ chrome.runtime.onInstalled.addListener(function(details) {
                 });
             }, 10 * 60 * 1000); // 10 min
         } else if (details.reason === "update") {
+            // Fix language setting compatibility between Edge Translate 2.x and 1.x.x.
+            chrome.storage.sync.get("languageSetting", result => {
+                if (result.languageSetting.sl === "zh-cn") {
+                    result.languageSetting.sl = "zh-CN";
+                } else if (result.languageSetting.sl === "zh-tw") {
+                    result.languageSetting.sl = "zh-TW";
+                }
+
+                if (result.languageSetting.tl === "zh-cn") {
+                    result.languageSetting.tl = "zh-CN";
+                } else if (result.languageSetting.tl === "zh-tw") {
+                    result.languageSetting.tl = "zh-TW";
+                }
+                chrome.storage.sync.set(result);
+            });
+
             // 从旧版本更新，引导用户查看更新日志
             chrome.notifications.create("update_notification", {
                 type: "basic",
