@@ -36,6 +36,9 @@ var bodyPanel;
 
 // store the moveable object return by moveable.js
 var moveablePanel;
+// store the element for highlight part
+var highlightPart;
+var highlightPartShown = false;
 
 // store the display type(floating or fixed)
 var displaySetting = {
@@ -148,9 +151,12 @@ const FIX_OFF = false; // 侧边栏不固定的值
                     showFloatingPanel();
                     updateDisplaySetting();
                 }
-                if (inputEvent.clientX <= 0) {
-                    // TODO add change effect
-                }
+                /* whether to show hight part on the one side of the page*/
+                let threshold = 3;
+                if (inputEvent.clientX <= threshold) showHighlightPart("left");
+                else if (inputEvent.clientX >= window.innerWidth - threshold)
+                    showHighlightPart("right");
+                else removeHighlightPart();
             }
             startTranslate = translate;
             target.style.transform = `translate(${translate[0]}px, ${translate[1]}px)`;
@@ -374,6 +380,39 @@ async function removeFixedPanel() {
         document.body.style.width = "100%";
         await delayPromise(transitionDuration);
         document.body.style.cssText = "";
+    }
+}
+
+/**
+ * show a highlight part in the page
+ * @param {string} position the highlight part show on the "left" or "right" of the page
+ */
+function showHighlightPart(position) {
+    if (!highlightPartShown) {
+        // the element has been created
+        if (highlightPart) {
+            highlightPartShown = true;
+            highlightPart.style.width = `${displaySetting.fixedData.width * window.innerWidth}px`;
+            if (position === "left") highlightPart.style.left = 0;
+            else highlightPart.style.right = 0;
+        }
+        // the element is not existed, create one
+        else {
+            highlightPart = document.createElement("div");
+            highlightPart.id = "panel-highlight";
+            shadowDom.appendChild(highlightPart);
+            showHighlightPart(position);
+        }
+    }
+}
+
+/**
+ * remove the highlight part from the page
+ */
+function removeHighlightPart() {
+    if (highlightPartShown) {
+        highlightPartShown = false;
+        highlightPart.style.cssText = "";
     }
 }
 
