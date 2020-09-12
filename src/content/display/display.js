@@ -681,24 +681,28 @@ function targetPronounce() {
 
 function copyContent() {
     // the node of translation result
-    translateResult = resultPanel.getElementsByClassName("main-meaning")[0].firstChild;
-    translateResult.setAttribute("contenteditable", "true");
-    translateResult.focus();
-    // select all content automatically
-    var range = resultPanel.createRange();
-    var frameWindow = shadowDom.contentWindow;
-    if (frameWindow) {
-        range.selectNodeContents(translateResult);
-        frameWindow.getSelection().removeAllRanges();
-        frameWindow.getSelection().addRange(range);
-        resultPanel.execCommand("copy");
+    let translateResultEle = resultPanel
+        .getElementsByClassName("main-meaning")[0]
+        .getElementsByTagName("p")[0];
 
-        // on focus out, set the node to unedible
-        translateResult.addEventListener("blur", function() {
-            translateResult.setAttribute("contenteditable", "false");
-            frameWindow.getSelection().removeAllRanges();
-        });
-    }
+    // make contents editable
+    translateResultEle.setAttribute("contenteditable", "true");
+    translateResultEle.focus();
+
+    // select all content automatically
+    let range = document.createRange();
+    range.selectNodeContents(translateResultEle);
+    window.getSelection().removeAllRanges();
+    window.getSelection().addRange(range);
+
+    // do copy
+    document.execCommand("copy");
+
+    // on focus out, set the node to unedible
+    translateResultEle.addEventListener("blur", function() {
+        translateResultEle.setAttribute("contenteditable", "false");
+        window.getSelection().removeAllRanges();
+    });
 }
 
 /**
