@@ -57,7 +57,7 @@ const DEFAULT_SETTINGS = {
     },
     DefaultPageTranslator: "YouDaoPageTranslate",
     TranslatorConfig: {
-        single: "hybrid",
+        single: "GoogleTranslate",
         translators: ["BaiduTranslate", "BingTranslate", "GoogleTranslate"],
         selections: {
             originalText: "GoogleTranslate",
