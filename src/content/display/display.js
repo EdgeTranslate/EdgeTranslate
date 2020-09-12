@@ -2,7 +2,7 @@ import render from "./library/render.js";
 import myMoveable from "./library/moveable/moveable.js";
 import { isChromePDFViewer } from "../common.js";
 import Messager from "../../common/scripts/messager.js";
-// import Moveable from "moveable";
+import { delayPromise } from "../../common/scripts/promise.js";
 
 /**
  * load templates
@@ -54,6 +54,10 @@ var translateResult; // 保存翻译结果
 var sourceTTSSpeed, targetTTSSpeed;
 // store the width of scroll bar
 const scrollbarWidth = getScrollbarWidth();
+// the duration time of result panel's transition. unit: ms
+const transitionDuration = 500;
+// flag whether the user set to resize document body
+var resizeFlag = false;
 const FIX_ON = true; // 侧边栏固定的值
 const FIX_OFF = false; // 侧边栏不固定的值
 
@@ -140,6 +144,7 @@ const FIX_OFF = false; // 侧边栏不固定的值
                 // change the display type from fixed to floating
                 if (displaySetting.type === "fixed") {
                     displaySetting.type = "floating";
+                    removeFixedPanel();
                     showFloatingPanel();
                     updateDisplaySetting();
                 }
@@ -212,6 +217,8 @@ function showPanel(content, template) {
     addBodyEventListener(template);
     // if panel hasn't been displayed, locate the panel and show it
     if (!document.documentElement.contains(panelContainer)) {
+        updateBounds();
+        document.documentElement.appendChild(panelContainer);
         if (displaySetting.type === "floating") {
             /* show floating panel */
             let position;
@@ -232,71 +239,6 @@ function showPanel(content, template) {
         } else {
             showFixedPanel();
         }
-        updateBounds();
-        document.documentElement.appendChild(panelContainer);
-        // 用户设置 在页面左侧显示侧边栏
-        // if (resizeFlag) {
-        //     // 用户设置 收缩页面
-        //     document.body.style.position = "absolute";
-        //     // document.body.style.marginLeft = 0.2 * originOriginWidth + "px";
-        //     document.body.style.right = "0";
-        //     document.body.style.left = "";
-        // }
-        // panelContainer.style.left = "0";
-        // panelContainer.style["padding-right"] = dragSensitivity + "px";
-
-        // if (resizeFlag) {
-        //     // 用户设置 收缩页面
-        //     document.body.style.margin = "0";
-        //     document.body.style.right = "";
-        //     document.body.style.left = "0";
-        // }
-        // setTimeout(() => {
-        //     console.log(getElementLeft(shadowDom.getElementById("translate-test")));
-        //     moveablePanel = new Moveable(shadowDom, {
-        //         target: resultPanel,
-        //         // If the container is null, the position is fixed. (default: parentElement(document.body))
-        //         container: null,
-        //         draggable: true,
-        //         resizable: true,
-        //         edge: true
-        //     });
-        //     let startTranslate = [0, 0];
-        //     /* draggable */
-        //     moveablePanel
-        //         .on("dragStart", ({ set }) => {
-        //             set(startTranslate);
-        //         })
-        //         .on("drag", ({ target, beforeTranslate }) => {
-        //             startTranslate = beforeTranslate;
-        //             target.style.transform = `translate(${beforeTranslate[0]}px, ${beforeTranslate[1]}px)`;
-        //         });
-        //     /* resizable */
-        //     moveablePanel
-        //         .on("resizeStart", ({ setOrigin, dragStart }) => {
-        //             setOrigin(["%", "%"]);
-        //             dragStart && dragStart.set(startTranslate);
-        //         })
-        //         .on("resize", ({ target, width, height, drag }) => {
-        //             const beforeTranslate = drag.beforeTranslate;
-        //             startTranslate = beforeTranslate;
-        //             target.style.width = `${width}px`;
-        //             target.style.height = `${height}px`;
-        //             target.style.transform = `translate(${beforeTranslate[0]}px, ${beforeTranslate[1]}px)`;
-        //         });
-        // }, 0);
-        // panelContainer.style.right = "0";
-        // panelContainer.style["padding-left"] = dragSensitivity + "px";
-
-        //     // 根据用户设定决定是否采用从右到左布局（用于阿拉伯语等从右到左书写的语言）
-        //     chrome.storage.sync.get("LayoutSettings", result => {
-        //         if (result.LayoutSettings.RTL) {
-        //             let contents = resultPanel.getElementsByClassName("may-need-rtl");
-        //             for (let i = 0; i < contents.length; i++) {
-        //                 contents[i].dir = "rtl";
-        //             }
-        //         }
-        //     });
     }
 }
 
@@ -380,10 +322,53 @@ function showFloatingPanel() {
  */
 function showFixedPanel() {
     let width = displaySetting.fixedData.width * window.innerWidth;
+    // the offset left value for fixed result panel
     let offsetLeft = 0;
     if (displaySetting.fixedData.position === "right")
         offsetLeft = window.innerWidth - width - (hasScrollbar() ? scrollbarWidth : 0);
-    move(width, window.innerHeight, offsetLeft, 0);
+    chrome.storage.sync.get("LayoutSettings", async result => {
+        resizeFlag = result.LayoutSettings.Resize;
+        // user set to resize the document body
+        if (resizeFlag) {
+            document.body.style.position = "absolute";
+            document.body.style.transition = `width ${transitionDuration}ms`;
+            resultPanel.style.transition = `width ${transitionDuration}ms`;
+            /* set the start width to make the transition effect work */
+            document.body.style.width = "100%";
+            move(0, window.innerHeight, offsetLeft, 0);
+            // wait some time to make the setting of width applied
+            await delayPromise(50);
+            // the fixed panel in on the left side
+            if (displaySetting.fixedData.position === "left") {
+                document.body.style.right = "0";
+                document.body.style.left = "";
+            }
+            // the fixed panel in on the right side
+            else {
+                document.body.style.margin = "0";
+                document.body.style.right = "";
+                document.body.style.left = "0";
+            }
+            // set the target width for document body
+            document.body.style.width = `${(1 - displaySetting.fixedData.width) * 100}%`;
+            // set the target width for the result panel
+            move(width, window.innerHeight, offsetLeft, 0);
+            /* cancel the transition effect after the panel showed */
+            await delayPromise(transitionDuration);
+            resultPanel.style.transition = "";
+        } else move(width, window.innerHeight, offsetLeft, 0);
+    });
+}
+
+/**
+ * if user choose to resize the document body, make the page return to normal size
+ */
+async function removeFixedPanel() {
+    if (resizeFlag) {
+        document.body.style.width = "100%";
+        await delayPromise(transitionDuration);
+        document.body.style.cssText = "";
+    }
 }
 
 /**
@@ -449,13 +434,13 @@ function windowResizeHandler() {
  * @param {number} top y-axis coordinate of the target position
  */
 function move(width, height, left, top) {
-    moveablePanel.request("resizable", {
-        width: width,
-        height: height
-    });
     moveablePanel.request("draggable", {
         x: left,
         y: top
+    });
+    moveablePanel.request("resizable", {
+        width: width,
+        height: height
     });
 }
 
@@ -496,6 +481,15 @@ function addBodyEventListener(template) {
             if (targetPronounceIcon) {
                 targetPronounceIcon.addEventListener("click", targetPronounce);
             }
+            // 根据用户设定决定是否采用从右到左布局（用于阿拉伯语等从右到左书写的语言）
+            chrome.storage.sync.get("LayoutSettings", result => {
+                if (result.LayoutSettings.RTL) {
+                    let contents = resultPanel.getElementsByClassName("may-need-rtl");
+                    for (let i = 0; i < contents.length; i++) {
+                        contents[i].dir = "rtl";
+                    }
+                }
+            });
             break;
         }
         case "loading":
@@ -530,10 +524,12 @@ function clickListener(event) {
  */
 function removePanel() {
     if (document.documentElement.contains(panelContainer)) {
+        removeFixedPanel();
         document.documentElement.removeChild(panelContainer);
         moveablePanel.snappable = false;
 
         document.documentElement.removeEventListener("mousedown", clickListener);
+
         // handle the click event exception when using chrome's original pdf viewer
         if (isChromePDFViewer()) {
             document.body.children[0].focus();
