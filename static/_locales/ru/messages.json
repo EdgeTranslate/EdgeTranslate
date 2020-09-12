@@ -291,6 +291,10 @@
         "message": "Tencent Translate",
         "description": "Tencent Translate"
     },
+    "HybridTranslate": {
+        "message": "Hybrid Translate",
+        "description": "Translate with multiple translators."
+    },
     "NETERR": {
         "message": "Ошибка сети! Проверьте ваше сетевое соединение.",
         "description": "Сообщение об ошибке сети."

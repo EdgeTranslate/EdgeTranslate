@@ -20,7 +20,7 @@ class TranslatorProxy {
          * Translate config.
          */
         this.CONFIG = {};
-        this.SINGLE = "hybrid";
+        this.SINGLE = "HybridTranslate";
         this.MAIN_TRANSLATOR = "GoogleTranslate";
 
         /**
@@ -138,7 +138,7 @@ class TranslatorProxy {
      * @returns {Promise<String>} Promise of language of given text
      */
     detect(text) {
-        if (this.SINGLE !== "hybrid") {
+        if (this.SINGLE !== "HybridTranslate") {
             return this.TRANSLATORS[this.SINGLE].detect(text);
         }
 
@@ -155,7 +155,7 @@ class TranslatorProxy {
      * @returns {Promise<Object>} result Promise
      */
     async translate(text, from, to) {
-        if (this.SINGLE !== "hybrid") {
+        if (this.SINGLE !== "HybridTranslate") {
             return this.TRANSLATORS[this.SINGLE].translate(text, from, to);
         }
 
@@ -227,7 +227,7 @@ class TranslatorProxy {
      * @returns {Promise<void>} pronounce finished
      */
     pronounce(text, language, speed) {
-        if (this.SINGLE !== "hybrid") {
+        if (this.SINGLE !== "HybridTranslate") {
             return this.TRANSLATORS[this.SINGLE].pronounce(text, language, speed);
         }
 
@@ -238,7 +238,7 @@ class TranslatorProxy {
      * Pause pronounce.
      */
     stopPronounce() {
-        if (this.SINGLE !== "hybrid") {
+        if (this.SINGLE !== "HybridTranslate") {
             return this.TRANSLATORS[this.SINGLE].stopPronounce();
         }
 

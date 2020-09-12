@@ -291,6 +291,10 @@
         "message": "騰訊翻譯",
         "description": "騰訊翻譯翻譯源。"
     },
+    "HybridTranslate": {
+        "message": "混合翻譯",
+        "description": "混合使用多個翻譯源。"
+    },
     "NETERR": {
         "message": "網絡錯誤！請檢查您的網絡連接。",
         "description": "網絡錯誤信息。"

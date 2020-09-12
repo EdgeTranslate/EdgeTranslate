@@ -291,6 +291,10 @@
         "message": "腾讯翻译",
         "description": "腾讯翻译翻译源。"
     },
+    "HybridTranslate": {
+        "message": "混合翻译",
+        "description": "混合使用多个翻译源。"
+    },
     "NETERR": {
         "message": "网络错误！请检查您的网络连接。",
         "description": "网络错误信息。"

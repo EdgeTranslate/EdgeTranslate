@@ -701,10 +701,14 @@ function setUpTranslateConfig(config, availableTranslators) {
     let selected = config.single;
 
     // Add hybrid translator alone.
-    if (selected === "hybrid") {
-        translatorsEle.options.add(new Option("Hybrid", "hybrid", true, true));
+    if (selected === "HybridTranslate") {
+        translatorsEle.options.add(
+            new Option(chrome.i18n.getMessage("HybridTranslate"), "HybridTranslate", true, true)
+        );
     } else {
-        translatorsEle.options.add(new Option("Hybrid", "hybrid"));
+        translatorsEle.options.add(
+            new Option(chrome.i18n.getMessage("HybridTranslate"), "HybridTranslate")
+        );
     }
 
     // Add normal translators.
