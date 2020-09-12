@@ -433,13 +433,15 @@ function removeHighlightPart() {
  * @returns {Promise{undefined}} null promise
  */
 function getDisplaySetting() {
-    chrome.storage.sync.get("DisplaySetting", result => {
-        if (result.DisplaySetting) {
-            displaySetting = result.DisplaySetting;
-        } else {
-            updateDisplaySetting();
-        }
-        return Promise.resolve();
+    return new Promise(resolve => {
+        chrome.storage.sync.get("DisplaySetting", result => {
+            if (result.DisplaySetting) {
+                displaySetting = result.DisplaySetting;
+            } else {
+                updateDisplaySetting();
+            }
+            resolve();
+        });
     });
 }
 

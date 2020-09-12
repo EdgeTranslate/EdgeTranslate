@@ -22,13 +22,19 @@
 
 #panel-head{		 
 	display: flex;
-	justify-content: flex-end;
+	justify-content: space-between;
 	align-items: center;
 	background: color-primary;
 	flex-grow: 0;
 	flex-shrink: 0;
 	overflow: hidden;
 	border-radius: 6px 6px 0 0;
+
+	#heading-icon{
+		display: flex;
+		justify-content: space-around;
+		justify-items: center;		
+	}
 
 	&:hover{
 		cursor: grabbing;
