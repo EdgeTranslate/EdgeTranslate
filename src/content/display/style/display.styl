@@ -1,6 +1,9 @@
 @import 'result.styl';
 @import 'loading.styl';
 @import 'error.styl';
+
+light-primary = rgba(74,140,247,0.7);
+
 /*
  * style of translation result panel
  */
@@ -21,14 +24,38 @@
 }
 
 #panel-head{		 
+	padding: 2%;
 	display: flex;
-	justify-content: flex-end;
+	justify-content: space-between;
 	align-items: center;
-	background: color-primary;
+	background: light-primary;
 	flex-grow: 0;
 	flex-shrink: 0;
 	overflow: hidden;
 	border-radius: 6px 6px 0 0;
+
+	#heading-icon{
+		display: flex;
+		justify-content: space-around;
+		justify-items: center;		
+	}
+
+	#translators{		
+		box-sizing: border-box;
+		font-size: medium;
+		width: 45%;
+		height: 90%;	
+		background: rgba(74,140,247,0.5);
+		color: white;
+		border: none;
+		border-radius: 3px;	
+		outline: none !important;	
+
+		option{
+			background: white;
+			color: color-primary;
+		}	
+	}
 
 	&:hover{
 		cursor: grabbing;

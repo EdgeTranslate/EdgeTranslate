@@ -94,7 +94,7 @@ const FIX_OFF = false; // 侧边栏不固定的值
     window.addEventListener("resize", windowResizeHandler);
 
     /* initiate setting value */
-    updateDisplaySetting();
+    getDisplaySetting();
     // Set up translator options.
     chrome.storage.sync.get(["languageSetting", "TranslatorConfig"], async result => {
         let config = result.TranslatorConfig;
@@ -194,6 +194,7 @@ const FIX_OFF = false; // 侧边栏不固定的值
     /* resizable  events*/
     moveablePanel
         .on("resizeStart", ({ set }) => {
+            getDisplaySetting();
             set(startTranslate);
         })
         .on("resize", ({ target, width, height, translate }) => {
@@ -201,7 +202,7 @@ const FIX_OFF = false; // 侧边栏不固定的值
             target.style.height = `${height}px`;
             target.style.transform = `translate(${translate[0]}px, ${translate[1]}px)`;
             if (resizeFlag) {
-                document.body.style.width = `${(1 - width / window.innerWidth - 0.01) * 100}%`;
+                document.body.style.width = `${(1 - width / window.innerWidth) * 100}%`;
             }
         })
         .on("resizeEnd", ({ translate, width, height, inputEvent, target }) => {
@@ -227,12 +228,13 @@ const FIX_OFF = false; // 侧边栏不固定的值
  * @param {Object} content translation result
  * @param {String} template the name of render template
  */
-function showPanel(content, template) {
+async function showPanel(content, template) {
     // Write contents into iframe.
     bodyPanel.innerHTML = render(Template[template], content);
     addBodyEventListener(template);
     // if panel hasn't been displayed, locate the panel and show it
     if (!document.documentElement.contains(panelContainer)) {
+        await getDisplaySetting();
         updateBounds();
         document.documentElement.appendChild(panelContainer);
         if (displaySetting.type === "floating") {
@@ -369,7 +371,7 @@ function showFixedPanel() {
                 document.body.style.left = "0";
             }
             // set the target width for document body
-            document.body.style.width = `${(1 - displaySetting.fixedData.width - 0.01) * 100}%`;
+            document.body.style.width = `${(1 - displaySetting.fixedData.width) * 100}%`;
             // set the target width for the result panel
             move(width, window.innerHeight, offsetLeft, 0);
             /* cancel the transition effect after the panel showed */
@@ -386,6 +388,7 @@ function showFixedPanel() {
 async function removeFixedPanel() {
     if (resizeFlag) {
         document.body.style.transition = `width ${transitionDuration}ms`;
+        await delayPromise(50);
         document.body.style.width = "100%";
         await delayPromise(transitionDuration);
         document.body.style.cssText = "";
@@ -426,10 +429,27 @@ function removeHighlightPart() {
 }
 
 /**
- * get or set the display setting in chrome.storage api
+ * get the display setting in chrome.storage api
+ * @returns {Promise{undefined}} null promise
+ */
+function getDisplaySetting() {
+    return new Promise(resolve => {
+        chrome.storage.sync.get("DisplaySetting", result => {
+            if (result.DisplaySetting) {
+                displaySetting = result.DisplaySetting;
+            } else {
+                updateDisplaySetting();
+            }
+            resolve();
+        });
+    });
+}
+
+/**
+ * set the display setting in chrome.storage api
  */
 function updateDisplaySetting() {
-    // TODO
+    chrome.storage.sync.set({ DisplaySetting: displaySetting });
 }
 
 /**
@@ -459,7 +479,8 @@ function getScrollbarWidth() {
 /**
  * update the bounds value for draggable area
  */
-function updateBounds() {
+async function updateBounds() {
+    await getDisplaySetting();
     let scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
     moveablePanel.setBounds({
         top: scrollTop,

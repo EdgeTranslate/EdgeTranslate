@@ -125,9 +125,4 @@ describe("test resizable api in content module", () => {
 
         done();
     });
-    it("test test", done => {
-        let a = new resizable(document.body, {}, {});
-        console.log(a.directions);
-        done();
-    });
 });

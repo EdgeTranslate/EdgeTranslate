@@ -40,7 +40,6 @@ const DEFAULT_SETTINGS = {
     // Resize: determine whether the web page will resize when showing translation result
     // RTL: determine whether the text in translation block should display from right to left
     LayoutSettings: {
-        PopupPosition: "right",
         Resize: false,
         RTL: false
     },
