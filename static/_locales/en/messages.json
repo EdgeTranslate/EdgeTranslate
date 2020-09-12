@@ -76,11 +76,11 @@
         "description": "Pronounce selected text"
     },
     "PronounceOriginal": {
-        "message": "Read original text",
+        "message": "original text",
         "description": "Read original text."
     },
     "PronounceTranslated": {
-        "message": "Read translated text",
+        "message": "translated text",
         "description": "Read translated text."
     },
     "CopyResult": {
