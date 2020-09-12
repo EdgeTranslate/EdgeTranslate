@@ -274,7 +274,7 @@ export default class resizable {
     resizeStart(e) {
         this.resizing = true;
         // store the start css translate value. [x,y]
-        // this.store.startTranslate
+        this.store.startTranslate = [0, 0];
         // store the current css translate value. [x,y]
         this.store.currentTranslate;
         // store the start mouse absolute position. [x,y]

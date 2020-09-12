@@ -1,5 +1,5 @@
 import render from "./library/render.js";
-import myMoveable from "./library/moveable/moveable.js";
+import moveable from "./library/moveable/moveable.js";
 import { isChromePDFViewer } from "../common.js";
 import Messager from "common/scripts/messager.js";
 import { delayPromise } from "common/scripts/promise.js";
@@ -107,7 +107,7 @@ const FIX_OFF = false; // 侧边栏不固定的值
     });
 
     /* make the resultPanel resizable and draggable */
-    moveablePanel = new myMoveable(resultPanel, {
+    moveablePanel = new moveable(resultPanel, {
         draggable: true,
         resizable: true,
         /* set threshold value to increase the resize area */
@@ -174,6 +174,7 @@ const FIX_OFF = false; // 侧边栏不固定的值
                     displaySetting.fixedData.position = "right";
                 else return;
                 displaySetting.type = "fixed";
+                removeHighlightPart();
                 showFixedPanel();
                 updateDisplaySetting();
             }
@@ -368,6 +369,7 @@ function showFixedPanel() {
             /* cancel the transition effect after the panel showed */
             await delayPromise(transitionDuration);
             resultPanel.style.transition = "";
+            document.body.style.transition = "";
         } else move(width, window.innerHeight, offsetLeft, 0);
     });
 }
@@ -377,6 +379,7 @@ function showFixedPanel() {
  */
 async function removeFixedPanel() {
     if (resizeFlag) {
+        document.body.style.transition = `width ${transitionDuration}ms`;
         document.body.style.width = "100%";
         await delayPromise(transitionDuration);
         document.body.style.cssText = "";
