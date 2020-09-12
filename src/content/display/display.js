@@ -201,7 +201,7 @@ const FIX_OFF = false; // 侧边栏不固定的值
             target.style.height = `${height}px`;
             target.style.transform = `translate(${translate[0]}px, ${translate[1]}px)`;
             if (resizeFlag) {
-                document.body.style.width = `${(1 - width / window.innerWidth - 0.01) * 100}%`;
+                document.body.style.width = `${(1 - width / window.innerWidth) * 100}%`;
             }
         })
         .on("resizeEnd", ({ translate, width, height, inputEvent, target }) => {
@@ -369,7 +369,7 @@ function showFixedPanel() {
                 document.body.style.left = "0";
             }
             // set the target width for document body
-            document.body.style.width = `${(1 - displaySetting.fixedData.width - 0.01) * 100}%`;
+            document.body.style.width = `${(1 - displaySetting.fixedData.width) * 100}%`;
             // set the target width for the result panel
             move(width, window.innerHeight, offsetLeft, 0);
             /* cancel the transition effect after the panel showed */
@@ -386,6 +386,7 @@ function showFixedPanel() {
 async function removeFixedPanel() {
     if (resizeFlag) {
         document.body.style.transition = `width ${transitionDuration}ms`;
+        await delayPromise(50);
         document.body.style.width = "100%";
         await delayPromise(transitionDuration);
         document.body.style.cssText = "";
