@@ -1,7 +1,7 @@
 import axios from "axios";
 import fs from "fs";
 import mockAdapter from "axios-mock-adapter";
-import TRANSLATOR from "../../src/background/library/translators/baidu.js";
+import TRANSLATOR from "background/library/translators/baidu.js";
 
 describe("baidu translator api", () => {
     beforeEach(() => {
@@ -32,7 +32,7 @@ describe("baidu translator api", () => {
     });
 
     it("to parse translation result", done => {
-        let result = fs.readFileSync("test/translators/baiduTransResult.json", "utf-8");
+        let result = fs.readFileSync("test/background/translators/baiduTransResult.json", "utf-8");
         result = JSON.parse(result);
         let parseResult = TRANSLATOR.parseResult(result);
         expect(parseResult.originalText).toEqual("hello");
@@ -65,7 +65,7 @@ describe("baidu translator api", () => {
                     expect(data.get("token")).not.toEqual("");
 
                     // to return translation result stored at $localResultPath
-                    let localResultPath = "test/translators/baiduTransResult.json";
+                    let localResultPath = "test/background/translators/baiduTransResult.json";
                     let result = fs.readFileSync(localResultPath, "utf-8").toString();
                     return [200, result];
                 });

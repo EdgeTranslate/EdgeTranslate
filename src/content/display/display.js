@@ -1,8 +1,8 @@
 import render from "./library/render.js";
 import myMoveable from "./library/moveable/moveable.js";
 import { isChromePDFViewer } from "../common.js";
-import Messager from "../../common/scripts/messager.js";
-import { delayPromise } from "../../common/scripts/promise.js";
+import Messager from "common/scripts/messager.js";
+import { delayPromise } from "common/scripts/promise.js";
 
 /**
  * load templates

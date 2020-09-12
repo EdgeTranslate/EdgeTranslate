@@ -1,4 +1,4 @@
-import Moveable from "../../../../src/content/display/library/moveable/moveable.js";
+import Moveable from "content/display/library/moveable/moveable.js";
 
 describe("test moveable api in content module", () => {
     it("to test on function(set event handlers)", done => {
@@ -44,12 +44,6 @@ describe("test moveable api in content module", () => {
     it("to set the the threshold value option", done => {
         let moveable = new Moveable(document.body, {});
         expect(moveable.setThreshold({})).toBeFalsy();
-        done();
-    });
-
-    it("to set the drag area bounds option", done => {
-        let moveable = new Moveable(document.body, {});
-        expect(moveable.setBounds()).toBeFalsy();
         done();
     });
 });

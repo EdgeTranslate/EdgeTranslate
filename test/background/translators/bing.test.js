@@ -1,19 +1,27 @@
 import axios from "axios";
-import TRANSLATOR from "../../src/background/library/translators/google.js";
+import TRANSLATOR from "background/library/translators/bing.js";
 
-describe("google translator api", () => {
-    beforeEach(() => {
+describe("bing translator api", () => {
+    beforeAll(() => {
         // set http module of nodejs as axios' request method
         let path = require("path");
         let lib = path.join(path.dirname(require.resolve("axios")), "lib/adapters/http");
         axios.defaults.adapter = require(lib);
+
+        // Set user-agent to prevent 429 error.
+        TRANSLATOR.HEADERS["user-agent"] =
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.135 Safari/537.36";
     });
 
-    it("to update TKK", done => {
-        TRANSLATOR.updateTKK()
+    it("to update IG and IID", done => {
+        TRANSLATOR.updateIGIID()
             .then(() => {
-                expect(typeof TRANSLATOR.TKK[0]).toEqual("number");
-                expect(typeof TRANSLATOR.TKK[1]).toEqual("number");
+                expect(typeof TRANSLATOR.IG).toEqual("string");
+                expect(TRANSLATOR.IG.length).toBeGreaterThan(0);
+
+                expect(typeof TRANSLATOR.IID).toEqual("string");
+                expect(TRANSLATOR.IID.length).toBeGreaterThan(0);
+
                 done();
             })
             .catch(error => {
@@ -47,7 +55,7 @@ describe("google translator api", () => {
         TRANSLATOR.translate("hello", "en", "zh-CN")
             .then(result => {
                 expect(result.mainMeaning).toEqual("你好");
-                expect(result.originalText).toEqual("hello");
+                expect(result.originalText).toEqual("Hello");
                 done();
             })
             .catch(error => {
@@ -58,7 +66,7 @@ describe("google translator api", () => {
     it("to translate a piece of Chinese text", done => {
         TRANSLATOR.translate("你好", "zh-CN", "en")
             .then(result => {
-                expect(result.mainMeaning).toEqual("Hello there");
+                expect(result.mainMeaning).toEqual("Hello");
                 expect(result.originalText).toEqual("你好");
                 done();
             })

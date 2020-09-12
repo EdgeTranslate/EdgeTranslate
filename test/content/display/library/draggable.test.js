@@ -1,4 +1,4 @@
-import draggable from "../../../../src/content/display/library/moveable/draggable.js";
+import draggable from "content/display/library/moveable/draggable.js";
 
 describe("test draggable api in content module", () => {
     it("to parse the bounds option", done => {

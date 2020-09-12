@@ -1,34 +1,20 @@
 import axios from "axios";
-import TRANSLATOR from "../../src/background/library/translators/tencent.js";
+import TRANSLATOR from "background/library/translators/google.js";
 
-describe("tencent translator api", () => {
-    beforeAll(() => {
+describe("google translator api", () => {
+    beforeEach(() => {
         // set http module of nodejs as axios' request method
         let path = require("path");
         let lib = path.join(path.dirname(require.resolve("axios")), "lib/adapters/http");
         axios.defaults.adapter = require(lib);
-
-        TRANSLATOR.HEADERS["Origin"] = TRANSLATOR.BASE_URL;
     });
 
-    it("to update tokens", done => {
-        TRANSLATOR.updateTokens()
+    it("to update TKK", done => {
+        TRANSLATOR.updateTKK()
             .then(() => {
-                expect(typeof TRANSLATOR.qtk).toEqual("string");
-                expect(TRANSLATOR.qtk.length).toBeGreaterThan(0);
-
-                expect(typeof TRANSLATOR.qtv).toEqual("string");
-                expect(TRANSLATOR.qtv.length).toBeGreaterThan(0);
-
-                TRANSLATOR.updateTokens().then(() => {
-                    expect(typeof TRANSLATOR.qtk).toEqual("string");
-                    expect(TRANSLATOR.qtk.length).toBeGreaterThan(0);
-
-                    expect(typeof TRANSLATOR.qtv).toEqual("string");
-                    expect(TRANSLATOR.qtv.length).toBeGreaterThan(0);
-
-                    done();
-                });
+                expect(typeof TRANSLATOR.TKK[0]).toEqual("number");
+                expect(typeof TRANSLATOR.TKK[1]).toEqual("number");
+                done();
             })
             .catch(error => {
                 done(error);
@@ -60,7 +46,7 @@ describe("tencent translator api", () => {
     it("to translate a piece of English text", done => {
         TRANSLATOR.translate("hello", "en", "zh-CN")
             .then(result => {
-                expect(result.mainMeaning).toEqual("“喂”的招呼声");
+                expect(result.mainMeaning).toEqual("你好");
                 expect(result.originalText).toEqual("hello");
                 done();
             })
@@ -72,7 +58,7 @@ describe("tencent translator api", () => {
     it("to translate a piece of Chinese text", done => {
         TRANSLATOR.translate("你好", "zh-CN", "en")
             .then(result => {
-                expect(result.mainMeaning).toEqual("Hello");
+                expect(result.mainMeaning).toEqual("Hello there");
                 expect(result.originalText).toEqual("你好");
                 done();
             })

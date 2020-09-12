@@ -1,8 +1,8 @@
-import allLanguages from "../../src/background/library/translators/languages.js";
-import googleTranslator from "../../src/background/library/translators/google.js";
-import bingTranslator from "../../src/background/library/translators/bing.js";
-import baiduTranslator from "../../src/background/library/translators/baidu.js";
-import tencentTranslator from "../../src/background/library/translators/tencent.js";
+import allLanguages from "background/library/translators/languages.js";
+import googleTranslator from "background/library/translators/google.js";
+import bingTranslator from "background/library/translators/bing.js";
+import baiduTranslator from "background/library/translators/baidu.js";
+import tencentTranslator from "background/library/translators/tencent.js";
 
 describe("these tests are used to make sure all of the supported languages in translators/**.js can be found in languages.js", () => {
     it("to test supported languages in google.js", done => {

@@ -51,8 +51,8 @@
         "gulp-stylus": "^2.7.0",
         "gulp-terser": "^1.3.2",
         "gulp-zip": "^4.2.0",
-        "identity-obj-proxy": "^3.0.0",
         "jest": "^26.4.0",
+        "jest-raw-loader": "^1.0.1",
         "lodash": "^4.17.20",
         "merge-stream": "^2.0.0",
         "minimist": "^1.2.5",
@@ -65,9 +65,13 @@
     "jest": {
         "verbose": true,
         "testTimeout": 10000,
-        "moduleNameMapper": {
-            "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.js",
-            "\\.(css|less)$": "identity-obj-proxy"
-        }
+        "transform": {
+            "^.+\\.[t|j]sx?$": "babel-jest",
+            "\\.(css|less)$": "jest-raw-loader"
+        },
+        "moduleDirectories": [
+            "node_modules",
+            "src"
+        ]
     }
 }

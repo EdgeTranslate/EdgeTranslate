@@ -1,4 +1,4 @@
-import resizable from "../../../../src/content/display/library/moveable/resizable.js";
+import resizable from "content/display/library/moveable/resizable.js";
 
 describe("test resizable api in content module", () => {
     it("to parse the direction option", done => {
@@ -123,6 +123,11 @@ describe("test resizable api in content module", () => {
             sw: thresholdValue
         });
 
+        done();
+    });
+    it("test test", done => {
+        let a = new resizable(document.body, {}, {});
+        console.log(a.directions);
         done();
     });
 });
