@@ -86,7 +86,7 @@ window.addEventListener("DOMContentLoaded", () => {
 /**
  * Handle double click event
  */
-function dblClickHandler() {
+function dblClickHandler(event) {
     executeIfNotInBlacklist(function() {
         if (isSelected()) {
             // 检查页面中是否有内容被选中
@@ -99,6 +99,8 @@ function dblClickHandler() {
                     OtherSettings["TranslateAfterDblClick"]
                 ) {
                     disable = false;
+                    // store the position which would be transferred to display.js through messager.
+                    currentPosition = [event.clientX, event.clientY];
                     translateSubmit();
                 }
             });
@@ -121,6 +123,8 @@ function mouseUpHandler(event) {
                 if (OtherSettings && OtherSettings["TranslateAfterSelect"] && HasMouseDown) {
                     // 重置HasMouseDown
                     HasMouseDown = false;
+                    // store the position which would be transferred to display.js through messager.
+                    currentPosition = [event.clientX, event.clientY];
                     // submit translation request
                     translateSubmit();
 
