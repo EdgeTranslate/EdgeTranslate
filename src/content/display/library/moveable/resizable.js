@@ -312,8 +312,10 @@ export default class resizable {
         // store the current translate value. used in resize end handler
         this.store.currentTranslate = this.store.startTranslate;
 
-        if (this.resizing)
+        if (this.resizing) {
+            e.preventDefault();
             document.documentElement.addEventListener("mousemove", this.resizeHandler);
+        }
     }
 
     /**
