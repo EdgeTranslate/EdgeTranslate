@@ -304,13 +304,13 @@ chrome.contextMenus.onClicked.addListener(function(info, tab) {
     switch (info.menuItemId) {
         case "translate":
             sendMessageToCurrentTab("get_selection", {})
-                .then(selection => {
-                    let text = selection;
+                .then(({ selectedText, position }) => {
+                    let text = selectedText;
                     // If content scripts can not access the selection, use info.selectionText instead.
-                    if (!text.trim() && info.selectionText.trim()) {
+                    if (!text && info.selectionText.trim()) {
                         text = info.selectionText;
                     }
-                    translate(text).then(result => showTranslate(result, tab));
+                    translate(text, position).then(result => showTranslate(result, tab));
                 })
                 .catch(() => {});
             break;

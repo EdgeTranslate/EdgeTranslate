@@ -48,7 +48,7 @@ function detect(text) {
  *
  * @returns {Promise<Object>} translate result Promise
  */
-function translate(text, position = undefined) {
+function translate(text, position) {
     sendMessageToCurrentTab("info", {
         info: "start_translating",
         position: position
