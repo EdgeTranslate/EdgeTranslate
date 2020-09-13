@@ -51,6 +51,8 @@ function detect(text) {
 function translate(text, position) {
     sendMessageToCurrentTab("info", {
         info: "start_translating",
+        // Send translating text back to content scripts.
+        text: text,
         position: position
     }).catch(error => log(error));
 
