@@ -239,23 +239,30 @@ async function showPanel(content, template) {
         if (displaySetting.type === "floating") {
             /* show floating panel */
             let position;
+            let width = displaySetting.floatingData.width * window.innerWidth;
+            let height = displaySetting.floatingData.height * window.innerHeight;
             if (content.position) {
                 /* adjust the position of result panel. Avoid to beyond the range of page */
-                const XBias = 10,
-                    YBias = 15;
-                position = [content.position[0] + XBias, content.position[1] + YBias];
+                const XBias = 20,
+                    YBias = 20,
+                    threshold = height / 4;
+                position = [content.position[0], content.position[1]];
+                // the result panel would exceeds the right boundary of the page
+                if (position[0] + width > window.innerWidth) {
+                    position[0] = position[0] - width - XBias;
+                }
+                // the result panel would exceeds the bottom boundary of the page
+                if (position[1] + height > window.innerHeight + threshold) {
+                    position[1] = position[1] - height - YBias + threshold;
+                }
+                position = [position[0] + XBias, position[1] + YBias];
             } else
                 position = [
                     (1 - displaySetting.floatingData.width) * window.innerWidth -
                         (hasScrollbar() ? scrollbarWidth : 0),
                     0
                 ];
-            move(
-                displaySetting.floatingData.width * window.innerWidth,
-                displaySetting.floatingData.height * window.innerHeight,
-                position[0],
-                position[1]
-            );
+            move(width, height, position[0], position[1]);
         } else {
             showFixedPanel();
         }

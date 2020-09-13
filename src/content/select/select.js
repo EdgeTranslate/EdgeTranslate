@@ -171,8 +171,7 @@ function showButton(event) {
 
         // if the icon is beyond the right side of the page, we need to put the icon on the left of the cursor
         if (XPosition + translateButton.clientWidth > document.documentElement.clientWidth)
-            XPosition =
-                event.x + document.documentElement.scrollLeft - XBias - translateButton.clientWidth;
+            XPosition = event.x - XBias - translateButton.clientWidth;
         // if the icon is above the top of the page, we need to put the icon below the cursor
         if (YPosition <= 0) YPosition = event.y + YBias;
 
