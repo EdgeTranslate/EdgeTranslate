@@ -354,6 +354,8 @@ function cancelPageTranslate() {
  */
 Messager.receive("content", message => {
     switch (message.title) {
+        case "get_selection":
+            return Promise.resolve(window.getSelection().toString());
         case "command":
             switch (message.detail.command) {
                 case "translate_selected":

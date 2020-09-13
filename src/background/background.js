@@ -303,8 +303,16 @@ chrome.runtime.onStartup.addListener(function() {
 chrome.contextMenus.onClicked.addListener(function(info, tab) {
     switch (info.menuItemId) {
         case "translate":
-            var text = info.selectionText;
-            translate(text).then(result => showTranslate(result, tab));
+            sendMessageToCurrentTab("get_selection", {})
+                .then(selection => {
+                    let text = selection;
+                    // If content scripts can not access the selection, use info.selectionText instead.
+                    if (!text.trim() && info.selectionText.trim()) {
+                        text = info.selectionText;
+                    }
+                    translate(text).then(result => showTranslate(result, tab));
+                })
+                .catch(() => {});
             break;
         case "pronounce":
             pronounce(info.selectionText, "auto", selectedTTSSpeed);
