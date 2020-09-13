@@ -350,15 +350,33 @@ function cancelPageTranslate() {
 }
 
 /**
+ * get selected text and its position in the page
+ * @returns {Object} format: {selectedText: "string", position: [p1,p2]}
+ */
+function getSelection() {
+    let selection = window.getSelection();
+    let selectedText;
+    let position;
+    if (selection.rangeCount > 0) {
+        selectedText = selection.toString().trim();
+        let rect = selection.getRangeAt(selection.rangeCount - 1).getBoundingClientRect();
+        position = [rect.left, rect.top];
+    }
+    return { selectedText: selectedText, position: position };
+}
+
+/**
  *  实现快捷键翻译
  */
 Messager.receive("content", message => {
     switch (message.title) {
-        case "get_selection":
-            return Promise.resolve(window.getSelection().toString());
+        case "get_selection": {
+            return Promise.resolve(getSelection());
+        }
         case "command":
             switch (message.detail.command) {
                 case "translate_selected":
+                    currentPosition = getSelection().position;
                     translateSubmit();
                     break;
                 case "pronounce_selected":
