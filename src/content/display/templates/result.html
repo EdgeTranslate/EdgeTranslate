@@ -17,13 +17,13 @@
 	<div class="target-phonetic-symbol">
 		<% if (this.tPronunciation && this.tPronunciation.length > 0) { %>
 			<% if (this.tPronunciation.length <= 10) { %>
-				<p class="target-phonetic-symbol-large"><% this.tPronunciation %></p>
+				<p class="may-need-rtl target-phonetic-symbol-large"><% this.tPronunciation %></p>
 			<% } %>
 			<% else if (this.tPronunciation.length > 10 && this.tPronunciation.length <= 16) { %>  
-				<p class="target-phonetic-symbol-medium"><% this.tPronunciation %></p>
+				<p class="may-need-rtl target-phonetic-symbol-medium"><% this.tPronunciation %></p>
 			<% } %>
 			<% else { %>  
-				<p class="target-phonetic-symbol-small"><% this.tPronunciation %></p>
+				<p class="may-need-rtl target-phonetic-symbol-small"><% this.tPronunciation %></p>
 			<% } %>                                
 		<% } %>
 	</div>
