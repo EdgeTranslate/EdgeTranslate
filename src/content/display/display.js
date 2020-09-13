@@ -53,7 +53,8 @@ var displaySetting = {
     }
 };
 
-var translateResult; // 保存翻译结果
+// store the translation result
+var translateResult;
 var sourceTTSSpeed, targetTTSSpeed;
 // store the width of scroll bar
 const scrollbarWidth = getScrollbarWidth();
@@ -61,8 +62,6 @@ const scrollbarWidth = getScrollbarWidth();
 const transitionDuration = 500;
 // flag whether the user set to resize document body
 var resizeFlag = false;
-const FIX_ON = true; // 侧边栏固定的值
-const FIX_OFF = false; // 侧边栏不固定的值
 
 /**
  * initiate panel elements to display translation result
@@ -240,9 +239,12 @@ async function showPanel(content, template) {
         if (displaySetting.type === "floating") {
             /* show floating panel */
             let position;
-            if (content.position)
-                position = [content.position.XPosition, content.position.YPosition];
-            else
+            if (content.position) {
+                /* adjust the position of result panel. Avoid to beyond the range of page */
+                const XBias = 10,
+                    YBias = 15;
+                position = [content.position[0] + XBias, content.position[1] + YBias];
+            } else
                 position = [
                     (1 - displaySetting.floatingData.width) * window.innerWidth -
                         (hasScrollbar() ? scrollbarWidth : 0),
@@ -602,9 +604,6 @@ function removePanel() {
     if (document.documentElement.contains(panelContainer)) {
         removeFixedPanel();
         document.documentElement.removeChild(panelContainer);
-        moveablePanel.snappable = false;
-
-        document.documentElement.removeEventListener("mousedown", clickListener);
 
         // handle the click event exception when using chrome's original pdf viewer
         if (isChromePDFViewer()) {
@@ -621,12 +620,10 @@ function removePanel() {
  */
 function fixOn() {
     chrome.storage.sync.set({
-        fixSetting: FIX_ON
+        fixSetting: true
     });
-    if (shadowDom.getElementById("icon-tuding-full")) {
-        shadowDom.getElementById("icon-tuding-full").style.display = "inline";
-        shadowDom.getElementById("icon-tuding-fix").style.display = "none";
-    }
+    shadowDom.getElementById("icon-tuding-full").style.display = "inline";
+    shadowDom.getElementById("icon-tuding-fix").style.display = "none";
     document.documentElement.removeEventListener("mousedown", clickListener);
 }
 
@@ -635,12 +632,10 @@ function fixOn() {
  */
 function fixOff() {
     chrome.storage.sync.set({
-        fixSetting: FIX_OFF
+        fixSetting: false
     });
-    if (shadowDom.getElementById("icon-tuding-full")) {
-        shadowDom.getElementById("icon-tuding-full").style.display = "none";
-        shadowDom.getElementById("icon-tuding-fix").style.display = "inline";
-    }
+    shadowDom.getElementById("icon-tuding-full").style.display = "none";
+    shadowDom.getElementById("icon-tuding-fix").style.display = "inline";
     document.documentElement.addEventListener("mousedown", clickListener);
 }
 

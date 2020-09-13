@@ -7,12 +7,11 @@ var HasMouseDown = false;
 // to indicate whether the translation button has been shown
 var HasButtonShown = false;
 
-// store the position of selection icon
-// to help locate the result panel
-var Position = {
-    XPosition: -1,
-    YPosition: -1
-};
+/* store the position of selection icon to help locate the result panel*/
+// store start position of the icon
+var startPosition;
+// store the latest position of the icon. scroll event may change the icon's position
+var currentPosition;
 
 /**
  * 创建翻译按钮的图标元素
@@ -162,9 +161,13 @@ function showButton(event) {
             YBias = 15;
 
         // 翻译按钮的横坐标位置: 鼠标停留位置 + x方向滚动的高度 + bias
-        let XPosition = event.x + document.documentElement.scrollLeft + XBias;
+        let XPosition = event.x + XBias;
         // 翻译按钮的纵坐标位置: 鼠标停留位置 + y方向滚动的高度 + bias
         let YPosition = event.y - YBias - translateButton.clientHeight;
+
+        // transfer this position to display.js through the translate submission
+        startPosition = [event.clientX, event.clientY];
+        currentPosition = startPosition;
 
         // if the icon is beyond the right side of the page, we need to put the icon on the left of the cursor
         if (XPosition + translateButton.clientWidth > document.documentElement.clientWidth)
@@ -183,8 +186,6 @@ function showButton(event) {
         originScrollY = scrollingElement.scrollTop;
         originPositionX = XPosition;
         originPositionY = YPosition;
-        Position.XPosition = XPosition;
-        Position.YPosition = YPosition;
         HasButtonShown = true;
     }
 }
@@ -205,7 +206,7 @@ function translateSubmit() {
             text: window.getSelection().toString(),
             // send the position of selection icon to background
             // to help locate the result panel
-            position: Position
+            position: currentPosition // an array
         }).then(() => {
             chrome.storage.sync.get("OtherSettings", result => {
                 // to check whether user need to cancel text selection after translation finished
@@ -283,6 +284,7 @@ function scrollHandler() {
 
         translateButton.style.left = originPositionX + distanceX + "px";
         translateButton.style.top = originPositionY + distanceY + "px";
+        currentPosition = [startPosition[0] + distanceX, startPosition[1] + distanceY];
     }
 }
 

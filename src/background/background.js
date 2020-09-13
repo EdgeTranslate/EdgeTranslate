@@ -384,7 +384,7 @@ async function messageHandler(message, sender) {
                 info: "start_translating"
             };
             // send the position of selection icon.
-            if (message.detail.position) infoMessage.position = message.detail.position;
+            infoMessage.position = message.detail.position;
             sendMessageToCurrentTab("info", infoMessage).catch(error => log(error));
 
             let result = await translate(message.detail.text);
