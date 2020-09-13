@@ -54,7 +54,7 @@ var displaySetting = {
 };
 
 // store the translation result
-var translateResult;
+var translateResult = {};
 var sourceTTSSpeed, targetTTSSpeed;
 // store the width of scroll bar
 const scrollbarWidth = getScrollbarWidth();
@@ -296,6 +296,8 @@ Messager.receive("content", message => {
         case "info":
             switch (message.detail.info) {
                 case "start_translating":
+                    // Remember translating text.
+                    translateResult.originalText = message.detail.text;
                     showPanel(message.detail, "loading");
                     break;
                 case "network_error":
@@ -330,7 +332,7 @@ Messager.receive("content", message => {
                     targetPronounce();
                     break;
                 case "copy_result":
-                    if (translateResult) {
+                    if (translateResult.mainMeaning) {
                         copyContent();
                     }
                     break;
