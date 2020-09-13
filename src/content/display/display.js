@@ -269,7 +269,8 @@ async function showPanel(content, template) {
                         (hasScrollbar() ? scrollbarWidth : 0),
                     0
                 ];
-            move(width, height, position[0], position[1]);
+            showFloatingPanel();
+            moveablePanel.request("draggable", { x: position[0], y: position[1] });
         } else {
             showFixedPanel();
         }
@@ -348,6 +349,9 @@ Messager.receive("content", message => {
  * show the result panel in the floating type
  */
 function showFloatingPanel() {
+    /* set border radius for the floating type result panel */
+    shadowDom.getElementById("panel-head").style["border-radius"] = "6px 6px 0 0";
+    shadowDom.getElementById("panel-body").style["border-radius"] = "0 0 6px 6px";
     moveablePanel.request("resizable", {
         width: displaySetting.floatingData.width * window.innerWidth,
         height: displaySetting.floatingData.height * window.innerHeight
@@ -396,6 +400,10 @@ function showFixedPanel() {
             document.body.style.transition = "";
         } else move(width, window.innerHeight, offsetLeft, 0);
     });
+
+    /* cancel the border radius of the fixed type result panel */
+    shadowDom.getElementById("panel-head").style["border-radius"] = "";
+    shadowDom.getElementById("panel-body").style["border-radius"] = "";
 }
 
 /**
