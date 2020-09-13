@@ -374,6 +374,7 @@ export default class resizable {
         /* call the resize event handler given by users */
         this.handlers.resize &&
             this.handlers.resize({
+                inputEvent: e,
                 target: this.targetElement,
                 width: width,
                 height: height,

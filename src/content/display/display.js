@@ -196,12 +196,14 @@ var resizeFlag = false;
             getDisplaySetting();
             set(startTranslate);
         })
-        .on("resize", ({ target, width, height, translate }) => {
+        .on("resize", ({ target, width, height, translate, inputEvent }) => {
             target.style.width = `${width}px`;
             target.style.height = `${height}px`;
             target.style.transform = `translate(${translate[0]}px, ${translate[1]}px)`;
-            if (resizeFlag) {
-                document.body.style.width = `${(1 - width / window.innerWidth) * 100}%`;
+            if (inputEvent) {
+                if (displaySetting.type === "fixed" && resizeFlag) {
+                    document.body.style.width = `${(1 - width / window.innerWidth) * 100}%`;
+                }
             }
         })
         .on("resizeEnd", ({ translate, width, height, inputEvent, target }) => {
