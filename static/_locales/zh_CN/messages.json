@@ -72,11 +72,11 @@
         "description": "朗读"
     },
     "PronounceSelected": {
-        "message": "选中文本",
+        "message": "朗读选中文本",
         "description": "朗读选中文本"
     },
     "PronounceOriginal": {
-        "message": "原始文本",
+        "message": "朗读原始文本",
         "description": "朗读原始文本"
     },
     "PronounceTranslated": {
