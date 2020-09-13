@@ -62,6 +62,11 @@ const scrollbarWidth = getScrollbarWidth();
 const transitionDuration = 500;
 // flag whether the user set to resize document body
 var resizeFlag = false;
+// store original css text on document.body
+var documentBodyCSS;
+window.onload = () => {
+    documentBodyCSS = document.body.style.cssText;
+};
 
 /**
  * initiate panel elements to display translation result
@@ -402,7 +407,7 @@ async function removeFixedPanel() {
         await delayPromise(50);
         document.body.style.width = "100%";
         await delayPromise(transitionDuration);
-        document.body.style.cssText = "";
+        document.body.style.cssText = documentBodyCSS;
     }
 }
 
@@ -505,12 +510,15 @@ async function updateBounds() {
  */
 function windowResizeHandler() {
     updateBounds();
-    if (displaySetting.type === "fixed") showFixedPanel();
-    else
-        moveablePanel.request("resizable", {
-            width: displaySetting.floatingData.width * window.innerWidth,
-            height: displaySetting.floatingData.height * window.innerHeight
-        });
+    // if result panel has been shown
+    if (document.documentElement.contains(panelContainer)) {
+        if (displaySetting.type === "fixed") showFixedPanel();
+        else
+            moveablePanel.request("resizable", {
+                width: displaySetting.floatingData.width * window.innerWidth,
+                height: displaySetting.floatingData.height * window.innerHeight
+            });
+    }
 }
 
 /**
