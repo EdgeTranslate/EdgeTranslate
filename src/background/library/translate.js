@@ -31,7 +31,8 @@ function detect(text) {
     return TRANSLATOR.detect(text).catch(error => {
         sendMessageToCurrentTab("info", {
             info: "network_error",
-            error: error
+            error: error,
+            timestamp: new Date().getTime()
         }).catch(e => log(e));
     });
 }
@@ -49,11 +50,15 @@ function detect(text) {
  * @returns {Promise<Object>} translate result Promise
  */
 function translate(text, position) {
+    // Get time stamp for this translating.
+    let timestamp = new Date().getTime();
+
     sendMessageToCurrentTab("info", {
         info: "start_translating",
         // Send translating text back to content scripts.
         text: text,
-        position: position
+        position: position,
+        timestamp: timestamp
     }).catch(error => log(error));
 
     // get language settings from chrome storage
@@ -82,7 +87,8 @@ function translate(text, position) {
                 } catch (error) {
                     sendMessageToCurrentTab("info", {
                         info: "network_error",
-                        error: error
+                        error: error,
+                        timestamp: timestamp
                     }).catch(e => log(e));
                     return error;
                 }
@@ -94,11 +100,13 @@ function translate(text, position) {
 
                 result.sourceLanguage = sl;
                 result.targetLanguage = tl;
+                result.timestamp = timestamp;
                 resolve(result);
             } catch (error) {
                 sendMessageToCurrentTab("info", {
                     info: "network_error",
-                    error: error
+                    error: error,
+                    timestamp: timestamp
                 }).catch(e => log(e));
                 return error;
             }
@@ -117,6 +125,8 @@ function translate(text, position) {
  */
 async function pronounce(text, language, speed) {
     let lang = language;
+    let timestamp = new Date().getTime();
+
     try {
         if (language == "auto") {
             lang = await TRANSLATOR.detect(text);
@@ -124,14 +134,16 @@ async function pronounce(text, language, speed) {
     } catch (error) {
         sendMessageToCurrentTab("info", {
             info: "network_error",
-            error: error
+            error: error,
+            timestamp: timestamp
         });
     }
 
     return TRANSLATOR.pronounce(text, lang, speed).catch(error => {
         sendMessageToCurrentTab("info", {
             info: "network_error",
-            error: error
+            error: error,
+            timestamp: timestamp
         });
     });
 }
@@ -221,13 +233,7 @@ async function showTranslate(content, tab) {
     }
 
     try {
-        return await sendMessageToCurrentTab(
-            "translateResult",
-            {
-                translateResult: content
-            },
-            tab
-        );
+        return await sendMessageToCurrentTab("translateResult", content, tab);
     } catch (error) {
         // Filter out tabs that are not file://.
         if (!(error && error.tab && error.tab.url && error.tab.url.startsWith("file://"))) {

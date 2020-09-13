@@ -284,14 +284,23 @@ async function showPanel(content, template) {
  * @param {Object} sender 返送消息者的具体信息 如果sender是content module，会有tab属性，如果是background，则没有tab属性
  */
 Messager.receive("content", message => {
+    // Check message timestamp.
+    if (translateResult.timestamp && message.detail.timestamp) {
+        if (translateResult.timestamp > message.detail.timestamp) {
+            return Promise.resolve();
+        } else {
+            translateResult.timestamp = message.detail.timestamp;
+        }
+    }
+
     // 避免从file://跳转到pdf viewer的消息传递对此的影响
     switch (message.title) {
         // 发送的是翻译结果
         case "translateResult":
-            translateResult = message.detail.translateResult;
+            translateResult = message.detail;
             sourceTTSSpeed = "fast";
             targetTTSSpeed = "fast";
-            showPanel(message.detail.translateResult, "result");
+            showPanel(message.detail, "result");
             break;
         // 发送的是翻译状态信息
         case "info":
