@@ -123,8 +123,9 @@ class YoudaoTranslator {
             // "accept-language":
             //     "en,zh;q=0.9,en-GB;q=0.8,en-CA;q=0.7,en-AU;q=0.6,en-ZA;q=0.5,en-NZ;q=0.4,en-IN;q=0.3,zh-CN;q=0.2",
             "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
-            "Cookie": "OUTFOX_SEARCH_USER_ID=350012125@101.224.253.176; UM_distinctid=1746d0c442e97f-042f749d1c0fb3-1711424a-1fa400-1746d0c442f8a3; OUTFOX_SEARCH_USER_ID_NCOO=608404064.645282; _ntes_nnid=15061f9646bde23f26634549a2af10f6,1599559922661; DICT_UGC=be3af0da19b5c5e6aa4e17bd8d90b28a|; JSESSIONID=abcEdBWwXs8mW8MJ2vXrx; ___rl__test__cookies=1599639537705",
-            "Referer": "http://fanyi.youdao.com/?keyfrom=dict2.index"
+            Cookie:
+                "OUTFOX_SEARCH_USER_ID=350012125@101.224.253.176;  UM_distinctid=1746d0c442e97f-042f749d1c0fb3-1711424a-1fa400-1746d0c442f8a3; OUTFOX_SEARCH_USER_ID_NCOO=608404064.645282; _ntes_nnid=15061f9646bde23f26634549a2af10f6,1599559922661; DICT_UGC=be3af0da19b5c5e6aa4e17bd8d90b28a|; JSESSIONID=abcEdBWwXs8mW8MJ2vXrx; ___rl__test__cookies=1599639537705",
+            Referer: "http://fanyi.youdao.com/?keyfrom=dict2.index"
         };
 
         /**
@@ -150,7 +151,10 @@ class YoudaoTranslator {
      * @returns {Object} parsed result
      */
     parseResult(result) {
-        let resText = result.translateResult && result.translateResult[0] && result.translateResult[0][0] ? result.translateResult[0][0].tgt : "";
+        let resText =
+            result.translateResult && result.translateResult[0] && result.translateResult[0][0]
+                ? result.translateResult[0][0].tgt
+                : "";
         let originText = resText ? result.translateResult[0][0].src : "";
         // console.log('resText:', resText);
 
@@ -289,7 +293,7 @@ class YoudaoTranslator {
         let reTryCount = 0;
         // send translation request one time
         // if the first request fails, resend requests no more than {this.MAX_RETRY} times
-        let translateOneTime = async function () {
+        let translateOneTime = async function() {
             let detectedFrom = from;
             if (detectedFrom === "auto") {
                 // detectedFrom = await this.detect(text);
@@ -320,7 +324,7 @@ class YoudaoTranslator {
             });
         }.bind(this);
 
-        // 
+        //
         return translateOneTime();
     }
 
@@ -376,15 +380,15 @@ class YoudaoTranslator {
         let sign = this.generateSign(text);
         // TODO support languages selecting
         let QSObj = {
-            "i": text,
-            "from": "AUTO",
-            "to": "AUTO",
-            "smartresult": "dict",
-            "client": "fanyideskweb",
-            "doctype": "json",
-            "version": "2.1",
-            "keyfrom": "fanyi.web",
-            "action": "FY_BY_REALTlME",
+            i: text,
+            from: "AUTO",
+            to: "AUTO",
+            smartresult: "dict",
+            client: "fanyideskweb",
+            doctype: "json",
+            version: "2.1",
+            keyfrom: "fanyi.web",
+            action: "FY_BY_REALTlME",
             ...sign
         };
         const qs = querystring.stringify(QSObj);
@@ -399,17 +403,23 @@ class YoudaoTranslator {
      * @returns {Object} sign object
      */
     generateSign(text = "") {
-        let t = crypto.createHash('md5').update(navigator.appVersion).digest("hex")  // n.md5(navigator.appVersion)
-            , r = "" + (new Date).getTime()
-            , i = r + parseInt(10 * Math.random(), 10);
+        let t = crypto
+                .createHash("md5")
+                .update(navigator.appVersion)
+                .digest("hex"), // n.md5(navigator.appVersion)
+            r = "" + new Date().getTime(),
+            i = r + parseInt(10 * Math.random(), 10);
         let raw = "fanyideskweb" + text + i + "]BjuETDhU)zqSxf-=B#7m";
-        let sign = crypto.createHash('md5').update(raw).digest("hex");
+        let sign = crypto
+            .createHash("md5")
+            .update(raw)
+            .digest("hex");
         return {
             lts: r, // date getTime ms
             bv: t, // md5 navigator.appVersion string
             salt: i, // radom number
             sign
-        }
+        };
     }
     /* eslint-enable */
 }
