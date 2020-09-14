@@ -1,67 +1,69 @@
 {
-    "name": "edge_translate",
-    "version": "1.9.1",
-    "description": "A translator extension.",
-    "keywords": [
-        "Edge Translate",
-        "侧边翻译"
-    ],
-    "contributors": [
-        {
-            "name": "nickyc975",
-            "email": "chenjinlong2016@outlook.com",
-            "url": "https://github.com/nickyc975"
-        },
-        {
-            "name": "Mark-Fenng",
-            "email": "f18846188605@gmail.com",
-            "url": "https://github.com/Mark-Fenng"
-        }
-    ],
-    "license": "MIT",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/EdgeTranslate/EdgeTranslate.git"
+  "name": "edge_translate",
+  "version": "1.9.1",
+  "description": "A translator extension.",
+  "keywords": [
+    "Edge Translate",
+    "侧边翻译"
+  ],
+  "contributors": [
+    {
+      "name": "nickyc975",
+      "email": "chenjinlong2016@outlook.com",
+      "url": "https://github.com/nickyc975"
     },
-    "scripts": {
-        "test": "jest",
-        "format": "eslint 'src/**/*.js' 'config/**/*.js' --fix",
-        "dev:chrome": "gulp dev:chrome & gulp buildJS:chrome",
-        "dev:firefox": " gulp dev:firefox & gulp buildJS:firefox",
-        "build:chrome": "gulp build:chrome",
-        "build:firefox": "gulp build:firefox",
-        "pack:chrome": "gulp pack:chrome",
-        "pack:firefox": "gulp pack:firefox"
-    },
-    "devDependencies": {
-        "acorn": "^7.4.0",
-        "axios": "^0.19.2",
-        "axios-mock-adapter": "^1.18.2",
-        "babel-core": "^6.26.3",
-        "babel-eslint": "^10.1.0",
-        "babel-loader": "^7.1.5",
-        "babel-preset-env": "^1.7.0",
-        "del": "^3.0.0",
-        "eslint": "^5.16.0",
-        "eslint-config-prettier": "^4.3.0",
-        "eslint-plugin-html": "^5.0.5",
-        "eslint-plugin-prettier": "^3.1.4",
-        "gulp": "^4.0.2",
-        "gulp-eslint": "^5.0.0",
-        "gulp-stylus": "^2.7.0",
-        "gulp-terser": "^1.3.2",
-        "gulp-zip": "^4.2.0",
-        "jest": "^26.4.0",
-        "lodash": "^4.17.20",
-        "merge-stream": "^2.0.0",
-        "prettier": "^1.19.1",
-        "raw-loader": "^0.5.1",
-        "webpack": "^4.44.1",
-        "webpack-merge": "^4.2.2",
-        "webpack-stream": "^5.2.1"
-    },
-    "jest": {
-        "verbose": true,
-        "testTimeout": 10000
+    {
+      "name": "Mark-Fenng",
+      "email": "f18846188605@gmail.com",
+      "url": "https://github.com/Mark-Fenng"
     }
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/EdgeTranslate/EdgeTranslate.git"
+  },
+  "scripts": {
+    "test": "jest",
+    "format": "eslint 'src/**/*.js' 'config/**/*.js' --fix",
+    "dev:chrome": "gulp dev:chrome & gulp buildJS:chrome",
+    "dev:firefox": " gulp dev:firefox & gulp buildJS:firefox",
+    "build:chrome": "gulp build:chrome",
+    "build:firefox": "gulp build:firefox",
+    "pack:chrome": "gulp pack:chrome",
+    "pack:firefox": "gulp pack:firefox"
+  },
+  "devDependencies": {
+    "acorn": "^7.4.0",
+    "axios": "^0.19.2",
+    "axios-mock-adapter": "^1.18.2",
+    "babel-core": "^6.26.3",
+    "babel-eslint": "^10.1.0",
+    "babel-loader": "^7.1.5",
+    "babel-preset-env": "^1.7.0",
+    "crypto": "^1.0.1",
+    "del": "^3.0.0",
+    "eslint": "^5.16.0",
+    "eslint-config-prettier": "^4.3.0",
+    "eslint-plugin-html": "^5.0.5",
+    "eslint-plugin-prettier": "^3.1.4",
+    "gulp": "^4.0.2",
+    "gulp-eslint": "^5.0.0",
+    "gulp-stylus": "^2.7.0",
+    "gulp-terser": "^1.3.2",
+    "gulp-zip": "^4.2.0",
+    "jest": "^26.4.0",
+    "lodash": "^4.17.20",
+    "merge-stream": "^2.0.0",
+    "prettier": "^1.19.1",
+    "querystring": "^0.2.0",
+    "raw-loader": "^0.5.1",
+    "webpack": "^4.44.1",
+    "webpack-merge": "^4.2.2",
+    "webpack-stream": "^5.2.1"
+  },
+  "jest": {
+    "verbose": true,
+    "testTimeout": 10000
+  }
 }
