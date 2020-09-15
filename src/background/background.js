@@ -1,10 +1,5 @@
 import {
-    translate,
-    pronounce,
-    stopPronounce,
-    onLanguageSettingUpdated,
-    getAvailableTranslators,
-    updateTranslator,
+    TRANSLATOR_MANAGER,
     showTranslate,
     translatePage,
     youdaoPageTranslate,
@@ -54,11 +49,9 @@ const DEFAULT_SETTINGS = {
         UseGoogleAnalytics: true,
         UsePDFjs: true
     },
+    DefaultTranslator: "GoogleTranslate",
     DefaultPageTranslator: "YouDaoPageTranslate",
-    TranslatorConfig: {
-        // The translator user selected in translating result frame.
-        single: "GoogleTranslate",
-
+    HybridTranslatorConfig: {
         // The translators used in current hybrid translate.
         translators: ["BaiduTranslate", "BingTranslate", "GoogleTranslate"],
 
@@ -310,12 +303,14 @@ chrome.contextMenus.onClicked.addListener(function(info, tab) {
                     if (!text && info.selectionText.trim()) {
                         text = info.selectionText;
                     }
-                    translate(text, position).then(result => showTranslate(result, tab));
+                    TRANSLATOR_MANAGER.translate(text, position).then(result =>
+                        showTranslate(result, tab)
+                    );
                 })
                 .catch(() => {});
             break;
         case "pronounce":
-            pronounce(info.selectionText, "auto", selectedTTSSpeed);
+            TRANSLATOR_MANAGER.pronounce(info.selectionText, "auto", selectedTTSSpeed);
             if (selectedTTSSpeed === "fast") {
                 selectedTTSSpeed = "slow";
             } else {
@@ -387,7 +382,10 @@ async function messageHandler(message, sender) {
             chrome.tabs.update(sender.tab.id, { url: message.detail.url });
             return Promise.resolve();
         case "translate": {
-            let result = await translate(message.detail.text, message.detail.position);
+            let result = await TRANSLATOR_MANAGER.translate(
+                message.detail.text,
+                message.detail.position
+            );
             return await showTranslate(result, sender.tab);
         }
         case "pronounce": {
@@ -401,7 +399,11 @@ async function messageHandler(message, sender) {
                 }
             }
 
-            let result = await pronounce(message.detail.text, message.detail.language, speed);
+            let result = await TRANSLATOR_MANAGER.pronounce(
+                message.detail.text,
+                message.detail.language,
+                speed
+            );
             return result;
         }
         case "youdao_page_translate":
@@ -415,14 +417,14 @@ async function messageHandler(message, sender) {
         case "get_lang":
             return Promise.resolve({ lang: chrome.i18n.getUILanguage() });
         case "frame_closed":
-            stopPronounce();
+            TRANSLATOR_MANAGER.stopPronounce();
             return Promise.resolve();
         case "language_setting_update":
-            return onLanguageSettingUpdated(message.detail);
+            return TRANSLATOR_MANAGER.onLanguageSettingUpdated(message.detail);
         case "get_available_translators":
-            return getAvailableTranslators(message.detail);
-        case "update_translator":
-            return updateTranslator(message.detail);
+            return TRANSLATOR_MANAGER.getAvailableTranslators(message.detail);
+        case "update_default_translator":
+            return TRANSLATOR_MANAGER.updateDefaultTranslator(message.detail.translator);
         default:
             log("Unknown message title: " + message.title);
             return Promise.reject();

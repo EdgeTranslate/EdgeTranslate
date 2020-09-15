@@ -27,14 +27,18 @@ window.onload = () => {
     /**
      * Set up hybrid translate config.
      */
-    chrome.storage.sync.get(["languageSetting", "TranslatorConfig"], async result => {
-        let config = result.TranslatorConfig;
+    chrome.storage.sync.get(["languageSetting", "HybridTranslatorConfig"], async result => {
+        let config = result.HybridTranslatorConfig;
         let languageSetting = result.languageSetting;
         let availableTranslators = await Messager.send("background", "get_available_translators", {
             from: languageSetting.sl,
             to: languageSetting.tl
         });
-        setUpTranslateConfig(config, availableTranslators);
+        setUpTranslateConfig(
+            config,
+            // Remove the hybrid translator at the beginning of the availableTranslators array.
+            availableTranslators.slice(1)
+        );
     });
 
     /**
@@ -42,7 +46,7 @@ window.onload = () => {
      */
     Messager.receive("options", message => {
         switch (message.title) {
-            case "update_translator_config_options":
+            case "hybrid_translator_config_updated":
                 setUpTranslateConfig(message.detail.config, message.detail.availableTranslators);
                 break;
             default:
@@ -155,7 +159,7 @@ function setUpTranslateConfig(config, availableTranslators) {
                 }
             }
 
-            chrome.storage.sync.set({ TranslatorConfig: config });
+            chrome.storage.sync.set({ HybridTranslatorConfig: config });
         };
     }
 }

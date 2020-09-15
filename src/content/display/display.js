@@ -100,14 +100,13 @@ window.onload = () => {
     /* initiate setting value */
     getDisplaySetting();
     // Set up translator options.
-    chrome.storage.sync.get(["languageSetting", "TranslatorConfig"], async result => {
-        let config = result.TranslatorConfig;
+    chrome.storage.sync.get(["languageSetting", "DefaultTranslator"], async result => {
         let languageSetting = result.languageSetting;
         let availableTranslators = await Messager.send("background", "get_available_translators", {
             from: languageSetting.sl,
             to: languageSetting.tl
         });
-        setUpTranslateConfig(config, availableTranslators);
+        setUpTranslateConfig(result.DefaultTranslator, availableTranslators);
     });
 
     /* make the resultPanel resizable and draggable */
@@ -317,8 +316,11 @@ Messager.receive("content", message => {
                     break;
             }
             break;
-        case "update_translator_config_options":
-            setUpTranslateConfig(message.detail.config, message.detail.availableTranslators);
+        case "update_translator_options":
+            setUpTranslateConfig(
+                message.detail.selectedTranslator,
+                message.detail.availableTranslators
+            );
             break;
         // 发送的是快捷键命令
         case "command":
@@ -739,12 +741,12 @@ function copyContent() {
 /**
  * Set up translator options.
  *
- * @param {Object} config translator config
+ * @param {String} selectedTranslator selected translator
  * @param {Array<String>} availableTranslators available translators for current language setting
  *
  * @returns {void} nothing
  */
-function setUpTranslateConfig(config, availableTranslators) {
+function setUpTranslateConfig(selectedTranslator, availableTranslators) {
     let translatorsEle = shadowDom.getElementById("translators");
 
     // Remove existed options.
@@ -752,23 +754,9 @@ function setUpTranslateConfig(config, availableTranslators) {
         translatorsEle.options.remove(i - 1);
     }
 
-    // data-affected indicates items affected by this element in config.selections, they always have the same value.
-    let selected = config.single;
-
-    // Add hybrid translator alone.
-    if (selected === "HybridTranslate") {
-        translatorsEle.options.add(
-            new Option(chrome.i18n.getMessage("HybridTranslate"), "HybridTranslate", true, true)
-        );
-    } else {
-        translatorsEle.options.add(
-            new Option(chrome.i18n.getMessage("HybridTranslate"), "HybridTranslate")
-        );
-    }
-
-    // Add normal translators.
+    // Add translator options.
     for (let translator of availableTranslators) {
-        if (translator === selected) {
+        if (translator === selectedTranslator) {
             translatorsEle.options.add(
                 new Option(chrome.i18n.getMessage(translator), translator, true, true)
             );
@@ -779,15 +767,10 @@ function setUpTranslateConfig(config, availableTranslators) {
 
     // Update and re-translate.
     translatorsEle.onchange = () => {
-        let value = translatorsEle.options[translatorsEle.selectedIndex].value;
-        chrome.storage.sync.get("languageSetting", result => {
-            Messager.send("background", "update_translator", {
-                translator: value,
-                from: result.languageSetting.sl,
-                to: result.languageSetting.tl
-            }).then(() => {
-                Messager.send("background", "translate", { text: translateResult.originalText });
-            });
+        Messager.send("background", "update_default_translator", {
+            translator: translatorsEle.options[translatorsEle.selectedIndex].value
+        }).then(() => {
+            Messager.send("background", "translate", { text: translateResult.originalText });
         });
     };
 }

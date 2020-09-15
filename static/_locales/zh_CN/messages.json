@@ -255,8 +255,8 @@
         "message": "展开语言设置",
         "description": "将语言设置选项展开"
     },
-    "TranslatorConfig": {
-        "message": "翻译源设置",
+    "HybridTranslatorConfig": {
+        "message": "混合翻译源设置",
         "description": "设置翻译结果各个部分使用的翻译源。"
     },
     "MainTranslator": {

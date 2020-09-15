@@ -255,8 +255,8 @@
         "message": "Unfold language settings",
         "description": "Unfold language setting options"
     },
-    "TranslatorConfig": {
-        "message": "Translator Config",
+    "HybridTranslatorConfig": {
+        "message": "Hybrid Translator Config",
         "description": "Config providers for each part of the translation."
     },
     "MainTranslator": {

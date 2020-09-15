@@ -255,8 +255,8 @@
         "message": "Развернуть настройки языка",
         "description": "Развернуть параметры настройки языка"
     },
-    "TranslatorConfig": {
-        "message": "Translator Config",
+    "HybridTranslatorConfig": {
+        "message": "Hybrid Translator Config",
         "description": "Config providers for each part of the translation."
     },
     "MainTranslator": {
