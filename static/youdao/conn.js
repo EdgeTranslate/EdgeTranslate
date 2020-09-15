@@ -370,7 +370,11 @@ window.onload = function() {
              */
             translate: function(request) {
                 chrome.runtime.sendMessage(
-                    {to: "background", title: "youdao_page_translate", detail: { request: request } },
+                    {
+                        to: { background: true },
+                        title: "youdao_page_translate",
+                        detail: { request: request }
+                    },
                     function(response) {
                         Response.sendMessage({
                             response: response.response,
