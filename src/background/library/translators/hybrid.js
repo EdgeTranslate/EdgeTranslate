@@ -4,12 +4,12 @@ import GOOGLE from "./google.js";
 import TENCENT from "./tencent.js";
 import { log } from "../../../common/scripts/common.js";
 
-class TranslatorProxy {
+class HybridTranslator {
     constructor() {
         /**
-         * Supported translators.
+         * Real supported translators.
          */
-        this.TRANSLATORS = {
+        this.REAL_TRANSLATORS = {
             BaiduTranslate: BAIDU,
             BingTranslate: BING,
             GoogleTranslate: GOOGLE,
@@ -17,18 +17,18 @@ class TranslatorProxy {
         };
 
         /**
-         * Translate config.
+         * Hybrid translator config.
          */
         this.CONFIG = {};
-        this.MAIN_TRANSLATOR = "GoogleTranslate";
+        this.MAIN_TRANSLATOR = "";
 
         /**
          * Update config cache on config changed.
          */
         chrome.storage.onChanged.addListener(
             ((changes, area) => {
-                if (area === "sync" && changes["TranslatorConfig"]) {
-                    this.CONFIG = changes["TranslatorConfig"].newValue;
+                if (area === "sync" && changes["HybridTranslatorConfig"]) {
+                    this.CONFIG = changes["HybridTranslatorConfig"].newValue;
                     this.MAIN_TRANSLATOR = this.CONFIG.selections.mainMeaning;
                 }
             }).bind(this)
@@ -36,20 +36,20 @@ class TranslatorProxy {
     }
 
     /**
-     * Load hybrid translate config if it is not loaded.
+     * Load hybrid translator config if it is not loaded.
      *
      * @returns {Promise<void>} loading Promise.
      */
     loadConfigIfNotLoaded() {
         return new Promise((resolve, reject) => {
             if (!(this.CONFIG.translators && this.CONFIG.selections)) {
-                chrome.storage.sync.get("TranslatorConfig", res => {
+                chrome.storage.sync.get("HybridTranslatorConfig", res => {
                     if (chrome.runtime.lastError) {
                         reject(chrome.runtime.lastError);
                         return;
                     }
 
-                    this.CONFIG = res.TranslatorConfig;
+                    this.CONFIG = res.HybridTranslatorConfig;
                     this.MAIN_TRANSLATOR = this.CONFIG.selections.mainMeaning;
                     resolve();
                 });
@@ -67,8 +67,8 @@ class TranslatorProxy {
      */
     getAvailableTranslatorsFor(from, to) {
         let translators = [];
-        for (let translator in this.TRANSLATORS) {
-            let languages = this.TRANSLATORS[translator].supportedLanguages();
+        for (let translator in this.REAL_TRANSLATORS) {
+            let languages = this.REAL_TRANSLATORS[translator].supportedLanguages();
             if (languages.has(from) && languages.has(to)) {
                 translators.push(translator);
             }
@@ -77,20 +77,21 @@ class TranslatorProxy {
     }
 
     /**
-     * Update translator config when language setting changed.
+     * Update hybrid translator config when language setting changed.
      *
-     * @param {Object} detail language setting detail, detail.from is the new source language and detail.to is the new target language.
+     * @param {String} from source language
+     * @param {String} to target language
      *
      * @returns {Promise<Object>} new config Promise
      */
-    async updateConfigFor(detail) {
+    async updateConfigFor(from, to) {
         // Load config if not loaded.
         await this.loadConfigIfNotLoaded();
 
         let newConfig = { translators: new Set(), selections: {} };
 
         // Get translators that support new language setting.
-        let availableTranslators = this.getAvailableTranslatorsFor(detail.from, detail.to);
+        let availableTranslators = this.getAvailableTranslatorsFor(from, to);
 
         // Replace translators that don't support new language setting with a default translator.
         let defaultTranslator = availableTranslators[0];
@@ -117,7 +118,7 @@ class TranslatorProxy {
         newConfig.translators = Array.from(newConfig.translators);
 
         // Update config.
-        chrome.storage.sync.set({ TranslatorConfig: newConfig });
+        chrome.storage.sync.set({ HybridTranslatorConfig: newConfig });
 
         // Provide new config.
         return Promise.resolve(newConfig);
@@ -130,12 +131,17 @@ class TranslatorProxy {
      *
      * @returns {Promise<String>} Promise of language of given text
      */
-    detect(text) {
-        return this.TRANSLATORS[this.MAIN_TRANSLATOR].detect(text);
+    async detect(text) {
+        /**
+         * Check config firstly.
+         */
+        await this.loadConfigIfNotLoaded();
+
+        return this.REAL_TRANSLATORS[this.MAIN_TRANSLATOR].detect(text);
     }
 
     /**
-     * Hybrid translator.
+     * Hybrid translate.
      *
      * @param {String} text text to translate
      * @param {String} from source language
@@ -185,14 +191,19 @@ class TranslatorProxy {
             };
 
             // Initiate translation requests.
-            try {
-                config.translators.forEach(translator => {
-                    this.TRANSLATORS[translator]
-                        .translate(text, from, to)
-                        .then(result => receive(translator, result));
-                });
-            } catch (error) {
-                reject(error);
+            let errorEncountered = false;
+            for (let translator of config.translators) {
+                // Break if error encountered.
+                if (errorEncountered) break;
+
+                // Translate with a translator.
+                this.REAL_TRANSLATORS[translator]
+                    .translate(text, from, to)
+                    .then(result => receive(translator, result))
+                    .catch(error => {
+                        errorEncountered = true;
+                        reject(error);
+                    });
             }
         });
     }
@@ -206,20 +217,30 @@ class TranslatorProxy {
      *
      * @returns {Promise<void>} pronounce finished
      */
-    pronounce(text, language, speed) {
-        return this.TRANSLATORS[this.MAIN_TRANSLATOR].pronounce(text, language, speed);
+    async pronounce(text, language, speed) {
+        /**
+         * Check config firstly.
+         */
+        await this.loadConfigIfNotLoaded();
+
+        return this.REAL_TRANSLATORS[this.MAIN_TRANSLATOR].pronounce(text, language, speed);
     }
 
     /**
      * Pause pronounce.
      */
-    stopPronounce() {
-        this.TRANSLATORS[this.MAIN_TRANSLATOR].stopPronounce();
+    async stopPronounce() {
+        /**
+         * Check config firstly.
+         */
+        await this.loadConfigIfNotLoaded();
+
+        this.REAL_TRANSLATORS[this.MAIN_TRANSLATOR].stopPronounce();
     }
 }
 
 /**
  * Create and export default translator instance.
  */
-const TRANSLATOR = new TranslatorProxy();
+const TRANSLATOR = new HybridTranslator();
 export default TRANSLATOR;

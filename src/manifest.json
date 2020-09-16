@@ -1,7 +1,7 @@
 {
     "name": "__MSG_AppName__",
     "description": "__MSG_Description__",
-    "version": "1.9.1",
+    "version": "2.0.0",
     "default_locale": "en",
     "background": {
         "scripts": ["./background/background.js"]
@@ -66,13 +66,7 @@
             "description": "__MSG_CancelPageTranslate__"
         }
     },
-    "web_accessible_resources": [
-        "content/display/style/result.css",
-        "content/display/style/loading.css",
-        "content/display/style/error.css",
-        "youdao/*",
-        "google/*"
-    ],
+    "web_accessible_resources": ["content/display/style/display.css", "youdao/*", "google/*"],
     "icons": {
         "16": "icon/icon16.png",
         "48": "icon/icon48.png",

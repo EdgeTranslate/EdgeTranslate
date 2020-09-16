@@ -1,28 +1,34 @@
 import axios from "axios";
-import TRANSLATOR from "../../src/translators/bing.js";
+import TRANSLATOR from "background/library/translators/tencent.js";
 
-describe("bing translator api", () => {
+describe("tencent translator api", () => {
     beforeAll(() => {
         // set http module of nodejs as axios' request method
         let path = require("path");
         let lib = path.join(path.dirname(require.resolve("axios")), "lib/adapters/http");
         axios.defaults.adapter = require(lib);
 
-        // Set user-agent to prevent 429 error.
-        TRANSLATOR.HEADERS["user-agent"] =
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.135 Safari/537.36";
+        TRANSLATOR.HEADERS["Origin"] = TRANSLATOR.BASE_URL;
     });
 
-    it("to update IG and IID", done => {
-        TRANSLATOR.updateIGIID()
+    it("to update tokens", done => {
+        TRANSLATOR.updateTokens()
             .then(() => {
-                expect(typeof TRANSLATOR.IG).toEqual("string");
-                expect(TRANSLATOR.IG.length).toBeGreaterThan(0);
+                expect(typeof TRANSLATOR.qtk).toEqual("string");
+                expect(TRANSLATOR.qtk.length).toBeGreaterThan(0);
 
-                expect(typeof TRANSLATOR.IID).toEqual("string");
-                expect(TRANSLATOR.IID.length).toBeGreaterThan(0);
+                expect(typeof TRANSLATOR.qtv).toEqual("string");
+                expect(TRANSLATOR.qtv.length).toBeGreaterThan(0);
 
-                done();
+                TRANSLATOR.updateTokens().then(() => {
+                    expect(typeof TRANSLATOR.qtk).toEqual("string");
+                    expect(TRANSLATOR.qtk.length).toBeGreaterThan(0);
+
+                    expect(typeof TRANSLATOR.qtv).toEqual("string");
+                    expect(TRANSLATOR.qtv.length).toBeGreaterThan(0);
+
+                    done();
+                });
             })
             .catch(error => {
                 done(error);
@@ -54,8 +60,8 @@ describe("bing translator api", () => {
     it("to translate a piece of English text", done => {
         TRANSLATOR.translate("hello", "en", "zh-CN")
             .then(result => {
-                expect(result.mainMeaning).toEqual("你好");
-                expect(result.originalText).toEqual("Hello");
+                expect(result.mainMeaning).toEqual("“喂”的招呼声");
+                expect(result.originalText).toEqual("hello");
                 done();
             })
             .catch(error => {

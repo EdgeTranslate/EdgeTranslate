@@ -1,0 +1,56 @@
+#resizable-container {
+    overflow: hidden;
+    opacity: 0;
+}
+
+#resizable-s {
+    width: 100%;
+    position: absolute;
+    left: 0;
+    cursor: ns-resize;
+}
+
+#resizable-se {
+    position: absolute;
+    cursor: nwse-resize;
+    z-index: 1;
+}
+
+#resizable-e {
+    height: 100%;
+    position: absolute;
+    top: 0;
+    cursor: ew-resize;
+}
+
+#resizable-ne {
+    position: absolute;
+    cursor: nesw-resize;
+    z-index: 1;
+}
+
+#resizable-n {
+    width: 100%;
+    position: absolute;
+    left: 0;
+    cursor: ns-resize;
+}
+
+#resizable-nw {
+    position: absolute;
+    cursor: nwse-resize;
+    z-index: 1;
+}
+
+#resizable-w {
+    height: 100%;
+    position: absolute;
+    top: 0;
+    cursor: ew-resize;
+}
+
+#resizable-sw {
+    position: absolute;
+    cursor: nesw-resize;
+    z-index: 1;
+}

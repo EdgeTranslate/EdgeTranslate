@@ -255,8 +255,8 @@
         "message": "展开语言设置",
         "description": "将语言设置选项展开"
     },
-    "TranslatorConfig": {
-        "message": "翻译源设置",
+    "HybridTranslatorConfig": {
+        "message": "混合翻译源设置",
         "description": "设置翻译结果各个部分使用的翻译源。"
     },
     "MainTranslator": {
@@ -290,6 +290,10 @@
     "TencentTranslate": {
         "message": "腾讯翻译",
         "description": "腾讯翻译翻译源。"
+    },
+    "HybridTranslate": {
+        "message": "混合翻译",
+        "description": "混合使用多个翻译源。"
     },
     "NETERR": {
         "message": "网络错误！请检查您的网络连接。",
@@ -484,8 +488,8 @@
         "description": "切罗基语"
     },
     "Chichewa": {
-        "message": "斯瓦希里语",
-        "description": "斯瓦希里语"
+        "message": "奇切瓦语",
+        "description": "奇切瓦语"
     },
     "Chuvash": {
         "message": "楚瓦什语",

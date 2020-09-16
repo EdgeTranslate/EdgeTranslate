@@ -1,9 +1,5 @@
 import {
-    translate,
-    pronounce,
-    stopPronounce,
-    onLanguageSettingUpdated,
-    getAvailableTranslators,
+    TRANSLATOR_MANAGER,
     showTranslate,
     translatePage,
     youdaoPageTranslate,
@@ -39,7 +35,6 @@ const DEFAULT_SETTINGS = {
     // Resize: determine whether the web page will resize when showing translation result
     // RTL: determine whether the text in translation block should display from right to left
     LayoutSettings: {
-        PopupPosition: "right",
         Resize: false,
         RTL: false
     },
@@ -54,9 +49,13 @@ const DEFAULT_SETTINGS = {
         UseGoogleAnalytics: true,
         UsePDFjs: true
     },
+    DefaultTranslator: "GoogleTranslate",
     DefaultPageTranslator: "YouDaoPageTranslate",
-    TranslatorConfig: {
+    HybridTranslatorConfig: {
+        // The translators used in current hybrid translate.
         translators: ["BaiduTranslate", "BingTranslate", "GoogleTranslate"],
+
+        // The translators for each item.
         selections: {
             originalText: "GoogleTranslate",
             mainMeaning: "BingTranslate",
@@ -167,6 +166,22 @@ chrome.runtime.onInstalled.addListener(function(details) {
                 });
             }, 10 * 60 * 1000); // 10 min
         } else if (details.reason === "update") {
+            // Fix language setting compatibility between Edge Translate 2.x and 1.x.x.
+            chrome.storage.sync.get("languageSetting", result => {
+                if (result.languageSetting.sl === "zh-cn") {
+                    result.languageSetting.sl = "zh-CN";
+                } else if (result.languageSetting.sl === "zh-tw") {
+                    result.languageSetting.sl = "zh-TW";
+                }
+
+                if (result.languageSetting.tl === "zh-cn") {
+                    result.languageSetting.tl = "zh-CN";
+                } else if (result.languageSetting.tl === "zh-tw") {
+                    result.languageSetting.tl = "zh-TW";
+                }
+                chrome.storage.sync.set(result);
+            });
+
             // 从旧版本更新，引导用户查看更新日志
             chrome.notifications.create("update_notification", {
                 type: "basic",
@@ -281,11 +296,21 @@ chrome.runtime.onStartup.addListener(function() {
 chrome.contextMenus.onClicked.addListener(function(info, tab) {
     switch (info.menuItemId) {
         case "translate":
-            var text = info.selectionText;
-            translate(text).then(result => showTranslate(result, tab));
+            sendMessageToCurrentTab("get_selection", {})
+                .then(({ selectedText, position }) => {
+                    let text = selectedText;
+                    // If content scripts can not access the selection, use info.selectionText instead.
+                    if (!text && info.selectionText.trim()) {
+                        text = info.selectionText;
+                    }
+                    TRANSLATOR_MANAGER.translate(text, position).then(result =>
+                        showTranslate(result, tab)
+                    );
+                })
+                .catch(() => {});
             break;
         case "pronounce":
-            pronounce(info.selectionText, "auto", selectedTTSSpeed);
+            TRANSLATOR_MANAGER.pronounce(info.selectionText, "auto", selectedTTSSpeed);
             if (selectedTTSSpeed === "fast") {
                 selectedTTSSpeed = "slow";
             } else {
@@ -357,7 +382,10 @@ async function messageHandler(message, sender) {
             chrome.tabs.update(sender.tab.id, { url: message.detail.url });
             return Promise.resolve();
         case "translate": {
-            let result = await translate(message.detail.text);
+            let result = await TRANSLATOR_MANAGER.translate(
+                message.detail.text,
+                message.detail.position
+            );
             return await showTranslate(result, sender.tab);
         }
         case "pronounce": {
@@ -371,7 +399,11 @@ async function messageHandler(message, sender) {
                 }
             }
 
-            let result = await pronounce(message.detail.text, message.detail.language, speed);
+            let result = await TRANSLATOR_MANAGER.pronounce(
+                message.detail.text,
+                message.detail.language,
+                speed
+            );
             return result;
         }
         case "youdao_page_translate":
@@ -385,12 +417,14 @@ async function messageHandler(message, sender) {
         case "get_lang":
             return Promise.resolve({ lang: chrome.i18n.getUILanguage() });
         case "frame_closed":
-            stopPronounce();
+            TRANSLATOR_MANAGER.stopPronounce();
             return Promise.resolve();
         case "language_setting_update":
-            return onLanguageSettingUpdated(message.detail);
+            return TRANSLATOR_MANAGER.onLanguageSettingUpdated(message.detail);
         case "get_available_translators":
-            return getAvailableTranslators(message.detail);
+            return TRANSLATOR_MANAGER.getAvailableTranslators(message.detail);
+        case "update_default_translator":
+            return TRANSLATOR_MANAGER.updateDefaultTranslator(message.detail.translator);
         default:
             log("Unknown message title: " + message.title);
             return Promise.reject();

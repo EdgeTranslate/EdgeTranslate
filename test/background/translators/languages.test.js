@@ -1,15 +1,15 @@
-import allLanguages from "../../src/translators/languages.js";
-import googleTranslator from "../../src/translators/google.js";
-import bingTranslator from "../../src/translators/bing.js";
-import baiduTranslator from "../../src/translators/baidu.js";
-import tencentTranslator from "../../src/translators/tencent.js";
+import LANGUAGES from "common/scripts/languages.js";
+import googleTranslator from "background/library/translators/google.js";
+import bingTranslator from "background/library/translators/bing.js";
+import baiduTranslator from "background/library/translators/baidu.js";
+import tencentTranslator from "background/library/translators/tencent.js";
 
 describe("these tests are used to make sure all of the supported languages in translators/**.js can be found in languages.js", () => {
     it("to test supported languages in google.js", done => {
         let languages = googleTranslator.supportedLanguages();
         for (let lan of languages) {
             if (lan !== "auto") {
-                expect(allLanguages[lan]).toBeDefined();
+                expect(LANGUAGES[lan]).toBeDefined();
             }
         }
         done();
@@ -19,7 +19,7 @@ describe("these tests are used to make sure all of the supported languages in tr
         let languages = bingTranslator.supportedLanguages();
         for (let lan of languages) {
             if (lan !== "auto") {
-                expect(allLanguages[lan]).toBeDefined();
+                expect(LANGUAGES[lan]).toBeDefined();
             }
         }
         done();
@@ -29,7 +29,7 @@ describe("these tests are used to make sure all of the supported languages in tr
         let languages = baiduTranslator.supportedLanguages();
         for (let lan of languages) {
             if (lan !== "auto") {
-                expect(allLanguages[lan]).toBeDefined();
+                expect(LANGUAGES[lan]).toBeDefined();
             }
         }
         done();
@@ -39,7 +39,7 @@ describe("these tests are used to make sure all of the supported languages in tr
         let languages = tencentTranslator.supportedLanguages();
         for (let lan of languages) {
             if (lan !== "auto") {
-                expect(allLanguages[lan]).toBeDefined();
+                expect(LANGUAGES[lan]).toBeDefined();
             }
         }
         done();

@@ -1,4 +1,5 @@
 import axios from "axios";
+import { log } from "../../../common/scripts/common.js";
 
 /**
  * Supported languages.
@@ -75,35 +76,77 @@ class TencentTranslator {
     }
 
     /**
+     * Request Tencent translate home page in a new tab to update cookies.
+     *
+     * @returns {Promise<void>} request finished
+     */
+    async requestHomePage() {
+        /**
+         * Create a tab to start requesting https://fanyi.qq.com
+         */
+        let tabId = await new Promise((resolve, reject) =>
+            chrome.tabs.create({ url: this.BASE_URL, active: false }, tab => {
+                if (chrome.runtime.lastError) {
+                    reject(chrome.runtime.lastError.message);
+                    return;
+                }
+
+                resolve(tab.id);
+            })
+        );
+
+        /**
+         * Check if the tab has been loaded.
+         */
+        return new Promise((resolve, reject) => {
+            let tabUpdateListener = (id, change, tab) => {
+                if (id !== tabId || tab.status === "loading") {
+                    return;
+                }
+
+                // Finished loading, remove the tab.
+                chrome.tabs.remove(tabId, () => {
+                    if (chrome.runtime.lastError) {
+                        log(chrome.runtime.lastError.message);
+                    }
+
+                    // Remove added listener.
+                    chrome.tabs.onUpdated.removeListener(tabUpdateListener);
+
+                    // It has been loaded, call resolve.
+                    if (tab.status === "complete") resolve();
+                    // It can not be loaded, call reject.
+                    else reject();
+                });
+            };
+
+            // Add listener.
+            chrome.tabs.onUpdated.addListener(tabUpdateListener);
+        });
+    }
+
+    /**
      * Update request tokens.
      *
      * @returns {Promise<void>} request Promise.
      */
     async updateTokens() {
-        if (this.qtk === "" || this.qtv === "") {
-            const response = await axios({
-                method: "GET",
-                baseURL: this.BASE_URL,
-                headers: this.HEADERS
-            });
+        // Update cookies first.
+        await this.requestHomePage();
 
-            this.qtv = response.data.match(/qtv\s*=\s*"([a-zA-Z0-9]+)";/)[1];
-            this.qtk = response.data.match(/qtk\s*=\s*"([^\s]+)";/)[1];
-        } else {
-            const response = await axios({
-                method: "POST",
-                baseURL: this.BASE_URL,
-                url: "/api/reAuth",
-                headers: this.HEADERS,
-                data: new URLSearchParams({
-                    qtv: this.qtv,
-                    qtk: this.qtk
-                })
+        // Get qtk and qrv from cookies.
+        return new Promise(resolve => {
+            chrome.cookies.getAll({ url: this.BASE_URL }, cookies => {
+                for (let cookie of cookies) {
+                    if (cookie.name === "qtv") {
+                        this.qtv = cookie.value;
+                    } else if (cookie.name === "qtk") {
+                        this.qtk = cookie.value;
+                    }
+                }
+                resolve();
             });
-
-            this.qtv = response.data.qtv;
-            this.qtk = response.data.qtk;
-        }
+        });
     }
 
     /**
@@ -236,28 +279,38 @@ class TencentTranslator {
         // Pause audio in case that it's playing.
         this.stopPronounce();
 
-        return new Promise((resolve, reject) => {
-            /**
-             * Get guid from cookies firstly.
-             */
-            chrome.cookies.get({ url: this.BASE_URL, name: "fy_guid" }, cookie => {
-                if (!cookie || !cookie.value) {
-                    reject("Tencent guid not found!");
-                    return;
+        let retryCount = 0;
+        let pronounceOnce = async () => {
+            try {
+                // Get Tencent guid.
+                let guid = await new Promise((resolve, reject) => {
+                    chrome.cookies.get({ url: this.BASE_URL, name: "fy_guid" }, cookie => {
+                        if (!cookie || !cookie.value) {
+                            reject("Tencent guid not found!");
+                            return;
+                        }
+                        resolve(cookie.value);
+                    });
+                });
+
+                // Construct src url.
+                this.AUDIO.src = `${
+                    this.BASE_URL
+                }/api/tts?platform=PC_Website&lang=${this.LAN_TO_CODE.get(
+                    language
+                )}&text=${encodeURIComponent(text)}&guid=${guid}`;
+
+                return await this.AUDIO.play();
+            } catch (error) {
+                // Update cookies on failure.
+                if (retryCount < this.MAX_RETRY) {
+                    retryCount++;
+                    return this.requestHomePage().then(pronounceOnce);
                 }
-
-                this.AUDIO.src =
-                    this.BASE_URL +
-                    "/api/tts?platform=PC_Website&lang=" +
-                    this.LAN_TO_CODE.get(language) +
-                    "&text=" +
-                    encodeURIComponent(text) +
-                    "&guid=" +
-                    cookie.value;
-
-                resolve(this.AUDIO.play());
-            });
-        });
+                return Promise.reject(error);
+            }
+        };
+        return pronounceOnce();
     }
 
     /**

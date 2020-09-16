@@ -1,6 +1,6 @@
 {
     "name": "edge_translate",
-    "version": "1.9.1",
+    "version": "2.0.0",
     "description": "A translator extension.",
     "keywords": [
         "Edge Translate",
@@ -34,13 +34,14 @@
         "pack:firefox": "gulp pack --browser firefox"
     },
     "devDependencies": {
-        "acorn": "^7.4.0",
         "axios": "^0.19.2",
         "axios-mock-adapter": "^1.18.2",
         "babel-core": "^6.26.3",
         "babel-eslint": "^10.1.0",
         "babel-loader": "^7.1.5",
         "babel-preset-env": "^1.7.0",
+        "crypto": "^1.0.1",
+        "css": "^3.0.0",
         "del": "^3.0.0",
         "eslint": "^5.16.0",
         "eslint-config-prettier": "^4.3.0",
@@ -52,10 +53,12 @@
         "gulp-terser": "^1.3.2",
         "gulp-zip": "^4.2.0",
         "jest": "^26.4.0",
+        "jest-raw-loader": "^1.0.1",
         "lodash": "^4.17.20",
         "merge-stream": "^2.0.0",
         "minimist": "^1.2.5",
         "prettier": "^1.19.1",
+        "querystring": "^0.2.0",
         "raw-loader": "^0.5.1",
         "webpack": "^4.44.1",
         "webpack-merge": "^4.2.2",
@@ -63,6 +66,14 @@
     },
     "jest": {
         "verbose": true,
-        "testTimeout": 10000
+        "testTimeout": 10000,
+        "transform": {
+            "^.+\\.[t|j]sx?$": "babel-jest",
+            "\\.(css|less)$": "jest-raw-loader"
+        },
+        "moduleDirectories": [
+            "node_modules",
+            "src"
+        ]
     }
 }

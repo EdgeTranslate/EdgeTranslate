@@ -1,4 +1,4 @@
-import { LANGUAGES } from "./languages.js";
+import LANGUAGES from "../common/scripts/languages.js";
 import Messager from "../common/scripts/messager";
 
 // 获取下拉列表元素
@@ -79,9 +79,9 @@ window.onload = function() {
         }
 
         // languages是可选的源语言和目标语言的列表
-        LANGUAGES.forEach(element => {
-            let value = element.value;
-            let name = chrome.i18n.getMessage(element.name);
+        for (let language in LANGUAGES) {
+            let value = language;
+            let name = chrome.i18n.getMessage(LANGUAGES[language]);
 
             if (languageSetting && value == languageSetting.sl) {
                 sourceLanguage.options.add(new Option(name, value, true, true));
@@ -94,7 +94,7 @@ window.onload = function() {
             } else {
                 targetLanguage.options.add(new Option(name, value));
             }
-        });
+        }
 
         showSourceTarget(); // show source language and target language in input placeholder
     });

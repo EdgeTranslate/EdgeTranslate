@@ -1,38 +1,280 @@
 import render from "./library/render.js";
-import Resizable from "./library/resizable.js";
+import moveable from "./library/moveable/moveable.js";
 import { isChromePDFViewer } from "../common.js";
-import Messager from "../../common/scripts/messager.js";
+import Messager from "common/scripts/messager.js";
+import { delayPromise } from "common/scripts/promise.js";
 
 /**
  * load templates
  */
-// load templates
+import common from "./templates/common.html"; // template of panel's structure(common part of the result panel)
 import result from "./templates/result.html"; // template of translate result
 import loading from "./templates/loading.html"; // template of loading icon
 import error from "./templates/error.html"; // template of error message
+
+const Template = {
+    result: result,
+    loading: loading,
+    error: error
+};
 
 /**
  * end load
  */
 
-// 用于存储div, div 中包含一个 iframe元素，这个iframe元素用来在页面的右侧展示翻译结果
-var divFrame;
-// 用于存储一个iframe元素，这个元素用来在页面的右侧展示翻译结果
-var frame;
-// iframe中的 document
-var frameDocument;
+// the container of translation panel. the root element of panel
+var panelContainer;
 
-var resizeBody;
+// store a shadow dom which is used to attach panel elements
+var shadowDom;
 
-var resizeDivFrame;
+// the first child element of shadow dom. It contains all of the panel content elements
+var resultPanel;
 
-var translateResult; // 保存翻译结果
+// store the panel body element
+var bodyPanel;
+
+// store the moveable object return by moveable.js
+var moveablePanel;
+// store the element for highlight part
+var highlightPart;
+var highlightPartShown = false;
+
+// store the display type(floating or fixed)
+var displaySetting = {
+    type: "fixed",
+    fixedData: {
+        width: 0.2,
+        position: "right"
+    },
+    floatingData: {
+        width: 0.15,
+        height: 0.6
+    }
+};
+
+// store the translation result
+var translateResult = {};
 var sourceTTSSpeed, targetTTSSpeed;
-var popupPosition; // 保存侧边栏展示的位置
-const FIX_ON = true; // 侧边栏固定的值
-const FIX_OFF = false; // 侧边栏不固定的值
-const dragSensitivity = 6; // 用来调节拖动侧边栏的灵敏度的参数 单位:px
-const transitionDuration = 500; // 侧边栏出现动画的持续事件 单位:ms
+// store the width of scroll bar
+const scrollbarWidth = getScrollbarWidth();
+// the duration time of result panel's transition. unit: ms
+const transitionDuration = 500;
+// flag whether the user set to resize document body
+var resizeFlag = false;
+// store original css text on document.body
+var documentBodyCSS;
+window.onload = () => {
+    documentBodyCSS = document.body.style.cssText;
+};
+
+/**
+ * initiate panel elements to display translation result
+ * create a shadow dom to contain panel elements
+ * add moveable feature to ${resultPanel}
+ */
+(function initiate() {
+    /* create elements */
+    // the container of translation panel. the root element of panel
+    panelContainer = document.createElement("div");
+    // store a shadow dom which is used to attach panel elements
+    shadowDom = panelContainer.attachShadow({ mode: "open" });
+    shadowDom.innerHTML = render(common);
+    // the first child element of shadow dom. It contains all of the panel content elements
+    resultPanel = shadowDom.firstChild;
+    // store the panel body element
+    bodyPanel = shadowDom.getElementById("panel-body");
+
+    /* set attributes of elements */
+    resultPanel.style.backgroundColor = "white"; // set style dynamically to be compatible with chrome extension "Dark Reader"
+    resultPanel.style.boxShadow = "0px 4px 23px -6px rgb(64,64,64,0.8)"; // set style dynamically to be compatible with chrome extension "Dark Reader"
+
+    /* add event listeners */
+    // add event listeners to the panel- head elements
+    addHeadEventListener();
+    // update drag bounds when users scroll the page
+    window.addEventListener("scroll", updateBounds);
+    // update the drag bounds and size when the size of window has changed
+    window.addEventListener("resize", windowResizeHandler);
+
+    /* initiate setting value */
+    getDisplaySetting();
+    // Set up translator options.
+    chrome.storage.sync.get(["languageSetting", "DefaultTranslator"], async result => {
+        let languageSetting = result.languageSetting;
+        let availableTranslators = await Messager.send("background", "get_available_translators", {
+            from: languageSetting.sl,
+            to: languageSetting.tl
+        });
+        setUpTranslateConfig(result.DefaultTranslator, availableTranslators);
+    });
+
+    /* make the resultPanel resizable and draggable */
+    moveablePanel = new moveable(resultPanel, {
+        draggable: true,
+        resizable: true,
+        /* set threshold value to increase the resize area */
+        // threshold: { s: 5, se: 5, e: 5, ne: 5, n: 5, nw: 5, w: 5, sw: 5 },
+        // threshold: { edge:5, corner:5 },
+        threshold: 10,
+        /**
+         * set thresholdPosition to decide where the resizable area is
+         * "in": the activated resizable area is within the target element
+         * "center": the activated resizable area is half within the target element and half out of the it
+         * "out": the activated resizable area is out of the target element
+         * a number(0~1): a ratio which determines the how much the the activated resizable area beyond the element
+         */
+        // thresholdPosition: "in",
+        // thresholdPosition: "center",
+        // thresholdPosition: "out",
+        thresholdPosition: 0.9
+    });
+
+    let startTranslate = [0, 0];
+    /* draggable events*/
+    moveablePanel
+        .on("dragStart", ({ set, stop, inputEvent }) => {
+            if (inputEvent) {
+                const path =
+                    inputEvent.path || (inputEvent.composedPath && inputEvent.composedPath());
+                // if drag element isn't the head element, stop the drag event
+                if (!path || !shadowDom.getElementById("panel-head").isSameNode(path[0])) {
+                    stop();
+                    return;
+                }
+            }
+            set(startTranslate);
+        })
+        .on("drag", ({ target, translate, inputEvent }) => {
+            if (inputEvent) {
+                // change the display type from fixed to floating
+                if (displaySetting.type === "fixed") {
+                    displaySetting.type = "floating";
+                    removeFixedPanel();
+                    showFloatingPanel();
+                    updateDisplaySetting();
+                }
+                /* whether to show hight part on the one side of the page*/
+                let threshold = 10;
+                if (inputEvent.clientX <= threshold) showHighlightPart("left");
+                else if (inputEvent.clientX >= window.innerWidth - threshold)
+                    showHighlightPart("right");
+                else removeHighlightPart();
+            }
+            startTranslate = translate;
+            target.style.transform = `translate(${translate[0]}px, ${translate[1]}px)`;
+        })
+        .on("dragEnd", ({ translate, inputEvent }) => {
+            startTranslate = translate;
+
+            /* change the display type of result panel */
+            if (inputEvent && displaySetting.type === "floating") {
+                let threshold = 10;
+                // mouse is close to the left boundary
+                if (inputEvent.clientX <= threshold) displaySetting.fixedData.position = "left";
+                // mouse is close to the right boundary
+                else if (inputEvent.clientX >= window.innerWidth - threshold)
+                    displaySetting.fixedData.position = "right";
+                else return;
+                displaySetting.type = "fixed";
+                removeHighlightPart();
+                showFixedPanel();
+                updateDisplaySetting();
+            }
+        });
+    // // the result panel start to drag out of the drag area
+    // .on("boundStart", ({ direction }) => {
+    //     console.log("boundStart" + direction);
+    // })
+    // // the result panel drag out of the drag area
+    // .on("bound", ({ direction, distance }) => {
+    //     console.log("bound", direction, distance);
+    // })
+    // // the result panel drag into drag area first time
+    // .on("boundEnd", () => {
+    //     console.log("boundEnd");
+    // });
+    /* resizable  events*/
+    moveablePanel
+        .on("resizeStart", ({ set }) => {
+            getDisplaySetting();
+            set(startTranslate);
+        })
+        .on("resize", ({ target, width, height, translate, inputEvent }) => {
+            target.style.width = `${width}px`;
+            target.style.height = `${height}px`;
+            target.style.transform = `translate(${translate[0]}px, ${translate[1]}px)`;
+            if (inputEvent) {
+                if (displaySetting.type === "fixed" && resizeFlag) {
+                    document.body.style.width = `${(1 - width / window.innerWidth) * 100}%`;
+                }
+            }
+        })
+        .on("resizeEnd", ({ translate, width, height, inputEvent, target }) => {
+            startTranslate = translate;
+            target.style.transform = `translate(${translate[0]}px, ${translate[1]}px)`;
+
+            // update new size of the result panel
+            if (inputEvent) {
+                if (displaySetting.type === "floating") {
+                    displaySetting.floatingData.width = width / window.innerWidth;
+                    displaySetting.floatingData.height = height / window.innerHeight;
+                } else {
+                    displaySetting.fixedData.width = width / window.innerWidth;
+                }
+                updateDisplaySetting();
+            }
+        });
+})();
+
+/**
+ * render panel content using translation result and templates and show the panel in the current web page
+ *
+ * @param {Object} content translation result
+ * @param {String} template the name of render template
+ */
+async function showPanel(content, template) {
+    // Write contents into iframe.
+    bodyPanel.innerHTML = render(Template[template], content);
+    addBodyEventListener(template);
+    // if panel hasn't been displayed, locate the panel and show it
+    if (!document.documentElement.contains(panelContainer)) {
+        await getDisplaySetting();
+        updateBounds();
+        document.documentElement.appendChild(panelContainer);
+        if (displaySetting.type === "floating") {
+            /* show floating panel */
+            let position;
+            let width = displaySetting.floatingData.width * window.innerWidth;
+            let height = displaySetting.floatingData.height * window.innerHeight;
+            if (content.position) {
+                /* adjust the position of result panel. Avoid to beyond the range of page */
+                const XBias = 20,
+                    YBias = 20,
+                    threshold = height / 4;
+                position = [content.position[0], content.position[1]];
+                // the result panel would exceeds the right boundary of the page
+                if (position[0] + width > window.innerWidth) {
+                    position[0] = position[0] - width - XBias;
+                }
+                // the result panel would exceeds the bottom boundary of the page
+                if (position[1] + height > window.innerHeight + threshold) {
+                    position[1] = position[1] - height - YBias + threshold;
+                }
+                position = [position[0] + XBias, position[1] + YBias];
+            } else
+                position = [
+                    (1 - displaySetting.floatingData.width) * window.innerWidth -
+                        (hasScrollbar() ? scrollbarWidth : 0),
+                    0
+                ];
+            showFloatingPanel();
+            moveablePanel.request("draggable", { x: position[0], y: position[1] });
+        } else {
+            showFixedPanel();
+        }
+    }
+}
 
 /**
  * 负责处理后台发送给页面的消息
@@ -41,27 +283,44 @@ const transitionDuration = 500; // 侧边栏出现动画的持续事件 单位:m
  * @param {Object} sender 返送消息者的具体信息 如果sender是content module，会有tab属性，如果是background，则没有tab属性
  */
 Messager.receive("content", message => {
+    // Check message timestamp.
+    if (translateResult.timestamp && message.detail.timestamp) {
+        if (translateResult.timestamp > message.detail.timestamp) {
+            return Promise.resolve();
+        } else {
+            translateResult.timestamp = message.detail.timestamp;
+        }
+    }
+
     // 避免从file://跳转到pdf viewer的消息传递对此的影响
     switch (message.title) {
         // 发送的是翻译结果
         case "translateResult":
-            translateResult = message.detail.translateResult;
+            translateResult = message.detail;
             sourceTTSSpeed = "fast";
             targetTTSSpeed = "fast";
-            createBlock(message.detail.translateResult, result);
+            showPanel(message.detail, "result");
             break;
         // 发送的是翻译状态信息
         case "info":
             switch (message.detail.info) {
                 case "start_translating":
-                    createBlock(message.detail, loading);
+                    // Remember translating text.
+                    translateResult.originalText = message.detail.text;
+                    showPanel(message.detail, "loading");
                     break;
-                case "error":
-                    createBlock(message.detail, error);
+                case "network_error":
+                    showPanel(message.detail, "error");
                     break;
                 default:
                     break;
             }
+            break;
+        case "update_translator_options":
+            setUpTranslateConfig(
+                message.detail.selectedTranslator,
+                message.detail.availableTranslators
+            );
             break;
         // 发送的是快捷键命令
         case "command":
@@ -76,7 +335,7 @@ Messager.receive("content", message => {
                     });
                     break;
                 case "close_result_frame":
-                    removeSlider();
+                    removePanel();
                     break;
                 case "pronounce_original":
                     sourcePronounce();
@@ -85,7 +344,7 @@ Messager.receive("content", message => {
                     targetPronounce();
                     break;
                 case "copy_result":
-                    if (translateResult) {
+                    if (translateResult.mainMeaning) {
                         copyContent();
                     }
                     break;
@@ -100,138 +359,216 @@ Messager.receive("content", message => {
 });
 
 /**
- * 在页面的右侧创建一块区域，用于显示翻译的结果，创建一个frame元素，将其插入到document中
- *
- * @param {Object} content 翻译的结果
- * @param {String} template 需要渲染的模板
+ * show the result panel in the floating type
  */
-function createBlock(content, template) {
-    // 获取用户对侧边栏展示位置的设定
-    chrome.storage.sync.get("LayoutSettings", function(result) {
-        var layoutSettings = result.LayoutSettings;
-        popupPosition = layoutSettings["PopupPosition"]; // 保存侧边栏展示的位置
-
-        // 判断frame是否已经添加到了页面中
-        if (!isChildNode(divFrame, document.documentElement)) {
-            // frame不在页面中，创建新的frame
-            divFrame = document.createElement("div");
-            divFrame.id = "translate_div";
-            divFrame.style.backgroundColor = "white"; // 动态设置样式以兼容Dark Reader
-            divFrame.style.boxShadow = "0px 0px 50px rgb(200,200,200,0.5)"; // 动态设置样式以兼容Dark Reader
-            frame = document.createElement("iframe");
-            frame.id = "translate_frame";
-            frame.sandbox = "allow-same-origin allow-scripts";
-            startSlider(layoutSettings);
-            divFrame.appendChild(frame);
-            document.documentElement.appendChild(divFrame);
-
-            if (popupPosition == "left") {
-                resizeBody = new Resizable(document.body, "left", {
-                    parentElement: document.documentElement,
-                    dragSensitivity: dragSensitivity,
-                    preFunction: function(element) {
-                        element.style.transition = "none";
-                    },
-                    callback(element) {
-                        element.style.transition = "width " + transitionDuration + "ms";
-                    }
-                });
-                resizeBody.enableResize();
-                resizeDivFrame = new Resizable(divFrame, "right", {
-                    parentElement: document.documentElement,
-                    dragSensitivity: dragSensitivity,
-                    callback: function(element) {
-                        // if user resize the width of side block, calculate the new width value(range from 0 to 1)
-                        let newSideWidth =
-                            element.clientWidth / document.documentElement.clientWidth;
-                        // update the value to the chrome storage
-                        if (newSideWidth > 0 && newSideWidth <= 1)
-                            chrome.storage.sync.set({
-                                sideWidth: newSideWidth
-                            });
-                    }
-                });
-                resizeDivFrame.enableResize();
-            } else {
-                resizeBody = new Resizable(document.body, "right", {
-                    parentElement: document.documentElement,
-                    dragSensitivity: dragSensitivity,
-                    preFunction: function(element) {
-                        element.style.transition = "none";
-                    },
-                    callback(element) {
-                        element.style.transition = "width " + transitionDuration + "ms";
-                    }
-                });
-                resizeBody.enableResize();
-                resizeDivFrame = new Resizable(divFrame, "left", {
-                    parentElement: document.documentElement,
-                    dragSensitivity: dragSensitivity,
-                    callback(element) {
-                        element.style.position = "fixed";
-                        // if user resize the width of side block, calculate the new width value(range from 0 to 1)
-                        let newSideWidth =
-                            element.clientWidth / document.documentElement.clientWidth;
-                        // update the value to the chrome storage
-                        if (newSideWidth > 0 && newSideWidth <= 1)
-                            chrome.storage.sync.set({
-                                sideWidth: newSideWidth
-                            });
-                    }
-                });
-                resizeDivFrame.enableResize();
-            }
-        }
-
-        // Write contents into iframe.
-        frame.srcdoc = render(template, content);
-
-        // iframe 一加载完成添加事件监听
-        frame.onload = function() {
-            frameDocument = frame.contentDocument;
-
-            // 根据用户设定决定是否采用从右到左布局（用于阿拉伯语等从右到左书写的语言）
-            chrome.storage.sync.get("LayoutSettings", result => {
-                if (result.LayoutSettings.RTL) {
-                    let contents = frameDocument.getElementsByClassName("may-need-rtl");
-                    for (let i = 0; i < contents.length; i++) {
-                        contents[i].dir = "rtl";
-                    }
-                }
-            });
-            // 添加事件监听
-            addEventListener();
-        };
+function showFloatingPanel() {
+    /* set border radius for the floating type result panel */
+    shadowDom.getElementById("panel-head").style["border-radius"] = "6px 6px 0 0";
+    shadowDom.getElementById("panel-body").style["border-radius"] = "0 0 6px 6px";
+    moveablePanel.request("resizable", {
+        width: displaySetting.floatingData.width * window.innerWidth,
+        height: displaySetting.floatingData.height * window.innerHeight
     });
 }
 
 /**
- * 需要对侧边栏中的元素添加事件监听时，请在此函数中添加
+ * show the result panel in the fixed type
  */
-function addEventListener() {
+function showFixedPanel() {
+    let width = displaySetting.fixedData.width * window.innerWidth;
+    // the offset left value for fixed result panel
+    let offsetLeft = 0;
+    if (displaySetting.fixedData.position === "right")
+        offsetLeft = window.innerWidth - width - (hasScrollbar() ? scrollbarWidth : 0);
+    chrome.storage.sync.get("LayoutSettings", async result => {
+        resizeFlag = result.LayoutSettings.Resize;
+        // user set to resize the document body
+        if (resizeFlag) {
+            document.body.style.position = "absolute";
+            document.body.style.transition = `width ${transitionDuration}ms`;
+            resultPanel.style.transition = `width ${transitionDuration}ms`;
+            /* set the start width to make the transition effect work */
+            document.body.style.width = "100%";
+            move(0, window.innerHeight, offsetLeft, 0);
+            // wait some time to make the setting of width applied
+            await delayPromise(50);
+            // the fixed panel in on the left side
+            if (displaySetting.fixedData.position === "left") {
+                document.body.style.right = "0";
+                document.body.style.left = "";
+            }
+            // the fixed panel in on the right side
+            else {
+                document.body.style.margin = "0";
+                document.body.style.right = "";
+                document.body.style.left = "0";
+            }
+            // set the target width for document body
+            document.body.style.width = `${(1 - displaySetting.fixedData.width) * 100}%`;
+            // set the target width for the result panel
+            move(width, window.innerHeight, offsetLeft, 0);
+            /* cancel the transition effect after the panel showed */
+            await delayPromise(transitionDuration);
+            resultPanel.style.transition = "";
+            document.body.style.transition = "";
+        } else move(width, window.innerHeight, offsetLeft, 0);
+    });
+
+    /* cancel the border radius of the fixed type result panel */
+    shadowDom.getElementById("panel-head").style["border-radius"] = "";
+    shadowDom.getElementById("panel-body").style["border-radius"] = "";
+}
+
+/**
+ * if user choose to resize the document body, make the page return to normal size
+ */
+async function removeFixedPanel() {
+    if (resizeFlag) {
+        document.body.style.transition = `width ${transitionDuration}ms`;
+        await delayPromise(50);
+        document.body.style.width = "100%";
+        await delayPromise(transitionDuration);
+        document.body.style.cssText = documentBodyCSS;
+    }
+}
+
+/**
+ * show a highlight part in the page
+ * @param {string} position the highlight part show on the "left" or "right" of the page
+ */
+function showHighlightPart(position) {
+    if (!highlightPartShown) {
+        // the element has been created
+        if (highlightPart) {
+            highlightPartShown = true;
+            highlightPart.style.width = `${displaySetting.fixedData.width * window.innerWidth}px`;
+            if (position === "left") highlightPart.style.left = 0;
+            else highlightPart.style.right = 0;
+        }
+        // the element is not existed, create one
+        else {
+            highlightPart = document.createElement("div");
+            highlightPart.id = "panel-highlight";
+            shadowDom.appendChild(highlightPart);
+            showHighlightPart(position);
+        }
+    }
+}
+
+/**
+ * remove the highlight part from the page
+ */
+function removeHighlightPart() {
+    if (highlightPartShown) {
+        highlightPartShown = false;
+        highlightPart.style.cssText = "";
+    }
+}
+
+/**
+ * get the display setting in chrome.storage api
+ * @returns {Promise{undefined}} null promise
+ */
+function getDisplaySetting() {
+    return new Promise(resolve => {
+        chrome.storage.sync.get("DisplaySetting", result => {
+            if (result.DisplaySetting) {
+                displaySetting = result.DisplaySetting;
+            } else {
+                updateDisplaySetting();
+            }
+            resolve();
+        });
+    });
+}
+
+/**
+ * set the display setting in chrome.storage api
+ */
+function updateDisplaySetting() {
+    chrome.storage.sync.set({ DisplaySetting: displaySetting });
+}
+
+/**
+ * judge whether the current page has a scroll bar
+ */
+function hasScrollbar() {
+    return (
+        document.body.scrollHeight > (window.innerHeight || document.documentElement.clientHeight)
+    );
+}
+
+/**
+ * calculate the width of scroll bar
+ * method: create a div element with a scroll bar and calculate the difference between offsetWidth and clientWidth
+ * @returns {number} the width of scroll bar
+ */
+function getScrollbarWidth() {
+    var scrollDiv = document.createElement("div");
+    scrollDiv.style.cssText =
+        "width: 99px; height: 99px; overflow: scroll; position: absolute; top: -9999px;";
+    document.documentElement.appendChild(scrollDiv);
+    var scrollbarWidth = scrollDiv.offsetWidth - scrollDiv.clientWidth;
+    document.documentElement.removeChild(scrollDiv);
+    return scrollbarWidth;
+}
+
+/**
+ * update the bounds value for draggable area
+ */
+async function updateBounds() {
+    await getDisplaySetting();
+    let scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+    moveablePanel.setBounds({
+        top: scrollTop,
+        bottom: scrollTop + (1 + displaySetting.floatingData.height) * window.innerHeight - 64
+    });
+}
+
+/**
+ * the handler for window resize event
+ * update drag bounds and the size or position of the result panel
+ */
+function windowResizeHandler() {
+    updateBounds();
+    // if result panel has been shown
+    if (document.documentElement.contains(panelContainer)) {
+        if (displaySetting.type === "fixed") showFixedPanel();
+        else
+            moveablePanel.request("resizable", {
+                width: displaySetting.floatingData.width * window.innerWidth,
+                height: displaySetting.floatingData.height * window.innerHeight
+            });
+    }
+}
+
+/**
+ * drag the target element to the position and resize it to the size
+ * @param {number} width width
+ * @param {number} height height value
+ * @param {number} left x-axis coordinate of the target position
+ * @param {number} top y-axis coordinate of the target position
+ */
+function move(width, height, left, top) {
+    moveablePanel.request("draggable", {
+        x: left,
+        y: top
+    });
+    moveablePanel.request("resizable", {
+        width: width,
+        height: height
+    });
+}
+
+/**
+ * add event listeners to the panel-head elements
+ */
+function addHeadEventListener() {
     // 给关闭按钮添加点击事件监听，用于关闭侧边栏
-    frameDocument.getElementById("icon-close").addEventListener("click", removeSlider);
-    // 如果渲染的是result.html或error.html，则有icon-tuding-fix图标， 可以添加点击事件监听
-    if (frameDocument.getElementById("icon-tuding-fix")) {
-        // 给固定侧边栏的按钮添加点击事件监听，用户侧边栏的固定与取消固定
-        frameDocument.getElementById("icon-tuding-fix").addEventListener("click", fixOn);
-        frameDocument.getElementById("icon-tuding-full").addEventListener("click", fixOff);
-    }
-    // 如果渲染的是result.html，则有icon-copy图标， 可以添加点击事件监听
-    if (frameDocument.getElementById("icon-copy")) {
-        // copy the translation result to the copy board
-        frameDocument.getElementById("icon-copy").addEventListener("click", copyContent);
-
-        let sourcePronounceIcon = frameDocument.getElementById("source-pronounce");
-        if (sourcePronounceIcon) {
-            sourcePronounceIcon.addEventListener("click", sourcePronounce);
-        }
-
-        let targetPronounceIcon = frameDocument.getElementById("target-pronounce");
-        if (targetPronounceIcon) {
-            targetPronounceIcon.addEventListener("click", targetPronounce);
-        }
-    }
+    shadowDom.getElementById("icon-close").addEventListener("click", removePanel);
+    // 给固定侧边栏的按钮添加点击事件监听，用户侧边栏的固定与取消固定
+    shadowDom.getElementById("icon-tuding-fix").addEventListener("click", fixOn);
+    shadowDom.getElementById("icon-tuding-full").addEventListener("click", fixOff);
     // 给点击侧边栏之外区域事件添加监听，点击侧边栏之外的部分就会让侧边栏关闭
     chrome.storage.sync.get("fixSetting", function(result) {
         if (!result.fixSetting) {
@@ -240,76 +577,44 @@ function addEventListener() {
             fixOn();
         }
     });
-
-    // 将iframe内部的事件转发到document里，以实现更好的拖动效果。
-    frameDocument.addEventListener("mousemove", function(event) {
-        let new_event = new event.constructor(event.type, event);
-        document.documentElement.dispatchEvent(new_event);
-    });
-
-    frameDocument.addEventListener("mouseup", function(event) {
-        let new_event = new event.constructor(event.type, event);
-        document.documentElement.dispatchEvent(new_event);
-    });
 }
 
 /**
- *
- * 一个工具api,判断传入的第一个元素是否是传入的第二个元素的子节点
- *
- * @param {Element} node1 第一个document Element 元素,非空
- * @param {Element} node2 第二个document Element 元素，非空
+ * add event listeners to panel body elements
+ * @param {String} template the name of the current using template
  */
-function isChildNode(node1, node2) {
-    // 判断传入的参数是否合法
-    if (!(node1 && node2)) return false;
-    while (node1 && !node1.isSameNode(document.body)) {
-        if (node1.isSameNode(node2)) return true;
-        else node1 = node1.parentNode;
+function addBodyEventListener(template) {
+    switch (template) {
+        case "result": {
+            // copy the translation result to the copy board
+            shadowDom.getElementById("icon-copy").addEventListener("click", copyContent);
+            let sourcePronounceIcon = shadowDom.getElementById("source-pronounce");
+            if (sourcePronounceIcon) {
+                sourcePronounceIcon.addEventListener("click", sourcePronounce);
+            }
+
+            let targetPronounceIcon = shadowDom.getElementById("target-pronounce");
+            if (targetPronounceIcon) {
+                targetPronounceIcon.addEventListener("click", targetPronounce);
+            }
+            // 根据用户设定决定是否采用从右到左布局（用于阿拉伯语等从右到左书写的语言）
+            chrome.storage.sync.get("LayoutSettings", result => {
+                if (result.LayoutSettings.RTL) {
+                    let contents = resultPanel.getElementsByClassName("may-need-rtl");
+                    for (let i = 0; i < contents.length; i++) {
+                        contents[i].dir = "rtl";
+                    }
+                }
+            });
+            break;
+        }
+        case "loading":
+            break;
+        case "error":
+            break;
+        default:
+            break;
     }
-    return false;
-}
-
-/**
- * change CSS style of body element and the frame element
- * the body size will be contracted
- */
-function startSlider(layoutSettings) {
-    // 获取用户上次通过resize设定的侧边栏宽度
-    chrome.storage.sync.get("sideWidth", function(result) {
-        let sideWidth = 0.2;
-        if (result.sideWidth) {
-            sideWidth = result.sideWidth;
-        }
-        var resizeFlag = layoutSettings["Resize"]; // 保存侧边栏展示的位置
-        divFrame.style.width = sideWidth * 100 + "%";
-        if (resizeFlag) {
-            // 用户设置 收缩页面
-            document.body.style.transition = "width " + transitionDuration + "ms";
-            document.body.style.width = (1 - sideWidth) * 100 + "%";
-        }
-        if (popupPosition === "left") {
-            // 用户设置 在页面左侧显示侧边栏
-            if (resizeFlag) {
-                // 用户设置 收缩页面
-                document.body.style.position = "absolute";
-                // document.body.style.marginLeft = 0.2 * originOriginWidth + "px";
-                document.body.style.right = "0";
-                document.body.style.left = "";
-            }
-            divFrame.style.left = "0";
-            divFrame.style["padding-right"] = dragSensitivity + "px";
-        } else {
-            if (resizeFlag) {
-                // 用户设置 收缩页面
-                document.body.style.margin = "0";
-                document.body.style.right = "";
-                document.body.style.left = "0";
-            }
-            divFrame.style.right = "0";
-            divFrame.style["padding-left"] = dragSensitivity + "px";
-        }
-    });
 }
 
 /**
@@ -325,37 +630,23 @@ function startSlider(layoutSettings) {
  */
 function clickListener(event) {
     let node = event.target;
-    if (!isChildNode(node, divFrame)) {
-        var boundary =
-            popupPosition === "left"
-                ? divFrame.offsetLeft + divFrame.clientWidth
-                : divFrame.offsetLeft; // 根据侧边栏的位置确定拖拽的起点
-        if (Math.abs(event.x - boundary) > dragSensitivity) {
-            removeSlider();
-        }
+    if (!panelContainer.contains(node)) {
+        removePanel();
     }
 }
 
 /**
- * 将侧边栏元素从页面中除去，即将frame从document中删除
+ * remove the panel from the page
  */
-function removeSlider() {
-    if (isChildNode(divFrame, document.documentElement)) {
-        document.documentElement.removeChild(divFrame);
-        document.body.style.width = 100 + "%";
-        setTimeout(function() {
-            document.body.style.margin = "auto";
-            document.body.style.position = "static";
-            document.body.style.right = "";
-            document.body.style.left = "";
-        }, transitionDuration);
-        document.documentElement.removeEventListener("mousedown", clickListener);
+function removePanel() {
+    if (document.documentElement.contains(panelContainer)) {
+        removeFixedPanel();
+        document.documentElement.removeChild(panelContainer);
+
         // handle the click event exception when using chrome's original pdf viewer
         if (isChromePDFViewer()) {
             document.body.children[0].focus();
         }
-        resizeBody.disableResize();
-        resizeDivFrame.disableResize();
 
         // 告诉background.js翻译框已关闭
         Messager.send("background", "frame_closed");
@@ -367,12 +658,10 @@ function removeSlider() {
  */
 function fixOn() {
     chrome.storage.sync.set({
-        fixSetting: FIX_ON
+        fixSetting: true
     });
-    if (frameDocument.getElementById("icon-tuding-full")) {
-        frameDocument.getElementById("icon-tuding-full").style.display = "inline";
-        frameDocument.getElementById("icon-tuding-fix").style.display = "none";
-    }
+    shadowDom.getElementById("icon-tuding-full").style.display = "inline";
+    shadowDom.getElementById("icon-tuding-fix").style.display = "none";
     document.documentElement.removeEventListener("mousedown", clickListener);
 }
 
@@ -381,12 +670,10 @@ function fixOn() {
  */
 function fixOff() {
     chrome.storage.sync.set({
-        fixSetting: FIX_OFF
+        fixSetting: false
     });
-    if (frameDocument.getElementById("icon-tuding-full")) {
-        frameDocument.getElementById("icon-tuding-full").style.display = "none";
-        frameDocument.getElementById("icon-tuding-fix").style.display = "inline";
-    }
+    shadowDom.getElementById("icon-tuding-full").style.display = "none";
+    shadowDom.getElementById("icon-tuding-fix").style.display = "inline";
     document.documentElement.addEventListener("mousedown", clickListener);
 }
 
@@ -394,7 +681,7 @@ function fixOff() {
  * Send message to background to pronounce the translating text.
  */
 function sourcePronounce() {
-    if (isChildNode(divFrame, document.documentElement)) {
+    if (document.documentElement.contains(panelContainer)) {
         Messager.send("background", "pronounce", {
             text: translateResult.originalText,
             language: translateResult.sourceLanguage,
@@ -410,7 +697,7 @@ function sourcePronounce() {
 }
 
 function targetPronounce() {
-    if (isChildNode(divFrame, document.documentElement)) {
+    if (document.documentElement.contains(panelContainer)) {
         Messager.send("background", "pronounce", {
             text: translateResult.mainMeaning,
             language: translateResult.targetLanguage,
@@ -427,24 +714,65 @@ function targetPronounce() {
 
 function copyContent() {
     // the node of translation result
-    translateResult = frameDocument.getElementsByClassName("main-meaning")[0].firstChild;
-    translateResult.setAttribute("contenteditable", "true");
-    translateResult.focus();
-    // select all content automatically
-    var range = frameDocument.createRange();
-    var frameWindow = frame.contentWindow;
-    if (frameWindow) {
-        range.selectNodeContents(translateResult);
-        frameWindow.getSelection().removeAllRanges();
-        frameWindow.getSelection().addRange(range);
-        frameDocument.execCommand("copy");
+    let translateResultEle = resultPanel
+        .getElementsByClassName("main-meaning")[0]
+        .getElementsByTagName("p")[0];
 
-        // on focus out, set the node to unedible
-        translateResult.addEventListener("blur", function() {
-            translateResult.setAttribute("contenteditable", "false");
-            frameWindow.getSelection().removeAllRanges();
-        });
+    // make contents editable
+    translateResultEle.setAttribute("contenteditable", "true");
+    translateResultEle.focus();
+
+    // select all content automatically
+    let range = document.createRange();
+    range.selectNodeContents(translateResultEle);
+    window.getSelection().removeAllRanges();
+    window.getSelection().addRange(range);
+
+    // do copy
+    document.execCommand("copy");
+
+    // on focus out, set the node to unedible
+    translateResultEle.addEventListener("blur", function() {
+        translateResultEle.setAttribute("contenteditable", "false");
+        window.getSelection().removeAllRanges();
+    });
+}
+
+/**
+ * Set up translator options.
+ *
+ * @param {String} selectedTranslator selected translator
+ * @param {Array<String>} availableTranslators available translators for current language setting
+ *
+ * @returns {void} nothing
+ */
+function setUpTranslateConfig(selectedTranslator, availableTranslators) {
+    let translatorsEle = shadowDom.getElementById("translators");
+
+    // Remove existed options.
+    for (let i = translatorsEle.options.length; i > 0; i--) {
+        translatorsEle.options.remove(i - 1);
     }
+
+    // Add translator options.
+    for (let translator of availableTranslators) {
+        if (translator === selectedTranslator) {
+            translatorsEle.options.add(
+                new Option(chrome.i18n.getMessage(translator), translator, true, true)
+            );
+        } else {
+            translatorsEle.options.add(new Option(chrome.i18n.getMessage(translator), translator));
+        }
+    }
+
+    // Update and re-translate.
+    translatorsEle.onchange = () => {
+        Messager.send("background", "update_default_translator", {
+            translator: translatorsEle.options[translatorsEle.selectedIndex].value
+        }).then(() => {
+            Messager.send("background", "translate", { text: translateResult.originalText });
+        });
+    };
 }
 
 /**

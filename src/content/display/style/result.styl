@@ -3,10 +3,15 @@
 /**
  * start content style
  */
-.translate {
+.translate {		
+	box-sizing: border-box;
+	padding: 5% 10%;
 	font-weight: medium;
 	font-size: medium;
-    position: relative;
+    position: relative;		
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
 
 	.content-title { // 标题样式
 		color: gray;
@@ -18,7 +23,32 @@
 	}
 
 	.main-meaning {
-		margin-right: 1em;
+		width: 100%;		
+		padding: 0;
+		margin: 0;
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		justify-items: flex-end;
+
+		p{
+			flex-grow: 3;
+			flex-shrink: 1;
+			padding: 0;
+			margin: 0;
+		}
+
+		.icon-copy {												
+			font-size: x-large;
+			fill: lightgray;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;	
+
+			&:hover{
+				fill: gray;
+			}		   
+		}
 
 		.main-meaning-content-larger {
 			font-size: 30px;
@@ -42,6 +72,7 @@
 	}
 
 	.target-phonetic-symbol {
+		width: 100%;
 
 		.target-phonetic-symbol-large {
 			font-size: large;
@@ -59,11 +90,33 @@
 		}
 	}
 
-	.phonetic-symbol {
-		.phonetic-symbol-content {
+	.pronounce{
+		width: 100%;	
+
+		.pronounce-item{
+			padding: 0;
+			display: flex;
+			justify-content: flex-start;
+			justify-items: center;					
+		}
+
+		.icon-pronounce{						
+			padding: 0;
+			svg {				
+				fill: light-primary !important; 
+
+				&:hover{				
+					fill: orange !important;
+				}		
+			}			
+		}		
+	}
+
+	.phonetic-symbol {		
+
+		.phonetic-symbol-content {			
 			font-weight: lighter;
-			position: relative;
-			left: 12%;
+			margin-left: 12%;
 		}
 	}
 

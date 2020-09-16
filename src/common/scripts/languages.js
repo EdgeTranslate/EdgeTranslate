@@ -1,7 +1,7 @@
 /**
  * 支持的语言列表
  */
-const ALL_LANGUAGES = {
+const LANGUAGES = {
     en: "English",
     "zh-CN": "ChineseSimplified",
     "zh-TW": "ChineseTraditional",
@@ -218,4 +218,4 @@ const ALL_LANGUAGES = {
 /**
  * Export languages.
  */
-export default ALL_LANGUAGES;
+export default LANGUAGES;

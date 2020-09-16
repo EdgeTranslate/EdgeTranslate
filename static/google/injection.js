@@ -3,7 +3,7 @@
 /**
  * 检测用户语言，并设定翻译组件的语言。
  */
-chrome.runtime.sendMessage({ to: "background", title: "get_lang" }, function(response) {
+chrome.runtime.sendMessage({ to: { background: true }, title: "get_lang" }, function(response) {
     var s = document.getElementById("google-translate-injection");
     if (s !== null) {
         s.remove();

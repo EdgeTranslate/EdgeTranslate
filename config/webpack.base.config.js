@@ -12,14 +12,23 @@ module.exports = {
     },
     output: {
         filename: "[name].js",
-        path: path.resolve(__dirname, "build")
+        path: path.resolve(__dirname, "../build")
     },
     module: {
         rules: [
             {
-                test: /\.html$/,
+                test: [/\.html$/, /\.css$/],
                 use: "raw-loader"
             }
         ]
+    },
+    resolve: {
+        alias: {
+            "@": path.resolve(__dirname, "../src"),
+            common: path.resolve(__dirname, "../src/common")
+        }
+    },
+    node: {
+        fs: "empty"
     }
 };

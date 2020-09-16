@@ -1,18 +1,6 @@
 icon-size = 1em;
 color-primary = #4a8cf7;
-
-html {
-    height: auto;
-    min-height: 100%;
-    box-sizing: border-box;
-    z-index: 10000;
-}
-
-body {
-    height: 100%;
-    padding: 10%;
-    box-sizing: border-box;
-}
+light-primary = rgba(74,140,247,0.7);
 
 /**
  * start icon style
@@ -20,50 +8,21 @@ body {
 .icon {
     font-style: normal;
     -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    fill: #aaa;
+    -moz-osx-font-smoothing: grayscale;    
     cursor: pointer;
-    font-size: larger;
-    position: relative;
+    font-size: x-large;	
+	display: block;   
 
     svg {
         width: icon-size;
         height: icon-size;
         vertical-align: bottom;
     }
-
-    :hover {
-        fill:  #777;
-    }
 }
 
-/* 关闭页面的图标 */
-#icon-close {
-    left: 92%;
-}
-
-.icon-fix {
-    left: 87%;
+.icon-fix {    
     display: none;
 }
-
-.icon-pronounce {
-    position: static;
-
-    svg{
-        padding-bottom: 1%; 
-    }
-
-    :hover {
-        fill: color-primary !important;
-    }
-}
-
-.icon-copy
-    position: absolute;
-    font-size: x-large;
-    right: -10%;
-    top: 0;    
 
 /**
  * end icon style
