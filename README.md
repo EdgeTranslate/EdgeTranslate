@@ -23,7 +23,8 @@ View this page in other languages:
 
 ## Downloads
 
-[Chrome Web Store](https://chrome.google.com/webstore/detail/bocbaocobfecmglnmeaeppambideimao)
+[Microsoft Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/bfdogplmndidlpjfhoijckpakkdjkkil)
+/ [Chrome Web Store](https://chrome.google.com/webstore/detail/bocbaocobfecmglnmeaeppambideimao)
 / [Firefox Add-ons](https://addons.mozilla.org/firefox/addon/edge_translate/)
 / [QQ Browser Web Store](https://appcenter.browser.qq.com/search/detail?key=edgetranslate&id=bocbaocobfecmglnmeaeppambideimao%20&title=edgetranslate)
 / [360 Browser Web Store](https://ext.se.360.cn/webstore/detail/aajldohlagodeegngemjjgmabejbejli)

@@ -17,7 +17,8 @@
 
 ## 下載
 
-[Chrome應用商店](https://chrome.google.com/webstore/detail/bocbaocobfecmglnmeaeppambideimao)
+[Microsoft Edge擴展商店](https://microsoftedge.microsoft.com/addons/detail/bfdogplmndidlpjfhoijckpakkdjkkil)
+/ [Chrome應用商店](https://chrome.google.com/webstore/detail/bocbaocobfecmglnmeaeppambideimao)
 / [Firefox附加組件商店](https://addons.mozilla.org/firefox/addon/edge_translate/)
 / [QQ瀏覽器應用商店](https://appcenter.browser.qq.com/search/detail?key=edgetranslate&id=bocbaocobfecmglnmeaeppambideimao%20&title=edgetranslate)
 / [360瀏覽器應用商店](https://ext.se.360.cn/webstore/detail/aajldohlagodeegngemjjgmabejbejli)
