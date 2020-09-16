@@ -150,6 +150,7 @@ export default class resizable {
             /* create resizable div elements and append to the container */
             let div = document.createElement("div");
             div.id = `resizable-${direction}`;
+            div.setAttribute("class", "resizable-div");
             div.style.cssText = cssObject.stringifyItems(divCss);
             this.store.divContainer.appendChild(div);
             // store the div resizable element

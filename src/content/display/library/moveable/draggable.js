@@ -72,6 +72,7 @@ export default class draggable {
      * @param {event} e the mouse down event
      */
     dragStart(e) {
+        if (e.target.getAttribute("class") === "resizable-div") return;
         this.dragging = true;
         // store the start css translate value. [x,y]
         this.store.startTranslate = [];
