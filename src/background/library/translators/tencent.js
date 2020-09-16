@@ -300,7 +300,7 @@ class TencentTranslator {
                     language
                 )}&text=${encodeURIComponent(text)}&guid=${guid}`;
 
-                return this.AUDIO.play();
+                return await this.AUDIO.play();
             } catch (error) {
                 // Update cookies on failure.
                 if (retryCount < this.MAX_RETRY) {
