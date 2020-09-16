@@ -1,10 +1,10 @@
 import {
     TRANSLATOR_MANAGER,
-    showTranslate,
-    translatePage,
-    youdaoPageTranslate,
-    executeYouDaoScript,
-    executeGoogleScript
+    showTranslate
+    // translatePage,
+    // youdaoPageTranslate,
+    // executeYouDaoScript,
+    // executeGoogleScript
 } from "./library/translate.js";
 import {
     addUrlBlacklist,
@@ -13,7 +13,7 @@ import {
     removeDomainBlacklist,
     updateBLackListMenu
 } from "./library/blacklist.js";
-import { sendHitRequest } from "./library/analytics.js";
+// import { sendHitRequest } from "./library/analytics.js";
 import { sendMessageToCurrentTab } from "./library/common.js";
 import Messager from "../common/scripts/messager.js";
 import { getDomain, log } from "../common/scripts/common.js";
@@ -45,12 +45,12 @@ const DEFAULT_SETTINGS = {
         SelectTranslate: true,
         TranslateAfterDblClick: false,
         TranslateAfterSelect: false,
-        CancelTextSelection: false,
-        UseGoogleAnalytics: true,
-        UsePDFjs: true
+        CancelTextSelection: false
+        // UseGoogleAnalytics: true
+        // UsePDFjs: true
     },
     DefaultTranslator: "GoogleTranslate",
-    DefaultPageTranslator: "YouDaoPageTranslate",
+    // DefaultPageTranslator: "YouDaoPageTranslate",
     HybridTranslatorConfig: {
         // The translators used in current hybrid translate.
         translators: ["BaiduTranslate", "BingTranslate", "GoogleTranslate"],
@@ -84,23 +84,23 @@ chrome.runtime.onInstalled.addListener(function(details) {
         contexts: ["browser_action"]
     });
 
-    chrome.contextMenus.create({
-        id: "translate_page",
-        title: chrome.i18n.getMessage("TranslatePage"),
-        contexts: ["page"]
-    });
+    // chrome.contextMenus.create({
+    //     id: "translate_page",
+    //     title: chrome.i18n.getMessage("TranslatePage"),
+    //     contexts: ["page"]
+    // });
 
-    chrome.contextMenus.create({
-        id: "translate_page_youdao",
-        title: chrome.i18n.getMessage("TranslatePageYouDao"),
-        contexts: ["browser_action"]
-    });
+    // chrome.contextMenus.create({
+    //     id: "translate_page_youdao",
+    //     title: chrome.i18n.getMessage("TranslatePageYouDao"),
+    //     contexts: ["browser_action"]
+    // });
 
-    chrome.contextMenus.create({
-        id: "translate_page_google",
-        title: chrome.i18n.getMessage("TranslatePageGoogle"),
-        contexts: ["browser_action"]
-    });
+    // chrome.contextMenus.create({
+    //     id: "translate_page_google",
+    //     title: chrome.i18n.getMessage("TranslatePageGoogle"),
+    //     contexts: ["browser_action"]
+    // });
 
     chrome.contextMenus.create({
         id: "add_url_blacklist",
@@ -151,20 +151,20 @@ chrome.runtime.onInstalled.addListener(function(details) {
             });
 
             // 告知用户数据收集相关信息
-            chrome.notifications.create("data_collection_notification", {
-                type: "basic",
-                iconUrl: "./icon/icon128.png",
-                title: chrome.i18n.getMessage("AppName"),
-                message: chrome.i18n.getMessage("DataCollectionNotice")
-            });
+            // chrome.notifications.create("data_collection_notification", {
+            //     type: "basic",
+            //     iconUrl: "./icon/icon128.png",
+            //     title: chrome.i18n.getMessage("AppName"),
+            //     message: chrome.i18n.getMessage("DataCollectionNotice")
+            // });
 
             // 尝试发送安装事件
-            setTimeout(() => {
-                sendHitRequest("background", "event", {
-                    ec: "installation", // event category
-                    ea: "installation" // event label
-                });
-            }, 10 * 60 * 1000); // 10 min
+            // setTimeout(() => {
+            //     sendHitRequest("background", "event", {
+            //         ec: "installation", // event category
+            //         ea: "installation" // event label
+            //     });
+            // }, 10 * 60 * 1000); // 10 min
         } else if (details.reason === "update") {
             // Fix language setting compatibility between Edge Translate 2.x and 1.x.x.
             chrome.storage.sync.get("languageSetting", result => {
@@ -207,12 +207,12 @@ chrome.notifications.onClicked.addListener(function(notificationId) {
                 url: "https://github.com/EdgeTranslate/EdgeTranslate/releases"
             });
             break;
-        case "data_collection_notification":
-            chrome.tabs.create({
-                // 为设置页面单独创建一个标签页
-                url: chrome.runtime.getURL("options/options.html#google-analytics")
-            });
-            break;
+        // case "data_collection_notification":
+        //     chrome.tabs.create({
+        //         // 为设置页面单独创建一个标签页
+        //         url: chrome.runtime.getURL("options/options.html#google-analytics")
+        //     });
+        //     break;
         default:
             break;
     }
@@ -239,23 +239,23 @@ chrome.runtime.onStartup.addListener(function() {
         contexts: ["browser_action"]
     });
 
-    chrome.contextMenus.create({
-        id: "translate_page",
-        title: chrome.i18n.getMessage("TranslatePage"),
-        contexts: ["page"]
-    });
+    // chrome.contextMenus.create({
+    //     id: "translate_page",
+    //     title: chrome.i18n.getMessage("TranslatePage"),
+    //     contexts: ["page"]
+    // });
 
-    chrome.contextMenus.create({
-        id: "translate_page_youdao",
-        title: chrome.i18n.getMessage("TranslatePageYouDao"),
-        contexts: ["browser_action"]
-    });
+    // chrome.contextMenus.create({
+    //     id: "translate_page_youdao",
+    //     title: chrome.i18n.getMessage("TranslatePageYouDao"),
+    //     contexts: ["browser_action"]
+    // });
 
-    chrome.contextMenus.create({
-        id: "translate_page_google",
-        title: chrome.i18n.getMessage("TranslatePageGoogle"),
-        contexts: ["browser_action"]
-    });
+    // chrome.contextMenus.create({
+    //     id: "translate_page_google",
+    //     title: chrome.i18n.getMessage("TranslatePageGoogle"),
+    //     contexts: ["browser_action"]
+    // });
 
     chrome.contextMenus.create({
         id: "add_url_blacklist",
@@ -317,15 +317,15 @@ chrome.contextMenus.onClicked.addListener(function(info, tab) {
                 selectedTTSSpeed = "fast";
             }
             break;
-        case "translate_page":
-            translatePage();
-            break;
-        case "translate_page_youdao":
-            executeYouDaoScript();
-            break;
-        case "translate_page_google":
-            executeGoogleScript();
-            break;
+        // case "translate_page":
+        //     translatePage();
+        //     break;
+        // case "translate_page_youdao":
+        //     executeYouDaoScript();
+        //     break;
+        // case "translate_page_google":
+        //     executeGoogleScript();
+        //     break;
         case "shortcut":
             chrome.tabs.create({
                 url: "chrome://extensions/shortcuts"
@@ -406,14 +406,14 @@ async function messageHandler(message, sender) {
             );
             return result;
         }
-        case "youdao_page_translate":
-            return youdaoPageTranslate(message.detail.request);
-        case "translate_page_youdao":
-            executeYouDaoScript();
-            return Promise.resolve();
-        case "translate_page_google":
-            executeGoogleScript();
-            return Promise.resolve();
+        // case "youdao_page_translate":
+        //     return youdaoPageTranslate(message.detail.request);
+        // case "translate_page_youdao":
+        //     executeYouDaoScript();
+        //     return Promise.resolve();
+        // case "translate_page_google":
+        //     executeGoogleScript();
+        //     return Promise.resolve();
         case "get_lang":
             return Promise.resolve({ lang: chrome.i18n.getUILanguage() });
         case "frame_closed":
@@ -441,9 +441,9 @@ Messager.receive("background", messageHandler);
  */
 chrome.commands.onCommand.addListener(function(command) {
     switch (command) {
-        case "translate_page":
-            translatePage();
-            break;
+        // case "translate_page":
+        //     translatePage();
+        //     break;
         default:
             sendMessageToCurrentTab("command", {
                 command: command
@@ -486,9 +486,9 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
 );
 
 // send basic hit data to google analytics
-setTimeout(() => {
-    sendHitRequest("background", "pageview", null);
-}, 1000);
+// setTimeout(() => {
+//     sendHitRequest("background", "pageview", null);
+// }, 1000);
 
 /**
  * assign default value to settings which are undefined in recursive way

@@ -1,4 +1,4 @@
-import axios from "axios";
+// import axios from "axios";
 import HYBRID_TRANSLATOR from "./translators/hybrid.js";
 import { sendMessageToCurrentTab } from "./common.js";
 import { log } from "../../common/scripts/common.js";
@@ -322,67 +322,67 @@ async function showTranslate(content, tab) {
 /**
  * 使用用户选定的网页翻译引擎翻译当前网页。
  */
-function translatePage() {
-    chrome.storage.sync.get(["DefaultPageTranslator"], result => {
-        let translator = result.DefaultPageTranslator;
-        switch (translator) {
-            case "YouDaoPageTranslate":
-                executeYouDaoScript();
-                break;
-            case "GooglePageTranslate":
-                executeGoogleScript();
-                break;
-            default:
-                executeYouDaoScript();
-                break;
-        }
-    });
-}
+// function translatePage() {
+//     chrome.storage.sync.get(["DefaultPageTranslator"], result => {
+//         let translator = result.DefaultPageTranslator;
+//         switch (translator) {
+//             case "YouDaoPageTranslate":
+//                 executeYouDaoScript();
+//                 break;
+//             case "GooglePageTranslate":
+//                 executeGoogleScript();
+//                 break;
+//             default:
+//                 executeYouDaoScript();
+//                 break;
+//         }
+//     });
+// }
 
-/**
- * 有道翻译接口
- * @param {Object} request request
- *
- * @returns {Promise<Object>} response Promise
- */
-async function youdaoPageTranslate(request) {
-    let isPost = request.type === "POST";
-    let response = await axios({
-        method: request.type,
-        baseURL: request.url,
-        headers: isPost ? { "Content-Type": "application/x-www-form-urlencoded" } : {},
-        data: isPost ? request.data : null
-    });
+// /**
+//  * 有道翻译接口
+//  * @param {Object} request request
+//  *
+//  * @returns {Promise<Object>} response Promise
+//  */
+// async function youdaoPageTranslate(request) {
+//     let isPost = request.type === "POST";
+//     let response = await axios({
+//         method: request.type,
+//         baseURL: request.url,
+//         headers: isPost ? { "Content-Type": "application/x-www-form-urlencoded" } : {},
+//         data: isPost ? request.data : null
+//     });
 
-    return {
-        response: response.status === 200 ? JSON.stringify(response.data) : null,
-        index: request.index
-    };
-}
+//     return {
+//         response: response.status === 200 ? JSON.stringify(response.data) : null,
+//         index: request.index
+//     };
+// }
 
-/**
- * 执行有道网页翻译相关脚本
- */
-function executeYouDaoScript() {
-    chrome.tabs.executeScript({ file: "/youdao/main.js" }, function(result) {
-        if (chrome.runtime.lastError) {
-            log("Chrome runtime error: " + chrome.runtime.lastError);
-            log("Detail: " + result);
-        }
-    });
-}
+// /**
+//  * 执行有道网页翻译相关脚本
+//  */
+// function executeYouDaoScript() {
+//     chrome.tabs.executeScript({ file: "/youdao/main.js" }, function(result) {
+//         if (chrome.runtime.lastError) {
+//             log("Chrome runtime error: " + chrome.runtime.lastError);
+//             log("Detail: " + result);
+//         }
+//     });
+// }
 
-/**
- * 执行谷歌网页翻译相关脚本。
- */
-function executeGoogleScript() {
-    chrome.tabs.executeScript({ file: "/google/injection.js" }, function(result) {
-        if (chrome.runtime.lastError) {
-            log("Chrome runtime error: " + chrome.runtime.lastError);
-            log("Detail: " + result);
-        }
-    });
-}
+// /**
+//  * 执行谷歌网页翻译相关脚本。
+//  */
+// function executeGoogleScript() {
+//     chrome.tabs.executeScript({ file: "/google/injection.js" }, function(result) {
+//         if (chrome.runtime.lastError) {
+//             log("Chrome runtime error: " + chrome.runtime.lastError);
+//             log("Detail: " + result);
+//         }
+//     });
+// }
 
 /* EXPORTED OBJECTS AND FUNCTIONS END */
 
@@ -414,9 +414,9 @@ function checkAndRequestFileAccess() {
 
 export {
     TRANSLATOR_MANAGER,
-    showTranslate,
-    translatePage,
-    youdaoPageTranslate,
-    executeYouDaoScript,
-    executeGoogleScript
+    showTranslate
+    // translatePage,
+    // youdaoPageTranslate,
+    // executeYouDaoScript,
+    // executeGoogleScript
 };

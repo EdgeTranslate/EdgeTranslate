@@ -241,22 +241,28 @@ function packStatic() {
         return mergeStream([staticJSFiles, googleJS, staticOtherFiles]);
     } else {
         // static JS files except google JS
-        let staticJSFiles = gulp
-            .src("./static/!(pdf)/**/!(element_main).js", { base: "static" })
-            .pipe(terser().on("error", error => log(error)))
-            .pipe(gulp.dest(output_dir));
+        // let staticJSFiles = gulp
+        //     .src("./static/!(pdf)/**/!(element_main).js", { base: "static" })
+        //     .pipe(terser().on("error", error => log(error)))
+        //     .pipe(gulp.dest(output_dir));
 
         // google page translation files
         // Do not uglify element_main.js
-        let googleJS = gulp
-            .src("./static/google/element_main.js", { base: "static" })
-            .pipe(gulp.dest(output_dir));
+        // let googleJS = gulp
+        //     .src("./static/google/element_main.js", { base: "static" })
+        //     .pipe(gulp.dest(output_dir));
 
         // non-js static files
-        let staticOtherFiles = gulp
-            .src("./static/!(pdf)/**/!(*.js)", { base: "static" })
+        // let staticOtherFiles = gulp
+        //     .src("./static/!(pdf)/**/!(*.js)", { base: "static" })
+        //     .pipe(gulp.dest(output_dir));
+        // return mergeStream([staticJSFiles, googleJS, staticOtherFiles]);
+
+        // icon and _locales
+        let iconAnd_locales = gulp
+            .src("./static/!(google|youdao|pdf)/**/*", { base: "static" })
             .pipe(gulp.dest(output_dir));
-        return mergeStream([staticJSFiles, googleJS, staticOtherFiles]);
+        return iconAnd_locales;
     }
 }
 /**

@@ -165,12 +165,12 @@ function addEventListener() {
     document.getElementById("translateSubmit").addEventListener("click", translateSubmit);
     document.addEventListener("keypress", translatePreSubmit); // 对用户按下回车按键后的事件进行监听
     document.getElementById("setting-switch").addEventListener("click", settingSwitch);
-    document.getElementById("google-page-translate").addEventListener("click", () => {
-        Messager.send("background", "translate_page_google");
-    });
-    document.getElementById("youdao-page-translate").addEventListener("click", () => {
-        Messager.send("background", "translate_page_youdao");
-    });
+    // document.getElementById("google-page-translate").addEventListener("click", () => {
+    //     Messager.send("background", "translate_page_google");
+    // });
+    // document.getElementById("youdao-page-translate").addEventListener("click", () => {
+    //     Messager.send("background", "translate_page_youdao");
+    // });
 }
 
 /**

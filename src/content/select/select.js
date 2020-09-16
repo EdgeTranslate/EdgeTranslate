@@ -327,27 +327,27 @@ function cancelTextSelection() {
 /**
  * 处理取消网页翻译的快捷键
  */
-function cancelPageTranslate() {
-    let checkAndClick = button => {
-        if (button !== null && button !== undefined) {
-            button.click();
-        }
-    };
+// function cancelPageTranslate() {
+//     let checkAndClick = button => {
+//         if (button !== null && button !== undefined) {
+//             button.click();
+//         }
+//     };
 
-    let frame = document.getElementById(":0.container");
-    if (frame !== null && frame !== undefined) {
-        let cancelButton = frame.contentDocument.getElementById(":0.close");
-        checkAndClick(cancelButton);
-        return;
-    }
+//     let frame = document.getElementById(":0.container");
+//     if (frame !== null && frame !== undefined) {
+//         let cancelButton = frame.contentDocument.getElementById(":0.close");
+//         checkAndClick(cancelButton);
+//         return;
+//     }
 
-    frame = document.getElementById("OUTFOX_JTR_BAR");
-    if (frame !== null && frame !== undefined) {
-        let cancelButton = frame.contentDocument.getElementById("OUTFOX_JTR_BAR_CLOSE");
-        checkAndClick(cancelButton);
-        return;
-    }
-}
+//     frame = document.getElementById("OUTFOX_JTR_BAR");
+//     if (frame !== null && frame !== undefined) {
+//         let cancelButton = frame.contentDocument.getElementById("OUTFOX_JTR_BAR_CLOSE");
+//         checkAndClick(cancelButton);
+//         return;
+//     }
+// }
 
 /**
  * get selected text and its position in the page
@@ -382,9 +382,9 @@ Messager.receive("content", message => {
                 case "pronounce_selected":
                     pronounceSubmit();
                     break;
-                case "cancel_page_translate":
-                    cancelPageTranslate();
-                    break;
+                // case "cancel_page_translate":
+                //     cancelPageTranslate();
+                //     break;
                 default:
                     break;
             }
