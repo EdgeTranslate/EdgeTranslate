@@ -286,11 +286,27 @@ async function showPanel(content, template) {
  * @param {Object} sender 返送消息者的具体信息 如果sender是content module，会有tab属性，如果是background，则没有tab属性
  */
 Messager.receive("content", message => {
-    // Check message timestamp.
+    /**
+     * Check message timestamp.
+     *
+     * translateResult keeps the latest(biggest) timestamp ever received.
+     */
     if (translateResult.timestamp && message.detail.timestamp) {
+        /**
+         * When a new message with timestamp arrived, we check if the timestamp stored in translateResult
+         * is bigger than the timestamp of the arriving message.
+         */
         if (translateResult.timestamp > message.detail.timestamp) {
+            /**
+             * If it does, which means the corresponding translating request is out of date, we drop the
+             * message.
+             */
             return Promise.resolve();
         } else {
+            /**
+             * If it doesn't, which means the corresponding translating request is up to date, we update
+             * the timestamp stored in translateResult and accept the message.
+             */
             translateResult.timestamp = message.detail.timestamp;
         }
     }

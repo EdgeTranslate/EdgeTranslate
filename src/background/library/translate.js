@@ -117,11 +117,22 @@ class TranslatorManager {
         // Check config.
         await this.loadConfigIfNotLoaded();
 
+        /**
+         * Get current time as timestamp.
+         *
+         * Timestamp is used for preventing disordered translating message to disturb user.
+         *
+         * Every translating request has a unique timestamp and every message from that translating
+         * request will be assigned with the timestamp. About usage of the timestamp, please refer
+         * to display.js.
+         */
+        let timestamp = new Date().getTime();
+
         // Trigger translating start event.
         EVENT_MANAGER.triggerEvent(EVENT_MANAGER.EVENTS.TRANSLATE_START, {
             text: text,
             position: position,
-            timestamp: new Date().getTime()
+            timestamp: timestamp
         });
 
         let sl = this.LANGUAGE_SETTING.sl,
@@ -153,13 +164,13 @@ class TranslatorManager {
             EVENT_MANAGER.triggerEvent(EVENT_MANAGER.EVENTS.TRANSLATE_FINISHED, {
                 content: result,
                 tab: tab,
-                timestamp: new Date().getTime()
+                timestamp: timestamp
             });
         } catch (error) {
             // Trigger translating error event.
             EVENT_MANAGER.triggerEvent(EVENT_MANAGER.EVENTS.TRANSLATE_ERROR, {
                 error: error,
-                timestamp: new Date().getTime()
+                timestamp: timestamp
             });
         }
     }
