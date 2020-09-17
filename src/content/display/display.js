@@ -660,7 +660,7 @@ function fixOn() {
     chrome.storage.sync.set({
         fixSetting: true
     });
-    shadowDom.getElementById("icon-tuding-full").style.display = "inline";
+    shadowDom.getElementById("icon-tuding-full").style.display = "block";
     shadowDom.getElementById("icon-tuding-fix").style.display = "none";
     document.documentElement.removeEventListener("mousedown", clickListener);
 }
@@ -673,7 +673,7 @@ function fixOff() {
         fixSetting: false
     });
     shadowDom.getElementById("icon-tuding-full").style.display = "none";
-    shadowDom.getElementById("icon-tuding-fix").style.display = "inline";
+    shadowDom.getElementById("icon-tuding-fix").style.display = "block";
     document.documentElement.addEventListener("mousedown", clickListener);
 }
 

@@ -3,7 +3,7 @@
 /**
  * start content style
  */
-.translate {		
+#edge-translate-result {		
 	box-sizing: border-box;
 	padding: 5% 10%;
 	font-weight: medium;
@@ -38,7 +38,7 @@
 			margin: 0;
 		}
 
-		.icon-copy {												
+		#icon-copy {												
 			font-size: x-large;
 			fill: lightgray;
 			display: flex;
@@ -122,7 +122,7 @@
 
 	.common-meanings {
 		.common-meanings-content {
-			@extend .translate .phonetic-symbol .phonetic-symbol-content;
+			@extend #edge-translate-result .phonetic-symbol .phonetic-symbol-content;
 		}
 	}
 
@@ -140,7 +140,7 @@
 	}
 
 	.definitions {
-		@extend .translate .detailed-meanings;
+		@extend #edge-translate-result .detailed-meanings;
 
 		.definitions-content {
 			display: block;
@@ -150,12 +150,12 @@
 	}
 
 	.synonyms {
-		@extend .translate .detailed-meanings;
+		@extend #edge-translate-result .detailed-meanings;
 	}
 
 	.phrases {
 		.phrases {
-			@extend .translate .phonetic-symbol .phonetic-symbol-content;
+			@extend #edge-translate-result .phonetic-symbol .phonetic-symbol-content;
 		}
 	}
 
