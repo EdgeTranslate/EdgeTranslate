@@ -1,6 +1,5 @@
 import {
     TRANSLATOR_MANAGER,
-    showTranslate,
     translatePage,
     youdaoPageTranslate,
     executeYouDaoScript,
@@ -303,9 +302,7 @@ chrome.contextMenus.onClicked.addListener(function(info, tab) {
                     if (!text && info.selectionText.trim()) {
                         text = info.selectionText;
                     }
-                    TRANSLATOR_MANAGER.translate(text, position).then(result =>
-                        showTranslate(result, tab)
-                    );
+                    return TRANSLATOR_MANAGER.translate(text, position, tab);
                 })
                 .catch(() => {});
             break;
@@ -381,13 +378,8 @@ async function messageHandler(message, sender) {
         case "redirect":
             chrome.tabs.update(sender.tab.id, { url: message.detail.url });
             return Promise.resolve();
-        case "translate": {
-            let result = await TRANSLATOR_MANAGER.translate(
-                message.detail.text,
-                message.detail.position
-            );
-            return await showTranslate(result, sender.tab);
-        }
+        case "translate":
+            return TRANSLATOR_MANAGER.translate(message.detail.text, message.detail.position);
         case "pronounce": {
             let speed = message.detail.speed;
             if (!speed) {

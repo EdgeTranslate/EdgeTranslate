@@ -3,6 +3,7 @@ import HYBRID_TRANSLATOR from "./translators/hybrid.js";
 import { sendMessageToCurrentTab } from "./common.js";
 import { log } from "../../common/scripts/common.js";
 import Messager from "../../common/scripts/messager.js";
+import EVENT_MANAGER from "./event.js";
 
 class TranslatorManager {
     constructor() {
@@ -95,13 +96,7 @@ class TranslatorManager {
         // Check config.
         await this.loadConfigIfNotLoaded();
 
-        return this.TRANSLATORS[this.DEFAULT_TRANSLATOR].detect(text).catch(error => {
-            sendMessageToCurrentTab("info", {
-                info: "network_error",
-                error: error,
-                timestamp: new Date().getTime()
-            }).catch(e => log(e));
-        });
+        return this.TRANSLATORS[this.DEFAULT_TRANSLATOR].detect(text);
     }
 
     /**
@@ -114,24 +109,20 @@ class TranslatorManager {
      *
      * @param {String} text original text to be translated
      * @param {Array<Number>} position position of the text
+     * @param {chrome.tabs.Tab} tab tab where the text from
      *
      * @returns {Promise<Object>} translate result Promise
      */
-    async translate(text, position) {
+    async translate(text, position, tab = null) {
         // Check config.
         await this.loadConfigIfNotLoaded();
 
-        // Get time stamp for this translating.
-        let timestamp = new Date().getTime();
-
-        // Tell display part translating start.
-        sendMessageToCurrentTab("info", {
-            info: "start_translating",
-            // Send translating text back to content scripts.
+        // Trigger translating start event.
+        EVENT_MANAGER.triggerEvent(EVENT_MANAGER.EVENTS.TRANSLATE_START, {
             text: text,
             position: position,
-            timestamp: timestamp
-        }).catch(error => log(error));
+            timestamp: new Date().getTime()
+        });
 
         let sl = this.LANGUAGE_SETTING.sl,
             tl = this.LANGUAGE_SETTING.tl;
@@ -157,15 +148,19 @@ class TranslatorManager {
             let result = await this.TRANSLATORS[this.DEFAULT_TRANSLATOR].translate(text, sl, tl);
             result.sourceLanguage = sl;
             result.targetLanguage = tl;
-            result.timestamp = timestamp;
-            return result;
+
+            // Trigger translating finished event.
+            EVENT_MANAGER.triggerEvent(EVENT_MANAGER.EVENTS.TRANSLATE_FINISHED, {
+                content: result,
+                tab: tab,
+                timestamp: new Date().getTime()
+            });
         } catch (error) {
-            sendMessageToCurrentTab("info", {
-                info: "network_error",
+            // Trigger translating error event.
+            EVENT_MANAGER.triggerEvent(EVENT_MANAGER.EVENTS.TRANSLATE_ERROR, {
                 error: error,
-                timestamp: timestamp
-            }).catch(e => log(e));
-            return error;
+                timestamp: new Date().getTime()
+            });
         }
     }
 
@@ -283,43 +278,6 @@ class TranslatorManager {
 const TRANSLATOR_MANAGER = new TranslatorManager();
 
 /**
- * 展示翻译结果。
- *
- * @param {Object} content 翻译结果
- * @param {Object} tab 展示翻译结果的页面
- *
- * @returns {Promise<Object>} show translate result Promise
- */
-async function showTranslate(content, tab) {
-    if (!content) {
-        return Promise.resolve();
-    }
-
-    try {
-        return await sendMessageToCurrentTab("translateResult", content, tab);
-    } catch (error) {
-        // Filter out tabs that are not file://.
-        if (!(error && error.tab && error.tab.url && error.tab.url.startsWith("file://"))) {
-            alert(content.mainMeaning);
-            log(error.error);
-            return Promise.resolve();
-        }
-
-        return checkAndRequestFileAccess()
-            .then(allowed => {
-                if (allowed) {
-                    // file:// access allowed but still can not access the tab.
-                    alert(content.mainMeaning);
-                }
-            })
-            .catch(() => {
-                alert(content.mainMeaning);
-                log("Permission denied.");
-            });
-    }
-}
-
-/**
  * 使用用户选定的网页翻译引擎翻译当前网页。
  */
 function translatePage() {
@@ -410,11 +368,84 @@ function checkAndRequestFileAccess() {
     });
 }
 
+/**
+ * 展示翻译结果。
+ *
+ * @param {Object} content 翻译结果
+ * @param {Object} tab 展示翻译结果的页面
+ *
+ * @returns {Promise<Object>} show translate result Promise
+ */
+async function showTranslate(content, tab) {
+    if (!content) {
+        return Promise.resolve();
+    }
+
+    try {
+        return await sendMessageToCurrentTab("translateResult", content, tab);
+    } catch (error) {
+        // Filter out tabs that are not file://.
+        if (!(error && error.tab && error.tab.url && error.tab.url.startsWith("file://"))) {
+            alert(content.mainMeaning);
+            log(error.error);
+            return Promise.resolve();
+        }
+
+        return checkAndRequestFileAccess()
+            .then(allowed => {
+                if (allowed) {
+                    // file:// access allowed but still can not access the tab.
+                    alert(content.mainMeaning);
+                }
+            })
+            .catch(() => {
+                alert(content.mainMeaning);
+                log("Permission denied.");
+            });
+    }
+}
+
 /* INNER OBJECTS AND FUNCTIONS END */
+
+/**
+ * Tell display that translating started.
+ */
+EVENT_MANAGER.addEventListener(EVENT_MANAGER.EVENTS.TRANSLATE_START, detail => {
+    sendMessageToCurrentTab("info", {
+        info: "start_translating",
+        // Send translating text back to content scripts.
+        text: detail.text,
+        position: detail.position,
+        timestamp: detail.timestamp
+    }).catch(error => log(error));
+});
+
+/**
+ * Send translating result to display.
+ */
+EVENT_MANAGER.addEventListener(EVENT_MANAGER.EVENTS.TRANSLATE_FINISHED, detail => {
+    showTranslate(
+        {
+            timestamp: detail.timestamp,
+            ...detail.content
+        },
+        detail.tab
+    );
+});
+
+/**
+ * Tell display translating error.
+ */
+EVENT_MANAGER.addEventListener(EVENT_MANAGER.EVENTS.TRANSLATE_ERROR, detail => {
+    sendMessageToCurrentTab("info", {
+        info: "network_error",
+        error: detail.error,
+        timestamp: detail.timestamp
+    }).catch(error => log(error));
+});
 
 export {
     TRANSLATOR_MANAGER,
-    showTranslate,
     translatePage,
     youdaoPageTranslate,
     executeYouDaoScript,
