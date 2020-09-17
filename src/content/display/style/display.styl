@@ -23,22 +23,26 @@
 	overflow: visible;
 }
 
-#panel-head{		 
+#edge-translate-panel-head{		 
 	padding: 2%;
 	display: flex;
 	justify-content: space-between;
-	align-items: center;
+	justify-items: center;
 	background: light-primary;
 	flex-grow: 0;
 	flex-shrink: 0;
 	overflow: hidden;	
 
-	.icon{
+	.edge-translate-icon{
 		fill: white;
 
 		:hover {
 			fill: #ddd;
 		}
+	}
+
+	.icon-fix{    
+		display: none;
 	}
 
 	#heading-icon{
@@ -74,7 +78,7 @@
 	}	
 }
 
-#panel-body{	
+#edge-translate-panel-body{	
 	overflow-x: hidden;
 	overflow-y: scroll;		
 	overscroll-behavior: contain;
@@ -82,7 +86,7 @@
 	flex-shrink: 1;		
 }
 
-#panel-highlight{
+#edge-translate-panel-highlight{
 	height: 100%;
 	background: color-primary;
 	opacity: 0.3;

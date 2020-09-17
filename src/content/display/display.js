@@ -83,7 +83,7 @@ window.onload = () => {
     // the first child element of shadow dom. It contains all of the panel content elements
     resultPanel = shadowDom.firstChild;
     // store the panel body element
-    bodyPanel = shadowDom.getElementById("panel-body");
+    bodyPanel = shadowDom.getElementById("edge-translate-panel-body");
 
     /* set attributes of elements */
     resultPanel.style.backgroundColor = "white"; // set style dynamically to be compatible with chrome extension "Dark Reader"
@@ -138,7 +138,10 @@ window.onload = () => {
                 const path =
                     inputEvent.path || (inputEvent.composedPath && inputEvent.composedPath());
                 // if drag element isn't the head element, stop the drag event
-                if (!path || !shadowDom.getElementById("panel-head").isSameNode(path[0])) {
+                if (
+                    !path ||
+                    !shadowDom.getElementById("edge-translate-panel-head").isSameNode(path[0])
+                ) {
                     stop();
                     return;
                 }
@@ -363,8 +366,8 @@ Messager.receive("content", message => {
  */
 function showFloatingPanel() {
     /* set border radius for the floating type result panel */
-    shadowDom.getElementById("panel-head").style["border-radius"] = "6px 6px 0 0";
-    shadowDom.getElementById("panel-body").style["border-radius"] = "0 0 6px 6px";
+    shadowDom.getElementById("edge-translate-panel-head").style["border-radius"] = "6px 6px 0 0";
+    shadowDom.getElementById("edge-translate-panel-body").style["border-radius"] = "0 0 6px 6px";
     moveablePanel.request("resizable", {
         width: displaySetting.floatingData.width * window.innerWidth,
         height: displaySetting.floatingData.height * window.innerHeight
@@ -415,8 +418,8 @@ function showFixedPanel() {
     });
 
     /* cancel the border radius of the fixed type result panel */
-    shadowDom.getElementById("panel-head").style["border-radius"] = "";
-    shadowDom.getElementById("panel-body").style["border-radius"] = "";
+    shadowDom.getElementById("edge-translate-panel-head").style["border-radius"] = "";
+    shadowDom.getElementById("edge-translate-panel-body").style["border-radius"] = "";
 }
 
 /**
@@ -448,7 +451,7 @@ function showHighlightPart(position) {
         // the element is not existed, create one
         else {
             highlightPart = document.createElement("div");
-            highlightPart.id = "panel-highlight";
+            highlightPart.id = "edge-translate-panel-highlight";
             shadowDom.appendChild(highlightPart);
             showHighlightPart(position);
         }
@@ -660,7 +663,7 @@ function fixOn() {
     chrome.storage.sync.set({
         fixSetting: true
     });
-    shadowDom.getElementById("icon-tuding-full").style.display = "inline";
+    shadowDom.getElementById("icon-tuding-full").style.display = "block";
     shadowDom.getElementById("icon-tuding-fix").style.display = "none";
     document.documentElement.removeEventListener("mousedown", clickListener);
 }
@@ -673,7 +676,7 @@ function fixOff() {
         fixSetting: false
     });
     shadowDom.getElementById("icon-tuding-full").style.display = "none";
-    shadowDom.getElementById("icon-tuding-fix").style.display = "inline";
+    shadowDom.getElementById("icon-tuding-fix").style.display = "block";
     document.documentElement.addEventListener("mousedown", clickListener);
 }
 
