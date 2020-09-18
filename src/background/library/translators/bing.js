@@ -284,6 +284,7 @@ class BingTranslator {
 
             let translations = result[0].translations;
             parsed.mainMeaning = translations[0].displayTarget;
+            parsed.tPronunciation = translations[0].transliteration;
 
             let detailedMeanings = [];
             for (let i in translations) {

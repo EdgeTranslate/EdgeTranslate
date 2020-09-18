@@ -150,62 +150,33 @@ class HybridTranslator {
      * @returns {Promise<Object>} result Promise
      */
     async translate(text, from, to) {
-        /**
-         * Check config firstly.
-         */
+        // Check config firstly.
         await this.loadConfigIfNotLoaded();
 
-        return new Promise((resolve, reject) => {
-            let count = 0;
-            let results = {};
-            let config = this.CONFIG;
-            /**
-             * Receive results from different translators.
-             *
-             * This function will be called for several times to collect all results from
-             * selected translators.
-             *
-             * @param {String} translator translator used
-             * @param {Object} result result from the translator
-             *
-             * @returns {void} nothing
-             */
-            let receive = (translator, result) => {
-                count++;
-                results[translator] = result;
-
-                // Check if all results have been collected.
-                if (count >= config.translators.length) {
-                    let translation = {};
-                    for (let item in config.selections) {
-                        try {
-                            let selectedTranslator = config.selections[item];
-                            translation[item] = results[selectedTranslator][item];
-                        } catch (error) {
-                            log(item + " " + config.selections[item]);
-                            log(error);
-                        }
-                    }
-                    resolve(translation);
-                }
-            };
-
-            // Initiate translation requests.
-            let errorEncountered = false;
-            for (let translator of config.translators) {
-                // Break if error encountered.
-                if (errorEncountered) break;
-
-                // Translate with a translator.
+        // Initiate translation requests.
+        let requests = [];
+        for (let translator of this.CONFIG.translators) {
+            // Translate with a translator.
+            requests.push(
                 this.REAL_TRANSLATORS[translator]
                     .translate(text, from, to)
-                    .then(result => receive(translator, result))
-                    .catch(error => {
-                        errorEncountered = true;
-                        reject(error);
-                    });
+                    .then(result => [translator, result])
+            );
+        }
+
+        // Combine all results.
+        let translation = {};
+        let results = new Map(await Promise.all(requests));
+        for (let item in this.CONFIG.selections) {
+            try {
+                let selectedTranslator = this.CONFIG.selections[item];
+                translation[item] = results.get(selectedTranslator)[item];
+            } catch (error) {
+                log(item + " " + this.CONFIG.selections[item]);
+                log(error);
             }
-        });
+        }
+        return translation;
     }
 
     /**
