@@ -42,18 +42,21 @@ class HybridTranslator {
      */
     loadConfigIfNotLoaded() {
         return new Promise((resolve, reject) => {
-            if (!(this.CONFIG.translators && this.CONFIG.selections)) {
-                chrome.storage.sync.get("HybridTranslatorConfig", res => {
-                    if (chrome.runtime.lastError) {
-                        reject(chrome.runtime.lastError);
-                        return;
-                    }
+            if (this.CONFIG.translators && this.CONFIG.selections) {
+                resolve();
+                return;
+            }
 
-                    this.CONFIG = res.HybridTranslatorConfig;
-                    this.MAIN_TRANSLATOR = this.CONFIG.selections.mainMeaning;
-                    resolve();
-                });
-            } else resolve();
+            chrome.storage.sync.get("HybridTranslatorConfig", res => {
+                if (chrome.runtime.lastError) {
+                    reject(chrome.runtime.lastError);
+                    return;
+                }
+
+                this.CONFIG = res.HybridTranslatorConfig;
+                this.MAIN_TRANSLATOR = this.CONFIG.selections.mainMeaning;
+                resolve();
+            });
         });
     }
 
