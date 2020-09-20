@@ -588,6 +588,10 @@ function addHeadEventListener() {
     // 给固定侧边栏的按钮添加点击事件监听，用户侧边栏的固定与取消固定
     shadowDom.getElementById("icon-tuding-fix").addEventListener("click", fixOn);
     shadowDom.getElementById("icon-tuding-full").addEventListener("click", fixOff);
+    // Open options page.
+    shadowDom
+        .getElementById("icon-edge-translate-options")
+        .addEventListener("click", openOptionsPage);
     // 给点击侧边栏之外区域事件添加监听，点击侧边栏之外的部分就会让侧边栏关闭
     chrome.storage.sync.get("fixSetting", function(result) {
         if (!result.fixSetting) {
@@ -694,6 +698,13 @@ function fixOff() {
     shadowDom.getElementById("icon-tuding-full").style.display = "none";
     shadowDom.getElementById("icon-tuding-fix").style.display = "block";
     document.documentElement.addEventListener("mousedown", clickListener);
+}
+
+/**
+ * Open options page.
+ */
+function openOptionsPage() {
+    Messager.send("background", "open_options_page", {});
 }
 
 /**
