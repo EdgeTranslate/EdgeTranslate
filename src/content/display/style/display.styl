@@ -6,92 +6,92 @@
  * style of translation result panel
  */
 
-#edge-translate-panel{	
-	min-width: 100px;	
-	min-height: 150px;	
-    position: fixed;	
-    top: 0;    
-    box-sizing: border-box;    
-    z-index: 10000000;        
-	display: flex;		
-	flex-direction: column;
-	flex-wrap: nowrap;
-	justify-content: flex-start;
-	align-items: stretch;	
-	
-	border-radius: 6px;
-	overflow: visible;
+#edge-translate-panel{
+    min-width: 100px;
+    min-height: 150px;
+    position: fixed;
+    top: 0;
+    box-sizing: border-box;
+    z-index: 10000000;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: stretch;
+
+    border-radius: 6px;
+    overflow: visible;
 }
 
-#edge-translate-panel-head{		 
-	padding: 2%;
-	display: flex;
-	justify-content: space-between;
-	justify-items: center;
-	background: light-primary;
-	flex-grow: 0;
-	flex-shrink: 0;
-	overflow: hidden;	
+#edge-translate-panel-head{
+    padding: 2%;
+    display: flex;
+    justify-content: space-between;
+    justify-items: center;
+    background: light-primary;
+    flex-grow: 0;
+    flex-shrink: 0;
+    overflow: hidden;
 
-	.edge-translate-icon{
-		fill: white;
+    .edge-translate-icon{
+        fill: white;
 
-		:hover {
-			fill: #ddd;
-		}
-	}
+        :hover {
+            fill: #ddd;
+        }
+    }
 
-	.icon-fix{    
-		display: none;
-	}
+    .icon-fix{
+        display: none;
+    }
 
-	#heading-icon{
-		display: flex;
-		justify-content: space-around;
-		justify-items: center;		
-	}
+    #heading-icon{
+        display: flex;
+        justify-content: space-around;
+        justify-items: center;
+    }
 
-	#translators{		
-		box-sizing: border-box;
-		font-size: medium;
-		max-width: 45%;
-		height: 90%;	
-		flex-shrink: 5;
-		flex-grow: 0;
-		background: rgba(74,140,247,0.5);
-		color: white;
-		border: none;
-		border-radius: 3px;	
-		outline: none !important;	
-		-webkit-appearance:none;
+    #translators{
+        box-sizing: border-box;
+        font-size: medium;
+        max-width: 45%;
+        height: 90%;
+        flex-shrink: 5;
+        flex-grow: 0;
+        background: rgba(74,140,247,0.5);
+        color: white;
+        border: none;
+        border-radius: 3px;
+        outline: none !important;
+        -webkit-appearance:none;
         -moz-appearance:none;
         appearance:none;
-		margin: 2px;
+        margin: 2px;
 
-		option{
-			background: white;
-			color: color-primary;
-		}	
-	}
+        option{
+            background: white;
+            color: color-primary;
+        }
+    }
 
-	&:hover{
-		cursor: grabbing;
-	}	
+    &:hover{
+        cursor: grabbing;
+    }
 }
 
-#edge-translate-panel-body{	
-	overflow-x: hidden;
-	overflow-y: scroll;		
-	overscroll-behavior: contain;
-	flex-grow: 1;
-	flex-shrink: 1;		
+#edge-translate-panel-body{
+    overflow-x: hidden;
+    overflow-y: scroll;
+    overscroll-behavior: contain;
+    flex-grow: 1;
+    flex-shrink: 1;
 }
 
 #edge-translate-panel-highlight{
-	height: 100%;
-	background: color-primary;
-	opacity: 0.3;
-	position: fixed;
-	top: 0;
-	z-index: 10000000;
+    height: 100%;
+    background: color-primary;
+    opacity: 0.3;
+    position: fixed;
+    top: 0;
+    z-index: 10000000;
 }
