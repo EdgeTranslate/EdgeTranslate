@@ -19,6 +19,10 @@
         "message": "結果フレームを修正",
         "description": "翻訳結果のフレームを修正する。"
     },
+    "UnfixResultFrame": {
+        "message": "Unfix the result frame",
+        "description": "Unfix the translating result frame."
+    },
     "CloseResultFrame": {
         "message": "結果フレームを閉じる",
         "description": "翻訳結果のフレームを閉じる。"

@@ -226,27 +226,18 @@ class BingTranslator {
     /**
      * Get IG and IID for urls.
      *
-     * @returns {Promise} IG and IID Promise
+     * @returns {Promise<void>} IG and IID Promise
      */
-    updateIGIID() {
-        return new Promise((resolve, reject) => {
-            axios
-                .get(this.HOME_PAGE)
-                .then(response => {
-                    this.IG = response.data.match(/IG:"([a-zA-Z0-9]+)"/)[1];
+    async updateIGIID() {
+        const response = await axios.get(this.HOME_PAGE);
 
-                    let html = this.HTMLParser.parseFromString(response.data, "text/html");
-                    this.IID = html.getElementById("rich_tta").getAttribute("data-iid");
+        this.IG = response.data.match(/IG:"([a-zA-Z0-9]+)"/)[1];
 
-                    // Reset request count.
-                    this.count = 0;
+        let html = this.HTMLParser.parseFromString(response.data, "text/html");
+        this.IID = html.getElementById("rich_tta").getAttribute("data-iid");
 
-                    resolve();
-                })
-                .catch(error => {
-                    reject(error);
-                });
-        });
+        // Reset request count.
+        this.count = 0;
     }
 
     /**
@@ -284,6 +275,7 @@ class BingTranslator {
 
             let translations = result[0].translations;
             parsed.mainMeaning = translations[0].displayTarget;
+            parsed.tPronunciation = translations[0].transliteration;
 
             let detailedMeanings = [];
             for (let i in translations) {
@@ -309,10 +301,10 @@ class BingTranslator {
     /**
      * Get TTS auth token.
      *
-     * @returns {Promise<Object>} Promise of auth data
+     * @returns {Promise<void>} request finished Promise
      */
-    updateTTSAuth() {
-        return this.request({
+    async updateTTSAuth() {
+        const response = await this.request({
             method: "POST",
             baseURL: this.HOST,
             url:
@@ -324,10 +316,10 @@ class BingTranslator {
                 this.count.toString(),
             headers: this.HEADERS,
             data: ""
-        }).then(response => {
-            this.TTS_AUTH.region = response.region;
-            this.TTS_AUTH.token = response.token;
         });
+
+        this.TTS_AUTH.region = response.region;
+        this.TTS_AUTH.token = response.token;
     }
 
     /**
@@ -391,28 +383,23 @@ class BingTranslator {
      */
     async request(params, retry = true) {
         let retryCount = 0;
-        let requestOnce = () => {
-            return new Promise((resolve, reject) => {
-                this.count++;
-                axios(params)
-                    .then(response => {
-                        // response.data.statusCode will indicate the info of error when error encountered
-                        if (response.data.statusCode && response.data.statusCode > 299) {
-                            // Retry after failure
-                            if (retry && retryCount < this.MAX_RETRY) {
-                                retryCount++;
-                                resolve(this.updateIGIID().then(requestOnce));
-                            } else {
-                                reject({ response: response });
-                            }
-                        } else {
-                            resolve(response.data);
-                        }
-                    })
-                    .catch(error => {
-                        reject(error);
-                    });
-            });
+        let requestOnce = async () => {
+            this.count++;
+            const response = await axios(params);
+
+            // response.data.statusCode will indicate the info of error when error encountered
+            if (!response.data.statusCode || response.data.statusCode < 300) {
+                return response.data;
+            }
+
+            // Retry after failure
+            if (retry && retryCount < this.MAX_RETRY) {
+                retryCount++;
+                return await this.updateIGIID().then(requestOnce);
+            }
+
+            // Throw error.
+            throw { response: response };
         };
 
         if (!(this.IG.length > 0 && this.IID.length > 0)) {
@@ -475,70 +462,56 @@ class BingTranslator {
      *
      * @returns {Promise<Object>} translation Promise
      */
-    translate(text, from, to) {
-        let translateURL =
-                "ttranslatev3?isVertical=1&IG=" +
-                this.IG +
-                "&IID=" +
-                this.IID +
-                "." +
-                this.count.toString(),
-            translateData =
-                "&fromLang=" +
-                this.LAN_TO_CODE.get(from) +
-                "&to=" +
-                this.LAN_TO_CODE.get(to) +
-                "&text=" +
-                encodeURIComponent(text);
+    async translate(text, from, to) {
+        /**
+         * Request the translate api to detect the language of the text and get a basic translation.
+         */
+        let translateURL = `ttranslatev3?isVertical=1&IG=${this.IG}&IID=${
+                this.IID
+            }.${this.count.toString()}`,
+            translateData = `&fromLang=${this.LAN_TO_CODE.get(from)}&to=${this.LAN_TO_CODE.get(
+                to
+            )}&text=${encodeURIComponent(text)}`;
 
-        return (
-            // Request the translate API firstly.
-            this.request({
-                method: "POST",
-                baseURL: this.HOST,
-                url: translateURL,
-                headers: this.HEADERS,
-                data: translateData
-            }).then(async transResponse => {
-                let lookupURL =
-                        "tlookupv3?isVertical=1&IG=" +
-                        this.IG +
-                        "&IID=" +
-                        this.IID +
-                        "." +
-                        this.count.toString(),
-                    lookupData =
-                        "&from=" +
-                        // Use detected language.
-                        transResponse[0].detectedLanguage.language +
-                        "&to=" +
-                        this.LAN_TO_CODE.get(to) +
-                        "&text=" +
-                        encodeURIComponent(text);
+        const transResponse = await this.request({
+            method: "POST",
+            baseURL: this.HOST,
+            url: translateURL,
+            headers: this.HEADERS,
+            data: translateData
+        });
 
-                // Set up originalText in case that lookup failed.
-                let transResult = this.parseTranslateResult(transResponse, {
-                    originalText: text
-                });
+        // Set up originalText in case that lookup failed.
+        let transResult = this.parseTranslateResult(transResponse, {
+            originalText: text
+        });
 
-                try {
-                    // Attempt to request the lookup API for detailed translation.
-                    const lookupResponse = await this.request(
-                        {
-                            method: "POST",
-                            baseURL: this.HOST,
-                            url: lookupURL,
-                            headers: this.HEADERS,
-                            data: lookupData
-                        },
-                        false
-                    );
-                    return this.parseLookupResult(lookupResponse, transResult);
-                } catch (e) {
-                    return transResult;
-                }
-            })
-        );
+        /**
+         * Attempt to request the lookup api to get detailed translation.
+         */
+        let lookupURL = `tlookupv3?isVertical=1&IG=${this.IG}&IID=${
+                this.IID
+            }.${this.count.toString()}`,
+            lookupData = `&from=${
+                // Use detected language.
+                transResponse[0].detectedLanguage.language
+            }&to=${this.LAN_TO_CODE.get(to)}&text=${encodeURIComponent(text)}`;
+
+        try {
+            const lookupResponse = await this.request(
+                {
+                    method: "POST",
+                    baseURL: this.HOST,
+                    url: lookupURL,
+                    headers: this.HEADERS,
+                    data: lookupData
+                },
+                false
+            );
+            return this.parseLookupResult(lookupResponse, transResult);
+        } catch (e) {
+            return transResult;
+        }
     }
 
     /**

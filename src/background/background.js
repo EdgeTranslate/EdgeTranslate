@@ -1,6 +1,5 @@
 import {
-    TRANSLATOR_MANAGER,
-    showTranslate
+    TRANSLATOR_MANAGER
     // translatePage,
     // youdaoPageTranslate,
     // executeYouDaoScript,
@@ -298,16 +297,18 @@ chrome.contextMenus.onClicked.addListener(function(info, tab) {
         case "translate":
             sendMessageToCurrentTab("get_selection", {})
                 .then(({ selectedText, position }) => {
-                    let text = selectedText;
-                    // If content scripts can not access the selection, use info.selectionText instead.
-                    if (!text && info.selectionText.trim()) {
-                        text = info.selectionText;
+                    if (selectedText) {
+                        return TRANSLATOR_MANAGER.translate(selectedText, position, tab);
                     }
-                    TRANSLATOR_MANAGER.translate(text, position).then(result =>
-                        showTranslate(result, tab)
-                    );
+                    return Promise.reject();
                 })
-                .catch(() => {});
+                .catch(error => {
+                    // If content scripts can not access the tab the selection, use info.selectionText instead.
+                    if (info.selectionText.trim()) {
+                        return TRANSLATOR_MANAGER.translate(info.selectionText, null, tab);
+                    }
+                    return Promise.resolve(error);
+                });
             break;
         case "pronounce":
             TRANSLATOR_MANAGER.pronounce(info.selectionText, "auto", selectedTTSSpeed);
@@ -381,13 +382,8 @@ async function messageHandler(message, sender) {
         case "redirect":
             chrome.tabs.update(sender.tab.id, { url: message.detail.url });
             return Promise.resolve();
-        case "translate": {
-            let result = await TRANSLATOR_MANAGER.translate(
-                message.detail.text,
-                message.detail.position
-            );
-            return await showTranslate(result, sender.tab);
-        }
+        case "translate":
+            return TRANSLATOR_MANAGER.translate(message.detail.text, message.detail.position);
         case "pronounce": {
             let speed = message.detail.speed;
             if (!speed) {
@@ -425,6 +421,9 @@ async function messageHandler(message, sender) {
             return TRANSLATOR_MANAGER.getAvailableTranslators(message.detail);
         case "update_default_translator":
             return TRANSLATOR_MANAGER.updateDefaultTranslator(message.detail.translator);
+        case "open_options_page":
+            chrome.tabs.create({ url: chrome.runtime.getURL("options/options.html") });
+            return Promise.resolve();
         default:
             log("Unknown message title: " + message.title);
             return Promise.reject();

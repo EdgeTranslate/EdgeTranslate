@@ -7,7 +7,7 @@ image-size = 20px;
     height: image-size;
     padding: 0.4%;
     margin: 0;
-    position: fixed;          
+    position: fixed;
     display: none;
     box-shadow: 0px 0px 2px 2px #ddd;
     cursor: pointer;
@@ -18,20 +18,20 @@ image-size = 20px;
     transition: box-shadow 200ms ease-in-out,transform 300ms ease; // set transtition effect when hover occurs
     animation: fade-in 300ms ease-in-out; // set fade-in animation on selection icon
 
-    &&:hover    
-        box-shadow: 0px 0px 8px 3px #bbb;  
-        transform: rotate(180deg);   
-    
+    &&:hover
+        box-shadow: 0px 0px 8px 3px #bbb;
+        transform: rotate(180deg);
+
     img
         width: image-size;
         height: image-size;
         padding: 0;
-        border: 0; 
-        margin: 0;    
-        vertical-align: top; // fix the style problem in some websites                      
-               
-    
-    @keyframes fade-in{  
+        border: 0;
+        margin: 0;
+        vertical-align: top; // fix the style problem in some websites
+
+
+    @keyframes fade-in{
         0%{ opacity: 0;}
         100%{ opacity: 1;}
     }

@@ -19,6 +19,10 @@
         "message": "Зафиксировать рамку результата",
         "description": "Фиксация рамки результата перевода."
     },
+    "UnfixResultFrame": {
+        "message": "Unfix the result frame",
+        "description": "Unfix the translating result frame."
+    },
     "CloseResultFrame": {
         "message": "Закрыть рамку результата",
         "description": "Закрывать рамку результатов перевода."

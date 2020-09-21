@@ -3,167 +3,167 @@
 /**
  * start content style
  */
-#edge-translate-result {		
-	box-sizing: border-box;
-	padding: 5% 10%;
-	font-weight: medium;
-	font-size: medium;
-    position: relative;		
-	display: flex;
-	flex-direction: column;
-	align-items: flex-start;
+#edge-translate-result {
+    box-sizing: border-box;
+    padding: 5% 10%;
+    font-weight: medium;
+    font-size: medium;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 
-	.content-title { // 标题样式
-		color: gray;
-		font-size: larger;
-	}
+    .content-title { // 标题样式
+        color: gray;
+        font-size: larger;
+    }
 
-	ul, .list li {
-		list-style-type: none;
-	}
+    ul, .list li {
+        list-style-type: none;
+    }
 
-	.main-meaning {
-		width: 100%;		
-		padding: 0;
-		margin: 0;
-		display: flex;
-		flex-direction: row;
-		justify-content: space-between;
-		justify-items: flex-end;
+    .main-meaning {
+        width: 100%;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        justify-items: flex-end;
 
-		p{
-			flex-grow: 3;
-			flex-shrink: 1;
-			padding: 0;
-			margin: 0;
-		}
+        p{
+            flex-grow: 3;
+            flex-shrink: 1;
+            padding: 0;
+            margin: 0;
+        }
 
-		#icon-copy {												
-			font-size: x-large;
-			fill: lightgray;
-			display: flex;
-			flex-direction: column;
-			justify-content: center;	
+        #icon-copy {
+            font-size: x-large;
+            fill: lightgray;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
 
-			&:hover{
-				fill: gray;
-			}		   
-		}
+            &:hover{
+                fill: gray;
+            }
+        }
 
-		.main-meaning-content-larger {
-			font-size: 30px;
-			margin-bottom: 1%;
-		}
+        .main-meaning-content-larger {
+            font-size: 30px;
+            margin-bottom: 1%;
+        }
 
-		.main-meaning-content-large {
-			font-size: large;
-			margin-bottom: 1%;
-		}
+        .main-meaning-content-large {
+            font-size: large;
+            margin-bottom: 1%;
+        }
 
-		.main-meaning-content-small {
-			font-size: medium;
-			margin-bottom: 1%;
-		}
+        .main-meaning-content-small {
+            font-size: medium;
+            margin-bottom: 1%;
+        }
 
-		.main-meaning-content-smaller {
-			font-size: small;
-			margin-bottom: 1%;
-		}
-	}
+        .main-meaning-content-smaller {
+            font-size: small;
+            margin-bottom: 1%;
+        }
+    }
 
-	.target-phonetic-symbol {
-		width: 100%;
+    .target-phonetic-symbol {
+        width: 100%;
 
-		.target-phonetic-symbol-large {
-			font-size: large;
-			margin-top: 1%;
-		}
+        .target-phonetic-symbol-large {
+            font-size: large;
+            margin-top: 1%;
+        }
 
-		.target-phonetic-symbol-medium {
-			font-size: medium;
-			margin-top: 1%;
-		}
+        .target-phonetic-symbol-medium {
+            font-size: medium;
+            margin-top: 1%;
+        }
 
-		.target-phonetic-symbol-small {
-			font-size: small;
-			margin-top: 1%;
-		}
-	}
+        .target-phonetic-symbol-small {
+            font-size: small;
+            margin-top: 1%;
+        }
+    }
 
-	.pronounce{
-		width: 100%;	
+    .pronounce{
+        width: 100%;
 
-		.pronounce-item{
-			padding: 0;
-			display: flex;
-			justify-content: flex-start;
-			justify-items: center;					
-		}
+        .pronounce-item{
+            padding: 0;
+            display: flex;
+            justify-content: flex-start;
+            justify-items: center;
+        }
 
-		.icon-pronounce{						
-			padding: 0;
-			svg {				
-				fill: light-primary !important; 
+        .icon-pronounce{
+            padding: 0;
+            svg {
+                fill: light-primary !important;
 
-				&:hover{				
-					fill: orange !important;
-				}		
-			}			
-		}		
-	}
+                &:hover{
+                    fill: orange !important;
+                }
+            }
+        }
+    }
 
-	.phonetic-symbol {		
+    .phonetic-symbol {
 
-		.phonetic-symbol-content {			
-			font-weight: lighter;
-			margin-left: 12%;
-		}
-	}
+        .phonetic-symbol-content {
+            font-weight: lighter;
+            margin-left: 12%;
+        }
+    }
 
-	.common-meanings {
-		.common-meanings-content {
-			@extend #edge-translate-result .phonetic-symbol .phonetic-symbol-content;
-		}
-	}
+    .common-meanings {
+        .common-meanings-content {
+            @extend #edge-translate-result .phonetic-symbol .phonetic-symbol-content;
+        }
+    }
 
-	.detailed-meanings {
-		.word-type {
-			color: gray;
-			margin-left: 10%;
-		}
+    .detailed-meanings {
+        .word-type {
+            color: gray;
+            margin-left: 10%;
+        }
 
-		.content {
-			display: block;
-			margin-left: 15%;
-			font-weight: light;
-		}
-	}
+        .content {
+            display: block;
+            margin-left: 15%;
+            font-weight: light;
+        }
+    }
 
-	.definitions {
-		@extend #edge-translate-result .detailed-meanings;
+    .definitions {
+        @extend #edge-translate-result .detailed-meanings;
 
-		.definitions-content {
-			display: block;
-			margin-left: 5%;
-			font-weight: light;
-		}
-	}
+        .definitions-content {
+            display: block;
+            margin-left: 5%;
+            font-weight: light;
+        }
+    }
 
-	.synonyms {
-		@extend #edge-translate-result .detailed-meanings;
-	}
+    .synonyms {
+        @extend #edge-translate-result .detailed-meanings;
+    }
 
-	.phrases {
-		.phrases {
-			@extend #edge-translate-result .phonetic-symbol .phonetic-symbol-content;
-		}
-	}
+    .phrases {
+        .phrases {
+            @extend #edge-translate-result .phonetic-symbol .phonetic-symbol-content;
+        }
+    }
 
-	.examples {
-		.sentences {
-			font-weight: light;
-		}
-	}
+    .examples {
+        .sentences {
+            font-weight: light;
+        }
+    }
 }
 
 /**
