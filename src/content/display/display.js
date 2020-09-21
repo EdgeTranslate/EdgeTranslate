@@ -113,7 +113,7 @@ var documentBodyCSS;
         /* set threshold value to increase the resize area */
         // threshold: { s: 5, se: 5, e: 5, ne: 5, n: 5, nw: 5, w: 5, sw: 5 },
         // threshold: { edge:5, corner:5 },
-        threshold: 10,
+        threshold: 5,
         /**
          * set thresholdPosition to decide where the resizable area is
          * "in": the activated resizable area is within the target element
@@ -124,7 +124,7 @@ var documentBodyCSS;
         // thresholdPosition: "in",
         // thresholdPosition: "center",
         // thresholdPosition: "out",
-        thresholdPosition: 0.9
+        thresholdPosition: 0.7
     });
 
     let startTranslate = [0, 0];
