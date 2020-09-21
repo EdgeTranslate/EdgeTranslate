@@ -46,6 +46,8 @@
 
   If you want to make it side-fixed again, __drag the translation box to the right (left) until the mouse cursor reaches the border__ to make it side-fixed again.
 
+  See Figure 2 for demo (the gif file is large, wait a moment please).
+
 * __Q: What if the translation box is out of the interface and I can't see the translation?__
 
   If the floating translation box is out of the page and can't be dragged back, you can try to change the page zoom to make it back to the page, specific operations are: hold down the Ctrl key and roll the mouse wheel at the same time to adjust the page zoom.
@@ -53,3 +55,7 @@
 ### Figure 1: Allow Edge Translate to access file links
 
 ![grant_access](../../images/grant_access.gif)
+
+### Figure 2: Switch between floating mode and fixed mode
+
+![floating_fixed_switch](../../images/floating_fixed_switch.gif)
