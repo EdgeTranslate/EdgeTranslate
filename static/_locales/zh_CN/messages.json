@@ -19,6 +19,10 @@
         "message": "固定翻译结果展示栏框",
         "description": "固定翻译结果展示框"
     },
+    "UnfixResultFrame": {
+        "message": "取消固定翻译结果展示框",
+        "description": "取消固定翻译结果展示框"
+    },
     "CloseResultFrame": {
         "message": "关闭翻译结果展示框",
         "description": "关闭翻译结果展示框"
