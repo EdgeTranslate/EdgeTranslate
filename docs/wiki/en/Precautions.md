@@ -24,14 +24,31 @@
 
   __A:__ You can click the pin icon on the up right corner of the frame to fix it.
 
-* __Q: Why can't I install *.crx downloaded from the Releases page?__
-  __A:__ If your error message is "``Apps, Extensions and scripts cannot be added from this website.``", you may try these steps:
-  1. Open the url: ``chrome://flags/#extensions-on-chrome-urls`` in your chrome.
-  2. If "``Extensions on chrome:// URLs``" is disabled, enable it and relaunch your chrome.
-  3. Open the url: ``chrome://extensions/``.
-  4. Make sure to enable ``Developer mode``. If this was not enabled, refresh this page after enabling it.
-  5. Now you can try to drag and drop the *.crx file onto this page again.
+* __Q: Why can't I install the * .crx file I downloaded from the "Releases" page?__
 
+  __A:__ If your error message is "``Apps, extensions, and user scripts can not be added from this site``", try the following steps:
+
+  1. Open the url in Chrome: ``chrome://flags/#extensions-on-chrome-urls``.
+
+  2. If "``Extensions on chrome:// URLs``" is off, turn this switch on and restart chrome.
+
+  3. Open this url: ``chrome://extensions/``.
+
+  4. Make sure that ``Developer Mode`` is on. If the switch is off, turn it on and refresh the page. 5.
+
+  Now, you can try dragging and dropping the *.crx file onto this page again.
+
+* __Q: Why has the translation box become floating? How can I get it to change back to right (left) side fixed?__
+
+  __A:__ This is a new feature introduced in Edge Translate 2.0, which supports floating box display. When you move the mouse cursor to the blue area at the top of the translation box, you can drag the box by holding down the left mouse button.
+
+  When the translation box is fixed to the side, dragging the translation box will make it floating.
+
+  If you want to make it side-fixed again, __drag the translation box to the right (left) until the mouse cursor reaches the border__ to make it side-fixed again.
+
+* __Q: What if the translation box is out of the interface and I can't see the translation?__
+
+  If the floating translation box is out of the page and can't be dragged back, you can try to change the page zoom to make it back to the page, specific operations are: hold down the Ctrl key and roll the mouse wheel at the same time to adjust the page zoom.
 
 ### Figure 1: Allow Edge Translate to access file links
 
