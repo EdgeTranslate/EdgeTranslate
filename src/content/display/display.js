@@ -64,9 +64,6 @@ const transitionDuration = 500;
 var resizeFlag = false;
 // store original css text on document.body
 var documentBodyCSS;
-window.onload = () => {
-    documentBodyCSS = document.body.style.cssText;
-};
 
 /**
  * initiate panel elements to display translation result
@@ -403,6 +400,9 @@ function showFixedPanel() {
         resizeFlag = result.LayoutSettings.Resize;
         // user set to resize the document body
         if (resizeFlag) {
+            // store the original css text. when fixed panel is removed, restore the style of document.body
+            documentBodyCSS = document.body.style.cssText;
+
             document.body.style.position = "absolute";
             document.body.style.transition = `width ${transitionDuration}ms`;
             resultPanel.style.transition = `width ${transitionDuration}ms`;
