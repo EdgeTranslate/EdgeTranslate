@@ -1,6 +1,6 @@
 {
     "name": "edge_translate",
-    "version": "2.0.0",
+    "version": "2.0.2",
     "description": "A translator extension.",
     "keywords": [
         "Edge Translate",
@@ -60,7 +60,7 @@
         "prettier": "^1.19.1",
         "querystring": "^0.2.0",
         "raw-loader": "^0.5.1",
-        "webpack": "^4.44.1",
+        "webpack": "^4.44.2",
         "webpack-merge": "^4.2.2",
         "webpack-stream": "^5.2.1"
     },

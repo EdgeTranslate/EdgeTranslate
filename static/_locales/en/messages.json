@@ -19,6 +19,10 @@
         "message": "Fix the result frame",
         "description": "Fix the translating result frame."
     },
+    "UnfixResultFrame": {
+        "message": "Unfix the result frame",
+        "description": "Unfix the translating result frame."
+    },
     "CloseResultFrame": {
         "message": "Close the result frame",
         "description": "Close the translating result frame."

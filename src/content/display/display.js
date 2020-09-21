@@ -64,9 +64,6 @@ const transitionDuration = 500;
 var resizeFlag = false;
 // store original css text on document.body
 var documentBodyCSS;
-window.onload = () => {
-    documentBodyCSS = document.body.style.cssText;
-};
 
 /**
  * initiate panel elements to display translation result
@@ -116,7 +113,7 @@ window.onload = () => {
         /* set threshold value to increase the resize area */
         // threshold: { s: 5, se: 5, e: 5, ne: 5, n: 5, nw: 5, w: 5, sw: 5 },
         // threshold: { edge:5, corner:5 },
-        threshold: 10,
+        threshold: 5,
         /**
          * set thresholdPosition to decide where the resizable area is
          * "in": the activated resizable area is within the target element
@@ -127,7 +124,7 @@ window.onload = () => {
         // thresholdPosition: "in",
         // thresholdPosition: "center",
         // thresholdPosition: "out",
-        thresholdPosition: 0.9
+        thresholdPosition: 0.7
     });
 
     let startTranslate = [0, 0];
@@ -262,7 +259,9 @@ async function showPanel(content, template) {
                 }
                 // the result panel would exceeds the bottom boundary of the page
                 if (position[1] + height > window.innerHeight + threshold) {
-                    position[1] = position[1] - height - YBias + threshold;
+                    // make true the panel wouldn't exceed the top boundary
+                    let newPosition1 = position[1] - height - YBias + threshold;
+                    position[1] = newPosition1 < 0 ? 0 : newPosition1;
                 }
                 position = [position[0] + XBias, position[1] + YBias];
             } else
@@ -403,6 +402,9 @@ function showFixedPanel() {
         resizeFlag = result.LayoutSettings.Resize;
         // user set to resize the document body
         if (resizeFlag) {
+            // store the original css text. when fixed panel is removed, restore the style of document.body
+            documentBodyCSS = document.body.style.cssText;
+
             document.body.style.position = "absolute";
             document.body.style.transition = `width ${transitionDuration}ms`;
             resultPanel.style.transition = `width ${transitionDuration}ms`;
@@ -588,6 +590,10 @@ function addHeadEventListener() {
     // 给固定侧边栏的按钮添加点击事件监听，用户侧边栏的固定与取消固定
     shadowDom.getElementById("icon-tuding-fix").addEventListener("click", fixOn);
     shadowDom.getElementById("icon-tuding-full").addEventListener("click", fixOff);
+    // Open options page.
+    shadowDom
+        .getElementById("icon-edge-translate-options")
+        .addEventListener("click", openOptionsPage);
     // 给点击侧边栏之外区域事件添加监听，点击侧边栏之外的部分就会让侧边栏关闭
     chrome.storage.sync.get("fixSetting", function(result) {
         if (!result.fixSetting) {
@@ -694,6 +700,13 @@ function fixOff() {
     shadowDom.getElementById("icon-tuding-full").style.display = "none";
     shadowDom.getElementById("icon-tuding-fix").style.display = "block";
     document.documentElement.addEventListener("mousedown", clickListener);
+}
+
+/**
+ * Open options page.
+ */
+function openOptionsPage() {
+    Messager.send("background", "open_options_page", {});
 }
 
 /**

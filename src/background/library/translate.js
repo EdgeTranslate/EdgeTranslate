@@ -64,23 +64,26 @@ class TranslatorManager {
      */
     loadConfigIfNotLoaded() {
         return new Promise((resolve, reject) => {
-            if (!this.CONFIG_LOADED) {
-                chrome.storage.sync.get(
-                    ["DefaultTranslator", "languageSetting", "OtherSettings"],
-                    res => {
-                        if (chrome.runtime.lastError) {
-                            reject(chrome.runtime.lastError);
-                            return;
-                        }
+            if (this.CONFIG_LOADED) {
+                resolve();
+                return;
+            }
 
-                        this.IN_MUTUAL_MODE = res.OtherSettings.MutualTranslate;
-                        this.LANGUAGE_SETTING = res.languageSetting;
-                        this.DEFAULT_TRANSLATOR = res.DefaultTranslator;
-                        this.CONFIG_LOADED = true;
-                        resolve();
+            chrome.storage.sync.get(
+                ["DefaultTranslator", "languageSetting", "OtherSettings"],
+                res => {
+                    if (chrome.runtime.lastError) {
+                        reject(chrome.runtime.lastError);
+                        return;
                     }
-                );
-            } else resolve();
+
+                    this.IN_MUTUAL_MODE = res.OtherSettings.MutualTranslate;
+                    this.LANGUAGE_SETTING = res.languageSetting;
+                    this.DEFAULT_TRANSLATOR = res.DefaultTranslator;
+                    this.CONFIG_LOADED = true;
+                    resolve();
+                }
+            );
         });
     }
 
@@ -111,7 +114,7 @@ class TranslatorManager {
      * @param {Array<Number>} position position of the text
      * @param {chrome.tabs.Tab} tab tab where the text from
      *
-     * @returns {Promise<Object>} translate result Promise
+     * @returns {Promise<void>} translate finished Promise
      */
     async translate(text, position, tab = null) {
         // Check config.
