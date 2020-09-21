@@ -259,7 +259,9 @@ async function showPanel(content, template) {
                 }
                 // the result panel would exceeds the bottom boundary of the page
                 if (position[1] + height > window.innerHeight + threshold) {
-                    position[1] = position[1] - height - YBias + threshold;
+                    // make true the panel wouldn't exceed the top boundary
+                    let newPosition1 = position[1] - height - YBias + threshold;
+                    position[1] = newPosition1 < 0 ? 0 : newPosition1;
                 }
                 position = [position[0] + XBias, position[1] + YBias];
             } else
