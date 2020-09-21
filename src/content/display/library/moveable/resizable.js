@@ -35,13 +35,13 @@ export default class resizable {
     resizeInitiate() {
         this.resizeEnd();
         // wrap a resize start event handler
-        this.resizeStartHandler = function(e) {
+        this.resizeStartHandler = e => {
             this.resizeStart(e);
-        }.bind(this);
+        };
         // wrap a resize(resizing) event handler
-        this.resizeHandler = function(e) {
+        this.resizeHandler = e => {
             this.resize(e);
-        }.bind(this);
+        };
 
         // parse the direction parameter given by users
         this.directions = resizable.parseDirection(this.options.directions);
