@@ -1,8 +1,8 @@
-## Please refresh the page that needs to be translated after installation or update!
+## PLEASE REFRESH THE PAGE NEED TRANSLATING AFTER INSTALLATION OR UPDATE! ! !
 
-## Please refresh the page that needs to be translated after installation or update! !
+## PLEASE READ THE [INSTRUCTIONS](./Instructions.md) BEFORE USING! ! !
 
-## Please refresh the page that needs to be translated after installation or update! ! !
+## PLEASE READ THE [Q & A](./Precautions.md) WHEN YOU ENCOUNTERED PROBLEMS! ! !
 
 ## Introduction
 
@@ -70,7 +70,7 @@ Edge Translate were developed by us ( [nickyc975](https://github.com/nickyc975) 
 
 * Email: [nickyc975](mailto:chenjinlong2016@outlook.com), [Mark Fenng](mailto:f18846188605@gmail.com)
 
-* Chrome App Store: [Edge Translate](https://chrome.google.com/webstore/detail/%E4%BE%A7%E8%BE%B9%E7%BF%BB%E8%AF%91/bocbaocobfecmglnmeaeppambideimao/reviews)
+* Chrome App Store: [Edge Translate](https://chrome.google.com/webstore/detail/bocbaocobfecmglnmeaeppambideimao/reviews)
 
 * Firefox Add-ons Store: [Edge Translate](https://addons.mozilla.org/en-US/firefox/addon/edge_translate/reviews)
 
