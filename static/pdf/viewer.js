@@ -2839,6 +2839,27 @@ function webViewerKeyUp(evt) {
   }
 }
 
+/**
+ * Get the active or focused element in current DOM.
+ *
+ * Recursively search for the truly active or focused element incase there are shadow DOMs.
+ *
+ * @param {DocumentOrShadowRoot} root the root element.
+ *
+ * @returns {Element} the truly active or focused element.
+ */
+function getActiveOrFocusedElement(root) {
+  let curRoot = root || document;
+  let curActiveOrFocused = curRoot.activeElement || curRoot.querySelector(":focus");
+
+  while (curActiveOrFocused && curActiveOrFocused.shadowRoot) {
+    curRoot = curActiveOrFocused.shadowRoot;
+    curActiveOrFocused = curRoot.activeElement || curRoot.querySelector(":focus");
+  }
+
+  return curActiveOrFocused;
+}
+
 function webViewerKeyDown(evt) {
   if (PDFViewerApplication.overlayManager.active) {
     return;
@@ -2977,7 +2998,7 @@ function webViewerKeyDown(evt) {
     return;
   }
 
-  var curElement = document.activeElement || document.querySelector(":focus");
+  var curElement = getActiveOrFocusedElement();
   var curElementTagName = curElement && curElement.tagName.toUpperCase();
 
   if (curElementTagName === "INPUT" || curElementTagName === "TEXTAREA" || curElementTagName === "SELECT" || curElement && curElement.isContentEditable) {

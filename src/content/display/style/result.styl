@@ -71,6 +71,37 @@
         }
     }
 
+    .original-text {
+        color: gray;
+        font-weight: lighter;
+
+        #icon-edit {
+            font-size: x-large;
+            fill: lightgray;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+
+            &:hover{
+                fill: gray;
+            }
+        }
+
+        #icon-edit-done {
+            font-size: x-large;
+            fill: lightgray;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+
+            &:hover{
+                fill: gray;
+            }
+        }
+
+        @extend #edge-translate-result .main-meaning;
+    }
+
     .target-phonetic-symbol {
         width: 100%;
 

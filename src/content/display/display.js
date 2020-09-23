@@ -613,6 +613,8 @@ function addBodyEventListener(template) {
         case "result": {
             // copy the translation result to the copy board
             shadowDom.getElementById("icon-copy").addEventListener("click", copyContent);
+
+            // Pronounce texts.
             let sourcePronounceIcon = shadowDom.getElementById("source-pronounce");
             if (sourcePronounceIcon) {
                 sourcePronounceIcon.addEventListener("click", sourcePronounce);
@@ -622,6 +624,16 @@ function addBodyEventListener(template) {
             if (targetPronounceIcon) {
                 targetPronounceIcon.addEventListener("click", targetPronounce);
             }
+
+            // Edit and re-translate the text.
+            let editIcon = shadowDom.getElementById("icon-edit");
+            editIcon.addEventListener("click", editOriginalText);
+            editIcon.style.display = "block";
+
+            let editDoneIcon = shadowDom.getElementById("icon-edit-done");
+            editDoneIcon.addEventListener("click", submitEditedText);
+            editDoneIcon.style.display = "none";
+
             // 根据用户设定决定是否采用从右到左布局（用于阿拉伯语等从右到左书写的语言）
             chrome.storage.sync.get("LayoutSettings", result => {
                 if (result.LayoutSettings.RTL) {
@@ -768,6 +780,40 @@ function copyContent() {
         translateResultEle.setAttribute("contenteditable", "false");
         window.getSelection().removeAllRanges();
     });
+}
+
+/**
+ * Edit original test.
+ */
+function editOriginalText() {
+    let originalTextEle = resultPanel
+        .getElementsByClassName("original-text")[0]
+        .getElementsByTagName("p")[0];
+
+    // Allow editing.
+    originalTextEle.setAttribute("contenteditable", "true");
+    originalTextEle.focus();
+
+    shadowDom.getElementById("icon-edit").style.display = "none";
+    shadowDom.getElementById("icon-edit-done").style.display = "block";
+}
+
+/**
+ * Submit and translate edited text.
+ */
+function submitEditedText() {
+    let originalTextEle = resultPanel
+        .getElementsByClassName("original-text")[0]
+        .getElementsByTagName("p")[0];
+
+    // Prevent editing.
+    originalTextEle.setAttribute("contenteditable", "false");
+
+    // Do translating.
+    Messager.send("background", "translate", { text: originalTextEle.textContent });
+
+    shadowDom.getElementById("icon-edit").style.display = "block";
+    shadowDom.getElementById("icon-edit-done").style.display = "none";
 }
 
 /**

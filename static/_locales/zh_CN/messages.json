@@ -87,6 +87,14 @@
         "message": "朗读翻译结果",
         "description": "朗读翻译结果"
     },
+    "EditText": {
+        "message": "编辑文本",
+        "description": "编辑选中的文本。"
+    },
+    "Retranslate": {
+        "message": "重新翻译",
+        "description": "重新翻译编辑后的文本。"
+    },
     "CopyResult": {
         "message": "复制结果",
         "description": "将翻译结果复制到剪贴板。"

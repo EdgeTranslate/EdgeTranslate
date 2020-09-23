@@ -87,6 +87,14 @@
         "message": "Читать переведённый текст",
         "description": "Читать переведённый текст."
     },
+    "EditText": {
+        "message": "Edit text",
+        "description": "Edit selected text."
+    },
+    "Retranslate": {
+        "message": "Re-translate",
+        "description": "Re-translate the edited text."
+    },
     "CopyResult": {
         "message": "Скопировать результат",
         "description": "Копирование результата перевода."
