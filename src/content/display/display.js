@@ -128,6 +128,8 @@ var documentBodyCSS;
     });
 
     let startTranslate = [0, 0];
+    let floatingToFixed = false;
+    let fixedDirection = "";
     /* draggable events*/
     moveablePanel
         .on("dragStart", ({ set, stop, inputEvent }) => {
@@ -145,22 +147,7 @@ var documentBodyCSS;
             }
             set(startTranslate);
         })
-        .on("drag", ({ target, translate, inputEvent }) => {
-            if (inputEvent) {
-                // change the display type from fixed to floating
-                if (displaySetting.type === "fixed") {
-                    displaySetting.type = "floating";
-                    removeFixedPanel();
-                    showFloatingPanel();
-                    updateDisplaySetting();
-                }
-                /* whether to show hight part on the one side of the page*/
-                let threshold = 10;
-                if (inputEvent.clientX <= threshold) showHighlightPart("left");
-                else if (inputEvent.clientX >= window.innerWidth - threshold)
-                    showHighlightPart("right");
-                else removeHighlightPart();
-            }
+        .on("drag", ({ target, translate }) => {
             startTranslate = translate;
             target.style.transform = `translate(${translate[0]}px, ${translate[1]}px)`;
         })
@@ -169,31 +156,45 @@ var documentBodyCSS;
 
             /* change the display type of result panel */
             if (inputEvent && displaySetting.type === "floating") {
+                if (floatingToFixed) {
+                    displaySetting.fixedData.position = fixedDirection;
+                    displaySetting.type = "fixed";
+                    removeHighlightPart();
+                    showFixedPanel();
+                    updateDisplaySetting();
+                }
+            }
+        })
+        // // the result panel start to drag out of the drag area
+        // .on("boundStart", ({ direction }) => {
+        //     console.log(direction);
+        // })
+        // the result panel drag out of the drag area
+        .on("bound", ({ direction, distance }) => {
+            /* whether to show hight part on the one side of the page*/
+            if (displaySetting.type === "floating") {
                 let threshold = 10;
-                // mouse is close to the left boundary
-                if (inputEvent.clientX <= threshold) displaySetting.fixedData.position = "left";
-                // mouse is close to the right boundary
-                else if (inputEvent.clientX >= window.innerWidth - threshold)
-                    displaySetting.fixedData.position = "right";
-                else return;
-                displaySetting.type = "fixed";
-                removeHighlightPart();
-                showFixedPanel();
+                if (distance > threshold) {
+                    if (direction === "left" || direction === "right") {
+                        fixedDirection = direction;
+                        floatingToFixed = true;
+                        showHighlightPart(direction);
+                    }
+                }
+            }
+        })
+        // the result panel drag into drag area first time
+        .on("boundEnd", () => {
+            floatingToFixed = false;
+            removeHighlightPart();
+            // change the display type from fixed to floating
+            if (displaySetting.type === "fixed") {
+                displaySetting.type = "floating";
+                removeFixedPanel();
+                showFloatingPanel();
                 updateDisplaySetting();
             }
         });
-    // // the result panel start to drag out of the drag area
-    // .on("boundStart", ({ direction }) => {
-    //     console.log("boundStart" + direction);
-    // })
-    // // the result panel drag out of the drag area
-    // .on("bound", ({ direction, distance }) => {
-    //     console.log("bound", direction, distance);
-    // })
-    // // the result panel drag into drag area first time
-    // .on("boundEnd", () => {
-    //     console.log("boundEnd");
-    // });
     /* resizable  events*/
     moveablePanel
         .on("resizeStart", ({ set }) => {
@@ -539,9 +540,12 @@ function getScrollbarWidth() {
  */
 async function updateBounds() {
     await getDisplaySetting();
+    let scrollLeft = document.documentElement.scrollLeft || document.body.scrollLeft;
     let scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
     moveablePanel.setBounds({
+        left: scrollLeft,
         top: scrollTop,
+        right: scrollLeft + window.innerWidth - scrollbarWidth,
         bottom: scrollTop + (1 + displaySetting.floatingData.height) * window.innerHeight - 64
     });
 }
