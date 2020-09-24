@@ -128,7 +128,9 @@ var documentBodyCSS;
     });
 
     let startTranslate = [0, 0];
+    // to flag whether the floating panel should be changed to fixed panel
     let floatingToFixed = false;
+    // store the fixed direction on bound event
     let fixedDirection = "";
     /* draggable events*/
     moveablePanel
@@ -185,8 +187,8 @@ var documentBodyCSS;
         })
         // the result panel drag into drag area first time
         .on("boundEnd", () => {
+            if (floatingToFixed) removeHighlightPart();
             floatingToFixed = false;
-            removeHighlightPart();
             // change the display type from fixed to floating
             if (displaySetting.type === "fixed") {
                 displaySetting.type = "floating";
@@ -198,7 +200,6 @@ var documentBodyCSS;
     /* resizable  events*/
     moveablePanel
         .on("resizeStart", ({ set }) => {
-            getDisplaySetting();
             set(startTranslate);
         })
         .on("resize", ({ target, width, height, translate, inputEvent }) => {
