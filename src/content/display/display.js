@@ -546,7 +546,7 @@ async function updateBounds() {
     moveablePanel.setBounds({
         left: scrollLeft,
         top: scrollTop,
-        right: scrollLeft + window.innerWidth - scrollbarWidth,
+        right: scrollLeft + window.innerWidth - (hasScrollbar() ? scrollbarWidth : 0),
         bottom: scrollTop + (1 + displaySetting.floatingData.height) * window.innerHeight - 64
     });
 }
