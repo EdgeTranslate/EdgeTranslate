@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "../axios.js";
 
 /**
  * Supported languages.
@@ -240,27 +240,44 @@ class BaiduTranslator {
     }
 
     /**
+     * Throw an error.
+     *
+     * @param {String} code error code
+     * @param {String} msg error message
+     * @param {Any} error original error object
+     *
+     * @throws {Object} error
+     */
+    throwError(code, msg, error) {
+        throw {
+            errorType: "API_ERR",
+            errorCode: code,
+            errorMsg: msg,
+            errorObj: error
+        };
+    }
+
+    /**
      * Get latest token and gtk for urls.
      *
      * @returns {Promise} then(this=>callback()) used to run callback. catch(error) used to catch error
      */
-    getTokenGtk() {
-        let oneRequest = function() {
-            return axios({
+    async getTokenGtk() {
+        let oneRequest = async () => {
+            const response = await axios({
                 method: "get",
                 baseURL: this.HOST,
                 timeout: 5000
-            }).then(response => {
-                this.token = response.data.match(/token: '(.*?)',/)[1];
-                this.gtk = response.data.match(/window.gtk = '(.*?)'/)[1];
-                return Promise.resolve();
             });
-        }.bind(this);
+
+            this.token = response.data.match(/token: '(.*?)',/)[1];
+            this.gtk = response.data.match(/window.gtk = '(.*?)'/)[1];
+        };
+
         // request two times to ensure the token is the latest value
         // otherwise the request would return "997" error
-        return oneRequest().then(() => {
-            return oneRequest();
-        });
+        await oneRequest();
+        await oneRequest();
     }
 
     /**
@@ -372,8 +389,8 @@ class BaiduTranslator {
      * @param {String} text text to detect
      * @returns {Promise} then(result) used to return request result. catch(error) used to catch error
      */
-    detect(text) {
-        return axios({
+    async detect(text) {
+        const response = await axios({
             url: "langdetect",
             method: "post",
             baseURL: this.HOST,
@@ -382,11 +399,13 @@ class BaiduTranslator {
                 query: text
             }),
             timeout: 5000
-        }).then(result => {
-            if (result.data.msg === "success")
-                return Promise.resolve(this.CODE_TO_LAN.get(result.data.lan));
-            else return Promise.reject(result.data);
         });
+
+        if (response.data.msg === "success") {
+            return this.CODE_TO_LAN.get(response.data.lan);
+        } else {
+            this.throwError(response.data.errno, response.data.msg, undefined);
+        }
     }
 
     /**
@@ -397,11 +416,12 @@ class BaiduTranslator {
      * @param {String} to target language
      * @returns {Promise} then(result) used to return request result. catch(error) used to catch error
      */
-    translate(text, from, to) {
+    async translate(text, from, to) {
         let reTryCount = 0;
+
         // send translation request one time
         // if the first request fails, resend requests no more than {this.MAX_RETRY} times
-        let translateOneTime = async function() {
+        let translateOneTime = async () => {
             let detectedFrom = from;
             if (detectedFrom === "auto") {
                 detectedFrom = await this.detect(text);
@@ -410,7 +430,7 @@ class BaiduTranslator {
             let toCode = this.LAN_TO_CODE.get(to),
                 fromCode = this.LAN_TO_CODE.get(detectedFrom);
 
-            return axios({
+            const response = await axios({
                 url: "/v2transapi?" + "from=" + fromCode + "&to=" + toCode,
                 method: "post",
                 baseURL: this.HOST,
@@ -426,30 +446,32 @@ class BaiduTranslator {
                     domain: "common"
                 }),
                 timeout: 5000
-            }).then(result => {
-                let data = result.data;
-                // token is out of date and try to resend request
-                if (data.errno) {
-                    if (reTryCount < this.MAX_RETRY) {
-                        reTryCount++;
-                        // get new token and gtk
-                        return this.getTokenGtk().then(() => {
-                            // resend translation request
-                            return translateOneTime();
-                        });
-                    } else return Promise.reject(data);
-                } else return Promise.resolve(this.parseResult(result.data));
             });
-        }.bind(this);
-        // if old token and gtk exist
-        if (this.token && this.gtk) {
-            return translateOneTime();
-        } else {
-            // get token and gtk when the translator is initiated
-            return this.getTokenGtk().then(() => {
+
+            let data = response.data;
+
+            // request succeeded
+            if (!data.errno) {
+                return this.parseResult(data);
+            }
+
+            // token is out of date and try to resend request
+            if (reTryCount < this.MAX_RETRY) {
+                reTryCount++;
+                // get new token and gtk
+                await this.getTokenGtk();
+                // resend translation request
                 return translateOneTime();
-            });
+            }
+
+            this.throwError(data.errno, data.msg, undefined);
+        };
+
+        // if old token and gtk don't exist.
+        if (!(this.token && this.gtk)) {
+            await this.getTokenGtk();
         }
+        return translateOneTime();
     }
 
     /**
@@ -461,7 +483,7 @@ class BaiduTranslator {
      *
      * @returns {Promise<void>} pronounce finished
      */
-    pronounce(text, language, speed) {
+    async pronounce(text, language, speed) {
         // Pause audio in case that it's playing.
         this.stopPronounce();
 
@@ -478,7 +500,12 @@ class BaiduTranslator {
             speedValue +
             "&source=web";
 
-        return this.AUDIO.play();
+        try {
+            await this.AUDIO.play();
+        } catch (error) {
+            // TODO: error might be NET_ERR or API_ERR, should be handled differently.
+            this.throwError(0, error.message, undefined);
+        }
     }
 
     /**

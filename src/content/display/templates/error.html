@@ -20,15 +20,9 @@
         ></i>
     </div>
     <div class="content">
-        <% if (this.detail === 503) { %>
-        <p class="error-message"><% chrome.i18n.getMessage("NETERR_503") %></p>
-        <% } else if (this.detail === 413) { %>
-        <p class="error-message"><% chrome.i18n.getMessage("NETERR_413") %></p>
-        <% } else { %>
         <p class="error-message"><% chrome.i18n.getMessage("NETERR") %></p>
         <p class="error-message-detail">
-            <% chrome.i18n.getMessage("NETERR_CODE") %>: <% this.detail %>
+            <% chrome.i18n.getMessage("NETERR_CODE") %>: <% JSON.stringify(this.error) %>
         </p>
-        <% } %>
     </div>
 </div>
