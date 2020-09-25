@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "../axios.js";
 
 /**
  * Supported languages.
@@ -242,20 +242,18 @@ class BaiduTranslator {
     /**
      * Throw an error.
      *
-     * @param {String} func function error ocurred in
-     * @param {String} type error type, NET_ERR or API_ERR
      * @param {String} code error code
      * @param {String} msg error message
+     * @param {Any} error original error object
      *
      * @throws {Object} error
      */
-    throwError(func, type, code, msg) {
+    throwError(code, msg, error) {
         throw {
-            translator: "baidu",
-            function: func,
-            errorType: type,
+            errorType: "API_ERR",
             errorCode: code,
-            errorMsg: msg
+            errorMsg: msg,
+            errorObj: error
         };
     }
 
@@ -278,12 +276,8 @@ class BaiduTranslator {
 
         // request two times to ensure the token is the latest value
         // otherwise the request would return "997" error
-        try {
-            await oneRequest();
-            await oneRequest();
-        } catch (error) {
-            this.throwError("getTokenGtk", "NET_ERR", 0, error.message);
-        }
+        await oneRequest();
+        await oneRequest();
     }
 
     /**
@@ -396,25 +390,21 @@ class BaiduTranslator {
      * @returns {Promise} then(result) used to return request result. catch(error) used to catch error
      */
     async detect(text) {
-        try {
-            var response = await axios({
-                url: "langdetect",
-                method: "post",
-                baseURL: this.HOST,
-                headers: this.HEADERS,
-                data: new URLSearchParams({
-                    query: text
-                }),
-                timeout: 5000
-            });
-        } catch (error) {
-            this.throwError("detect", "NET_ERR", 0, error.message);
-        }
+        const response = await axios({
+            url: "langdetect",
+            method: "post",
+            baseURL: this.HOST,
+            headers: this.HEADERS,
+            data: new URLSearchParams({
+                query: text
+            }),
+            timeout: 5000
+        });
 
         if (response.data.msg === "success") {
             return this.CODE_TO_LAN.get(response.data.lan);
         } else {
-            this.throwError("detect", "API_ERR", response.data.errno, response.data.msg);
+            this.throwError(response.data.errno, response.data.msg, undefined);
         }
     }
 
@@ -440,27 +430,23 @@ class BaiduTranslator {
             let toCode = this.LAN_TO_CODE.get(to),
                 fromCode = this.LAN_TO_CODE.get(detectedFrom);
 
-            try {
-                var response = await axios({
-                    url: "/v2transapi?" + "from=" + fromCode + "&to=" + toCode,
-                    method: "post",
-                    baseURL: this.HOST,
-                    headers: this.HEADERS,
-                    data: new URLSearchParams({
-                        from: fromCode,
-                        to: toCode,
-                        query: text,
-                        transtype: "realtime",
-                        simple_means_flag: 3,
-                        sign: this.generateSign(text, this.gtk),
-                        token: this.token,
-                        domain: "common"
-                    }),
-                    timeout: 5000
-                });
-            } catch (error) {
-                this.throwError("translate", "NET_ERR", 0, error.message);
-            }
+            const response = await axios({
+                url: "/v2transapi?" + "from=" + fromCode + "&to=" + toCode,
+                method: "post",
+                baseURL: this.HOST,
+                headers: this.HEADERS,
+                data: new URLSearchParams({
+                    from: fromCode,
+                    to: toCode,
+                    query: text,
+                    transtype: "realtime",
+                    simple_means_flag: 3,
+                    sign: this.generateSign(text, this.gtk),
+                    token: this.token,
+                    domain: "common"
+                }),
+                timeout: 5000
+            });
 
             let data = response.data;
 
@@ -478,7 +464,7 @@ class BaiduTranslator {
                 return translateOneTime();
             }
 
-            this.throwError("translate", "API_ERR", data.errno, data.msg);
+            this.throwError(data.errno, data.msg, undefined);
         };
 
         // if old token and gtk don't exist.
@@ -518,7 +504,7 @@ class BaiduTranslator {
             await this.AUDIO.play();
         } catch (error) {
             // TODO: error might be NET_ERR or API_ERR, should be handled differently.
-            this.throwError("pronounce", "NET_ERR", 0, error.message);
+            this.throwError(0, error.message, undefined);
         }
     }
 

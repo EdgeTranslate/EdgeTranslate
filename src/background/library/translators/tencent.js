@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "../axios.js";
 import { log } from "../../../common/scripts/common.js";
 
 /**
