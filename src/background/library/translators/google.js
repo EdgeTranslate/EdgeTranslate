@@ -1,5 +1,4 @@
 import axios from "../axios.js";
-import { escapeHTML } from "../common.js";
 import { log } from "../../../common/scripts/common.js";
 
 /**
@@ -267,19 +266,16 @@ class GoogleTranslator {
                             originalTexts.push(items[j][1]);
                         }
                         // 根据源文本将翻译结果格式化
-                        result.mainMeaning = escapeHTML(mainMeanings.join("")).replace(
-                            /\n|\r/g,
-                            "<br/>"
-                        );
-                        result.originalText = escapeHTML(originalTexts.join(""));
+                        result.mainMeaning = mainMeanings.join("").replace(/\n|\r/g, "<br/>");
+                        result.originalText = originalTexts.join("");
                         try {
                             if (lastIndex > 0) {
                                 if (items[lastIndex][2] && items[lastIndex][2].length > 0) {
-                                    result.tPronunciation = escapeHTML(items[lastIndex][2]);
+                                    result.tPronunciation = items[lastIndex][2];
                                 }
 
                                 if (items[lastIndex][3] && items[lastIndex][3].length > 0) {
-                                    result.sPronunciation = escapeHTML(items[lastIndex][3]);
+                                    result.sPronunciation = items[lastIndex][3];
                                 }
                             }
                         } catch (error) {

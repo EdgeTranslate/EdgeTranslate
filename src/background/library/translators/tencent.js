@@ -153,13 +153,19 @@ class TencentTranslator {
      * Parse Google translate result.
      *
      * @param {Object} response Google translate response
+     * @param {String} originalText original text
      *
      * @returns {Object} parsed result
      */
-    parseResult(response) {
+    parseResult(response, originalText) {
         let result = {};
         result.originalText = response.translate.records[0].sourceText;
         result.mainMeaning = response.translate.records[0].targetText.split(/\s*\/\s*/g)[0];
+
+        // In case the original text is not returned by the API.
+        if (!result.originalText || result.originalText.length <= 0) {
+            result.originalText = originalText;
+        }
 
         if (response.suggest && response.suggest.data && response.suggest.data.length > 0) {
             if (response.suggest.data[0].prx_ph_AmE) {
@@ -249,7 +255,7 @@ class TencentTranslator {
                             (response.data.dict ||
                                 (response.data.translate && retryCount >= this.MAX_RETRY))
                         ) {
-                            let result = this.parseResult(response.data);
+                            let result = this.parseResult(response.data, text);
                             resolve(result);
                         } else if (retryCount < this.MAX_RETRY) {
                             retryCount++;
