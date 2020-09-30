@@ -399,7 +399,12 @@ class BingTranslator {
             }
 
             // Throw error.
-            throw { response: response };
+            throw {
+                errorType: "API_ERR",
+                errorCode: response.data.statusCode,
+                errorMsg: "Request failed, please contact developers to report problem.",
+                errorObj: response
+            };
         };
 
         if (!(this.IG.length > 0 && this.IID.length > 0)) {
@@ -559,7 +564,16 @@ class BingTranslator {
                     retryCount++;
                     return this.updateTTSAuth().then(pronounceOnce);
                 } else {
-                    throw error;
+                    if (error.errorType) {
+                        throw error;
+                    }
+
+                    throw {
+                        errorType: "API_ERR",
+                        errorCode: 0,
+                        errorMsg: "Pronounce failed, please contact developers to report problem.",
+                        errorObj: error
+                    };
                 }
             }
         };

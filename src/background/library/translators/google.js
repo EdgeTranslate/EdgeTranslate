@@ -215,31 +215,23 @@ class GoogleTranslator {
      *
      * @returns {Promise<void>} promise
      */
-    updateTKK() {
-        return new Promise((resolve, reject) => {
-            axios
-                .get(this.HOST)
-                .then(response => {
-                    let body = response.data;
-                    let tkk = (body.match(/TKK=(.*?)\(\)\)'\);/i) || [""])[0]
-                        .replace(/\\x([0-9A-Fa-f]{2})/g, "") // remove hex chars
-                        .match(/[+-]?\d+/g);
-                    if (tkk) {
-                        this.TKK[0] = Number(tkk[2]);
-                        this.TKK[1] = Number(tkk[0]) + Number(tkk[1]);
-                    } else {
-                        tkk = body.match(/TKK[=:]['"](\d+?)\.(\d+?)['"]/i);
-                        if (tkk) {
-                            this.TKK[0] = Number(tkk[1]);
-                            this.TKK[1] = Number(tkk[2]);
-                        }
-                    }
-                    resolve();
-                })
-                .catch(error => {
-                    reject(error);
-                });
-        });
+    async updateTKK() {
+        const response = await axios.get(this.HOST);
+
+        let body = response.data;
+        let tkk = (body.match(/TKK=(.*?)\(\)\)'\);/i) || [""])[0]
+            .replace(/\\x([0-9A-Fa-f]{2})/g, "") // remove hex chars
+            .match(/[+-]?\d+/g);
+        if (tkk) {
+            this.TKK[0] = Number(tkk[2]);
+            this.TKK[1] = Number(tkk[0]) + Number(tkk[1]);
+        } else {
+            tkk = body.match(/TKK[=:]['"](\d+?)\.(\d+?)['"]/i);
+            if (tkk) {
+                this.TKK[0] = Number(tkk[1]);
+                this.TKK[1] = Number(tkk[2]);
+            }
+        }
     }
 
     /**
@@ -349,29 +341,40 @@ class GoogleTranslator {
      */
     detect(text) {
         let retryCount = 0;
-        let detectOnce = () => {
-            return new Promise((resolve, reject) => {
-                let query = "&sl=auto&tl=zh-cn";
-                query +=
-                    "&tk=" +
-                    this.generateTK(text, this.TKK[0], this.TKK[1]) +
-                    "&q=" +
-                    encodeURIComponent(text);
+        let detectOnce = async () => {
+            let query = "&sl=auto&tl=zh-cn";
+            query +=
+                "&tk=" +
+                this.generateTK(text, this.TKK[0], this.TKK[1]) +
+                "&q=" +
+                encodeURIComponent(text);
 
-                axios
-                    .get(this.TRANSLATE_URL + query)
-                    .then(response => {
-                        if (response.status === 200) {
-                            resolve(this.CODE_TO_LAN.get(response.data[2]));
-                        } else if (response.status === 429 && retryCount < this.MAX_RETRY) {
-                            retryCount++;
-                            resolve(this.updateTKK().then(detectOnce));
-                        } else reject(response);
-                    })
-                    .catch(error => {
-                        reject(error);
-                    });
+            /**
+             * Google uses 4xx errors to indicate request parameters invalid, so axios should
+             * not throw error when status code is less than 500.
+             */
+            const response = await axios.get(this.TRANSLATE_URL + query, {
+                validateStatus: status => status < 500
             });
+
+            if (response.status === 200) {
+                return this.CODE_TO_LAN.get(response.data[2]);
+            }
+
+            /**
+             * 429 means token outdated, update token and retry.
+             */
+            if (response.status === 429 && retryCount < this.MAX_RETRY) {
+                retryCount++;
+                return await this.updateTKK().then(detectOnce);
+            }
+
+            throw {
+                errorType: "API_ERR",
+                errorCode: response.status,
+                errorMsg: "Detect failed, please contact developers to report problem.",
+                errorObj: response
+            };
         };
 
         return detectOnce();
@@ -388,30 +391,41 @@ class GoogleTranslator {
      */
     translate(text, from, to) {
         let retryCount = 0;
-        let translateOnce = () => {
-            return new Promise((resolve, reject) => {
-                let query = "&sl=" + this.LAN_TO_CODE.get(from) + "&tl=" + this.LAN_TO_CODE.get(to);
-                query +=
-                    "&tk=" +
-                    this.generateTK(text, this.TKK[0], this.TKK[1]) +
-                    "&q=" +
-                    encodeURIComponent(text);
+        let translateOnce = async () => {
+            let query = "&sl=" + this.LAN_TO_CODE.get(from) + "&tl=" + this.LAN_TO_CODE.get(to);
+            query +=
+                "&tk=" +
+                this.generateTK(text, this.TKK[0], this.TKK[1]) +
+                "&q=" +
+                encodeURIComponent(text);
 
-                axios
-                    .get(this.TRANSLATE_URL + query)
-                    .then(response => {
-                        if (response.status === 200) {
-                            let result = this.parseResult(response.data);
-                            resolve(result);
-                        } else if (response.status === 429 && retryCount < this.MAX_RETRY) {
-                            retryCount++;
-                            resolve(this.updateTKK().then(translateOnce));
-                        } else reject(response);
-                    })
-                    .catch(error => {
-                        reject(error);
-                    });
+            /**
+             * Google uses 4xx errors to indicate request parameters invalid, so axios should
+             * not throw error when status code is less than 500.
+             */
+            const response = await axios.get(this.TRANSLATE_URL + query, {
+                validateStatus: status => status < 500
             });
+
+            if (response.status === 200) {
+                let result = this.parseResult(response.data);
+                return result;
+            }
+
+            /**
+             * 429 means token outdated, update token and retry.
+             */
+            if (response.status === 429 && retryCount < this.MAX_RETRY) {
+                retryCount++;
+                return await this.updateTKK().then(translateOnce);
+            }
+
+            throw {
+                errorType: "API_ERR",
+                errorCode: response.status,
+                errorMsg: "Translate failed, please contact developers to report problem.",
+                errorObj: response
+            };
         };
 
         return translateOnce();
