@@ -68,71 +68,77 @@ const DEFAULT_SETTINGS = {
 };
 
 /**
+ * BEGIN SETTING UP CONTEXT MENUS
+ */
+chrome.contextMenus.create({
+    id: "translate",
+    title: chrome.i18n.getMessage("Translate") + " '%s'",
+    contexts: ["selection"]
+});
+
+chrome.contextMenus.create({
+    id: "shortcut",
+    title: chrome.i18n.getMessage("ShortcutSetting"),
+    contexts: ["browser_action"]
+});
+
+chrome.contextMenus.create({
+    id: "translate_page",
+    title: chrome.i18n.getMessage("TranslatePage"),
+    contexts: ["page"]
+});
+
+chrome.contextMenus.create({
+    id: "translate_page_youdao",
+    title: chrome.i18n.getMessage("TranslatePageYouDao"),
+    contexts: ["browser_action"]
+});
+
+chrome.contextMenus.create({
+    id: "translate_page_google",
+    title: chrome.i18n.getMessage("TranslatePageGoogle"),
+    contexts: ["browser_action"]
+});
+
+chrome.contextMenus.create({
+    id: "add_url_blacklist",
+    title: chrome.i18n.getMessage("AddUrlBlacklist"),
+    contexts: ["browser_action"],
+    enabled: false,
+    visible: false
+});
+
+chrome.contextMenus.create({
+    id: "add_domain_blacklist",
+    title: chrome.i18n.getMessage("AddDomainBlacklist"),
+    contexts: ["browser_action"],
+    enabled: false,
+    visible: false
+});
+
+chrome.contextMenus.create({
+    id: "remove_url_blacklist",
+    title: chrome.i18n.getMessage("RemoveUrlBlacklist"),
+    contexts: ["browser_action"],
+    enabled: false,
+    visible: false
+});
+
+chrome.contextMenus.create({
+    id: "remove_domain_blacklist",
+    title: chrome.i18n.getMessage("RemoveDomainBlacklist"),
+    contexts: ["browser_action"],
+    enabled: false,
+    visible: false
+});
+/**
+ * END SETTING UP CONTEXT MENUS
+ */
+
+/**
  * 初始化插件配置。
  */
 chrome.runtime.onInstalled.addListener(function(details) {
-    chrome.contextMenus.create({
-        id: "translate",
-        title: chrome.i18n.getMessage("Translate") + " '%s'",
-        contexts: ["selection"]
-    });
-
-    chrome.contextMenus.create({
-        id: "shortcut",
-        title: chrome.i18n.getMessage("ShortcutSetting"),
-        contexts: ["browser_action"]
-    });
-
-    chrome.contextMenus.create({
-        id: "translate_page",
-        title: chrome.i18n.getMessage("TranslatePage"),
-        contexts: ["page"]
-    });
-
-    chrome.contextMenus.create({
-        id: "translate_page_youdao",
-        title: chrome.i18n.getMessage("TranslatePageYouDao"),
-        contexts: ["browser_action"]
-    });
-
-    chrome.contextMenus.create({
-        id: "translate_page_google",
-        title: chrome.i18n.getMessage("TranslatePageGoogle"),
-        contexts: ["browser_action"]
-    });
-
-    chrome.contextMenus.create({
-        id: "add_url_blacklist",
-        title: chrome.i18n.getMessage("AddUrlBlacklist"),
-        contexts: ["browser_action"],
-        enabled: false,
-        visible: false
-    });
-
-    chrome.contextMenus.create({
-        id: "add_domain_blacklist",
-        title: chrome.i18n.getMessage("AddDomainBlacklist"),
-        contexts: ["browser_action"],
-        enabled: false,
-        visible: false
-    });
-
-    chrome.contextMenus.create({
-        id: "remove_url_blacklist",
-        title: chrome.i18n.getMessage("RemoveUrlBlacklist"),
-        contexts: ["browser_action"],
-        enabled: false,
-        visible: false
-    });
-
-    chrome.contextMenus.create({
-        id: "remove_domain_blacklist",
-        title: chrome.i18n.getMessage("RemoveDomainBlacklist"),
-        contexts: ["browser_action"],
-        enabled: false,
-        visible: false
-    });
-
     // assign default value to settings of this extension
     chrome.storage.sync.get(function(result) {
         var buffer = result; // use var buffer as a pointer
@@ -218,78 +224,6 @@ chrome.notifications.onClicked.addListener(function(notificationId) {
 });
 
 /**
- * 根据用户的语言设定国际化右键菜单中的 “翻译 'xxx'” 选项
- */
-chrome.runtime.onStartup.addListener(function() {
-    // 不知为何找不到这些menu item，导致 update 不能用。
-    // chrome.contextMenus.update("translate", {"title": chrome.i18n.getMessage("Translate") + " '%s'"});
-    // chrome.contextMenus.update("shortcut", {"title": chrome.i18n.getMessage("ShortcutSetting")});
-
-    chrome.contextMenus.removeAll();
-    chrome.contextMenus.create({
-        id: "translate",
-        title: chrome.i18n.getMessage("Translate") + " '%s'",
-        contexts: ["selection"]
-    });
-
-    chrome.contextMenus.create({
-        id: "shortcut",
-        title: chrome.i18n.getMessage("ShortcutSetting"),
-        contexts: ["browser_action"]
-    });
-
-    chrome.contextMenus.create({
-        id: "translate_page",
-        title: chrome.i18n.getMessage("TranslatePage"),
-        contexts: ["page"]
-    });
-
-    chrome.contextMenus.create({
-        id: "translate_page_youdao",
-        title: chrome.i18n.getMessage("TranslatePageYouDao"),
-        contexts: ["browser_action"]
-    });
-
-    chrome.contextMenus.create({
-        id: "translate_page_google",
-        title: chrome.i18n.getMessage("TranslatePageGoogle"),
-        contexts: ["browser_action"]
-    });
-
-    chrome.contextMenus.create({
-        id: "add_url_blacklist",
-        title: chrome.i18n.getMessage("AddUrlBlacklist"),
-        contexts: ["browser_action"],
-        enabled: false,
-        visible: false
-    });
-
-    chrome.contextMenus.create({
-        id: "add_domain_blacklist",
-        title: chrome.i18n.getMessage("AddDomainBlacklist"),
-        contexts: ["browser_action"],
-        enabled: false,
-        visible: false
-    });
-
-    chrome.contextMenus.create({
-        id: "remove_url_blacklist",
-        title: chrome.i18n.getMessage("RemoveUrlBlacklist"),
-        contexts: ["browser_action"],
-        enabled: false,
-        visible: false
-    });
-
-    chrome.contextMenus.create({
-        id: "remove_domain_blacklist",
-        title: chrome.i18n.getMessage("RemoveDomainBlacklist"),
-        contexts: ["browser_action"],
-        enabled: false,
-        visible: false
-    });
-});
-
-/**
  * 添加点击菜单后的处理事件
  */
 chrome.contextMenus.onClicked.addListener(function(info, tab) {
@@ -309,14 +243,6 @@ chrome.contextMenus.onClicked.addListener(function(info, tab) {
                     }
                     return Promise.resolve(error);
                 });
-            break;
-        case "pronounce":
-            TRANSLATOR_MANAGER.pronounce(info.selectionText, "auto", selectedTTSSpeed);
-            if (selectedTTSSpeed === "fast") {
-                selectedTTSSpeed = "slow";
-            } else {
-                selectedTTSSpeed = "fast";
-            }
             break;
         case "translate_page":
             translatePage();
