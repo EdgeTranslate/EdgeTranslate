@@ -347,9 +347,6 @@ async function messageHandler(message, sender) {
             return TRANSLATOR_MANAGER.getAvailableTranslators(message.detail);
         case "update_default_translator":
             return TRANSLATOR_MANAGER.updateDefaultTranslator(message.detail.translator);
-        case "open_options_page":
-            chrome.tabs.create({ url: chrome.runtime.getURL("options/options.html") });
-            return Promise.resolve();
         default:
             log("Unknown message title: " + message.title);
             return Promise.reject();
