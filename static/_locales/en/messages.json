@@ -311,17 +311,17 @@
         "message": "Network error! Please check your network connection.",
         "description": "Network error message."
     },
-    "NETERR_CODE": {
+    "APIERR": {
+        "message": "Request parameters error. Please try using other translators or wait a moment and retry. If translating is still broken, please contact developers.",
+        "description": "API parameters error."
+    },
+    "ERR_CODE": {
         "message": "Error code",
-        "description": "Network error code."
+        "description": "Error code."
     },
-    "NETERR_503": {
-        "message": "Request too frequently! Google has blocked your IP address temporarily. Please try again in 30 minutes.",
-        "description": "Network error message for error code 503."
-    },
-    "NETERR_413": {
-        "message": "Translating text too long! Please shorten your translating text and try again.",
-        "description": "Network error message for error code 413."
+    "ERR_MSG": {
+        "message": "Error message",
+        "description": "Error message."
     },
     "English": {
         "message": "English",

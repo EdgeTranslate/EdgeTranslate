@@ -311,17 +311,17 @@
         "message": "Ошибка сети! Проверьте ваше сетевое соединение.",
         "description": "Сообщение об ошибке сети."
     },
-    "NETERR_CODE": {
-        "message": "Код ошибки",
-        "description": "Код ошибки сети."
+    "APIERR": {
+        "message": "Request parameters error. Please try using other translators or wait a moment and retry. If translating is still broken, please contact developers.",
+        "description": "API parameters error."
     },
-    "NETERR_503": {
-        "message": "Слишком много запросов! Google временно заблокировал ваш IP-адрес. Повторите попытку через 30 минут.",
-        "description": "Сообщение об ошибке сети для кода ошибки 503."
+    "ERR_CODE": {
+        "message": "Error code",
+        "description": "Error code."
     },
-    "NETERR_413": {
-        "message": "Текст перевода слишком длинный! Сократите текст перевода и попробуйте еще раз.",
-        "description": "Сообщение об ошибке сети для кода ошибки 413."
+    "ERR_MSG": {
+        "message": "Error message",
+        "description": "Error message."
     },
     "English": {
         "message": "English",

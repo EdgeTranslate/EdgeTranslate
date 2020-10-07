@@ -20,9 +20,16 @@
         ></i>
     </div>
     <div class="content">
-        <p class="error-message"><% chrome.i18n.getMessage("NETERR") %></p>
-        <p class="error-message-detail">
-            <% chrome.i18n.getMessage("NETERR_CODE") %>: <% JSON.stringify(this.error) %>
+        <% if (this.error.errorType === "NET_ERR") { %>
+            <p class="error-type"><% chrome.i18n.getMessage("NETERR") %></p>
+        <% } else { %>
+            <p class="error-type"><% chrome.i18n.getMessage("APIERR") %></p>
+        <% } %>
+        <p class="error-message">
+            <% chrome.i18n.getMessage("ERR_CODE") %>: <% JSON.stringify(this.error.errorCode) %>
+        </p>
+        <p class="error-message">
+            <% chrome.i18n.getMessage("ERR_MSG") %>: <% JSON.stringify(this.error.errorMsg) %>
         </p>
     </div>
 </div>

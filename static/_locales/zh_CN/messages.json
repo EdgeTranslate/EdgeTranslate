@@ -311,17 +311,17 @@
         "message": "网络错误！请检查您的网络连接。",
         "description": "网络错误信息。"
     },
-    "NETERR_CODE": {
+    "APIERR": {
+        "message": "请求参数错误，请更换其他翻译源或过段时间再翻译，如还是无法使用，请联系开发者。",
+        "description": "接口参数配置错误。"
+    },
+    "ERR_CODE": {
         "message": "错误代码",
-        "description": "网络错误代码。"
+        "description": "错误代码。"
     },
-    "NETERR_503": {
-        "message": "由于您的请求过于频繁，Google已将您的IP暂时封锁，请等待半小时后重试！",
-        "description": "503状态码错误信息。"
-    },
-    "NETERR_413": {
-        "message": "您请求翻译的文本太长，请分段翻译！",
-        "description": "413状态码错误信息。"
+    "ERR_MSG": {
+        "message": "错误信息",
+        "description": "错误信息。"
     },
     "English": {
         "message": "英语",
