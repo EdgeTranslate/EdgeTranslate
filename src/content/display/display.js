@@ -11,7 +11,6 @@ import common from "./templates/common.html"; // template of panel's structure(c
 import result from "./templates/result.html"; // template of translate result
 import loading from "./templates/loading.html"; // template of loading icon
 import error from "./templates/error.html"; // template of error message
-import { log } from "../../common/scripts/common.js";
 
 const Template = {
     result: result,
@@ -724,11 +723,7 @@ function fixOff() {
  * Open options page.
  */
 function openOptionsPage() {
-    chrome.runtime.openOptionsPage(() => {
-        if (chrome.runtime.lastError) {
-            log("Chrome runtime error: " + JSON.stringify(chrome.runtime.lastError));
-        }
-    });
+    Messager.send("background", "open_options_page", {});
 }
 
 /**
