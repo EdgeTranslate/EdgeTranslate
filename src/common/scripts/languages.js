@@ -198,6 +198,7 @@ const LANGUAGES = {
     tr: "Turkish",
     tuk: "Turkmen",
     twi: "Twi",
+    ug: "Uyghur",
     uk: "Ukrainian",
     ups: "UpperSorbian",
     uz: "Uzbek",

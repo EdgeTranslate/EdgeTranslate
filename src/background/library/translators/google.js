@@ -101,6 +101,7 @@ const LANGUAGES = [
     ["th", "th"],
     ["fil", "tl"],
     ["tr", "tr"],
+    ["ug", "ug"],
     ["uk", "uk"],
     ["ur", "ur"],
     ["uz", "uz"],
