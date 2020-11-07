@@ -34,6 +34,8 @@
         "pack:firefox": "gulp pack --browser firefox"
     },
     "devDependencies": {
+        "@commitlint/cli": "^11.0.0",
+        "@commitlint/config-conventional": "^11.0.0",
         "axios": "^0.19.2",
         "axios-mock-adapter": "^1.18.2",
         "babel-core": "^6.26.3",
@@ -42,6 +44,8 @@
         "babel-preset-env": "^1.7.0",
         "crypto": "^1.0.1",
         "css": "^3.0.0",
+        "cz-conventional-changelog": "^3.3.0",
+        "cz-customizable": "^6.3.0",
         "del": "^3.0.0",
         "eslint": "^5.16.0",
         "eslint-config-prettier": "^4.3.0",
@@ -52,6 +56,7 @@
         "gulp-stylus": "^2.7.0",
         "gulp-terser": "^1.4.0",
         "gulp-zip": "^4.2.0",
+        "husky": "^4.3.0",
         "jest": "^26.4.2",
         "jest-raw-loader": "^1.0.1",
         "lodash": "^4.17.20",
@@ -75,5 +80,16 @@
             "node_modules",
             "src"
         ]
+    },
+    "config": {
+        "commitizen": {
+            "path": "./node_modules/cz-conventional-changelog"
+        }
+    },
+    "husky": {
+        "hooks": {
+            "prepare-commit-msg": "exec < /dev/tty && git cz --hook || true",
+            "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+        }
     }
 }
