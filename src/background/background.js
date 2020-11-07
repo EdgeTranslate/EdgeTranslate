@@ -14,8 +14,10 @@ import {
 } from "./library/blacklist.js";
 import { sendHitRequest } from "./library/analytics.js";
 import { sendMessageToCurrentTab } from "./library/common.js";
-import Messager from "../common/scripts/messager.js";
-import { getDomain, log } from "../common/scripts/common.js";
+import Messager from "common/scripts/messager.js";
+import { getDomain, log } from "common/scripts/common.js";
+// map language abbreviation from browser languages to translation languages
+import BrowserLanguagesMap from "common/scripts/BrowserLanguagesMap.js";
 
 /**
  * 选中文本TTS语速
@@ -38,7 +40,7 @@ const DEFAULT_SETTINGS = {
         RTL: false
     },
     // Default settings of source language and target language
-    languageSetting: { sl: "auto", tl: navigator.language },
+    languageSetting: { sl: "auto", tl: BrowserLanguagesMap[navigator.language] },
     OtherSettings: {
         MutualTranslate: false,
         SelectTranslate: true,

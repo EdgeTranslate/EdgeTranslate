@@ -142,7 +142,7 @@ const LANGUAGES = [
     ["fa", "per"],
     ["pl", "pl"],
     ["pt", "pt"],
-    ["ma", "pan"],
+    ["pa", "pan"],
     ["que", "que"],
     ["ro", "rom"],
     ["roh", "roh"],

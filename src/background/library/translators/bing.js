@@ -47,7 +47,7 @@ const LANGUAGES = [
     ["bn", "bn-BD"],
     ["hmn", "mww"],
     ["af", "af"],
-    ["ma", "pa"],
+    ["pa", "pa"],
     ["pt", "pt"],
     ["ps", "ps"],
     ["ja", "ja"],

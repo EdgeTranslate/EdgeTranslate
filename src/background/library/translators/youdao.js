@@ -31,7 +31,7 @@ const LANGUAGES = [
     ["fi", "fi"],
     ["el", "el"],
     ["ht", "ht"],
-    ["iw", "he"],
+    ["he", "he"],
     ["hi", "hi"],
     ["hu", "hu"],
     ["sw", "sw"],
