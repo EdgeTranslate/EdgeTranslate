@@ -17,7 +17,7 @@ import { sendMessageToCurrentTab } from "./library/common.js";
 import Messager from "common/scripts/messager.js";
 import { getDomain, log } from "common/scripts/common.js";
 // map language abbreviation from browser languages to translation languages
-import BrowserLanguagesMap from "common/scripts/BrowserLanguagesMap.js";
+import { BROWSER_LANGUAGES_MAP } from "common/scripts/languages.js";
 
 /**
  * 选中文本TTS语速
@@ -40,7 +40,7 @@ const DEFAULT_SETTINGS = {
         RTL: false
     },
     // Default settings of source language and target language
-    languageSetting: { sl: "auto", tl: BrowserLanguagesMap[navigator.language] },
+    languageSetting: { sl: "auto", tl: BROWSER_LANGUAGES_MAP[chrome.i18n.getUILanguage()] },
     OtherSettings: {
         MutualTranslate: false,
         SelectTranslate: true,
@@ -339,7 +339,7 @@ async function messageHandler(message, sender) {
             executeGoogleScript();
             return Promise.resolve();
         case "get_lang":
-            return Promise.resolve({ lang: chrome.i18n.getUILanguage() });
+            return Promise.resolve({ lang: BROWSER_LANGUAGES_MAP[chrome.i18n.getUILanguage()] });
         case "frame_closed":
             TRANSLATOR_MANAGER.stopPronounce();
             return Promise.resolve();

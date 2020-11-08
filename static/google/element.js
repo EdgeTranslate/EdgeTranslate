@@ -60,8 +60,7 @@
         // eslint-disable-next-line no-constant-condition
         var s = (true ? "https" : window.location.protocol == "https:" ? "https" : "http") + "://";
         var b = s + h;
-        var language = this.USER_LANG;
-        language = language.indexOf("en") > -1 ? "" : "_" + language;
+        var language = "_" + this.USER_LANG;
         c._pah = h;
         c._pas = s;
         c._pbi = b + "/translate_static/img/te_bk.gif";
