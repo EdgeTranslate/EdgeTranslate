@@ -58,10 +58,8 @@
 	</div>
 	<div class="phonetic-symbol">
 		<% if (this.sPronunciation && this.sPronunciation.length > 0) { %>
-			<p class="content-title"><% chrome.i18n.getMessage("PhoneticSymbol") %>: </p>  
-			<ul>
-				<li class="phonetic-symbol-content">[<% this.escapeHTML(this.sPronunciation) %>]</li>  
-			</ul>
+			<p class="content-title"><% chrome.i18n.getMessage("PhoneticSymbol") %>: </p>
+			<p class="phonetic-symbol-content">[<% this.escapeHTML(this.sPronunciation) %>]</p>
 		<% } %>
 	</div>	
 	<div class="detailed-meanings">
