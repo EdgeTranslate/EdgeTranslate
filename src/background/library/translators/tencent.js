@@ -276,8 +276,8 @@ class TencentTranslator {
                     api: "tencent",
                     action: "translate",
                     text: text,
-                    from: null,
-                    to: null
+                    from: from,
+                    to: to
                 },
                 errorObj: response
             };
@@ -338,7 +338,7 @@ class TencentTranslator {
                         api: "tencent",
                         action: "pronounce",
                         text: text,
-                        from: null,
+                        from: language,
                         to: null
                     },
                     errorObj: error

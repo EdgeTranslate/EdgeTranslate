@@ -594,7 +594,7 @@ class BingTranslator {
                         api: "bing",
                         action: "pronounce",
                         text: text,
-                        from: null,
+                        from: language,
                         to: null
                     };
 

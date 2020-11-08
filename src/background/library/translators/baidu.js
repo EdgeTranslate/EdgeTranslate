@@ -523,7 +523,7 @@ class BaiduTranslator {
                     api: "baidu",
                     action: "pronounce",
                     text: text,
-                    from: null,
+                    from: language,
                     to: null
                 },
                 errorObj: error
