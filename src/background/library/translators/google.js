@@ -380,8 +380,7 @@ class GoogleTranslator {
                     text: text,
                     from: null,
                     to: null
-                },
-                errorObj: response
+                }
             };
         };
 
@@ -438,8 +437,7 @@ class GoogleTranslator {
                     text: text,
                     from: from,
                     to: to
-                },
-                errorObj: response
+                }
             };
         };
 
@@ -482,8 +480,7 @@ class GoogleTranslator {
                     text: text,
                     from: language,
                     to: null
-                },
-                errorObj: null
+                }
             };
         }
     }

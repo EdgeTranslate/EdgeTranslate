@@ -222,8 +222,7 @@ class TencentTranslator {
                     text: text,
                     from: null,
                     to: null
-                },
-                errorObj: response
+                }
             };
         }
         return this.CODE_TO_LAN.get(result);
@@ -278,8 +277,7 @@ class TencentTranslator {
                     text: text,
                     from: from,
                     to: to
-                },
-                errorObj: response
+                }
             };
         };
 
@@ -340,8 +338,7 @@ class TencentTranslator {
                         text: text,
                         from: language,
                         to: null
-                    },
-                    errorObj: error
+                    }
                 };
             }
         };

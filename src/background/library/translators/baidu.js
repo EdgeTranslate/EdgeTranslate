@@ -252,7 +252,7 @@ class BaiduTranslator {
      *
      * @throws {Object} error
      */
-    throwError(code, msg, action, text, from = null, to = null, error = null) {
+    throwError(code, msg, action, text, from = null, to = null) {
         throw {
             errorType: "API_ERR",
             errorCode: code,
@@ -263,8 +263,7 @@ class BaiduTranslator {
                 text: text,
                 from: from,
                 to: to
-            },
-            errorObj: error
+            }
         };
     }
 
@@ -525,8 +524,7 @@ class BaiduTranslator {
                     text: text,
                     from: language,
                     to: null
-                },
-                errorObj: error
+                }
             };
         }
     }

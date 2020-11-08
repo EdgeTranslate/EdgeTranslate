@@ -402,8 +402,7 @@ class BingTranslator {
             throw {
                 errorType: "API_ERR",
                 errorCode: response.data.statusCode,
-                errorMsg: "Request failed.",
-                errorObj: response
+                errorMsg: "Request failed."
             };
         };
 
@@ -607,8 +606,7 @@ class BingTranslator {
                         errorType: "NET_ERR",
                         errorCode: 0,
                         errorMsg: "Pronounce failed.",
-                        errorAct: errorAct,
-                        errorObj: error
+                        errorAct: errorAct
                     };
                 }
             }
