@@ -63,10 +63,10 @@
 				<li class="phonetic-symbol-content">[<% this.escapeHTML(this.sPronunciation) %>]</li>  
 			</ul>
 		<% } %>
-	</div>
-	<hr/>
+	</div>	
 	<div class="detailed-meanings">
 		<% if (this.detailedMeanings && this.detailedMeanings.length > 0) { %>
+			<hr/>
 			<span class="content-title"><% chrome.i18n.getMessage("DetailedMeanings") %>: </span>
 			<% for (let i in this.detailedMeanings) { %>
 				<p class="detailed-meanings-content">  
@@ -78,10 +78,10 @@
 				</p>
 			<% } %>  
 		<% } %>  
-	</div>
-	<hr/>
+	</div>	
 	<div class="definitions">  
-		<% if (this.definitions && this.definitions.length > 0) { %>  
+		<% if (this.definitions && this.definitions.length > 0) { %>
+			<hr/>
 			<p class="content-title"><% chrome.i18n.getMessage("Definitions") %>: </p>  
 			<% for (let i in this.definitions) { %>  
 				<div class="definitions-content">  
@@ -99,13 +99,13 @@
 				</div>  
 			<% } %>  
 		<% } %>  
-	</div>
-	<hr/>
+	</div>	
 	<div class="examples">  
-		<% if (this.examples && this.examples.length > 0) { %>  
-			<p class="content-title"><% chrome.i18n.getMessage("Examples") %>: </p>  
-			<ol>  
-				<% for (let i in this.examples) { %>  
+		<% if (this.examples && this.examples.length > 0) { %>
+			<hr/>
+			<p class="content-title"><% chrome.i18n.getMessage("Examples") %>: </p>
+			<ol>
+				<% for (let i in this.examples) { %>
 					<li class="sentences">
 						<p><% this.examples[i].target %></p>
 						<p><% this.examples[i].source %></p>

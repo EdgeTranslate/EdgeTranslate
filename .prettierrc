@@ -1,5 +1,11 @@
 {
-	"tabWidth": 4,
-	"useTabs": false,
-	"printWidth": 100
+    "tabWidth": 4,
+    "useTabs": false,
+    "printWidth": 100,
+    "overrides": [
+        {
+            "files": ".prettierrc",
+            "options": { "parser": "json" }
+        }
+    ]
 }

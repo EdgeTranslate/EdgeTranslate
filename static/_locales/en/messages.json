@@ -312,7 +312,7 @@
         "description": "Network error message."
     },
     "APIERR": {
-        "message": "Request parameters error. Please try using other translators or wait a moment and retry. If translating is still broken, please contact developers.",
+        "message": "Request parameters error. Please try using other translators or wait a moment and retry. If translation is still broken, please contact developers.",
         "description": "API parameters error."
     },
     "ERR_CODE": {

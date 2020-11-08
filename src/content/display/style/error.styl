@@ -2,33 +2,47 @@
 
 #edge-translate-error-container {
     width: 100%;
-    height: 100%;
-    text-align: center;
     display: flex;
-    align-items: center;
     flex-direction: column;
-    justify-content: center;
-    justify-items: center;
+    align-items: center;
+
+    // "justify-content center;" may cause part of content hidden when overflowing.
+    // use pseudo elements to simulate its effect
+    &::before, &::after {
+        content: '';
+        flex: 1;
+    }
 
     .edge-translate-icon {
-        text-align: center;
+        align-self: center;
         width: 150px;
         height: 150px;
     }
 
     .content {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
         margin: 10% 5%;
+
+        .error-type {
+            font-weight: bold;
+            font-size: large;
+        }
     }
 }
 
 #icon-failure {
     display: block;
     cursor: auto;
+
     svg {
         fill: #dd5145;
         width: 150px;
         height: 150px;
-        :hover{
+
+        :hover {
             fill: #dd5145;
         }
     }

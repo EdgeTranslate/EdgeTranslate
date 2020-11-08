@@ -1,5 +1,5 @@
 <div id="edge-translate-error-container">
-    <div>
+    <div class="content">
         <i id="icon-failure" class="edge-translate-icon"
             ><?xml version="1.0" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"
             ><svg
@@ -18,12 +18,10 @@
                     p-id="2692"
                 ></path></svg
         ></i>
-    </div>
-    <div class="content">
         <% if (this.error.errorType === "NET_ERR") { %>
-            <p class="error-type"><% chrome.i18n.getMessage("NETERR") %></p>
+        <p class="error-type"><% chrome.i18n.getMessage("NETERR") %></p>
         <% } else { %>
-            <p class="error-type"><% chrome.i18n.getMessage("APIERR") %></p>
+        <p class="error-type"><% chrome.i18n.getMessage("APIERR") %></p>
         <% } %>
         <p class="error-message">
             <% chrome.i18n.getMessage("ERR_CODE") %>: <% JSON.stringify(this.error.errorCode) %>
@@ -32,9 +30,9 @@
             <% chrome.i18n.getMessage("ERR_MSG") %>: <% JSON.stringify(this.error.errorMsg) %>
         </p>
         <% if (this.error.errorAct) { %>
-            <p class="error-message">
-                <% chrome.i18n.getMessage("ERR_ACT") %>: <% JSON.stringify(this.error.errorAct) %>
-            </p>
+        <p class="error-message">
+            <% chrome.i18n.getMessage("ERR_ACT") %>: <% JSON.stringify(this.error.errorAct) %>
+        </p>
         <% } %>
     </div>
 </div>

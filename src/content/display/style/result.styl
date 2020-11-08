@@ -6,7 +6,7 @@
 #edge-translate-result {
     box-sizing: border-box;
     padding: 5% 10%;
-    font-weight: medium;
+    font-weight: normal;
     font-size: medium;
     position: relative;
     display: flex;
@@ -31,7 +31,7 @@
         justify-content: space-between;
         justify-items: flex-end;
 
-        p{
+        p {
             flex-grow: 3;
             flex-shrink: 1;
             padding: 0;
@@ -45,7 +45,7 @@
             flex-direction: column;
             justify-content: center;
 
-            &:hover{
+            &:hover {
                 fill: gray;
             }
         }
@@ -82,7 +82,7 @@
             flex-direction: column;
             justify-content: center;
 
-            &:hover{
+            &:hover {
                 fill: gray;
             }
         }
@@ -94,7 +94,7 @@
             flex-direction: column;
             justify-content: center;
 
-            &:hover{
+            &:hover {
                 fill: gray;
             }
         }
@@ -121,22 +121,23 @@
         }
     }
 
-    .pronounce{
+    .pronounce {
         width: 100%;
 
-        .pronounce-item{
+        .pronounce-item {
             padding: 0;
             display: flex;
             justify-content: flex-start;
             justify-items: center;
         }
 
-        .icon-pronounce{
+        .icon-pronounce {
             padding: 0;
+
             svg {
                 fill: light-primary !important;
 
-                &:hover{
+                &:hover {
                     fill: orange !important;
                 }
             }
@@ -144,7 +145,6 @@
     }
 
     .phonetic-symbol {
-
         .phonetic-symbol-content {
             font-weight: lighter;
             margin-left: 12%;
@@ -195,6 +195,10 @@
             font-weight: light;
         }
     }
+}
+
+hr {
+    width: 100%;
 }
 
 /**

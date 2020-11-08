@@ -868,8 +868,10 @@ function submitEditedText() {
 
     let text = originalTextEle.textContent.trim();
     if (text.length > 0) {
-        // Do translating.
-        Messager.send("background", "translate", { text: text });
+        // to make sure the new text is different from the original text
+        if (originalTextEle.textContent.valueOf() !== translateResult.originalText.valueOf())
+            // Do translating.
+            Messager.send("background", "translate", { text: originalTextEle.textContent });
     } else {
         // Restore original text.
         originalTextEle.textContent = translateResult.originalText;
