@@ -45,7 +45,6 @@
         "crypto": "^1.0.1",
         "css": "^3.0.0",
         "cz-conventional-changelog": "^3.3.0",
-        "cz-customizable": "^6.3.0",
         "del": "^3.0.0",
         "eslint": "^5.16.0",
         "eslint-config-prettier": "^4.3.0",
