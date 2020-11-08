@@ -814,8 +814,14 @@ function submitEditedText() {
     // Prevent editing.
     originalTextEle.setAttribute("contenteditable", "false");
 
-    // Do translating.
-    Messager.send("background", "translate", { text: originalTextEle.textContent });
+    let text = originalTextEle.textContent.trim();
+    if (text.length > 0) {
+        // Do translating.
+        Messager.send("background", "translate", { text: text });
+    } else {
+        // Restore original text.
+        originalTextEle.textContent = translateResult.originalText;
+    }
 
     shadowDom.getElementById("icon-edit").style.display = "block";
     shadowDom.getElementById("icon-edit-done").style.display = "none";
