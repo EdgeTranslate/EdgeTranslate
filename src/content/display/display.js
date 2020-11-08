@@ -788,6 +788,48 @@ function copyContent() {
 }
 
 /**
+ * The following 4 functions are intended to prevent input events from being caught by other elements.
+ */
+
+/**
+ * Prevent keydown event from propagation.
+ *
+ * @param {Event} event keydown event.
+ */
+function onKeyDownInTextEditor(event) {
+    event.stopPropagation();
+}
+
+/**
+ * Prevent keyup event from propagation.
+ *
+ * @param {Event} event keyup event.
+ */
+function onKeyUpInTextEditor(event) {
+    event.stopPropagation();
+}
+
+/**
+ * When the input box gets focused, prevent input events from propagation.
+ *
+ * @param {Event} event focus event.
+ */
+function onTextEditorFocused(event) {
+    event.target.addEventListener("keydown", onKeyDownInTextEditor);
+    event.target.addEventListener("keyup", onKeyUpInTextEditor);
+}
+
+/**
+ * When the input box gets blurred, allow input events propagation.
+ *
+ * @param {Event} event blur event.
+ */
+function onTextEditorBlurred(event) {
+    event.target.removeEventListener("keydown", onKeyDownInTextEditor);
+    event.target.removeEventListener("keyup", onKeyUpInTextEditor);
+}
+
+/**
  * Edit original test.
  */
 function editOriginalText() {
@@ -797,6 +839,12 @@ function editOriginalText() {
 
     // Allow editing.
     originalTextEle.setAttribute("contenteditable", "true");
+
+    // Prevent input events from propagation.
+    originalTextEle.addEventListener("focus", onTextEditorFocused);
+    originalTextEle.addEventListener("blur", onTextEditorBlurred);
+
+    // Auto focus.
     originalTextEle.focus();
 
     shadowDom.getElementById("icon-edit").style.display = "none";
@@ -813,6 +861,10 @@ function submitEditedText() {
 
     // Prevent editing.
     originalTextEle.setAttribute("contenteditable", "false");
+
+    // Allow input events propagation.
+    originalTextEle.removeEventListener("focus", onTextEditorFocused);
+    originalTextEle.removeEventListener("blur", onTextEditorBlurred);
 
     let text = originalTextEle.textContent.trim();
     if (text.length > 0) {
