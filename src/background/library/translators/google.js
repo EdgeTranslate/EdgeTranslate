@@ -468,12 +468,12 @@ class GoogleTranslator {
             this.generateTK(text, this.TKK[0], this.TKK[1]);
         try {
             return this.AUDIO.play();
-        } catch {
+        } catch (error) {
             // TODO: handle API_ERR and NET_ERR differently.
             throw {
                 errorType: "NET_ERR",
                 errorCode: 0,
-                errorMsg: "Pronounce failed.",
+                errorMsg: error.message,
                 errorAct: {
                     api: "google",
                     action: "pronounce",

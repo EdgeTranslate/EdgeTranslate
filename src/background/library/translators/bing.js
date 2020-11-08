@@ -605,7 +605,7 @@ class BingTranslator {
                     throw {
                         errorType: "NET_ERR",
                         errorCode: 0,
-                        errorMsg: "Pronounce failed.",
+                        errorMsg: error.message,
                         errorAct: errorAct
                     };
                 }

@@ -331,7 +331,7 @@ class TencentTranslator {
                 throw {
                     errorType: "NET_ERR",
                     errorCode: 0,
-                    errorMsg: "Pronounce failed.",
+                    errorMsg: error.message,
                     errorAct: {
                         api: "tencent",
                         action: "pronounce",
