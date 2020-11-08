@@ -211,6 +211,21 @@ class TencentTranslator {
         });
 
         let result = response.data.translate.source;
+        if (!result || result.length <= 0) {
+            throw {
+                errorType: "API_ERR",
+                errorCode: response.status,
+                errorMsg: "Detect failed.",
+                errorAct: {
+                    api: "tencent",
+                    action: "detect",
+                    text: text,
+                    from: null,
+                    to: null
+                },
+                errorObj: response
+            };
+        }
         return this.CODE_TO_LAN.get(result);
     }
 
@@ -256,7 +271,14 @@ class TencentTranslator {
             throw {
                 errorType: "API_ERR",
                 errorCode: response.status,
-                errorMsg: "Translate failed, please contact developers to report problem.",
+                errorMsg: "Translate failed.",
+                errorAct: {
+                    api: "tencent",
+                    action: "translate",
+                    text: text,
+                    from: null,
+                    to: null
+                },
                 errorObj: response
             };
         };
@@ -307,10 +329,18 @@ class TencentTranslator {
                     return this.requestHomePage().then(pronounceOnce);
                 }
 
+                // TODO: handle NET_ERR and API_ERR differently.
                 throw {
-                    errorType: "API_ERR",
+                    errorType: "NET_ERR",
                     errorCode: 0,
-                    errorMsg: "Pronounce failed, please contact developers to report problem.",
+                    errorMsg: "Pronounce failed.",
+                    errorAct: {
+                        api: "tencent",
+                        action: "pronounce",
+                        text: text,
+                        from: null,
+                        to: null
+                    },
                     errorObj: error
                 };
             }

@@ -323,6 +323,10 @@
         "message": "错误信息",
         "description": "错误信息。"
     },
+    "ERR_ACT": {
+        "message": "错误操作",
+        "description": "错误操作。"
+    },
     "English": {
         "message": "英语",
         "description": "英语"

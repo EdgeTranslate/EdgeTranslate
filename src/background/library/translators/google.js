@@ -373,7 +373,14 @@ class GoogleTranslator {
             throw {
                 errorType: "API_ERR",
                 errorCode: response.status,
-                errorMsg: "Detect failed, please contact developers to report problem.",
+                errorMsg: "Detect failed.",
+                errorAct: {
+                    api: "google",
+                    action: "detect",
+                    text: text,
+                    from: null,
+                    to: null
+                },
                 errorObj: response
             };
         };
@@ -424,7 +431,14 @@ class GoogleTranslator {
             throw {
                 errorType: "API_ERR",
                 errorCode: response.status,
-                errorMsg: "Translate failed, please contact developers to report problem.",
+                errorMsg: "Translate failed.",
+                errorAct: {
+                    api: "google",
+                    action: "translate",
+                    text: text,
+                    from: from,
+                    to: to
+                },
                 errorObj: response
             };
         };
@@ -454,7 +468,24 @@ class GoogleTranslator {
             speedValue +
             "&tk=" +
             this.generateTK(text, this.TKK[0], this.TKK[1]);
-        return this.AUDIO.play();
+        try {
+            return this.AUDIO.play();
+        } catch {
+            // TODO: handle API_ERR and NET_ERR differently.
+            throw {
+                errorType: "NET_ERR",
+                errorCode: 0,
+                errorMsg: "Pronounce failed.",
+                errorAct: {
+                    api: "google",
+                    action: "pronounce",
+                    text: text,
+                    from: null,
+                    to: null
+                },
+                errorObj: null
+            };
+        }
     }
 
     /**

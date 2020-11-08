@@ -329,7 +329,7 @@ Messager.receive("content", message => {
                     translateResult.originalText = message.detail.text;
                     showPanel(message.detail, "loading");
                     break;
-                case "network_error":
+                case "request_error":
                     showPanel(message.detail, "error");
                     break;
                 default:

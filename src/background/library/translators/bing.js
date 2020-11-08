@@ -402,7 +402,7 @@ class BingTranslator {
             throw {
                 errorType: "API_ERR",
                 errorCode: response.data.statusCode,
-                errorMsg: "Request failed, please contact developers to report problem.",
+                errorMsg: "Request failed.",
                 errorObj: response
             };
         };
@@ -440,15 +440,26 @@ class BingTranslator {
                 this.count.toString(),
             data = "&fromLang=auto-detect&to=zh-Hans&text=" + encodeURIComponent(text);
 
-        const response = await this.request({
-            method: "POST",
-            baseURL: this.HOST,
-            url: url,
-            headers: this.HEADERS,
-            data: data
-        });
-        let result = response[0].detectedLanguage.language;
-        return this.CODE_TO_LAN.get(result);
+        try {
+            const response = await this.request({
+                method: "POST",
+                baseURL: this.HOST,
+                url: url,
+                headers: this.HEADERS,
+                data: data
+            });
+            let result = response[0].detectedLanguage.language;
+            return this.CODE_TO_LAN.get(result);
+        } catch (error) {
+            error.errorAct = {
+                api: "bing",
+                action: "detect",
+                text: text,
+                from: null,
+                to: null
+            };
+            throw error;
+        }
     }
 
     /**
@@ -478,13 +489,28 @@ class BingTranslator {
                 to
             )}&text=${encodeURIComponent(text)}`;
 
-        const transResponse = await this.request({
-            method: "POST",
-            baseURL: this.HOST,
-            url: translateURL,
-            headers: this.HEADERS,
-            data: translateData
-        });
+        try {
+            /*
+             * Use var to prevent putting all of the code that referenced transResponse
+             * into this try-catch scope.
+             */
+            var transResponse = await this.request({
+                method: "POST",
+                baseURL: this.HOST,
+                url: translateURL,
+                headers: this.HEADERS,
+                data: translateData
+            });
+        } catch (error) {
+            error.errorAct = {
+                api: "bing",
+                action: "translate",
+                text: text,
+                from: from,
+                to: to
+            };
+            throw error;
+        }
 
         // Set up originalText in case that lookup failed.
         let transResult = this.parseTranslateResult(transResponse, {
@@ -564,14 +590,24 @@ class BingTranslator {
                     retryCount++;
                     return this.updateTTSAuth().then(pronounceOnce);
                 } else {
+                    let errorAct = {
+                        api: "bing",
+                        action: "pronounce",
+                        text: text,
+                        from: null,
+                        to: null
+                    };
+
                     if (error.errorType) {
+                        error.errorAct = errorAct;
                         throw error;
                     }
 
                     throw {
-                        errorType: "API_ERR",
+                        errorType: "NET_ERR",
                         errorCode: 0,
-                        errorMsg: "Pronounce failed, please contact developers to report problem.",
+                        errorMsg: "Pronounce failed.",
+                        errorAct: errorAct,
                         errorObj: error
                     };
                 }

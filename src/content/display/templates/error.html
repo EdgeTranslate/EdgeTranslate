@@ -31,5 +31,10 @@
         <p class="error-message">
             <% chrome.i18n.getMessage("ERR_MSG") %>: <% JSON.stringify(this.error.errorMsg) %>
         </p>
+        <% if (this.error.errorAct) { %>
+            <p class="error-message">
+                <% chrome.i18n.getMessage("ERR_ACT") %>: <% JSON.stringify(this.error.errorAct) %>
+            </p>
+        <% } %>
     </div>
 </div>

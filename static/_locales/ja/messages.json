@@ -323,6 +323,10 @@
         "message": "Error message",
         "description": "Error message."
     },
+    "ERR_ACT": {
+        "message": "Error action",
+        "description": "Error action."
+    },
     "English": {
         "message": "English",
         "description": "English"

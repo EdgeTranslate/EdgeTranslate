@@ -244,15 +244,26 @@ class BaiduTranslator {
      *
      * @param {String} code error code
      * @param {String} msg error message
+     * @param {String} action action, enum{detect, translate, pronounce}
+     * @param {String} text text
+     * @param {String?} from original language
+     * @param {String?} to target language
      * @param {Any} error original error object
      *
      * @throws {Object} error
      */
-    throwError(code, msg, error) {
+    throwError(code, msg, action, text, from = null, to = null, error = null) {
         throw {
             errorType: "API_ERR",
             errorCode: code,
             errorMsg: msg,
+            errorAct: {
+                api: "baidu",
+                action: action,
+                text: text,
+                from: from,
+                to: to
+            },
             errorObj: error
         };
     }
@@ -404,7 +415,7 @@ class BaiduTranslator {
         if (response.data.msg === "success") {
             return this.CODE_TO_LAN.get(response.data.lan);
         } else {
-            this.throwError(response.data.errno, response.data.msg, undefined);
+            this.throwError(response.data.errno, response.data.msg, "detect", text);
         }
     }
 
@@ -464,7 +475,7 @@ class BaiduTranslator {
                 return translateOneTime();
             }
 
-            this.throwError(data.errno, data.msg, undefined);
+            this.throwError(data.errno, data.msg, "translate", text, from, to);
         };
 
         // if old token and gtk don't exist.
@@ -504,7 +515,19 @@ class BaiduTranslator {
             await this.AUDIO.play();
         } catch (error) {
             // TODO: error might be NET_ERR or API_ERR, should be handled differently.
-            this.throwError(0, error.message, undefined);
+            throw {
+                errorType: "NET_ERR",
+                errorCode: 0,
+                errorMsg: error.message,
+                errorAct: {
+                    api: "baidu",
+                    action: "pronounce",
+                    text: text,
+                    from: null,
+                    to: null
+                },
+                errorObj: error
+            };
         }
     }
 

@@ -201,8 +201,8 @@ class TranslatorManager {
 
             return await this.TRANSLATORS[this.DEFAULT_TRANSLATOR].pronounce(text, lang, speed);
         } catch (error) {
-            sendMessageToCurrentTab("info", {
-                info: "network_error",
+            // Trigger pronouncing error event.
+            EVENT_MANAGER.triggerEvent(EVENT_MANAGER.EVENTS.PRONOUNCE_ERROR, {
                 error: error,
                 timestamp: timestamp
             });
@@ -452,7 +452,18 @@ EVENT_MANAGER.addEventListener(EVENT_MANAGER.EVENTS.TRANSLATE_FINISHED, detail =
  */
 EVENT_MANAGER.addEventListener(EVENT_MANAGER.EVENTS.TRANSLATE_ERROR, detail => {
     sendMessageToCurrentTab("info", {
-        info: "network_error",
+        info: "request_error",
+        error: detail.error,
+        timestamp: detail.timestamp
+    }).catch(error => log(error));
+});
+
+/**
+ * Tell display pronouncing error.
+ */
+EVENT_MANAGER.addEventListener(EVENT_MANAGER.EVENTS.PRONOUNCE_ERROR, detail => {
+    sendMessageToCurrentTab("info", {
+        info: "request_error",
         error: detail.error,
         timestamp: detail.timestamp
     }).catch(error => log(error));
