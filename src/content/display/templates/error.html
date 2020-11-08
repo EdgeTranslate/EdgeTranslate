@@ -18,10 +18,10 @@
                     p-id="2692"
                 ></path></svg
         ></i>
-        <% if (this.error.errorType === "NET_ERR") { %>
-        <p class="error-type"><% chrome.i18n.getMessage("NETERR") %></p>
-        <% } else { %>
+        <% if (this.error.errorType === "API_ERR") { %>
         <p class="error-type"><% chrome.i18n.getMessage("APIERR") %></p>
+        <% } else { %>
+        <p class="error-type"><% chrome.i18n.getMessage("NETERR") %></p>
         <% } %>
         <p class="error-message">
             <% chrome.i18n.getMessage("ERR_CODE") %>: <% JSON.stringify(this.error.errorCode) %>
