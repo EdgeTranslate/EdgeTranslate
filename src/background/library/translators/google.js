@@ -453,7 +453,7 @@ class GoogleTranslator {
      *
      * @returns {Promise<void>} Promise of playing
      */
-    pronounce(text, language, speed) {
+    async pronounce(text, language, speed) {
         this.stopPronounce();
         let speedValue = speed === "fast" ? "0.2" : "0.8";
         this.AUDIO.src =
@@ -467,7 +467,7 @@ class GoogleTranslator {
             "&tk=" +
             this.generateTK(text, this.TKK[0], this.TKK[1]);
         try {
-            return this.AUDIO.play();
+            await this.AUDIO.play();
         } catch (error) {
             // TODO: handle API_ERR and NET_ERR differently.
             throw {

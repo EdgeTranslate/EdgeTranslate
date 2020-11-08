@@ -583,7 +583,7 @@ class BingTranslator {
                     false
                 );
                 this.AUDIO.src = "data:audio/mp3;base64," + this.arrayBufferToBase64(TTSResponse);
-                return this.AUDIO.play();
+                await this.AUDIO.play();
             } catch (error) {
                 if (retryCount < this.MAX_RETRY) {
                     retryCount++;
