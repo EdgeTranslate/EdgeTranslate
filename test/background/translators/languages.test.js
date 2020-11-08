@@ -5,12 +5,18 @@ import bingTranslator from "background/library/translators/bing.js";
 import baiduTranslator from "background/library/translators/baidu.js";
 import tencentTranslator from "background/library/translators/tencent.js";
 
-describe("these tests are used to make sure all of the supported languages in translators/**.js can be found in languages.js", () => {
+describe("These tests are used to make sure all of the supported languages in translators/**.js can be found in languages.js", () => {
+    // Build language set.
+    let langSet = new Set();
+    for (let lang in LANGUAGES) {
+        langSet.add(lang);
+    }
+
     it("to test supported languages in google.js", done => {
         let languages = googleTranslator.supportedLanguages();
         for (let lan of languages) {
             if (lan !== "auto") {
-                expect(LANGUAGES[lan]).toBeDefined();
+                expect(langSet).toContain(lan);
             }
         }
         done();
@@ -20,7 +26,7 @@ describe("these tests are used to make sure all of the supported languages in tr
         let languages = bingTranslator.supportedLanguages();
         for (let lan of languages) {
             if (lan !== "auto") {
-                expect(LANGUAGES[lan]).toBeDefined();
+                expect(langSet).toContain(lan);
             }
         }
         done();
@@ -30,7 +36,7 @@ describe("these tests are used to make sure all of the supported languages in tr
         let languages = baiduTranslator.supportedLanguages();
         for (let lan of languages) {
             if (lan !== "auto") {
-                expect(LANGUAGES[lan]).toBeDefined();
+                expect(langSet).toContain(lan);
             }
         }
         done();
@@ -40,60 +46,49 @@ describe("these tests are used to make sure all of the supported languages in tr
         let languages = tencentTranslator.supportedLanguages();
         for (let lan of languages) {
             if (lan !== "auto") {
-                expect(LANGUAGES[lan]).toBeDefined();
+                expect(langSet).toContain(lan);
             }
         }
         done();
     });
 });
 
-describe("These test are used to make sure all languages supported by Google web page translate is in BROWSER_LANGUAGES_MAP.", () => {
+describe("These tests are used to make sure all languages supported by Google web page translate are in BROWSER_LANGUAGES_MAP.", () => {
     it("check languages for Google page translate", done => {
-        let langs = new Set();
+        let langSet = new Set();
         for (let langName in BROWSER_LANGUAGES_MAP) {
-            langs.add(BROWSER_LANGUAGES_MAP[langName]);
+            langSet.add(BROWSER_LANGUAGES_MAP[langName]);
         }
 
         let langInLans = fs
             .readdirSync("static/google/lans/")
             .map(file => file.split("_")[1].split(".")[0]);
         langInLans.forEach(lang => {
-            try {
-                expect(langs.has(lang)).toBe(true);
-            } catch (error) {
-                // eslint-disable-next-line no-console
-                console.log(`${lang} not found!`);
-                throw error;
-            }
+            expect(langSet).toContain(lang);
         });
 
         let langInMain = fs
             .readdirSync("static/google/main/")
             .map(file => file.split("_")[1].split(".")[0]);
         langInMain.forEach(lang => {
-            try {
-                expect(langs.has(lang)).toBe(true);
-            } catch (error) {
-                // eslint-disable-next-line no-console
-                console.log(`${lang} not found!`);
-                throw error;
-            }
+            expect(langSet).toContain(lang);
         });
 
         done();
     });
 });
 
-describe("These test are used to make sure that all languages in BROWSER_LANGUAGES_MAP in is LANGUAGES.", () => {
+describe("These tests are used to make sure that all languages in BROWSER_LANGUAGES_MAP are in LANGUAGES.", () => {
+    // Build language set.
+    let langSet = new Set();
+    for (let lang in LANGUAGES) {
+        langSet.add(lang);
+    }
+
     it("check languages in BROWSER_LANGUAGES_MAP", done => {
         for (let langName in BROWSER_LANGUAGES_MAP) {
-            try {
-                expect(LANGUAGES[BROWSER_LANGUAGES_MAP[langName]]).toBeDefined();
-            } catch (error) {
-                // eslint-disable-next-line no-console
-                console.log(`${langName} not found!`);
-                throw error;
-            }
+            let lang = BROWSER_LANGUAGES_MAP[langName];
+            expect(langSet).toContain(lang);
         }
 
         done();
