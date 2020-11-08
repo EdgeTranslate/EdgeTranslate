@@ -65,15 +65,15 @@
 	<div class="detailed-meanings">
 		<% if (this.detailedMeanings && this.detailedMeanings.length > 0) { %>
 			<hr/>
-			<span class="content-title"><% chrome.i18n.getMessage("DetailedMeanings") %>: </span>
+			<p class="content-title"><% chrome.i18n.getMessage("DetailedMeanings") %>: </p>
 			<% for (let i in this.detailedMeanings) { %>
-				<p class="detailed-meanings-content">  
+				<div class="detailed-meanings-content">  
 					<p class="word-type"><% this.detailedMeanings[i].pos + ": " %></p>  
 					<p class="may-need-rtl content"><% this.detailedMeanings[i].meaning %></p>
 					<% if (this.detailedMeanings[i].synonyms) { %>
 						<p class="may-need-rtl content"><% this.detailedMeanings[i].synonyms.join(", ") %></p>
 					<% } %>
-				</p>
+				</div>
 			<% } %>  
 		<% } %>  
 	</div>	
