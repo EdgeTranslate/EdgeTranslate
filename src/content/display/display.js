@@ -124,7 +124,9 @@ var documentBodyCSS;
         // thresholdPosition: "in",
         // thresholdPosition: "center",
         // thresholdPosition: "out",
-        thresholdPosition: 0.7
+        thresholdPosition: 0.7,
+        minWidth: 100,
+        minHeight: 150
     });
 
     let startTranslate = [0, 0];
