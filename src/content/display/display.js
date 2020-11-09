@@ -333,6 +333,7 @@ Messager.receive("content", message => {
                     onPronouncingFinished(message.detail.pronouncing);
                     break;
                 case "request_error":
+                    onPronouncingFinished(message.detail.pronouncing);
                     showPanel(message.detail, "error");
                     break;
                 default:
