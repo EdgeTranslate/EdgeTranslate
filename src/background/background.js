@@ -324,6 +324,7 @@ async function messageHandler(message, sender) {
             }
 
             let result = await TRANSLATOR_MANAGER.pronounce(
+                message.detail.pronouncing,
                 message.detail.text,
                 message.detail.language,
                 speed

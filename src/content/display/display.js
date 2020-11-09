@@ -329,6 +329,9 @@ Messager.receive("content", message => {
                     translateResult.originalText = message.detail.text;
                     showPanel(message.detail, "loading");
                     break;
+                case "pronouncing_finished":
+                    onPronouncingFinished(message.detail.pronouncing);
+                    break;
                 case "request_error":
                     showPanel(message.detail, "error");
                     break;
@@ -731,7 +734,12 @@ function openOptionsPage() {
  */
 function sourcePronounce() {
     if (document.documentElement.contains(panelContainer)) {
+        // Show loading animation when loading pronouncing.
+        shadowDom.getElementById("source-pronounce").style.display = "none";
+        shadowDom.getElementById("source-pronounce-loading").style.display = "block";
+
         Messager.send("background", "pronounce", {
+            pronouncing: "source",
             text: translateResult.originalText,
             language: translateResult.sourceLanguage,
             speed: sourceTTSSpeed
@@ -747,7 +755,12 @@ function sourcePronounce() {
 
 function targetPronounce() {
     if (document.documentElement.contains(panelContainer)) {
+        // Show loading animation when loading pronouncing.
+        shadowDom.getElementById("target-pronounce").style.display = "none";
+        shadowDom.getElementById("target-pronounce-loading").style.display = "block";
+
         Messager.send("background", "pronounce", {
+            pronouncing: "target",
             text: translateResult.mainMeaning,
             language: translateResult.targetLanguage,
             speed: targetTTSSpeed
@@ -758,6 +771,21 @@ function targetPronounce() {
                 targetTTSSpeed = "fast";
             }
         });
+    }
+}
+
+/**
+ * Restore pronounce icon when pronouncing finished.
+ *
+ * @param {String} pronouncing which pronounce icon should we restore, source or target?
+ */
+function onPronouncingFinished(pronouncing) {
+    if (pronouncing == "source") {
+        shadowDom.getElementById("source-pronounce-loading").style.display = "none";
+        shadowDom.getElementById("source-pronounce").style.display = "block";
+    } else if (pronouncing == "target") {
+        shadowDom.getElementById("target-pronounce-loading").style.display = "none";
+        shadowDom.getElementById("target-pronounce").style.display = "block";
     }
 }
 
