@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "../axios.js";
 import { log } from "../../../common/scripts/common.js";
 
 /**
@@ -153,13 +153,19 @@ class TencentTranslator {
      * Parse Google translate result.
      *
      * @param {Object} response Google translate response
+     * @param {String} originalText original text
      *
      * @returns {Object} parsed result
      */
-    parseResult(response) {
+    parseResult(response, originalText) {
         let result = {};
         result.originalText = response.translate.records[0].sourceText;
         result.mainMeaning = response.translate.records[0].targetText.split(/\s*\/\s*/g)[0];
+
+        // In case the original text is not returned by the API.
+        if (!result.originalText || result.originalText.length <= 0) {
+            result.originalText = originalText;
+        }
 
         if (response.suggest && response.suggest.data && response.suggest.data.length > 0) {
             if (response.suggest.data[0].prx_ph_AmE) {
@@ -191,29 +197,35 @@ class TencentTranslator {
      *
      * @returns {Promise<String>} detected language Promise
      */
-    detect(text) {
-        return new Promise((resolve, reject) => {
-            axios({
-                method: "POST",
-                baseURL: this.BASE_URL,
-                url: "/api/translate",
-                headers: this.HEADERS,
-                data: new URLSearchParams({
-                    source: this.LAN_TO_CODE.get("auto"),
-                    target: this.LAN_TO_CODE.get("zh-CN"),
-                    sourceText: text
-                })
+    async detect(text) {
+        const response = await axios({
+            method: "POST",
+            baseURL: this.BASE_URL,
+            url: "/api/translate",
+            headers: this.HEADERS,
+            data: new URLSearchParams({
+                source: this.LAN_TO_CODE.get("auto"),
+                target: this.LAN_TO_CODE.get("zh-CN"),
+                sourceText: text
             })
-                .then(response => {
-                    if (response.status === 200) {
-                        let result = response.data.translate.source;
-                        resolve(this.CODE_TO_LAN.get(result));
-                    } else reject(response);
-                })
-                .catch(error => {
-                    reject(error);
-                });
         });
+
+        let result = response.data.translate.source;
+        if (!result || result.length <= 0) {
+            throw {
+                errorType: "API_ERR",
+                errorCode: response.status,
+                errorMsg: "Detect failed.",
+                errorAct: {
+                    api: "tencent",
+                    action: "detect",
+                    text: text,
+                    from: null,
+                    to: null
+                }
+            };
+        }
+        return this.CODE_TO_LAN.get(result);
     }
 
     /**
@@ -227,39 +239,46 @@ class TencentTranslator {
      */
     translate(text, from, to) {
         let retryCount = 0;
-        let translateOnce = () => {
-            return new Promise((resolve, reject) => {
-                axios({
-                    method: "POST",
-                    baseURL: this.BASE_URL,
-                    url: "/api/translate",
-                    headers: this.HEADERS,
-                    data: new URLSearchParams({
-                        source: this.LAN_TO_CODE.get(from),
-                        target: this.LAN_TO_CODE.get(to),
-                        sourceText: text,
-                        qtv: this.qtv,
-                        qtk: this.qtk,
-                        sessionUuid: "translate_uuid" + new Date().getTime()
-                    })
+        let translateOnce = async () => {
+            const response = await axios({
+                method: "POST",
+                baseURL: this.BASE_URL,
+                url: "/api/translate",
+                headers: this.HEADERS,
+                data: new URLSearchParams({
+                    source: this.LAN_TO_CODE.get(from),
+                    target: this.LAN_TO_CODE.get(to),
+                    sourceText: text,
+                    qtv: this.qtv,
+                    qtk: this.qtk,
+                    sessionUuid: "translate_uuid" + new Date().getTime()
                 })
-                    .then(response => {
-                        if (
-                            response.status === 200 &&
-                            (response.data.dict ||
-                                (response.data.translate && retryCount >= this.MAX_RETRY))
-                        ) {
-                            let result = this.parseResult(response.data);
-                            resolve(result);
-                        } else if (retryCount < this.MAX_RETRY) {
-                            retryCount++;
-                            resolve(this.updateTokens().then(translateOnce));
-                        } else reject(response);
-                    })
-                    .catch(error => {
-                        reject(error);
-                    });
             });
+
+            // Translate succeeded.
+            if (response.data.dict || (response.data.translate && retryCount >= this.MAX_RETRY)) {
+                let result = this.parseResult(response.data, text);
+                return result;
+            }
+
+            // Retry.
+            if (retryCount < this.MAX_RETRY) {
+                retryCount++;
+                return this.updateTokens().then(translateOnce);
+            }
+
+            throw {
+                errorType: "API_ERR",
+                errorCode: response.status,
+                errorMsg: "Translate failed.",
+                errorAct: {
+                    api: "tencent",
+                    action: "translate",
+                    text: text,
+                    from: from,
+                    to: to
+                }
+            };
         };
 
         return translateOnce();
@@ -300,14 +319,27 @@ class TencentTranslator {
                     language
                 )}&text=${encodeURIComponent(text)}&guid=${guid}`;
 
-                return await this.AUDIO.play();
+                await this.AUDIO.play();
             } catch (error) {
                 // Update cookies on failure.
                 if (retryCount < this.MAX_RETRY) {
                     retryCount++;
                     return this.requestHomePage().then(pronounceOnce);
                 }
-                return Promise.reject(error);
+
+                // TODO: handle NET_ERR and API_ERR differently.
+                throw {
+                    errorType: "NET_ERR",
+                    errorCode: 0,
+                    errorMsg: error.message,
+                    errorAct: {
+                        api: "tencent",
+                        action: "pronounce",
+                        text: text,
+                        from: language,
+                        to: null
+                    }
+                };
             }
         };
         return pronounceOnce();

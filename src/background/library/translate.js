@@ -1,4 +1,4 @@
-// import axios from "axios";
+// import axios from "./axios.js";
 import HYBRID_TRANSLATOR from "./translators/hybrid.js";
 import { sendMessageToCurrentTab } from "./common.js";
 import { log } from "../../common/scripts/common.js";
@@ -181,28 +181,46 @@ class TranslatorManager {
     /**
      * Text to speech proxy.
      *
+     * @param {String} pronouncing which text are we pronouncing? enum{source, target}
      * @param {String} text The text.
      * @param {String} language The language of the text.
      * @param {String} speed The speed of the speech.
      *
      * @returns {Promise<void>} pronounce finished Promise
      */
-    async pronounce(text, language, speed) {
+    async pronounce(pronouncing, text, language, speed) {
         // Check config.
         await this.loadConfigIfNotLoaded();
 
         let lang = language;
         let timestamp = new Date().getTime();
 
+        // Trigger pronouncing start event.
+        EVENT_MANAGER.triggerEvent(EVENT_MANAGER.EVENTS.PRONOUNCE_START, {
+            pronouncing: pronouncing,
+            text: text,
+            language: language,
+            timestamp: timestamp
+        });
+
         try {
             if (language == "auto") {
                 lang = await this.TRANSLATORS[this.DEFAULT_TRANSLATOR].detect(text);
             }
 
-            return await this.TRANSLATORS[this.DEFAULT_TRANSLATOR].pronounce(text, lang, speed);
+            await this.TRANSLATORS[this.DEFAULT_TRANSLATOR].pronounce(text, lang, speed);
+
+            // Trigger pronouncing finished event.
+            EVENT_MANAGER.triggerEvent(EVENT_MANAGER.EVENTS.PRONOUNCE_FINISHED, {
+                pronouncing: pronouncing,
+                text: text,
+                language: lang,
+                timestamp: timestamp
+            });
         } catch (error) {
-            sendMessageToCurrentTab("info", {
-                info: "network_error",
+            // Trigger pronouncing error event.
+            EVENT_MANAGER.triggerEvent(EVENT_MANAGER.EVENTS.PRONOUNCE_ERROR, {
+                pronouncing: pronouncing,
                 error: error,
                 timestamp: timestamp
             });
@@ -452,9 +470,39 @@ EVENT_MANAGER.addEventListener(EVENT_MANAGER.EVENTS.TRANSLATE_FINISHED, detail =
  */
 EVENT_MANAGER.addEventListener(EVENT_MANAGER.EVENTS.TRANSLATE_ERROR, detail => {
     sendMessageToCurrentTab("info", {
-        info: "network_error",
+        info: "request_error",
         error: detail.error,
         timestamp: detail.timestamp
+    }).catch(error => log(error));
+});
+
+/**
+ * Tell display pronouncing start.
+ */
+EVENT_MANAGER.addEventListener(EVENT_MANAGER.EVENTS.PRONOUNCE_START, detail => {
+    sendMessageToCurrentTab("info", {
+        info: "start_pronouncing",
+        ...detail
+    }).catch(error => log(error));
+});
+
+/**
+ * Tell display pronouncing finished.
+ */
+EVENT_MANAGER.addEventListener(EVENT_MANAGER.EVENTS.PRONOUNCE_FINISHED, detail => {
+    sendMessageToCurrentTab("info", {
+        info: "pronouncing_finished",
+        ...detail
+    }).catch(error => log(error));
+});
+
+/**
+ * Tell display pronouncing error.
+ */
+EVENT_MANAGER.addEventListener(EVENT_MANAGER.EVENTS.PRONOUNCE_ERROR, detail => {
+    sendMessageToCurrentTab("info", {
+        info: "request_error",
+        ...detail
     }).catch(error => log(error));
 });
 

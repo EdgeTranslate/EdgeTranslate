@@ -61,5 +61,26 @@ function render(template, contents, includes) {
     }
 
     code.push("return result.join('');");
-    return new Function(code.join("").replace(/\n|\r/g, "")).apply(contents);
+    return new Function(code.join("").replace(/\n|\r/g, "")).apply({
+        escapeHTML: escapeHTML,
+        ...contents
+    });
+}
+
+/**
+ * Escape HTML tag to avoid XSS security problems
+ *
+ * @param {String} str string text to be escaped
+ *
+ * @returns {String} escaped string
+ */
+function escapeHTML(str) {
+    const HTML_CHAR_REGEX = /"|&|'|<|>/g;
+
+    if (typeof str !== "string") return str;
+    return str.replace(HTML_CHAR_REGEX, expression => {
+        let char = expression.charCodeAt(0);
+        char = char == 0x20 ? 0xa0 : char;
+        return `&#${char};`;
+    });
 }

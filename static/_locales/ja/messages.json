@@ -87,6 +87,14 @@
         "message": "翻訳されたテキストを読み上げる",
         "description": "翻訳されたテキストを読み上げる"
     },
+    "EditText": {
+        "message": "Edit text",
+        "description": "Edit selected text."
+    },
+    "Retranslate": {
+        "message": "Re-translate",
+        "description": "Re-translate the edited text."
+    },
     "CopyResult": {
         "message": "結果をコピー",
         "description": "翻訳結果をコピーします。"
@@ -303,17 +311,21 @@
         "message": "ネットワークエラー! ネットワーク接続を確認してください。",
         "description": "ネットワークエラーメッセージ"
     },
-    "NETERR_CODE": {
-        "message": "エラーコード",
-        "description": "ネットワークエラーコード"
+    "APIERR": {
+        "message": "Request parameters error. Please try using other translators or wait a moment and retry. If translation is still broken, please contact developers.",
+        "description": "API parameters error."
     },
-    "NETERR_503": {
-        "message": "頻繁にリクエストしすぎです! Googleが一時的にあなたのIPアドレスをブロックしました。30分後にもう一度お試しください。",
-        "description": "エラーコード503のネットワークエラーメッセージ。"
+    "ERR_CODE": {
+        "message": "Error code",
+        "description": "Error code."
     },
-    "NETERR_413": {
-        "message": "翻訳テキストが長すぎます! 翻訳テキストを短くして、もう一度試してみてください。",
-        "description": "エラーコード413のネットワークエラーメッセージ。"
+    "ERR_MSG": {
+        "message": "Error message",
+        "description": "Error message."
+    },
+    "ERR_ACT": {
+        "message": "Error action",
+        "description": "Error action."
     },
     "English": {
         "message": "English",
@@ -1094,6 +1106,10 @@
     "Twi": {
         "message": "Twi",
         "description": "Twi"
+    },
+    "Uyghur": {
+        "message": "Uyghur",
+        "description": "Uyghur"
     },
     "Ukrainian": {
         "message": "Ukrainian",

@@ -24,7 +24,8 @@ class Messager {
         }
 
         return new Promise((resolve, reject) => {
-            chrome.runtime.sendMessage({ to: receivers, title: title, detail: detail }, result => {
+            let message = JSON.stringify({ to: receivers, title: title, detail: detail });
+            chrome.runtime.sendMessage(message, result => {
                 if (chrome.runtime.lastError) {
                     reject(chrome.runtime.lastError);
                 } else {
@@ -56,24 +57,21 @@ class Messager {
             receivers[receiver] = true;
         }
 
+        let message = JSON.stringify({ to: receivers, title: title, detail: detail });
         if (BROWSER_ENV === "chrome") {
             // Chrome is using callback.
             return new Promise((resolve, reject) => {
-                chrome.tabs.sendMessage(
-                    tabId,
-                    { to: receivers, title: title, detail: detail },
-                    result => {
-                        if (chrome.runtime.lastError) {
-                            reject(chrome.runtime.lastError);
-                        } else {
-                            resolve(result);
-                        }
+                chrome.tabs.sendMessage(tabId, message, result => {
+                    if (chrome.runtime.lastError) {
+                        reject(chrome.runtime.lastError);
+                    } else {
+                        resolve(result);
                     }
-                );
+                });
             });
         } else {
             // Firefox is using Promise.
-            return browser.tabs.sendMessage(tabId, { to: receivers, title: title, detail: detail });
+            return browser.tabs.sendMessage(tabId, message);
         }
     }
 
@@ -87,8 +85,9 @@ class Messager {
      */
     static receive(receiver, messageHandler) {
         chrome.runtime.onMessage.addListener((message, sender, callback) => {
-            if (message.to && message.to[receiver]) {
-                messageHandler(message, sender).then(result => {
+            let parsed = JSON.parse(message);
+            if (parsed.to && parsed.to[receiver]) {
+                messageHandler(parsed, sender).then(result => {
                     if (callback) callback(result);
                 });
             }

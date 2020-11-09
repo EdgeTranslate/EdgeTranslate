@@ -1,4 +1,4 @@
-import LANGUAGES from "../common/scripts/languages.js";
+import { LANGUAGES } from "../common/scripts/languages.js";
 import Messager from "../common/scripts/messager";
 
 // 获取下拉列表元素

@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "../axios.js";
 
 /**
  * Supported languages.
@@ -47,7 +47,7 @@ const LANGUAGES = [
     ["bn", "bn-BD"],
     ["hmn", "mww"],
     ["af", "af"],
-    ["ma", "pa"],
+    ["pa", "pa"],
     ["pt", "pt"],
     ["ps", "ps"],
     ["ja", "ja"],
@@ -399,7 +399,11 @@ class BingTranslator {
             }
 
             // Throw error.
-            throw { response: response };
+            throw {
+                errorType: "API_ERR",
+                errorCode: response.data.statusCode,
+                errorMsg: "Request failed."
+            };
         };
 
         if (!(this.IG.length > 0 && this.IID.length > 0)) {
@@ -435,15 +439,26 @@ class BingTranslator {
                 this.count.toString(),
             data = "&fromLang=auto-detect&to=zh-Hans&text=" + encodeURIComponent(text);
 
-        const response = await this.request({
-            method: "POST",
-            baseURL: this.HOST,
-            url: url,
-            headers: this.HEADERS,
-            data: data
-        });
-        let result = response[0].detectedLanguage.language;
-        return this.CODE_TO_LAN.get(result);
+        try {
+            const response = await this.request({
+                method: "POST",
+                baseURL: this.HOST,
+                url: url,
+                headers: this.HEADERS,
+                data: data
+            });
+            let result = response[0].detectedLanguage.language;
+            return this.CODE_TO_LAN.get(result);
+        } catch (error) {
+            error.errorAct = {
+                api: "bing",
+                action: "detect",
+                text: text,
+                from: null,
+                to: null
+            };
+            throw error;
+        }
     }
 
     /**
@@ -473,13 +488,28 @@ class BingTranslator {
                 to
             )}&text=${encodeURIComponent(text)}`;
 
-        const transResponse = await this.request({
-            method: "POST",
-            baseURL: this.HOST,
-            url: translateURL,
-            headers: this.HEADERS,
-            data: translateData
-        });
+        try {
+            /*
+             * Use var to prevent putting all of the code that referenced transResponse
+             * into this try-catch scope.
+             */
+            var transResponse = await this.request({
+                method: "POST",
+                baseURL: this.HOST,
+                url: translateURL,
+                headers: this.HEADERS,
+                data: translateData
+            });
+        } catch (error) {
+            error.errorAct = {
+                api: "bing",
+                action: "translate",
+                text: text,
+                from: from,
+                to: to
+            };
+            throw error;
+        }
 
         // Set up originalText in case that lookup failed.
         let transResult = this.parseTranslateResult(transResponse, {
@@ -553,13 +583,31 @@ class BingTranslator {
                     false
                 );
                 this.AUDIO.src = "data:audio/mp3;base64," + this.arrayBufferToBase64(TTSResponse);
-                return this.AUDIO.play();
+                await this.AUDIO.play();
             } catch (error) {
                 if (retryCount < this.MAX_RETRY) {
                     retryCount++;
                     return this.updateTTSAuth().then(pronounceOnce);
                 } else {
-                    throw error;
+                    let errorAct = {
+                        api: "bing",
+                        action: "pronounce",
+                        text: text,
+                        from: language,
+                        to: null
+                    };
+
+                    if (error.errorType) {
+                        error.errorAct = errorAct;
+                        throw error;
+                    }
+
+                    throw {
+                        errorType: "NET_ERR",
+                        errorCode: 0,
+                        errorMsg: error.message,
+                        errorAct: errorAct
+                    };
                 }
             }
         };

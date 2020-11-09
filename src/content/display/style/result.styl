@@ -6,7 +6,7 @@
 #edge-translate-result {
     box-sizing: border-box;
     padding: 5% 10%;
-    font-weight: medium;
+    font-weight: normal;
     font-size: medium;
     position: relative;
     display: flex;
@@ -31,7 +31,7 @@
         justify-content: space-between;
         justify-items: flex-end;
 
-        p{
+        p {
             flex-grow: 3;
             flex-shrink: 1;
             padding: 0;
@@ -45,7 +45,7 @@
             flex-direction: column;
             justify-content: center;
 
-            &:hover{
+            &:hover {
                 fill: gray;
             }
         }
@@ -71,6 +71,37 @@
         }
     }
 
+    .original-text {
+        color: gray;
+        font-weight: lighter;
+
+        #icon-edit {
+            font-size: x-large;
+            fill: lightgray;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+
+            &:hover {
+                fill: gray;
+            }
+        }
+
+        #icon-edit-done {
+            font-size: x-large;
+            fill: lightgray;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+
+            &:hover {
+                fill: gray;
+            }
+        }
+
+        @extend #edge-translate-result .main-meaning;
+    }
+
     .target-phonetic-symbol {
         width: 100%;
 
@@ -90,33 +121,44 @@
         }
     }
 
-    .pronounce{
+    .pronounce {
         width: 100%;
 
-        .pronounce-item{
+        .pronounce-item {
             padding: 0;
             display: flex;
             justify-content: flex-start;
             justify-items: center;
         }
 
-        .icon-pronounce{
+        .icon-pronounce {
             padding: 0;
+
             svg {
                 fill: light-primary !important;
 
-                &:hover{
+                &:hover {
                     fill: orange !important;
                 }
+            }
+        }
+
+        .icon-pronounce-loading {
+            padding: 0;
+
+            circle {
+                fill: none;
+                stroke: light-primary !important;
             }
         }
     }
 
     .phonetic-symbol {
-
+        width: 100%;
         .phonetic-symbol-content {
+            display: block;
+            margin-left: 15%;
             font-weight: lighter;
-            margin-left: 12%;
         }
     }
 
@@ -127,6 +169,8 @@
     }
 
     .detailed-meanings {
+        width: 100%;
+
         .word-type {
             color: gray;
             margin-left: 10%;
@@ -164,6 +208,10 @@
             font-weight: light;
         }
     }
+}
+
+hr {
+    width: 100%;
 }
 
 /**
