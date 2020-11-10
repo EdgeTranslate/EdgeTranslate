@@ -512,9 +512,14 @@ class BingTranslator {
                     response.request.responseURL
                 );
 
-                /*
-                 * If the requested host is different from the original host, which means there was a redirection
-                 * to a new region related host, update the original host and home page url with the redirecting host.
+                /**
+                 * Bing redirects user requests based on user region. For example, if you are in China and request
+                 * www.bing.com, you will be redirected to cn.bing.com. This causes translating error because IG and IID
+                 * for one region are not usable for another. Therefore, we need to update HOST, HOME_PAGE, IG and IID
+                 * whenever a redirection happened.
+                 *
+                 * If the requested host is different from the original host, which means there was a redirection,
+                 * update HOST and HOME_PAGE with the redirecting host.
                  */
                 if (responseHost && responseHost[1] !== this.HOST) {
                     this.HOST = responseHost[1];
