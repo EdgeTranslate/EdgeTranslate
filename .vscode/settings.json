@@ -1,11 +1,4 @@
 {
-    "spellright.language": [],
-    "spellright.documentTypes": ["markdown", "latex", "plaintext"],
-    "spellright.parserByClass": {
-        "stylus": {
-            "parser": "plain"
-        }
-    },
     "VSCodeCounter.include": ["**/src/**", "**/static/_locales/**"],
     "VSCodeCounter.outputDirectory": "build/counter/",
     "cSpell.words": [
@@ -16,8 +9,10 @@
         "contenteditable",
         "fanyi",
         "nesw",
+        "nowrap",
         "nwse",
         "objs",
+        "overscroll",
         "pageview",
         "snappable",
         "srcdoc",

@@ -124,10 +124,16 @@ var documentBodyCSS;
         // thresholdPosition: "in",
         // thresholdPosition: "center",
         // thresholdPosition: "out",
-        thresholdPosition: 0.7
+        thresholdPosition: 0.7,
+        minWidth: 100,
+        minHeight: 150
     });
 
     let startTranslate = [0, 0];
+    // to flag whether the floating panel should be changed to fixed panel
+    let floatingToFixed = false;
+    // store the fixed direction on bound event
+    let fixedDirection = "";
     /* draggable events*/
     moveablePanel
         .on("dragStart", ({ set, stop, inputEvent }) => {
@@ -145,22 +151,7 @@ var documentBodyCSS;
             }
             set(startTranslate);
         })
-        .on("drag", ({ target, translate, inputEvent }) => {
-            if (inputEvent) {
-                // change the display type from fixed to floating
-                if (displaySetting.type === "fixed") {
-                    displaySetting.type = "floating";
-                    removeFixedPanel();
-                    showFloatingPanel();
-                    updateDisplaySetting();
-                }
-                /* whether to show hight part on the one side of the page*/
-                let threshold = 10;
-                if (inputEvent.clientX <= threshold) showHighlightPart("left");
-                else if (inputEvent.clientX >= window.innerWidth - threshold)
-                    showHighlightPart("right");
-                else removeHighlightPart();
-            }
+        .on("drag", ({ target, translate }) => {
             startTranslate = translate;
             target.style.transform = `translate(${translate[0]}px, ${translate[1]}px)`;
         })
@@ -169,35 +160,48 @@ var documentBodyCSS;
 
             /* change the display type of result panel */
             if (inputEvent && displaySetting.type === "floating") {
+                if (floatingToFixed) {
+                    displaySetting.fixedData.position = fixedDirection;
+                    displaySetting.type = "fixed";
+                    removeHighlightPart();
+                    showFixedPanel();
+                    updateDisplaySetting();
+                }
+            }
+        })
+        // // the result panel start to drag out of the drag area
+        // .on("boundStart", ({ direction }) => {
+        //     console.log(direction);
+        // })
+        // the result panel drag out of the drag area
+        .on("bound", ({ direction, distance }) => {
+            /* whether to show hight part on the one side of the page*/
+            if (displaySetting.type === "floating") {
                 let threshold = 10;
-                // mouse is close to the left boundary
-                if (inputEvent.clientX <= threshold) displaySetting.fixedData.position = "left";
-                // mouse is close to the right boundary
-                else if (inputEvent.clientX >= window.innerWidth - threshold)
-                    displaySetting.fixedData.position = "right";
-                else return;
-                displaySetting.type = "fixed";
-                removeHighlightPart();
-                showFixedPanel();
+                if (distance > threshold) {
+                    if (direction === "left" || direction === "right") {
+                        fixedDirection = direction;
+                        floatingToFixed = true;
+                        showHighlightPart(direction);
+                    }
+                }
+            }
+        })
+        // the result panel drag into drag area first time
+        .on("boundEnd", () => {
+            if (floatingToFixed) removeHighlightPart();
+            floatingToFixed = false;
+            // change the display type from fixed to floating
+            if (displaySetting.type === "fixed") {
+                displaySetting.type = "floating";
+                removeFixedPanel();
+                showFloatingPanel();
                 updateDisplaySetting();
             }
         });
-    // // the result panel start to drag out of the drag area
-    // .on("boundStart", ({ direction }) => {
-    //     console.log("boundStart" + direction);
-    // })
-    // // the result panel drag out of the drag area
-    // .on("bound", ({ direction, distance }) => {
-    //     console.log("bound", direction, distance);
-    // })
-    // // the result panel drag into drag area first time
-    // .on("boundEnd", () => {
-    //     console.log("boundEnd");
-    // });
     /* resizable  events*/
     moveablePanel
         .on("resizeStart", ({ set }) => {
-            getDisplaySetting();
             set(startTranslate);
         })
         .on("resize", ({ target, width, height, translate, inputEvent }) => {
@@ -327,7 +331,11 @@ Messager.receive("content", message => {
                     translateResult.originalText = message.detail.text;
                     showPanel(message.detail, "loading");
                     break;
-                case "network_error":
+                case "pronouncing_finished":
+                    onPronouncingFinished(message.detail.pronouncing);
+                    break;
+                case "request_error":
+                    onPronouncingFinished(message.detail.pronouncing);
                     showPanel(message.detail, "error");
                     break;
                 default:
@@ -539,9 +547,12 @@ function getScrollbarWidth() {
  */
 async function updateBounds() {
     await getDisplaySetting();
+    let scrollLeft = document.documentElement.scrollLeft || document.body.scrollLeft;
     let scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
     moveablePanel.setBounds({
+        left: scrollLeft,
         top: scrollTop,
+        right: scrollLeft + window.innerWidth - (hasScrollbar() ? scrollbarWidth : 0),
         bottom: scrollTop + (1 + displaySetting.floatingData.height) * window.innerHeight - 64
     });
 }
@@ -613,6 +624,8 @@ function addBodyEventListener(template) {
         case "result": {
             // copy the translation result to the copy board
             shadowDom.getElementById("icon-copy").addEventListener("click", copyContent);
+
+            // Pronounce texts.
             let sourcePronounceIcon = shadowDom.getElementById("source-pronounce");
             if (sourcePronounceIcon) {
                 sourcePronounceIcon.addEventListener("click", sourcePronounce);
@@ -622,6 +635,16 @@ function addBodyEventListener(template) {
             if (targetPronounceIcon) {
                 targetPronounceIcon.addEventListener("click", targetPronounce);
             }
+
+            // Edit and re-translate the text.
+            let editIcon = shadowDom.getElementById("icon-edit");
+            editIcon.addEventListener("click", editOriginalText);
+            editIcon.style.display = "block";
+
+            let editDoneIcon = shadowDom.getElementById("icon-edit-done");
+            editDoneIcon.addEventListener("click", submitEditedText);
+            editDoneIcon.style.display = "none";
+
             // 根据用户设定决定是否采用从右到左布局（用于阿拉伯语等从右到左书写的语言）
             chrome.storage.sync.get("LayoutSettings", result => {
                 if (result.LayoutSettings.RTL) {
@@ -714,7 +737,12 @@ function openOptionsPage() {
  */
 function sourcePronounce() {
     if (document.documentElement.contains(panelContainer)) {
+        // Show loading animation when loading pronouncing.
+        shadowDom.getElementById("source-pronounce").style.display = "none";
+        shadowDom.getElementById("source-pronounce-loading").style.display = "block";
+
         Messager.send("background", "pronounce", {
+            pronouncing: "source",
             text: translateResult.originalText,
             language: translateResult.sourceLanguage,
             speed: sourceTTSSpeed
@@ -730,7 +758,12 @@ function sourcePronounce() {
 
 function targetPronounce() {
     if (document.documentElement.contains(panelContainer)) {
+        // Show loading animation when loading pronouncing.
+        shadowDom.getElementById("target-pronounce").style.display = "none";
+        shadowDom.getElementById("target-pronounce-loading").style.display = "block";
+
         Messager.send("background", "pronounce", {
+            pronouncing: "target",
             text: translateResult.mainMeaning,
             language: translateResult.targetLanguage,
             speed: targetTTSSpeed
@@ -741,6 +774,21 @@ function targetPronounce() {
                 targetTTSSpeed = "fast";
             }
         });
+    }
+}
+
+/**
+ * Restore pronounce icon when pronouncing finished.
+ *
+ * @param {String} pronouncing which pronounce icon should we restore, source or target?
+ */
+function onPronouncingFinished(pronouncing) {
+    if (pronouncing == "source") {
+        shadowDom.getElementById("source-pronounce-loading").style.display = "none";
+        shadowDom.getElementById("source-pronounce").style.display = "block";
+    } else if (pronouncing == "target") {
+        shadowDom.getElementById("target-pronounce-loading").style.display = "none";
+        shadowDom.getElementById("target-pronounce").style.display = "block";
     }
 }
 
@@ -768,6 +816,101 @@ function copyContent() {
         translateResultEle.setAttribute("contenteditable", "false");
         window.getSelection().removeAllRanges();
     });
+}
+
+/**
+ * The following 4 functions are intended to prevent input events from being caught by other elements.
+ */
+
+/**
+ * Prevent keydown event from propagation.
+ *
+ * @param {Event} event keydown event.
+ */
+function onKeyDownInTextEditor(event) {
+    event.stopPropagation();
+}
+
+/**
+ * Prevent keyup event from propagation.
+ *
+ * @param {Event} event keyup event.
+ */
+function onKeyUpInTextEditor(event) {
+    event.stopPropagation();
+}
+
+/**
+ * When the input box gets focused, prevent input events from propagation.
+ *
+ * @param {Event} event focus event.
+ */
+function onTextEditorFocused(event) {
+    event.target.addEventListener("keydown", onKeyDownInTextEditor);
+    event.target.addEventListener("keyup", onKeyUpInTextEditor);
+}
+
+/**
+ * When the input box gets blurred, allow input events propagation.
+ *
+ * @param {Event} event blur event.
+ */
+function onTextEditorBlurred(event) {
+    event.target.removeEventListener("keydown", onKeyDownInTextEditor);
+    event.target.removeEventListener("keyup", onKeyUpInTextEditor);
+}
+
+/**
+ * Edit original test.
+ */
+function editOriginalText() {
+    let originalTextEle = resultPanel
+        .getElementsByClassName("original-text")[0]
+        .getElementsByTagName("p")[0];
+
+    // Allow editing.
+    originalTextEle.setAttribute("contenteditable", "true");
+
+    // Prevent input events from propagation.
+    originalTextEle.addEventListener("focus", onTextEditorFocused);
+    originalTextEle.addEventListener("blur", onTextEditorBlurred);
+
+    // Auto focus.
+    originalTextEle.focus();
+
+    shadowDom.getElementById("icon-edit").style.display = "none";
+    shadowDom.getElementById("icon-edit-done").style.display = "block";
+}
+
+/**
+ * Submit and translate edited text.
+ */
+function submitEditedText() {
+    let originalTextEle = resultPanel
+        .getElementsByClassName("original-text")[0]
+        .getElementsByTagName("p")[0];
+
+    // Prevent editing.
+    originalTextEle.setAttribute("contenteditable", "false");
+
+    // Allow input events propagation.
+    originalTextEle.removeEventListener("focus", onTextEditorFocused);
+    originalTextEle.removeEventListener("blur", onTextEditorBlurred);
+
+    let text = originalTextEle.textContent.trim();
+    if (text.length > 0) {
+        // to make sure the new text is different from the original text
+        if (text.valueOf() !== translateResult.originalText.valueOf()) {
+            // Do translating.
+            Messager.send("background", "translate", { text: text });
+        }
+    } else {
+        // Restore original text.
+        originalTextEle.textContent = translateResult.originalText;
+    }
+
+    shadowDom.getElementById("icon-edit").style.display = "block";
+    shadowDom.getElementById("icon-edit-done").style.display = "none";
 }
 
 /**

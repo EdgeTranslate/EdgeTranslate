@@ -35,13 +35,13 @@ export default class resizable {
     resizeInitiate() {
         this.resizeEnd();
         // wrap a resize start event handler
-        this.resizeStartHandler = function(e) {
+        this.resizeStartHandler = e => {
             this.resizeStart(e);
-        }.bind(this);
+        };
         // wrap a resize(resizing) event handler
-        this.resizeHandler = function(e) {
+        this.resizeHandler = e => {
             this.resize(e);
-        }.bind(this);
+        };
 
         // parse the direction parameter given by users
         this.directions = resizable.parseDirection(this.options.directions);
@@ -51,6 +51,20 @@ export default class resizable {
 
         // create resizable div elements
         this.createResizableDivElements();
+
+        // initialize the size limit
+        this.sizeLimit = {
+            minWidth: this.options.minWidth !== undefined ? this.options.minWidth : 0,
+            maxWidth:
+                this.options.maxWidth !== undefined
+                    ? this.options.maxWidth
+                    : Number.POSITIVE_INFINITY,
+            minHeight: this.options.minHeight !== undefined ? this.options.minHeight : 0,
+            maxHeight:
+                this.options.maxHeight !== undefined
+                    ? this.options.maxHeight
+                    : Number.POSITIVE_INFINITY
+        };
     }
 
     /**
@@ -370,6 +384,25 @@ export default class resizable {
                 translate[0] += delta[0];
                 break;
         }
+        /**
+         * compare the new size with
+         * size limitation(given by users) to make sure it's within the size limitation.
+         */
+        if (width < this.sizeLimit.minWidth) {
+            width = this.sizeLimit.minWidth;
+            translate[0] = this.store.currentTranslate[0];
+        } else if (width > this.sizeLimit.maxWidth) {
+            width = this.sizeLimit.maxWidth;
+            translate[0] = this.store.currentTranslate = [0];
+        }
+        if (height < this.sizeLimit.minHeight) {
+            height = this.sizeLimit.minHeight;
+            translate[1] = this.store.currentTranslate[1];
+        } else if (height > this.sizeLimit.maxHeight) {
+            height = this.sizeLimit.maxHeight;
+            translate[1] = this.store.currentTranslate[1];
+        }
+
         // store the current translate value. used in resize end handler
         this.store.currentTranslate = translate;
         // store the current width and height of the element

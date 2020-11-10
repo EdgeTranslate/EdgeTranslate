@@ -1,25 +1,21 @@
 ---
-name: 功能建议
-about: 向我们提供你的建议
+name: feature request 功能建议
+about: tell us your feature suggestions向我们提供你的建议
 
 ---
 
-**功能描述**
+**describe feature功能描述**
 
-_你想要什么样的功能 /改进？_
+_What kind of feature/improvement would you like? 你想要什么样的功能 /改进？_
 
-**使用场景**
+**scene used使用场景**
 
-_你是在什么场景下需要用到这个功能 /改进？_
+_Where would you need this feature/improvement? 你是在什么场景下需要用到这个功能 /改进？_
 
-**你的解决方案**
+**your solution 你的解决方案**
 
-_你有没有想到什么解决方案？_
+_Do you have any solution 你有没有想到什么解决方案？_
 
-**替代方案**
+**more information 其他信息**
 
-_在没有这个功能的情况下，你有没有找到什么临时的解决方案？_
-
-**其他信息**
-
-_如果你还需要补充什么信息，请写在这里_
+_If you have any more information, please write here 如果你还需要补充什么信息，请写在这里_

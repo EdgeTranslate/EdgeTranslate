@@ -27,7 +27,9 @@ View this page in other languages:
 / [Chrome Web Store](https://chrome.google.com/webstore/detail/bocbaocobfecmglnmeaeppambideimao)
 / [Firefox Add-ons](https://addons.mozilla.org/firefox/addon/edge_translate/)
 / [QQ Browser Web Store](https://appcenter.browser.qq.com/search/detail?key=edgetranslate&id=bocbaocobfecmglnmeaeppambideimao%20&title=edgetranslate)
-/ [360 Browser Web Store](https://ext.se.360.cn/webstore/detail/aajldohlagodeegngemjjgmabejbejli)
+/ [360 Browser Web Store](https://ext.se.360.cn/webstore/detail/jkhojcaggkaojlhfddocjkkphfdkejeg)
+
+__Attention:__ The version in Firefox Add-ons does not support page translate anymore. If you need page translate, please refer to [here](./docs/wiki/en/ToFirefoxUsers.md).
 
 ## Manually Install
 

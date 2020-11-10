@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "../axios.js";
 
 /**
  * Supported languages.
@@ -47,7 +47,7 @@ const LANGUAGES = [
     ["bn", "bn-BD"],
     ["hmn", "mww"],
     ["af", "af"],
-    ["ma", "pa"],
+    ["pa", "pa"],
     ["pt", "pt"],
     ["ps", "ps"],
     ["ja", "ja"],
@@ -304,20 +304,23 @@ class BingTranslator {
      * @returns {Promise<void>} request finished Promise
      */
     async updateTTSAuth() {
-        const response = await this.request({
-            method: "POST",
-            baseURL: this.HOST,
-            url:
-                "tfetspktok?isVertical=1&&IG=" +
-                this.IG +
-                "&IID=" +
-                this.IID +
-                "." +
-                this.count.toString(),
-            headers: this.HEADERS,
-            data: ""
-        });
+        let constructParams = () => {
+            return {
+                method: "POST",
+                baseURL: this.HOST,
+                url:
+                    "tfetspktok?isVertical=1&&IG=" +
+                    this.IG +
+                    "&IID=" +
+                    this.IID +
+                    "." +
+                    this.count.toString(),
+                headers: this.HEADERS,
+                data: ""
+            };
+        };
 
+        const response = await this.request(constructParams, []);
         this.TTS_AUTH.region = response.region;
         this.TTS_AUTH.token = response.token;
     }
@@ -372,24 +375,158 @@ class BingTranslator {
     }
 
     /**
+     * Construct detect request parameters dynamically.
+     *
+     * @param {String} text text to detect
+     *
+     * @returns {Object} constructed parameters
+     */
+    constructDetectParams(text) {
+        let url =
+                "ttranslatev3?isVertical=1&IG=" +
+                this.IG +
+                "&IID=" +
+                this.IID +
+                "." +
+                this.count.toString(),
+            data = "&fromLang=auto-detect&to=zh-Hans&text=" + encodeURIComponent(text);
+
+        return {
+            method: "POST",
+            baseURL: this.HOST,
+            url: url,
+            headers: this.HEADERS,
+            data: data
+        };
+    }
+
+    /**
+     * Construct translate request parameters dynamically.
+     *
+     * @param {String} text text to translate
+     * @param {String} from source language
+     * @param {String} to target language
+     *
+     * @returns {Object} constructed parameters
+     */
+    constructTranslateParams(text, from, to) {
+        /**
+         * Request the translate api to detect the language of the text and get a basic translation.
+         */
+        let translateURL = `ttranslatev3?isVertical=1&IG=${this.IG}&IID=${
+                this.IID
+            }.${this.count.toString()}`,
+            translateData = `&fromLang=${this.LAN_TO_CODE.get(from)}&to=${this.LAN_TO_CODE.get(
+                to
+            )}&text=${encodeURIComponent(text)}`;
+
+        return {
+            method: "POST",
+            baseURL: this.HOST,
+            url: translateURL,
+            headers: this.HEADERS,
+            data: translateData
+        };
+    }
+
+    /**
+     * Construct lookup request parameters dynamically.
+     *
+     * @param {String} text text to lookup
+     * @param {String} from source language
+     * @param {String} to target language
+     *
+     * @returns {Object} constructed parameters
+     */
+    constructLookupParams(text, from, to) {
+        /**
+         * Attempt to request the lookup api to get detailed translation.
+         */
+        let lookupURL = `tlookupv3?isVertical=1&IG=${this.IG}&IID=${
+                this.IID
+            }.${this.count.toString()}`,
+            lookupData = `&from=${
+                // Use detected language.
+                from
+            }&to=${this.LAN_TO_CODE.get(to)}&text=${encodeURIComponent(text)}`;
+
+        return {
+            method: "POST",
+            baseURL: this.HOST,
+            url: lookupURL,
+            headers: this.HEADERS,
+            data: lookupData
+        };
+    }
+
+    /**
+     * Construct TTS request parameters dynamically.
+     *
+     * @param {String} text text to pronounce
+     * @param {String} lang language of text
+     * @param {String} speed pronounce speed
+     *
+     * @returns {Object} constructed parameters
+     */
+    constructTTSParams(text, lang, speed) {
+        let url =
+            "https://" + this.TTS_AUTH.region + ".tts.speech.microsoft.com/cognitiveservices/v1?";
+
+        let headers = {
+            "Content-Type": "application/ssml+xml",
+            Authorization: "Bearer " + this.TTS_AUTH.token,
+            "X-MICROSOFT-OutputFormat": "audio-16khz-32kbitrate-mono-mp3",
+            "cache-control": "no-cache"
+        };
+
+        return {
+            method: "POST",
+            baseURL: url,
+            headers: headers,
+            data: this.generateTTSData(text, lang, speed),
+            responseType: "arraybuffer"
+        };
+    }
+
+    /**
      * Request APIs.
      *
      * This is a wrapper of axios with retrying and error handling supported.
      *
-     * @param {Object} params request parameters
+     * @param {Function} constructParams request parameters constructor
+     * @param {Array} constructParamsArgs request parameters constructor arguments
      * @param {Boolean} retry whether retry is needed
      *
      * @returns {Promise<Object>} Promise of response data
      */
-    async request(params, retry = true) {
+    async request(constructParams, constructParamsArgs, retry = true) {
         let retryCount = 0;
         let requestOnce = async () => {
             this.count++;
-            const response = await axios(params);
+            const response = await axios(constructParams.call(this, ...constructParamsArgs));
 
             // response.data.statusCode will indicate the info of error when error encountered
             if (!response.data.statusCode || response.data.statusCode < 300) {
-                return response.data;
+                // Parse the actually requested url to get the requested host.
+                let responseHost = /(https:\/\/.*\.bing\.com\/).*/g.exec(
+                    response.request.responseURL
+                );
+
+                /**
+                 * Bing redirects user requests based on user region. For example, if you are in China and request
+                 * www.bing.com, you will be redirected to cn.bing.com. This causes translating error because IG and IID
+                 * for one region are not usable for another. Therefore, we need to update HOST, HOME_PAGE, IG and IID
+                 * whenever a redirection happened.
+                 *
+                 * If the requested host is different from the original host, which means there was a redirection,
+                 * update HOST and HOME_PAGE with the redirecting host.
+                 */
+                if (responseHost && responseHost[1] !== this.HOST) {
+                    this.HOST = responseHost[1];
+                    this.HOME_PAGE = this.HOST + "translator";
+                } else {
+                    return response.data;
+                }
             }
 
             // Retry after failure
@@ -399,7 +536,11 @@ class BingTranslator {
             }
 
             // Throw error.
-            throw { response: response };
+            throw {
+                errorType: "API_ERR",
+                errorCode: response.data.statusCode,
+                errorMsg: "Request failed."
+            };
         };
 
         if (!(this.IG.length > 0 && this.IID.length > 0)) {
@@ -426,24 +567,21 @@ class BingTranslator {
      * @returns {Promise<String>} detected language Promise
      */
     async detect(text) {
-        let url =
-                "ttranslatev3?isVertical=1&IG=" +
-                this.IG +
-                "&IID=" +
-                this.IID +
-                "." +
-                this.count.toString(),
-            data = "&fromLang=auto-detect&to=zh-Hans&text=" + encodeURIComponent(text);
-
-        const response = await this.request({
-            method: "POST",
-            baseURL: this.HOST,
-            url: url,
-            headers: this.HEADERS,
-            data: data
-        });
-        let result = response[0].detectedLanguage.language;
-        return this.CODE_TO_LAN.get(result);
+        try {
+            const response = await this.request(this.constructDetectParams, [text]);
+            let result = response[0].detectedLanguage.language;
+            return this.CODE_TO_LAN.get(result);
+        } catch (error) {
+            error.errorMsg = error.errorMsg || error.message;
+            error.errorAct = {
+                api: "bing",
+                action: "detect",
+                text: text,
+                from: null,
+                to: null
+            };
+            throw error;
+        }
     }
 
     /**
@@ -463,49 +601,32 @@ class BingTranslator {
      * @returns {Promise<Object>} translation Promise
      */
     async translate(text, from, to) {
-        /**
-         * Request the translate api to detect the language of the text and get a basic translation.
-         */
-        let translateURL = `ttranslatev3?isVertical=1&IG=${this.IG}&IID=${
-                this.IID
-            }.${this.count.toString()}`,
-            translateData = `&fromLang=${this.LAN_TO_CODE.get(from)}&to=${this.LAN_TO_CODE.get(
-                to
-            )}&text=${encodeURIComponent(text)}`;
-
-        const transResponse = await this.request({
-            method: "POST",
-            baseURL: this.HOST,
-            url: translateURL,
-            headers: this.HEADERS,
-            data: translateData
-        });
+        try {
+            /*
+             * Use var to prevent putting all of the code that referenced transResponse
+             * into this try-catch scope.
+             */
+            var transResponse = await this.request(this.constructTranslateParams, [text, from, to]);
+        } catch (error) {
+            error.errorAct = {
+                api: "bing",
+                action: "translate",
+                text: text,
+                from: from,
+                to: to
+            };
+            throw error;
+        }
 
         // Set up originalText in case that lookup failed.
         let transResult = this.parseTranslateResult(transResponse, {
             originalText: text
         });
 
-        /**
-         * Attempt to request the lookup api to get detailed translation.
-         */
-        let lookupURL = `tlookupv3?isVertical=1&IG=${this.IG}&IID=${
-                this.IID
-            }.${this.count.toString()}`,
-            lookupData = `&from=${
-                // Use detected language.
-                transResponse[0].detectedLanguage.language
-            }&to=${this.LAN_TO_CODE.get(to)}&text=${encodeURIComponent(text)}`;
-
         try {
             const lookupResponse = await this.request(
-                {
-                    method: "POST",
-                    baseURL: this.HOST,
-                    url: lookupURL,
-                    headers: this.HEADERS,
-                    data: lookupData
-                },
+                this.constructLookupParams,
+                [text, transResponse[0].detectedLanguage.language, to],
                 false
             );
             return this.parseLookupResult(lookupResponse, transResult);
@@ -529,37 +650,38 @@ class BingTranslator {
 
         let retryCount = 0;
         let pronounceOnce = async () => {
-            let url =
-                "https://" +
-                this.TTS_AUTH.region +
-                ".tts.speech.microsoft.com/cognitiveservices/v1?";
-
-            let headers = {
-                "Content-Type": "application/ssml+xml",
-                Authorization: "Bearer " + this.TTS_AUTH.token,
-                "X-MICROSOFT-OutputFormat": "audio-16khz-32kbitrate-mono-mp3",
-                "cache-control": "no-cache"
-            };
-
             try {
                 const TTSResponse = await this.request(
-                    {
-                        method: "POST",
-                        baseURL: url,
-                        headers: headers,
-                        data: this.generateTTSData(text, language, speed),
-                        responseType: "arraybuffer"
-                    },
+                    this.constructTTSParams,
+                    [text, language, speed],
                     false
                 );
                 this.AUDIO.src = "data:audio/mp3;base64," + this.arrayBufferToBase64(TTSResponse);
-                return this.AUDIO.play();
+                await this.AUDIO.play();
             } catch (error) {
                 if (retryCount < this.MAX_RETRY) {
                     retryCount++;
                     return this.updateTTSAuth().then(pronounceOnce);
                 } else {
-                    throw error;
+                    let errorAct = {
+                        api: "bing",
+                        action: "pronounce",
+                        text: text,
+                        from: language,
+                        to: null
+                    };
+
+                    if (error.errorType) {
+                        error.errorAct = errorAct;
+                        throw error;
+                    }
+
+                    throw {
+                        errorType: "NET_ERR",
+                        errorCode: 0,
+                        errorMsg: error.message,
+                        errorAct: errorAct
+                    };
                 }
             }
         };

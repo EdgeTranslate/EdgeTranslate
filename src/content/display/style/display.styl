@@ -5,12 +5,10 @@
 /*
  * style of translation result panel
  */
-
-#edge-translate-panel{
-    min-width: 100px;
-    min-height: 150px;
+#edge-translate-panel {    
     position: fixed;
     top: 0;
+    left: 0;
     box-sizing: border-box;
     z-index: 10000000;
     display: flex;
@@ -18,22 +16,20 @@
     flex-wrap: nowrap;
     justify-content: flex-start;
     align-items: stretch;
-
     border-radius: 6px;
     overflow: visible;
 }
 
-#edge-translate-panel-head{
-    padding: 2%;
+#edge-translate-panel-head {
+    padding: 0.5vh;
     display: flex;
     justify-content: space-between;
     justify-items: center;
     background: light-primary;
-    flex-grow: 0;
-    flex-shrink: 0;
+    flex: 0 0 auto;
     overflow: hidden;
 
-    .edge-translate-icon{
+    .edge-translate-icon {
         fill: white;
 
         :hover {
@@ -41,53 +37,55 @@
         }
     }
 
-    .icon-fix{
+    .icon-fix {
         display: none;
     }
 
-    #heading-icon{
+    #heading-icon {
         display: flex;
         justify-content: space-around;
         justify-items: center;
     }
 
-    #translators{
+    #translators {
         box-sizing: border-box;
         font-size: medium;
         max-width: 45%;
         height: 90%;
         flex-shrink: 5;
         flex-grow: 0;
-        background: rgba(74,140,247,0.5);
+        background: rgba(74, 140, 247, 0.5);
         color: white;
         border: none;
         border-radius: 3px;
         outline: none !important;
-        -webkit-appearance:none;
-        -moz-appearance:none;
-        appearance:none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
         margin: 2px;
 
-        option{
+        option {
             background: white;
             color: color-primary;
         }
     }
 
-    &:hover{
+    &:hover {
         cursor: grabbing;
     }
 }
 
-#edge-translate-panel-body{
+#edge-translate-panel-body {
+    display: flex;
     overflow-x: hidden;
-    overflow-y: scroll;
+    overflow-y: auto;
     overscroll-behavior: contain;
     flex-grow: 1;
     flex-shrink: 1;
+    word-break: break-all;
 }
 
-#edge-translate-panel-highlight{
+#edge-translate-panel-highlight {
     height: 100%;
     background: color-primary;
     opacity: 0.3;
