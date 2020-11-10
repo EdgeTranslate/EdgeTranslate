@@ -21,7 +21,9 @@
 / [Chrome應用商店](https://chrome.google.com/webstore/detail/bocbaocobfecmglnmeaeppambideimao)
 / [Firefox附加組件商店](https://addons.mozilla.org/firefox/addon/edge_translate/)
 / [QQ瀏覽器應用商店](https://appcenter.browser.qq.com/search/detail?key=edgetranslate&id=bocbaocobfecmglnmeaeppambideimao%20&title=edgetranslate)
-/ [360瀏覽器應用商店](https://ext.se.360.cn/webstore/detail/aajldohlagodeegngemjjgmabejbejli)
+/ [360瀏覽器應用商店](https://ext.se.360.cn/webstore/detail/jkhojcaggkaojlhfddocjkkphfdkejeg)
+
+__注意：__ 火狐瀏覽器附加組件商店裏的版本已不再支持網頁翻譯，需要網頁翻譯的用戶請看[這裏](./wiki/zh_TW/致火狐用戶.md)。
 
 ## 手動安裝
 
