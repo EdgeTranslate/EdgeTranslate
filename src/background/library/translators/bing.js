@@ -507,7 +507,21 @@ class BingTranslator {
 
             // response.data.statusCode will indicate the info of error when error encountered
             if (!response.data.statusCode || response.data.statusCode < 300) {
-                return response.data;
+                // Parse the actually requested url to get the requested host.
+                let responseHost = /(https:\/\/.*\.bing\.com\/).*/g.exec(
+                    response.request.responseURL
+                );
+
+                /*
+                 * If the requested host is different from the original host, which means there was a redirection
+                 * to a new region related host, update the original host and home page url with the redirecting host.
+                 */
+                if (responseHost && responseHost[1] !== this.HOST) {
+                    this.HOST = responseHost[1];
+                    this.HOME_PAGE = this.HOST + "translator";
+                } else {
+                    return response.data;
+                }
             }
 
             // Retry after failure
