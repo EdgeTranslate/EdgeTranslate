@@ -8,7 +8,8 @@ export {
     updateBLackListMenu
 };
 
-const DISABLED_MARK = "🗙";
+const DISABLED_MARK = "\u2717";
+// \u2717 \u2718 \u2716
 
 /**
  * 将当前页面的url添加到黑名单
