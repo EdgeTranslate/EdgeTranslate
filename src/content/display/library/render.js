@@ -62,25 +62,31 @@ function render(template, contents, includes) {
 
     code.push("return result.join('');");
     return new Function(code.join("").replace(/\n|\r/g, "")).apply({
-        escapeHTML: escapeHTML,
+        format: format,
         ...contents
     });
 }
 
 /**
- * Escape HTML tag to avoid XSS security problems
+ * This function does two operations:
  *
- * @param {String} str string text to be escaped
+ * 1. Escape HTML tag to avoid XSS security problems.
+ * 2. Replace line breakers with <br/> tag so that line break can be displayed.
  *
- * @returns {String} escaped string
+ * @param {String} text text to format
+ *
+ * @returns {String} formatted text
  */
-function escapeHTML(str) {
+function format(text) {
     const HTML_CHAR_REGEX = /"|&|'|<|>/g;
+    const LINE_BREAKERS_REGEX = /\r|\n/g;
 
-    if (typeof str !== "string") return str;
-    return str.replace(HTML_CHAR_REGEX, expression => {
-        let char = expression.charCodeAt(0);
-        char = char == 0x20 ? 0xa0 : char;
-        return `&#${char};`;
-    });
+    if (typeof text !== "string") return text;
+    return text
+        .replace(HTML_CHAR_REGEX, expression => {
+            let char = expression.charCodeAt(0);
+            char = char == 0x20 ? 0xa0 : char;
+            return `&#${char};`;
+        })
+        .replace(LINE_BREAKERS_REGEX, "<br/>");
 }
