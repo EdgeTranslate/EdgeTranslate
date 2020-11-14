@@ -1,5 +1,5 @@
 import axios from "../axios.js";
-import { log } from "../../../common/scripts/common.js";
+import Messager from "common/scripts/messager.js";
 
 /**
  * Supported languages.
@@ -95,33 +95,28 @@ class TencentTranslator {
             })
         );
 
-        /**
-         * Check if the tab has been loaded.
-         */
-        return new Promise((resolve, reject) => {
-            let tabUpdateListener = (id, change, tab) => {
-                if (id !== tabId || tab.status === "loading") {
-                    return;
-                }
+        // define the title of the message
+        const tencentClosedMessage = "tencent_translate_page_closed";
+        // the message receiver
+        const receiver = "tencent";
+        // the content of the message
+        const message = { to: {}, title: tencentClosedMessage };
+        message.to[receiver] = true;
 
-                // Finished loading, remove the tab.
-                chrome.tabs.remove(tabId, () => {
-                    if (chrome.runtime.lastError) {
-                        log(chrome.runtime.lastError.message);
-                    }
+        /* when the dom content loaded, send message to this context */
+        chrome.tabs.executeScript(tabId, {
+            code: `window.addEventListener("DOMContentLoaded", () => {chrome.runtime.sendMessage('${JSON.stringify(
+                message
+            )}');window.close();});`,
+            runAt: "document_start"
+        });
 
-                    // Remove added listener.
-                    chrome.tabs.onUpdated.removeListener(tabUpdateListener);
-
-                    // It has been loaded, call resolve.
-                    if (tab.status === "complete") resolve();
-                    // It can not be loaded, call reject.
-                    else reject();
-                });
-            };
-
-            // Add listener.
-            chrome.tabs.onUpdated.addListener(tabUpdateListener);
+        // wait until the tencent translation page loaded
+        await new Promise(resolve => {
+            Messager.receive(receiver, message => {
+                if (message.title === tencentClosedMessage) resolve();
+                return Promise.resolve();
+            });
         });
     }
 
@@ -131,22 +126,30 @@ class TencentTranslator {
      * @returns {Promise<void>} request Promise.
      */
     async updateTokens() {
-        // Update cookies first.
-        await this.requestHomePage();
-
-        // Get qtk and qrv from cookies.
-        return new Promise(resolve => {
-            chrome.cookies.getAll({ url: this.BASE_URL }, cookies => {
-                for (let cookie of cookies) {
-                    if (cookie.name === "qtv") {
-                        this.qtv = cookie.value;
-                    } else if (cookie.name === "qtk") {
-                        this.qtk = cookie.value;
-                    }
-                }
-                resolve();
+        if (this.qtk === "" || this.qtv === "") {
+            const response = await axios({
+                method: "GET",
+                baseURL: this.BASE_URL,
+                headers: this.HEADERS
             });
-        });
+
+            this.qtv = response.data.match(/qtv\s*=\s*"([a-zA-Z0-9]+)";/)[1];
+            this.qtk = response.data.match(/qtk\s*=\s*"([^\s]+)";/)[1];
+        } else {
+            const response = await axios({
+                method: "POST",
+                baseURL: this.BASE_URL,
+                url: "/api/reAuth",
+                headers: this.HEADERS,
+                data: new URLSearchParams({
+                    qtv: this.qtv,
+                    qtk: this.qtk
+                })
+            });
+
+            this.qtv = response.data.qtv;
+            this.qtk = response.data.qtk;
+        }
     }
 
     /**
