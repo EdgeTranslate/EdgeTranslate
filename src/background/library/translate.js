@@ -472,7 +472,7 @@ EVENT_MANAGER.addEventListener(EVENT_MANAGER.EVENTS.TRANSLATE_START, detail => {
             )
         );
         // wait for browser to open a new page
-        await delayPromise(100);
+        await delayPromise(500);
         // resend message to show being translated animation
         sendMessageToCurrentTab("info", {
             info: "start_translating",
