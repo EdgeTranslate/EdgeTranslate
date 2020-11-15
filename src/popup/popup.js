@@ -1,5 +1,6 @@
 import { LANGUAGES } from "../common/scripts/languages.js";
-import Messager from "../common/scripts/messager";
+import Messager from "common/scripts/messager";
+import { i18nHTML } from "common/scripts/common.js";
 
 // 获取下拉列表元素
 var sourceLanguage = document.getElementById("sl");
@@ -13,14 +14,7 @@ var mutualTranslate = document.getElementById("mutual-translate");
  * 初始化设置列表
  */
 window.onload = function() {
-    var i18nElements = document.getElementsByClassName("i18n");
-    for (let i = 0; i < i18nElements.length; i++) {
-        // 跟随浏览器的语言设置显示内容
-        i18nElements[i].insertAdjacentText(
-            "beforeEnd",
-            chrome.i18n.getMessage(i18nElements[i].getAttribute("data-i18n-name"))
-        );
-    }
+    i18nHTML();
 
     var arrowUp = document.getElementById("arrow-up");
     var arrowDown = document.getElementById("arrow-down");

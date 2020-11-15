@@ -327,6 +327,42 @@
         "message": "錯誤操作",
         "description": "錯誤操作。"
     },
+    "NOTICE": {
+        "message": "提示",
+        "description": "提示"
+    },
+    "NoticeTitle": {
+        "message": "為什麼會出現這個頁面？",
+        "description": "提示頁面的標題"
+    },
+    "NoticeReason1": {
+        "message": "你也許忘記在安裝或者更新擴展後刷新已經打開的頁面了。",
+        "description": "提示頁面的第一個原因"
+    },
+    "NoticeReason2": {
+        "message": "你正在一個無法注入我們擴展腳本的頁面上使用側邊翻譯。",
+        "description": "提示頁面的第二個原因"
+    },
+    "NoticeExampleSites": {
+        "message": "例如這些網址：",
+        "description": "例如這些網址："
+    },
+    "BlankPage": {
+        "message": "一個空白頁面",
+        "description": "一個空白頁面"
+    },
+    "NoticeLinks": {
+        "message": "鏈接",
+        "description": "鏈接"
+    },
+    "WIKI": {
+        "message ": "說明文檔",
+        "description": "說明文檔"
+    },
+    "BugReport": {
+        "message": "報告一個bug",
+        "description": "報告一個bug"
+    },
     "English": {
         "message": "英語",
         "description": "英語"

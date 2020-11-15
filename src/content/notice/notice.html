@@ -1,7 +1,7 @@
 <html>
     <head>
         <meta charset="utf-8" />
-        <title class="i18n" data-i18n-name="Notice"></title>
+        <title class="i18n" data-i18n-name="NOTICE"></title>
         <meta name="viewport" content="width=device-width,initial-scale=1" />
         <link type="text/css" rel="stylesheet" href="./notice.css" />
         <link type="text/css" rel="stylesheet" href="../select/select.css" />
@@ -14,43 +14,55 @@
                 <span class="space"></span>
                 Edge Translate
             </header>
-            <h1>
-                Why is this page displayed?
-            </h1>
+            <h1 class="i18n" data-i18n-name="NoticeTitle"></h1>
             <ol>
-                <li>
-                    You forget to refresh the existing page that needs to be translated after
-                    installing or updating.
-                </li>
-                <li>
-                    You are using Edge Translate on a page in which our scripts can't be injected.
-                    <ul>
-                        Such as these sites:
+                <li class="i18n" data-i18n-name="NoticeReason1"></li>
+                <li class="i18n" data-i18n-name="NoticeReason2" data-insert-pos="afterBegin">
+                    <ul
+                        class="i18n"
+                        data-i18n-name="NoticeExampleSites"
+                        data-insert-pos="afterBegin"
+                    >
                         <li>
-                            <a href="chrome://extensions/" target="_blank">chrome://extensions/</a>
+                            <a>chrome://extensions/</a>
                         </li>
                         <li>
                             <a href="https://chrome.google.com/webstore/" target="_blank">
                                 https://chrome.google.com/webstore/
                             </a>
                         </li>
-                        <li><a href="#" target="_blank">an empty page</a></li>
+                        <li>
+                            <a class="i18n" data-i18n-name="BlankPage"></a>
+                        </li>
                     </ul>
                 </li>
             </ol>
-            <h1>
-                Links
-            </h1>
+            <h1 class="i18n" data-i18n-name="NoticeLinks"></h1>
             <ul>
-                <li><a href="../../options/options.html" target="_blank">options</a></li>
                 <li>
-                    <a href="https://github.com/EdgeTranslate/EdgeTranslate/wiki" target="_blank">
-                        wiki
+                    <a
+                        href="../../options/options.html"
+                        target="_blank"
+                        class="i18n"
+                        data-i18n-name="Settings"
+                    ></a>
+                </li>
+                <li>
+                    <a
+                        href="https://github.com/EdgeTranslate/EdgeTranslate/wiki"
+                        target="_blank"
+                        class="i18n"
+                        data-i18n-name="WIKI"
+                    >
                     </a>
                 </li>
                 <li>
-                    <a href="https://github.com/EdgeTranslate/EdgeTranslate/issues" target="_blank">
-                        report a bug
+                    <a
+                        href="https://github.com/EdgeTranslate/EdgeTranslate/issues"
+                        target="_blank"
+                        class="i18n"
+                        data-i18n-name="BugReport"
+                    >
                     </a>
                 </li>
             </ul>
@@ -58,4 +70,5 @@
     </body>
     <script src="../select/select.js"></script>
     <script src="../display/display.js"></script>
+    <script src="./notice.js"></script>
 </html>

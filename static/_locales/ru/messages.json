@@ -327,6 +327,42 @@
         "message": "Error action",
         "description": "Error action."
     },
+    "NOTICE": {
+        "message": "Notice from Edge Translate",
+        "description": "Notice from Edge Translate"
+    },
+    "NoticeTitle": {
+        "message": "Why is this page displayed?",
+        "description": "The title of the notice message"
+    },
+    "NoticeReason1": {
+        "message": "You might forget to refresh the existing page that needs to be translated after installing or updating.",
+        "description": "the first reason of the notice message"
+    },
+    "NoticeReason2": {
+        "message": "You are using Edge Translate on a page in which our scripts can't be injected.",
+        "description": "the second reason of the notice message"
+    },
+    "NoticeExampleSites": {
+        "message": "Such as these sites:",
+        "description": "Such as these sites:"
+    },
+    "BlankPage": {
+        "message": "a blank page",
+        "description": "a blank page"
+    },
+    "NoticeLinks": {
+        "message": "Links",
+        "description": "Links"
+    },
+    "WIKI": {
+        "message": "wiki",
+        "description": "wiki title"
+    },
+    "BugReport": {
+        "message": "report a bug",
+        "description": "report a bug"
+    },
     "English": {
         "message": "English",
         "description": "English"

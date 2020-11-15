@@ -327,6 +327,42 @@
         "message": "错误操作",
         "description": "错误操作。"
     },
+    "NOTICE": {
+        "message": "提示",
+        "description": "提示"
+    },
+    "NoticeTitle": {
+        "message": "为什么会出现这个页面？",
+        "description": "提示页面的标题"
+    },
+    "NoticeReason1": {
+        "message": "你也许忘记在安装或者更新扩展后刷新已经打开的页面了。",
+        "description": "提示页面的第一个原因"
+    },
+    "NoticeReason2": {
+        "message": "你正在一个无法注入我们扩展脚本的页面上使用侧边翻译。",
+        "description": "提示页面的第二个原因"
+    },
+    "NoticeExampleSites": {
+        "message": "例如这些网址：",
+        "description": "例如这些网址："
+    },
+    "BlankPage": {
+        "message": "一个空白页面",
+        "description": "一个空白页面"
+    },
+    "NoticeLinks": {
+        "message": "链接",
+        "description": "链接"
+    },
+    "WIKI": {
+        "message": "说明文档",
+        "description": "说明文档"
+    },
+    "BugReport": {
+        "message": "报告一个bug",
+        "description": "报告一个bug"
+    },
     "English": {
         "message": "英语",
         "description": "英语"
