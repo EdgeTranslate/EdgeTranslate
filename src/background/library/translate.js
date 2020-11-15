@@ -4,6 +4,7 @@ import { sendMessageToCurrentTab } from "./common.js";
 import { log } from "../../common/scripts/common.js";
 import Messager from "../../common/scripts/messager.js";
 import EVENT_MANAGER from "./event.js";
+import { delayPromise } from "../../common/scripts/promise.js";
 
 class TranslatorManager {
     constructor() {
@@ -449,7 +450,38 @@ EVENT_MANAGER.addEventListener(EVENT_MANAGER.EVENTS.TRANSLATE_START, detail => {
         text: detail.text,
         position: detail.position,
         timestamp: detail.timestamp
-    }).catch(error => log(error));
+    }).catch(async () => {
+        /**
+         * the current tab can't display the result panel
+         * so we open an introduction page to display the result and explain why this page shows
+         */
+        const introductionPath = "content/instruction/instruction.html";
+        await new Promise((resolve, reject) =>
+            chrome.tabs.create(
+                {
+                    url: chrome.runtime.getURL(introductionPath),
+                    active: true
+                },
+                tab => {
+                    if (chrome.runtime.lastError) {
+                        reject(chrome.runtime.lastError.message);
+                        return;
+                    }
+                    resolve(tab.id);
+                }
+            )
+        );
+        // wait for browser to open a new page
+        await delayPromise(100);
+        // resend message to show being translated animation
+        sendMessageToCurrentTab("info", {
+            info: "start_translating",
+            // Send translating text back to content scripts.
+            text: detail.text,
+            position: detail.position,
+            timestamp: detail.timestamp
+        });
+    });
 });
 
 /**
