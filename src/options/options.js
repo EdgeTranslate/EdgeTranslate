@@ -1,24 +1,11 @@
 import Messager from "../common/scripts/messager.js";
-import { log } from "../common/scripts/common.js";
+import { log, i18nHTML } from "../common/scripts/common.js";
 
 /**
  * 初始化设置列表
  */
 window.onload = () => {
-    var i18nElements = document.getElementsByClassName("i18n");
-    for (let i = 0; i < i18nElements.length; i++) {
-        // Default "beforeEnd".
-        let pos = "beforeEnd";
-        if (i18nElements[i].hasAttribute("data-insert-pos")) {
-            pos = i18nElements[i].getAttribute("data-insert-pos");
-        }
-
-        // 跟随浏览器的语言设置显示内容
-        i18nElements[i].insertAdjacentText(
-            pos,
-            chrome.i18n.getMessage(i18nElements[i].getAttribute("data-i18n-name"))
-        );
-    }
+    i18nHTML();
 
     // 设置不同语言的隐私政策链接
     // var PrivacyPolicyLink = document.getElementById("PrivacyPolicyLink");
