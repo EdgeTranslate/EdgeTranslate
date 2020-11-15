@@ -453,26 +453,49 @@ EVENT_MANAGER.addEventListener(EVENT_MANAGER.EVENTS.TRANSLATE_START, detail => {
     }).catch(async () => {
         /**
          * the current tab can't display the result panel
-         * so we open an introduction page to display the result and explain why this page shows
+         * so we open a notice page to display the result and explain why this page shows
          */
-        const introductionPath = "content/instruction/instruction.html";
-        await new Promise((resolve, reject) =>
-            chrome.tabs.create(
+        const noticePageUrl = chrome.runtime.getURL("content/notice/notice.html");
+        // get the tab id of an existing notice page
+        const tabId = await new Promise(resolve => {
+            chrome.tabs.query(
                 {
-                    url: chrome.runtime.getURL(introductionPath),
-                    active: true
+                    url: noticePageUrl
                 },
-                tab => {
-                    if (chrome.runtime.lastError) {
-                        reject(chrome.runtime.lastError.message);
-                        return;
-                    }
-                    resolve(tab.id);
+                tabs => {
+                    // the tab exists
+                    if (tabs.length > 0) resolve(tabs[0].index);
+                    // the tab doesn't exist
+                    else resolve(-1);
                 }
-            )
-        );
-        // wait for browser to open a new page
-        await delayPromise(500);
+            );
+        });
+        // jump to the existed page
+        if (tabId !== -1) {
+            chrome.tabs.highlight({
+                tabs: tabId
+            });
+        }
+        // create a new notice page
+        else {
+            await new Promise((resolve, reject) =>
+                chrome.tabs.create(
+                    {
+                        url: noticePageUrl,
+                        active: true
+                    },
+                    tab => {
+                        if (chrome.runtime.lastError) {
+                            reject(chrome.runtime.lastError.message);
+                            return;
+                        }
+                        resolve(tab.id);
+                    }
+                )
+            );
+            // wait for browser to open a new page
+            await delayPromise(200);
+        }
         // resend message to show being translated animation
         sendMessageToCurrentTab("info", {
             info: "start_translating",
