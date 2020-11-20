@@ -645,6 +645,12 @@ function addBodyEventListener(template) {
             editDoneIcon.addEventListener("click", submitEditedText);
             editDoneIcon.style.display = "none";
 
+            // Unfold original text on click.
+            let originalTextEle = resultPanel
+                .getElementsByClassName("original-text")[0]
+                .getElementsByTagName("p")[0];
+            originalTextEle.addEventListener("click", expandOriginalText);
+
             // 根据用户设定决定是否采用从右到左布局（用于阿拉伯语等从右到左书写的语言）
             chrome.storage.sync.get("LayoutSettings", result => {
                 if (result.LayoutSettings.RTL) {
@@ -861,7 +867,41 @@ function onTextEditorBlurred(event) {
 }
 
 /**
- * Edit original test.
+ * Fold overflowed original text for better reading experience.
+ *
+ * @returns {void} nothing
+ */
+function foldOriginalText() {
+    let originalTextEle = resultPanel
+        .getElementsByClassName("original-text")[0]
+        .getElementsByTagName("p")[0];
+
+    originalTextEle.style.overflow = "hidden";
+    originalTextEle.style["white-space"] = "nowrap";
+
+    originalTextEle.removeEventListener("click", foldOriginalText);
+    originalTextEle.addEventListener("click", expandOriginalText);
+}
+
+/**
+ * Expand overflowed original text for reading and editing.
+ *
+ * @returns {void} nothing
+ */
+function expandOriginalText() {
+    let originalTextEle = resultPanel
+        .getElementsByClassName("original-text")[0]
+        .getElementsByTagName("p")[0];
+
+    originalTextEle.style.overflow = "inherit";
+    originalTextEle.style["white-space"] = "inherit";
+
+    originalTextEle.removeEventListener("click", expandOriginalText);
+    originalTextEle.addEventListener("click", foldOriginalText);
+}
+
+/**
+ * Edit original text.
  */
 function editOriginalText() {
     let originalTextEle = resultPanel
@@ -874,6 +914,14 @@ function editOriginalText() {
     // Prevent input events from propagation.
     originalTextEle.addEventListener("focus", onTextEditorFocused);
     originalTextEle.addEventListener("blur", onTextEditorBlurred);
+
+    // Expand original text for reading and editing.
+    originalTextEle.style.overflow = "inherit";
+    originalTextEle.style["white-space"] = "inherit";
+
+    // Remove click listeners to avoid unwanted folding and expanding.
+    originalTextEle.removeEventListener("click", foldOriginalText);
+    originalTextEle.removeEventListener("click", expandOriginalText);
 
     // Auto focus.
     originalTextEle.focus();
@@ -896,6 +944,9 @@ function submitEditedText() {
     // Allow input events propagation.
     originalTextEle.removeEventListener("focus", onTextEditorFocused);
     originalTextEle.removeEventListener("blur", onTextEditorBlurred);
+
+    // Add back foldOriginalText click listener to enable folding.
+    originalTextEle.addEventListener("click", foldOriginalText);
 
     let text = originalTextEle.textContent.trim();
     if (text.length > 0) {
