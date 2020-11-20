@@ -878,25 +878,28 @@ function foldOriginalText() {
 
     // Remember whether mouse moved.
     let moved = false;
+
+    // Inner event listeners for detecting mousemove and mouseup.
     let detectMouseMove = () => {
         moved = true;
     };
     let detectMouseUp = () => {
-        if (moved) return;
+        if (!moved) {
+            // Fold text.
+            originalTextEle.style.overflow = "hidden";
+            originalTextEle.style["white-space"] = "nowrap";
 
-        // Fold text.
-        originalTextEle.style.overflow = "hidden";
-        originalTextEle.style["white-space"] = "nowrap";
+            // Update mousedown event listener.
+            originalTextEle.removeEventListener("mousedown", foldOriginalText);
+            originalTextEle.addEventListener("mousedown", expandOriginalText);
+        }
 
-        // Remove listeners.
-        originalTextEle.removeEventListener("mouseup", detectMouseUp);
+        // Remove inner event listener.
         originalTextEle.removeEventListener("mousemove", detectMouseMove);
-        originalTextEle.removeEventListener("mousedown", foldOriginalText);
-
-        // Add expand listener.
-        originalTextEle.addEventListener("mousedown", expandOriginalText);
+        originalTextEle.removeEventListener("mouseup", detectMouseUp);
     };
 
+    // Add inner event listeners.
     originalTextEle.addEventListener("mousemove", detectMouseMove);
     originalTextEle.addEventListener("mouseup", detectMouseUp);
 }
@@ -911,26 +914,30 @@ function expandOriginalText() {
         .getElementsByClassName("original-text")[0]
         .getElementsByTagName("p")[0];
 
+    // Remember whether mouse moved.
     let moved = false;
+
+    // Inner event listeners for detecting mousemove and mouseup.
     let detectMouseMove = () => {
         moved = true;
     };
     let detectMouseUp = () => {
-        if (moved) return;
+        if (!moved) {
+            // Fold text.
+            originalTextEle.style.overflow = "inherit";
+            originalTextEle.style["white-space"] = "inherit";
 
-        // Expand text.
-        originalTextEle.style.overflow = "inherit";
-        originalTextEle.style["white-space"] = "inherit";
+            // Update mousedown event listener.
+            originalTextEle.removeEventListener("mousedown", expandOriginalText);
+            originalTextEle.addEventListener("mousedown", foldOriginalText);
+        }
 
-        // Remove listeners.
-        originalTextEle.removeEventListener("mouseup", detectMouseUp);
+        // Remove inner event listeners.
         originalTextEle.removeEventListener("mousemove", detectMouseMove);
-        originalTextEle.removeEventListener("mousedown", expandOriginalText);
-
-        // Add fold listener.
-        originalTextEle.addEventListener("mousedown", foldOriginalText);
+        originalTextEle.removeEventListener("mouseup", detectMouseUp);
     };
 
+    // Add inner event listeners.
     originalTextEle.addEventListener("mousemove", detectMouseMove);
     originalTextEle.addEventListener("mouseup", detectMouseUp);
 }
