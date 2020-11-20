@@ -151,3 +151,13 @@ QQ 群: [侧边翻译用户交流群](https://jq.qq.com/?_wv=1027&k=gT5EYfFB)
 如果你愿意帮忙将侧边翻译翻译到其他语言，请阅读下方的指引。
 
 [本地化](./wiki/zh_CN/本地化.md)
+
+## 关于打赏
+
+开发这个项目花费了我们许多的时间和精力，如果你真的觉得这个项目对你有帮助，不妨请我们喝罐可乐，支持我们继续做下去！
+
+当然，这 __纯属自愿__，打赏并不能获得什么优待，不打赏也不会有任何影响，请量力而为！
+
+| 微信 | 支付宝 |
+| :-: | :-: |
+| <img src="https://user-images.githubusercontent.com/25877145/80864662-b6617c00-8cb6-11ea-915a-582ca046118c.png" height=200 alt="微信支付"/> | <img src="https://user-images.githubusercontent.com/25877145/80864685-ced19680-8cb6-11ea-94e5-f5ca8e4389b9.jpg" height=200 alt="支付宝支付"/> |
