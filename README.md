@@ -158,3 +158,9 @@ Join the channel or group to get Edge Translate beta packages before releases.
 If you want to help localize Edge Translate, please read the following guide.
 
 [Localization](./docs/wiki/en/Localization.md)
+
+## Sponsor
+
+It took us much time and energy to develop this project. If it truly helped you in some way, you could reward us with cans of Coke to support us to keep improving it: [PayPal](https://paypal.me/EdgeTranslate).
+
+But, this is completely __voluntary__. Sponsoring won't bring any special treatment and you can still use Edge Translate freely without sponsoring. Do it according to your capability!
