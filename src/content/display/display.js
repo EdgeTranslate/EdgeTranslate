@@ -649,7 +649,7 @@ function addBodyEventListener(template) {
             let originalTextEle = resultPanel
                 .getElementsByClassName("original-text")[0]
                 .getElementsByTagName("p")[0];
-            originalTextEle.addEventListener("click", expandOriginalText);
+            originalTextEle.addEventListener("mousedown", expandOriginalText);
 
             // 根据用户设定决定是否采用从右到左布局（用于阿拉伯语等从右到左书写的语言）
             chrome.storage.sync.get("LayoutSettings", result => {
@@ -876,11 +876,29 @@ function foldOriginalText() {
         .getElementsByClassName("original-text")[0]
         .getElementsByTagName("p")[0];
 
-    originalTextEle.style.overflow = "hidden";
-    originalTextEle.style["white-space"] = "nowrap";
+    // Remember whether mouse moved.
+    let moved = false;
+    let detectMouseMove = () => {
+        moved = true;
+    };
+    let detectMouseUp = () => {
+        if (moved) return;
 
-    originalTextEle.removeEventListener("click", foldOriginalText);
-    originalTextEle.addEventListener("click", expandOriginalText);
+        // Fold text.
+        originalTextEle.style.overflow = "hidden";
+        originalTextEle.style["white-space"] = "nowrap";
+
+        // Remove listeners.
+        originalTextEle.removeEventListener("mouseup", detectMouseUp);
+        originalTextEle.removeEventListener("mousemove", detectMouseMove);
+        originalTextEle.removeEventListener("mousedown", foldOriginalText);
+
+        // Add expand listener.
+        originalTextEle.addEventListener("mousedown", expandOriginalText);
+    };
+
+    originalTextEle.addEventListener("mousemove", detectMouseMove);
+    originalTextEle.addEventListener("mouseup", detectMouseUp);
 }
 
 /**
@@ -893,11 +911,28 @@ function expandOriginalText() {
         .getElementsByClassName("original-text")[0]
         .getElementsByTagName("p")[0];
 
-    originalTextEle.style.overflow = "inherit";
-    originalTextEle.style["white-space"] = "inherit";
+    let moved = false;
+    let detectMouseMove = () => {
+        moved = true;
+    };
+    let detectMouseUp = () => {
+        if (moved) return;
 
-    originalTextEle.removeEventListener("click", expandOriginalText);
-    originalTextEle.addEventListener("click", foldOriginalText);
+        // Expand text.
+        originalTextEle.style.overflow = "inherit";
+        originalTextEle.style["white-space"] = "inherit";
+
+        // Remove listeners.
+        originalTextEle.removeEventListener("mouseup", detectMouseUp);
+        originalTextEle.removeEventListener("mousemove", detectMouseMove);
+        originalTextEle.removeEventListener("mousedown", expandOriginalText);
+
+        // Add fold listener.
+        originalTextEle.addEventListener("mousedown", foldOriginalText);
+    };
+
+    originalTextEle.addEventListener("mousemove", detectMouseMove);
+    originalTextEle.addEventListener("mouseup", detectMouseUp);
 }
 
 /**
@@ -920,8 +955,8 @@ function editOriginalText() {
     originalTextEle.style["white-space"] = "inherit";
 
     // Remove click listeners to avoid unwanted folding and expanding.
-    originalTextEle.removeEventListener("click", foldOriginalText);
-    originalTextEle.removeEventListener("click", expandOriginalText);
+    originalTextEle.removeEventListener("mousedown", foldOriginalText);
+    originalTextEle.removeEventListener("mousedown", expandOriginalText);
 
     // Auto focus.
     originalTextEle.focus();
@@ -946,7 +981,7 @@ function submitEditedText() {
     originalTextEle.removeEventListener("blur", onTextEditorBlurred);
 
     // Add back foldOriginalText click listener to enable folding.
-    originalTextEle.addEventListener("click", foldOriginalText);
+    originalTextEle.addEventListener("mousedown", foldOriginalText);
 
     let text = originalTextEle.textContent.trim();
     if (text.length > 0) {
