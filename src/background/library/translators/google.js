@@ -455,7 +455,7 @@ class GoogleTranslator {
      */
     async pronounce(text, language, speed) {
         this.stopPronounce();
-        let speedValue = speed === "fast" ? "0.2" : "0.8";
+        let speedValue = speed === "fast" ? "0.8" : "0.2";
         this.AUDIO.src =
             this.TTS_URL +
             "&q=" +
