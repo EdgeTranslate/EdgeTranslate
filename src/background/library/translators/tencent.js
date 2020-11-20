@@ -155,9 +155,12 @@ class TencentTranslator {
      * @returns {Object} parsed result
      */
     parseResult(response, originalText) {
-        let result = {};
-        result.originalText = response.translate.records[0].sourceText;
-        result.mainMeaning = response.translate.records[0].targetText.split(/\s*\/\s*/g)[0];
+        // Parse original text and main meaning.
+        let result = { originalText: "", mainMeaning: "" };
+        for (let record of response.translate.records) {
+            result.originalText += record.sourceText;
+            result.mainMeaning += record.targetText.split(/\s*\/\s*/g)[0];
+        }
 
         // In case the original text is not returned by the API.
         if (!result.originalText || result.originalText.length <= 0) {
