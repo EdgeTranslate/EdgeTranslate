@@ -160,7 +160,7 @@
         "description": "目标语言"
     },
     "PermissionRemind": {
-        "message": "请在扩展程序管理页面中开启：'允许访问文件网址' 的开关",
+        "message": "在扩展程序管理页面中开启：'允许访问文件网址' 的开关",
         "description": "在用户的 '允许访问文件网址'的权限未打开时，给用户合理的提醒"
     },
     "ContentSettings": {
@@ -350,6 +350,18 @@
     "BlankPage": {
         "message": "一个空白页面",
         "description": "一个空白页面"
+    },
+    "NoticeReason3": {
+        "message": "你正在一个文件页面上使用侧边翻译，但是我们没有访问文件链接的权限。",
+        "description": "提示页面的第三个原因"
+    },
+    "EnablePermission": {
+        "message": "如何打开权限？",
+        "description": "如何打开权限？"
+    },
+    "OpenThisPage": {
+        "message": "打开这个页面",
+        "description": "打开这个页面"
     },
     "NoticeLinks": {
         "message": "链接",

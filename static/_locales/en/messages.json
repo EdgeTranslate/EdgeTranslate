@@ -160,7 +160,7 @@
         "description": "Target Language"
     },
     "PermissionRemind": {
-        "message": "Please open the 'Allow access to file URLs' switch in the extension management page",
+        "message": "Open the 'Allow access to file URLs' switch in the extension management page",
         "description": "a hint to the user about the access to file url permission"
     },
     "ContentSettings": {
@@ -350,6 +350,18 @@
     "BlankPage": {
         "message": "a blank page",
         "description": "a blank page"
+    },
+    "NoticeReason3": {
+        "message": "You are using Edge Translate on a file page where extension doesn't have the permission to access file links.",
+        "description": "the third reason of the notice message"
+    },
+    "EnablePermission": {
+        "message": "How to enable it?",
+        "description": "How to enable it"
+    },
+    "OpenThisPage": {
+        "message": "Open this page",
+        "description": "Open this page"
     },
     "NoticeLinks": {
         "message": "Links",

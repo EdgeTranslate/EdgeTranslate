@@ -1,10 +1,10 @@
 import axios from "./axios.js";
 import HYBRID_TRANSLATOR from "./translators/hybrid.js";
 import { sendMessageToCurrentTab } from "./common.js";
-import { log } from "../../common/scripts/common.js";
-import Messager from "../../common/scripts/messager.js";
+import { log } from "common/scripts/common.js";
+import Messager from "common/scripts/messager.js";
+import { promiseTabs, delayPromise } from "common/scripts/promise.js";
 import EVENT_MANAGER from "./event.js";
-import { delayPromise } from "../../common/scripts/promise.js";
 
 class TranslatorManager {
     constructor() {
@@ -89,6 +89,48 @@ class TranslatorManager {
     }
 
     /**
+     * get the id of the current tab
+     * if the current tab can't display the result panel
+     * open a notice page to display the result and explain why the page shows
+     * @returns the tab id
+     */
+    async getCurrentTabId() {
+        let tabId = -1;
+        const tabs = await promiseTabs.query({ active: true, currentWindow: true });
+        tabId = tabs[0].id;
+
+        // to test whether the current tab can receive message(display results)
+        await Messager.sendToTab(tabId, "content", "info", {
+            info: "before_translating"
+        }).catch(async () => {
+            /**
+             * the current tab can't display the result panel
+             * so we open a notice page to display the result and explain why this page shows
+             */
+            const noticePageUrl = chrome.runtime.getURL("content/notice/notice.html");
+            // get the tab id of an existing notice page
+            try {
+                const tab = (await promiseTabs.query({ url: noticePageUrl }))[0];
+                // jump to the existed page
+                chrome.tabs.highlight({
+                    tabs: tab.index
+                });
+                tabId = tab.id;
+            } catch (error) {
+                // create a new notice page
+                const tab = await promiseTabs.create({
+                    url: noticePageUrl,
+                    active: true
+                });
+                // wait for browser to open a new page
+                await delayPromise(200);
+                tabId = tab.id;
+            }
+        });
+        return tabId;
+    }
+
+    /**
      *
      * 检测给定文本的语言。
      *
@@ -113,13 +155,15 @@ class TranslatorManager {
      *
      * @param {String} text original text to be translated
      * @param {Array<Number>} position position of the text
-     * @param {chrome.tabs.Tab} tab tab where the text from
      *
      * @returns {Promise<void>} translate finished Promise
      */
-    async translate(text, position, tab = null) {
+    async translate(text, position) {
         // Check config.
         await this.loadConfigIfNotLoaded();
+
+        // get current tab id
+        const currentTabId = await this.getCurrentTabId();
 
         /**
          * Get current time as timestamp.
@@ -136,7 +180,8 @@ class TranslatorManager {
         EVENT_MANAGER.triggerEvent(EVENT_MANAGER.EVENTS.TRANSLATE_START, {
             text: text,
             position: position,
-            timestamp: timestamp
+            timestamp: timestamp,
+            tabId: currentTabId
         });
 
         let sl = this.LANGUAGE_SETTING.sl,
@@ -167,14 +212,15 @@ class TranslatorManager {
             // Trigger translating finished event.
             EVENT_MANAGER.triggerEvent(EVENT_MANAGER.EVENTS.TRANSLATE_FINISHED, {
                 content: result,
-                tab: tab,
+                tabId: currentTabId,
                 timestamp: timestamp
             });
         } catch (error) {
             // Trigger translating error event.
             EVENT_MANAGER.triggerEvent(EVENT_MANAGER.EVENTS.TRANSLATE_ERROR, {
                 error: error,
-                timestamp: timestamp
+                timestamp: timestamp,
+                tabId: currentTabId
             });
         }
     }
@@ -193,6 +239,9 @@ class TranslatorManager {
         // Check config.
         await this.loadConfigIfNotLoaded();
 
+        // get current tab id
+        const currentTabId = await this.getCurrentTabId();
+
         let lang = language;
         let timestamp = new Date().getTime();
 
@@ -201,7 +250,8 @@ class TranslatorManager {
             pronouncing: pronouncing,
             text: text,
             language: language,
-            timestamp: timestamp
+            timestamp: timestamp,
+            tabId: currentTabId
         });
 
         try {
@@ -216,14 +266,16 @@ class TranslatorManager {
                 pronouncing: pronouncing,
                 text: text,
                 language: lang,
-                timestamp: timestamp
+                timestamp: timestamp,
+                tabId: currentTabId
             });
         } catch (error) {
             // Trigger pronouncing error event.
             EVENT_MANAGER.triggerEvent(EVENT_MANAGER.EVENTS.PRONOUNCE_ERROR, {
                 pronouncing: pronouncing,
                 error: error,
-                timestamp: timestamp
+                timestamp: timestamp,
+                tabId: currentTabId
             });
             return Promise.resolve();
         }
@@ -380,61 +432,22 @@ function executeGoogleScript() {
 /* INNER OBJECTS AND FUNCTIONS START */
 
 /**
- * Check if the extension is allowed to access file://. If not allowed, try to request the permission.
- *
- * @returns {Promise<boolean>} allowed Promise
- */
-function checkAndRequestFileAccess() {
-    return new Promise((resolve, reject) => {
-        chrome.extension.isAllowedFileSchemeAccess(allowed => {
-            if (allowed) {
-                resolve(allowed);
-            } else if (confirm(chrome.i18n.getMessage("PermissionRemind"))) {
-                chrome.tabs.create({
-                    url: "chrome://extensions/?id=" + chrome.runtime.id
-                });
-                resolve(allowed);
-            } else {
-                reject(allowed);
-            }
-        });
-    });
-}
-
-/**
  * 展示翻译结果。
  *
  * @param {Object} content 翻译结果
- * @param {Object} tab 展示翻译结果的页面
+ * @param {Object} tabId 展示翻译结果页面的id
  *
  * @returns {Promise<Object>} show translate result Promise
  */
-async function showTranslate(content, tab) {
+async function showTranslate(content, tabId) {
     if (!content) {
         return Promise.resolve();
     }
 
     try {
-        return await sendMessageToCurrentTab("translateResult", content, tab);
+        return await Messager.sendToTab(tabId, "content", "translateResult", content);
     } catch (error) {
-        // Filter out tabs that are not file://.
-        if (!(error && error.tab && error.tab.url && error.tab.url.startsWith("file://"))) {
-            alert(content.mainMeaning);
-            log(error.error);
-            return Promise.resolve();
-        }
-
-        return checkAndRequestFileAccess()
-            .then(allowed => {
-                if (allowed) {
-                    // file:// access allowed but still can not access the tab.
-                    alert(content.mainMeaning);
-                }
-            })
-            .catch(() => {
-                alert(content.mainMeaning);
-                log("Permission denied.");
-            });
+        // user closed the translating page
     }
 }
 
@@ -444,66 +457,14 @@ async function showTranslate(content, tab) {
  * Tell display that translating started.
  */
 EVENT_MANAGER.addEventListener(EVENT_MANAGER.EVENTS.TRANSLATE_START, detail => {
-    sendMessageToCurrentTab("info", {
+    Messager.sendToTab(detail.tabId, "content", "info", {
         info: "start_translating",
         // Send translating text back to content scripts.
         text: detail.text,
         position: detail.position,
         timestamp: detail.timestamp
-    }).catch(async () => {
-        /**
-         * the current tab can't display the result panel
-         * so we open a notice page to display the result and explain why this page shows
-         */
-        const noticePageUrl = chrome.runtime.getURL("content/notice/notice.html");
-        // get the tab id of an existing notice page
-        const tabId = await new Promise(resolve => {
-            chrome.tabs.query(
-                {
-                    url: noticePageUrl
-                },
-                tabs => {
-                    // the tab exists
-                    if (tabs.length > 0) resolve(tabs[0].index);
-                    // the tab doesn't exist
-                    else resolve(-1);
-                }
-            );
-        });
-        // jump to the existed page
-        if (tabId !== -1) {
-            chrome.tabs.highlight({
-                tabs: tabId
-            });
-        }
-        // create a new notice page
-        else {
-            await new Promise((resolve, reject) =>
-                chrome.tabs.create(
-                    {
-                        url: noticePageUrl,
-                        active: true
-                    },
-                    tab => {
-                        if (chrome.runtime.lastError) {
-                            reject(chrome.runtime.lastError.message);
-                            return;
-                        }
-                        resolve(tab.id);
-                    }
-                )
-            );
-            // wait for browser to open a new page
-            await delayPromise(200);
-        }
-        // resend message to show being translated animation
-        sendMessageToCurrentTab("info", {
-            info: "start_translating",
-            // Send translating text back to content scripts.
-            text: detail.text,
-            position: detail.position,
-            timestamp: detail.timestamp
-        });
+    }).catch(() => {
+        // user closed the translating page
     });
 });
 
@@ -516,7 +477,7 @@ EVENT_MANAGER.addEventListener(EVENT_MANAGER.EVENTS.TRANSLATE_FINISHED, detail =
             timestamp: detail.timestamp,
             ...detail.content
         },
-        detail.tab
+        detail.tabId
     );
 });
 
@@ -524,7 +485,7 @@ EVENT_MANAGER.addEventListener(EVENT_MANAGER.EVENTS.TRANSLATE_FINISHED, detail =
  * Tell display translating error.
  */
 EVENT_MANAGER.addEventListener(EVENT_MANAGER.EVENTS.TRANSLATE_ERROR, detail => {
-    sendMessageToCurrentTab("info", {
+    Messager.sendToTab(detail.tabId, "content", "info", {
         info: "request_error",
         error: detail.error,
         timestamp: detail.timestamp
@@ -535,7 +496,7 @@ EVENT_MANAGER.addEventListener(EVENT_MANAGER.EVENTS.TRANSLATE_ERROR, detail => {
  * Tell display pronouncing start.
  */
 EVENT_MANAGER.addEventListener(EVENT_MANAGER.EVENTS.PRONOUNCE_START, detail => {
-    sendMessageToCurrentTab("info", {
+    Messager.sendToTab(detail.tabId, "content", "info", {
         info: "start_pronouncing",
         ...detail
     }).catch(error => log(error));
@@ -545,7 +506,7 @@ EVENT_MANAGER.addEventListener(EVENT_MANAGER.EVENTS.PRONOUNCE_START, detail => {
  * Tell display pronouncing finished.
  */
 EVENT_MANAGER.addEventListener(EVENT_MANAGER.EVENTS.PRONOUNCE_FINISHED, detail => {
-    sendMessageToCurrentTab("info", {
+    Messager.sendToTab(detail.tabId, "content", "info", {
         info: "pronouncing_finished",
         ...detail
     }).catch(error => log(error));
@@ -555,7 +516,7 @@ EVENT_MANAGER.addEventListener(EVENT_MANAGER.EVENTS.PRONOUNCE_FINISHED, detail =
  * Tell display pronouncing error.
  */
 EVENT_MANAGER.addEventListener(EVENT_MANAGER.EVENTS.PRONOUNCE_ERROR, detail => {
-    sendMessageToCurrentTab("info", {
+    Messager.sendToTab(detail.tabId, "content", "info", {
         info: "request_error",
         ...detail
     }).catch(error => log(error));

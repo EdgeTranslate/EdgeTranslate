@@ -326,6 +326,9 @@ Messager.receive("content", message => {
         // 发送的是翻译状态信息
         case "info":
             switch (message.detail.info) {
+                case "before_translating":
+                    // the translator send this message to make sure current tab can display result panel
+                    break;
                 case "start_translating":
                     // Remember translating text.
                     translateResult.originalText = message.detail.text;

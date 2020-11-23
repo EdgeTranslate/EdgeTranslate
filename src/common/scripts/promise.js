@@ -22,3 +22,38 @@ function delayPromise(time) {
         }
     });
 }
+
+/**
+ * wrap chrome.tabs functions to promise
+ */
+export class promiseTabs {
+    /**
+     * equal to chrome.tabs.create
+     */
+    static create(createProperties) {
+        return new Promise((resolve, reject) => {
+            chrome.tabs.create(createProperties, function(tab) {
+                if (chrome.runtime.lastError) {
+                    return reject(chrome.runtime.lastError.message);
+                }
+                resolve(tab);
+            });
+        });
+    }
+
+    /**
+     * equal to chrome.tabs.query
+     */
+    static query(queryInfo) {
+        return new Promise((resolve, reject) => {
+            chrome.tabs.query(queryInfo, function(tabs) {
+                if (chrome.runtime.lastError || !tabs[0] || tabs[0].id < 0) {
+                    return reject({
+                        error: chrome.runtime.lastError || "The query has no results"
+                    });
+                }
+                return resolve(tabs);
+            });
+        });
+    }
+}

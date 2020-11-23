@@ -8,4 +8,10 @@ import { i18nHTML } from "common/scripts/common.js";
 
 window.onload = () => {
     i18nHTML();
+
+    document.getElementById("permissionPage").addEventListener("click", () => {
+        chrome.tabs.create({
+            url: "chrome://extensions/?id=" + chrome.runtime.id
+        });
+    });
 };
