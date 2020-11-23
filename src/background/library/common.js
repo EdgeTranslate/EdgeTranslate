@@ -1,4 +1,5 @@
-import Messager from "../../common/scripts/messager.js";
+import Messager from "common/scripts/messager.js";
+import { promiseTabs } from "common/scripts/promise.js";
 
 export { sendMessageToCurrentTab };
 
@@ -18,20 +19,14 @@ function sendMessageToCurrentTab(title, detail, tab = null) {
         );
     }
 
-    return new Promise((resolve, reject) => {
-        chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
-            if (chrome.runtime.lastError || !tabs[0] || tabs[0].id < 0) {
-                reject({
-                    error: chrome.runtime.lastError || "No tabs available to send message to."
-                });
-                return;
-            }
-            resolve(
-                Messager.sendToTab(tabs[0].id, "content", title, detail).catch(error =>
-                    Promise.reject({ error: error, tab: tabs[0] })
-                )
+    return promiseTabs
+        .query({ active: true, currentWindow: true })
+        .then(tabs => {
+            return Messager.sendToTab(tabs[0].id, "content", title, detail).catch(error =>
+                Promise.reject({ error: error, tab: tabs[0] })
             );
-            return;
+        })
+        .catch(() => {
+            return Promise.reject("No tabs available to send message to.");
         });
-    });
 }

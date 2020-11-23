@@ -228,20 +228,20 @@ chrome.notifications.onClicked.addListener(function(notificationId) {
 /**
  * 添加点击菜单后的处理事件
  */
-chrome.contextMenus.onClicked.addListener(function(info, tab) {
+chrome.contextMenus.onClicked.addListener(function(info) {
     switch (info.menuItemId) {
         case "translate":
             sendMessageToCurrentTab("get_selection", {})
                 .then(({ selectedText, position }) => {
                     if (selectedText) {
-                        return TRANSLATOR_MANAGER.translate(selectedText, position, tab);
+                        return TRANSLATOR_MANAGER.translate(selectedText, position);
                     }
                     return Promise.reject();
                 })
                 .catch(error => {
                     // If content scripts can not access the tab the selection, use info.selectionText instead.
                     if (info.selectionText.trim()) {
-                        return TRANSLATOR_MANAGER.translate(info.selectionText, null, tab);
+                        return TRANSLATOR_MANAGER.translate(info.selectionText, null);
                     }
                     return Promise.resolve(error);
                 });
