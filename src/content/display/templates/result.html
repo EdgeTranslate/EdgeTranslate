@@ -102,9 +102,11 @@
 					<p class="word-type"><% this.definitions[i].pos + ": " %></p>
 					<span class="content">
 						<span><% chrome.i18n.getMessage("DefinitionsMeaning") %>: </span>
-						<p class="definitions-content"><% this.definitions[i].meaning %></p>  
-						<span><% chrome.i18n.getMessage("DefinitionsExample") %>: </span>
-						<p class="definitions-content"><% this.definitions[i].example %></p>
+						<p class="definitions-content"><% this.definitions[i].meaning %></p>
+						<% if (this.definitions[i].example && this.definitions[i].example.length > 0) { %>
+							<span><% chrome.i18n.getMessage("DefinitionsExample") %>: </span>
+							<p class="definitions-content"><% this.definitions[i].example %></p>
+						<% } %>
 						<% if (this.definitions[i].synonyms) { %>
 							<span><% chrome.i18n.getMessage("Synonyms") %>: </span>
 							<p class="definitions-content"><% this.definitions[i].synonyms.join(", ") %></p>
