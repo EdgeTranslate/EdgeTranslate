@@ -294,8 +294,23 @@ class TencentTranslator {
                 })
             });
 
+            // Succeed flag.
+            let succeeded = false;
+
+            if (response.data.dict) {
+                // Translated text is a word with detailed meanings.
+                succeeded = true;
+            } else if (
+                response.data.translate &&
+                response.data.translate.records[0].targetText.length > 0 &&
+                (text.trim().indexOf(" ") > -1 || retryCount >= this.MAX_RETRY)
+            ) {
+                // Translated text is either a word without detailed meanings or a sentence.
+                succeeded = true;
+            }
+
             // Translate succeeded.
-            if (response.data.dict || (response.data.translate && retryCount >= this.MAX_RETRY)) {
+            if (succeeded) {
                 let result = this.parseResult(response.data, text);
                 return result;
             }
