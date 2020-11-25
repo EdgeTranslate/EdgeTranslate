@@ -87,6 +87,14 @@
         "message": "Читать переведённый текст",
         "description": "Читать переведённый текст."
     },
+    "ClickToExpand": {
+        "message": "Click to expand",
+        "description": "Click to expand."
+    },
+    "ClickToFold": {
+        "message": "Click to fold",
+        "description": "Click to fold."
+    },
     "EditText": {
         "message": "Edit text",
         "description": "Edit selected text."

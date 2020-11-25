@@ -891,6 +891,7 @@ function foldOriginalText() {
             // Fold text.
             originalTextEle.style.overflow = "hidden";
             originalTextEle.style["white-space"] = "nowrap";
+            originalTextEle.title = chrome.i18n.getMessage("ClickToExpand");
 
             // Update mousedown event listener.
             originalTextEle.removeEventListener("mousedown", foldOriginalText);
@@ -929,6 +930,7 @@ function expandOriginalText() {
             // Fold text.
             originalTextEle.style.overflow = "inherit";
             originalTextEle.style["white-space"] = "inherit";
+            originalTextEle.title = chrome.i18n.getMessage("ClickToFold");
 
             // Update mousedown event listener.
             originalTextEle.removeEventListener("mousedown", expandOriginalText);
@@ -963,6 +965,7 @@ function editOriginalText() {
     // Expand original text for reading and editing.
     originalTextEle.style.overflow = "inherit";
     originalTextEle.style["white-space"] = "inherit";
+    originalTextEle.title = "";
 
     // Remove click listeners to avoid unwanted folding and expanding.
     originalTextEle.removeEventListener("mousedown", foldOriginalText);
@@ -992,6 +995,7 @@ function submitEditedText() {
 
     // Add back foldOriginalText click listener to enable folding.
     originalTextEle.addEventListener("mousedown", foldOriginalText);
+    originalTextEle.title = chrome.i18n.getMessage("ClickToFold");
 
     let text = originalTextEle.textContent.trim();
     if (text.length > 0) {
