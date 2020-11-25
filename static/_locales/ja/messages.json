@@ -87,6 +87,14 @@
         "message": "翻訳されたテキストを読み上げる",
         "description": "翻訳されたテキストを読み上げる"
     },
+    "ClickToExpand": {
+        "message": "Click to expand",
+        "description": "Click to expand."
+    },
+    "ClickToFold": {
+        "message": "Click to fold",
+        "description": "Click to fold."
+    },
     "EditText": {
         "message": "Edit text",
         "description": "Edit selected text."

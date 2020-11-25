@@ -87,6 +87,14 @@
         "message": "朗读翻译结果",
         "description": "朗读翻译结果"
     },
+    "ClickToExpand": {
+        "message": "单击展开",
+        "description": "单击展开。"
+    },
+    "ClickToFold": {
+        "message": "单击折叠",
+        "description": "单击折叠。"
+    },
     "EditText": {
         "message": "编辑文本",
         "description": "编辑选中的文本。"
