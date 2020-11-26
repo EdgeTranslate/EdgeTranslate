@@ -201,6 +201,17 @@ class TencentTranslator {
             result.mainMeaning += record.targetText.split(/\s*\/\s*/g)[0];
         }
 
+        // Unescape html characters.
+        let parser = new DOMParser();
+        result.originalText = parser.parseFromString(
+            result.originalText,
+            "text/html"
+        ).documentElement.textContent;
+        result.mainMeaning = parser.parseFromString(
+            result.mainMeaning,
+            "text/html"
+        ).documentElement.textContent;
+
         // In case the original text is not returned by the API.
         if (!result.originalText || result.originalText.length <= 0) {
             result.originalText = originalText;
