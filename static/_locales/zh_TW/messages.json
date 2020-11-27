@@ -363,6 +363,10 @@
         "message": "你正在一個文件頁面上使用側邊翻譯，但是我們沒有訪問文件鏈接的權限。",
         "description": "提示頁面的第三個原因"
     },
+    "NoticeReason4": {
+        "message": "在火狐瀏覽器上，我們的擴展不能在文件頁面上使用",
+        "description": "提示頁面的第四個原因"
+    },
     "EnablePermission": {
         "message": "如何打開權限？",
         "description": "如何打開權限？"

@@ -14,4 +14,15 @@ window.onload = () => {
             url: "chrome://extensions/?id=" + chrome.runtime.id
         });
     });
+
+    // tell the current browser type
+    const isFirefox = typeof InstallTrigger !== "undefined";
+    const reasonsList = document.getElementById("reasonsList");
+    if (!isFirefox) {
+        const firefoxReason = document.getElementById("firefoxReason");
+        reasonsList.removeChild(firefoxReason);
+    } else {
+        const chromeReason = document.getElementById("chromeReason");
+        reasonsList.removeChild(chromeReason);
+    }
 };

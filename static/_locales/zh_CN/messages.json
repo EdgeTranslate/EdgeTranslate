@@ -363,6 +363,10 @@
         "message": "你正在一个文件页面上使用侧边翻译，但是我们没有访问文件链接的权限。",
         "description": "提示页面的第三个原因"
     },
+    "NoticeReason4": {
+        "message": "在火狐浏览器上，我们的扩展不能在文件页面上使用",
+        "description": "提示页面的第四个原因"
+    },
     "EnablePermission": {
         "message": "如何打开权限？",
         "description": "如何打开权限？"

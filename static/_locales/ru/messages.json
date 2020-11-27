@@ -363,6 +363,10 @@
         "message": "You are using Edge Translate on a file page where extension doesn't have the permission to access file links.",
         "description": "the third reason of the notice message"
     },
+    "NoticeReason4": {
+        "message": "Our extension are not allowed to run on the file page on Firefox.",
+        "description": "the fourth reason of the notice message"
+    },
     "EnablePermission": {
         "message": "How to enable it?",
         "description": "How to enable it"
