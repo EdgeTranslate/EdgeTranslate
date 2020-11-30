@@ -49,21 +49,25 @@ const TENCENT_TOKEN_UPDATED = "tencent_token_updated";
  */
 const HOME_PAGE_LOADING_WATCHER = `
     let watcher = document.createElement("script");
-    watcher.textContent = \`let intervalId = setInterval(() => {
-        if (window.qtk && window.qtv && window.qtk.length > 0 && window.qtv.length > 0) {
-            window.postMessage("et_tencent_token_updated", "*");
-            clearInterval(intervalId);
-        }
-    }, 50);\`;
+    watcher.textContent = \`
+        let intervalId = setInterval(() => {
+            if (window.qtk && window.qtv && window.qtk.length > 0 && window.qtv.length > 0) {
+                window.postMessage("et_tencent_token_updated", "*");
+                clearInterval(intervalId);
+            }
+        }, 50);
+    \`;
     document.body.appendChild(watcher);
 
     window.addEventListener("message", event => {
         if (event.data === "et_tencent_token_updated") {
-            chrome.runtime.sendMessage(JSON.stringify({
-                to: { ${RECEIVER}: true },
-                title: "${TENCENT_TOKEN_UPDATED}"
-            }));
-            window.close();
+            chrome.runtime.sendMessage(
+                JSON.stringify({
+                    to: { ${RECEIVER}: true },
+                    title: "${TENCENT_TOKEN_UPDATED}"
+                }),
+                () => window.close()
+            );
         }
     });
 `;
@@ -154,10 +158,14 @@ class TencentTranslator {
          * Wait until token updated.
          */
         await new Promise(resolve => {
-            Messager.receive(RECEIVER, message => {
-                if (message.title === TENCENT_TOKEN_UPDATED) resolve();
-                return Promise.resolve();
-            });
+            Messager.receive(
+                RECEIVER,
+                message => {
+                    if (message.title === TENCENT_TOKEN_UPDATED) resolve();
+                    return Promise.resolve();
+                },
+                true
+            );
         });
     }
 
