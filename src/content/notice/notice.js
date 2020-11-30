@@ -15,14 +15,12 @@ window.onload = () => {
         });
     });
 
-    // tell the current browser type
-    const isFirefox = typeof InstallTrigger !== "undefined";
     const reasonsList = document.getElementById("reasonsList");
-    if (!isFirefox) {
-        const firefoxReason = document.getElementById("firefoxReason");
-        reasonsList.removeChild(firefoxReason);
-    } else {
+    if (BROWSER_ENV === "firefox") {
         const chromeReason = document.getElementById("chromeReason");
         reasonsList.removeChild(chromeReason);
+    } else {
+        const firefoxReason = document.getElementById("firefoxReason");
+        reasonsList.removeChild(firefoxReason);
     }
 };
