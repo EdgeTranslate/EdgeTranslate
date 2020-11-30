@@ -4,6 +4,7 @@
  * start content style
  */
 #edge-translate-result {
+    width: 100%;
     box-sizing: border-box;
     padding: 5% 10%;
     font-weight: normal;
@@ -74,6 +75,12 @@
     .original-text {
         color: gray;
         font-weight: lighter;
+
+        p {
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
 
         #icon-edit {
             font-size: x-large;
@@ -155,6 +162,7 @@
 
     .phonetic-symbol {
         width: 100%;
+
         .phonetic-symbol-content {
             display: block;
             margin-left: 15%;

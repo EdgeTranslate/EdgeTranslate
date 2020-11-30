@@ -298,13 +298,20 @@ class BaiduTranslator {
      */
     parseResult(result) {
         let parsed = {};
-        parsed.originalText = result.trans_result.data[0].src;
-        parsed.mainMeaning = result.trans_result.data[0].dst;
+        let originalTexts = [],
+            mainMeanings = [];
+        for (let item of result.trans_result.data) {
+            originalTexts.push(item.src);
+            mainMeanings.push(item.dst);
+        }
+        parsed.originalText = originalTexts.join("\n");
+        parsed.mainMeaning = mainMeanings.join("\n");
 
-        if (result.trans_result.phonetic)
+        if (result.trans_result.phonetic) {
             parsed.tPronunciation = result.trans_result.phonetic
-                .map(e => e.trg_str)
+                .map(e => (e.trg_str !== " " ? e.trg_str : e.src_str))
                 .reduce((t1, t2) => t1 + " " + t2); // get the result by splicing the array
+        }
 
         // japanese target pronunciation
         if (result.trans_result.jp_pinyin) {
@@ -317,13 +324,27 @@ class BaiduTranslator {
                 parsed.sPronunciation = result.dict_result.simple_means.symbols[0].ph_en;
 
                 parsed.detailedMeanings = [];
-                for (let part of result.dict_result.simple_means.symbols[0].parts) {
+
+                // Parse one detailed meaning.
+                let appendDetailedMeaning = part => {
                     let meaning = {};
                     meaning.pos = part.part; // part of speech
                     meaning.meaning = part.means.reduce(
                         (meaning1, meaning2) => meaning1 + "\n" + meaning2
                     );
                     parsed.detailedMeanings.push(meaning);
+                };
+
+                for (let part of result.dict_result.simple_means.symbols[0].parts) {
+                    if (part.part) {
+                        appendDetailedMeaning(part);
+                        continue;
+                    }
+
+                    for (let mean of part.means) {
+                        if (!mean.means) continue;
+                        appendDetailedMeaning(mean);
+                    }
                 }
             }
 

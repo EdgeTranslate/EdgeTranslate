@@ -326,6 +326,9 @@ Messager.receive("content", message => {
         // 发送的是翻译状态信息
         case "info":
             switch (message.detail.info) {
+                case "before_translating":
+                    // the translator send this message to make sure current tab can display result panel
+                    break;
                 case "start_translating":
                     // Remember translating text.
                     translateResult.originalText = message.detail.text;
@@ -645,6 +648,12 @@ function addBodyEventListener(template) {
             editDoneIcon.addEventListener("click", submitEditedText);
             editDoneIcon.style.display = "none";
 
+            // Unfold original text on click.
+            let originalTextEle = resultPanel
+                .getElementsByClassName("original-text")[0]
+                .getElementsByTagName("p")[0];
+            originalTextEle.addEventListener("mousedown", expandOriginalText);
+
             // 根据用户设定决定是否采用从右到左布局（用于阿拉伯语等从右到左书写的语言）
             chrome.storage.sync.get("LayoutSettings", result => {
                 if (result.LayoutSettings.RTL) {
@@ -861,7 +870,85 @@ function onTextEditorBlurred(event) {
 }
 
 /**
- * Edit original test.
+ * Fold overflowed original text for better reading experience.
+ *
+ * @returns {void} nothing
+ */
+function foldOriginalText() {
+    let originalTextEle = resultPanel
+        .getElementsByClassName("original-text")[0]
+        .getElementsByTagName("p")[0];
+
+    // Remember whether mouse moved.
+    let moved = false;
+
+    // Inner event listeners for detecting mousemove and mouseup.
+    let detectMouseMove = () => {
+        moved = true;
+    };
+    let detectMouseUp = () => {
+        if (!moved) {
+            // Fold text.
+            originalTextEle.style.overflow = "hidden";
+            originalTextEle.style["white-space"] = "nowrap";
+            originalTextEle.title = chrome.i18n.getMessage("ClickToExpand");
+
+            // Update mousedown event listener.
+            originalTextEle.removeEventListener("mousedown", foldOriginalText);
+            originalTextEle.addEventListener("mousedown", expandOriginalText);
+        }
+
+        // Remove inner event listener.
+        originalTextEle.removeEventListener("mousemove", detectMouseMove);
+        originalTextEle.removeEventListener("mouseup", detectMouseUp);
+    };
+
+    // Add inner event listeners.
+    originalTextEle.addEventListener("mousemove", detectMouseMove);
+    originalTextEle.addEventListener("mouseup", detectMouseUp);
+}
+
+/**
+ * Expand overflowed original text for reading and editing.
+ *
+ * @returns {void} nothing
+ */
+function expandOriginalText() {
+    let originalTextEle = resultPanel
+        .getElementsByClassName("original-text")[0]
+        .getElementsByTagName("p")[0];
+
+    // Remember whether mouse moved.
+    let moved = false;
+
+    // Inner event listeners for detecting mousemove and mouseup.
+    let detectMouseMove = () => {
+        moved = true;
+    };
+    let detectMouseUp = () => {
+        if (!moved) {
+            // Fold text.
+            originalTextEle.style.overflow = "inherit";
+            originalTextEle.style["white-space"] = "inherit";
+            originalTextEle.title = chrome.i18n.getMessage("ClickToFold");
+
+            // Update mousedown event listener.
+            originalTextEle.removeEventListener("mousedown", expandOriginalText);
+            originalTextEle.addEventListener("mousedown", foldOriginalText);
+        }
+
+        // Remove inner event listeners.
+        originalTextEle.removeEventListener("mousemove", detectMouseMove);
+        originalTextEle.removeEventListener("mouseup", detectMouseUp);
+    };
+
+    // Add inner event listeners.
+    originalTextEle.addEventListener("mousemove", detectMouseMove);
+    originalTextEle.addEventListener("mouseup", detectMouseUp);
+}
+
+/**
+ * Edit original text.
  */
 function editOriginalText() {
     let originalTextEle = resultPanel
@@ -874,6 +961,15 @@ function editOriginalText() {
     // Prevent input events from propagation.
     originalTextEle.addEventListener("focus", onTextEditorFocused);
     originalTextEle.addEventListener("blur", onTextEditorBlurred);
+
+    // Expand original text for reading and editing.
+    originalTextEle.style.overflow = "inherit";
+    originalTextEle.style["white-space"] = "inherit";
+    originalTextEle.title = "";
+
+    // Remove click listeners to avoid unwanted folding and expanding.
+    originalTextEle.removeEventListener("mousedown", foldOriginalText);
+    originalTextEle.removeEventListener("mousedown", expandOriginalText);
 
     // Auto focus.
     originalTextEle.focus();
@@ -896,6 +992,10 @@ function submitEditedText() {
     // Allow input events propagation.
     originalTextEle.removeEventListener("focus", onTextEditorFocused);
     originalTextEle.removeEventListener("blur", onTextEditorBlurred);
+
+    // Add back foldOriginalText click listener to enable folding.
+    originalTextEle.addEventListener("mousedown", foldOriginalText);
+    originalTextEle.title = chrome.i18n.getMessage("ClickToFold");
 
     let text = originalTextEle.textContent.trim();
     if (text.length > 0) {

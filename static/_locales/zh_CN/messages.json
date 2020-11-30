@@ -87,6 +87,14 @@
         "message": "朗读翻译结果",
         "description": "朗读翻译结果"
     },
+    "ClickToExpand": {
+        "message": "单击展开",
+        "description": "单击展开。"
+    },
+    "ClickToFold": {
+        "message": "单击折叠",
+        "description": "单击折叠。"
+    },
     "EditText": {
         "message": "编辑文本",
         "description": "编辑选中的文本。"
@@ -160,7 +168,7 @@
         "description": "目标语言"
     },
     "PermissionRemind": {
-        "message": "请在扩展程序管理页面中开启：'允许访问文件网址' 的开关",
+        "message": "在扩展程序管理页面中开启：'允许访问文件网址' 的开关",
         "description": "在用户的 '允许访问文件网址'的权限未打开时，给用户合理的提醒"
     },
     "ContentSettings": {
@@ -326,6 +334,58 @@
     "ERR_ACT": {
         "message": "错误操作",
         "description": "错误操作。"
+    },
+    "NOTICE": {
+        "message": "提示",
+        "description": "提示"
+    },
+    "NoticeTitle": {
+        "message": "为什么会出现这个页面？",
+        "description": "提示页面的标题"
+    },
+    "NoticeReason1": {
+        "message": "你也许忘记在安装或者更新扩展后刷新已经打开的页面了。",
+        "description": "提示页面的第一个原因"
+    },
+    "NoticeReason2": {
+        "message": "你正在一个无法注入我们扩展脚本的页面上使用侧边翻译。",
+        "description": "提示页面的第二个原因"
+    },
+    "NoticeExampleSites": {
+        "message": "例如这些网址：",
+        "description": "例如这些网址："
+    },
+    "BlankPage": {
+        "message": "一个空白页面",
+        "description": "一个空白页面"
+    },
+    "NoticeReason3": {
+        "message": "你正在一个文件页面上使用侧边翻译，但是我们没有访问文件链接的权限。",
+        "description": "提示页面的第三个原因"
+    },
+    "NoticeReason4": {
+        "message": "在火狐浏览器上，我们的扩展不能在文件页面上使用",
+        "description": "提示页面的第四个原因"
+    },
+    "EnablePermission": {
+        "message": "如何打开权限？",
+        "description": "如何打开权限？"
+    },
+    "OpenThisPage": {
+        "message": "打开这个页面",
+        "description": "打开这个页面"
+    },
+    "NoticeLinks": {
+        "message": "链接",
+        "description": "链接"
+    },
+    "WIKI": {
+        "message": "说明文档",
+        "description": "说明文档"
+    },
+    "BugReport": {
+        "message": "报告一个bug",
+        "description": "报告一个bug"
     },
     "English": {
         "message": "英语",

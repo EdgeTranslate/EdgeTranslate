@@ -258,8 +258,8 @@ class GoogleTranslator {
                             mainMeanings.push(items[j][0]);
                             originalTexts.push(items[j][1]);
                         }
-                        // 根据源文本将翻译结果格式化
-                        result.mainMeaning = mainMeanings.join("").replace(/\n|\r/g, "<br/>");
+
+                        result.mainMeaning = mainMeanings.join("");
                         result.originalText = originalTexts.join("");
                         try {
                             if (lastIndex > 0) {
@@ -455,7 +455,7 @@ class GoogleTranslator {
      */
     async pronounce(text, language, speed) {
         this.stopPronounce();
-        let speedValue = speed === "fast" ? "0.2" : "0.8";
+        let speedValue = speed === "fast" ? "0.8" : "0.2";
         this.AUDIO.src =
             this.TTS_URL +
             "&q=" +

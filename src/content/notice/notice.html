@@ -1,0 +1,99 @@
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title class="i18n" data-i18n-name="NOTICE"></title>
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <link type="text/css" rel="stylesheet" href="./notice.css" />
+        <link type="text/css" rel="stylesheet" href="../select/select.css" />
+    </head>
+    <body>
+        <div id="notice">
+            <header>
+                <img src="../../icon/icon128.png" />
+                <span class="space"></span>
+                <span class="space"></span>
+                Edge Translate
+            </header>
+            <h1 class="i18n" data-i18n-name="NoticeTitle"></h1>
+            <ol id="reasonsList">
+                <li class="i18n" data-i18n-name="NoticeReason1"></li>
+                <li class="i18n" data-i18n-name="NoticeReason2" data-insert-pos="afterBegin">
+                    <ul
+                        class="i18n"
+                        data-i18n-name="NoticeExampleSites"
+                        data-insert-pos="afterBegin"
+                    >
+                        <li>
+                            <a>chrome://extensions/</a>
+                        </li>
+                        <li>
+                            <a href="https://chrome.google.com/webstore/" target="_blank">
+                                https://chrome.google.com/webstore/
+                            </a>
+                        </li>
+                        <li>
+                            <a class="i18n" data-i18n-name="BlankPage"></a>
+                        </li>
+                    </ul>
+                </li>
+                <li
+                    class="i18n"
+                    data-i18n-name="NoticeReason3"
+                    data-insert-pos="afterBegin"
+                    id="chromeReason"
+                >
+                    <ul class="i18n" data-i18n-name="EnablePermission" data-insert-pos="afterBegin">
+                        <li>
+                            <a
+                                href=""
+                                id="permissionPage"
+                                class="i18n"
+                                data-i18n-name="OpenThisPage"
+                            >
+                            </a>
+                        </li>
+                        <li class="i18n" data-i18n-name="PermissionRemind"></li>
+                    </ul>
+                </li>
+                <li
+                    class="i18n"
+                    data-i18n-name="NoticeReason4"
+                    data-insert-pos="afterBegin"
+                    id="firefoxReason"
+                ></li>
+            </ol>
+            <h1 class="i18n" data-i18n-name="NoticeLinks"></h1>
+            <ul>
+                <li>
+                    <a
+                        href="../../options/options.html"
+                        target="_blank"
+                        class="i18n"
+                        data-i18n-name="Settings"
+                    ></a>
+                </li>
+                <li>
+                    <a
+                        href="https://github.com/EdgeTranslate/EdgeTranslate/wiki"
+                        target="_blank"
+                        class="i18n"
+                        data-i18n-name="WIKI"
+                    >
+                    </a>
+                </li>
+                <li>
+                    <a
+                        href="https://github.com/EdgeTranslate/EdgeTranslate/issues"
+                        target="_blank"
+                        class="i18n"
+                        data-i18n-name="BugReport"
+                    >
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </body>
+    <script src="../select/select.js"></script>
+    <script src="../display/display.js"></script>
+    <script src="./notice.js"></script>
+</html>

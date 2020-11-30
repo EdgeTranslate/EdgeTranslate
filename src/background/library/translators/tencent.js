@@ -1,5 +1,5 @@
 import axios from "../axios.js";
-import { log } from "../../../common/scripts/common.js";
+import Messager from "common/scripts/messager.js";
 
 /**
  * Supported languages.
@@ -25,6 +25,56 @@ const LANGUAGES = [
     ["hi", "hi"]
 ];
 
+/**
+ * Message receiver.
+ */
+const RECEIVER = "tencent";
+
+/**
+ * Title of the message.
+ */
+const TENCENT_TOKEN_UPDATED = "tencent_token_updated";
+
+/**
+ * This piece of code is used to watch tencent translating home page loading.
+ *
+ * Content scripts run in isolated worlds so they can not access window globals
+ * set by the original page. Therefore we create a script element in the DOM to
+ * out break the isolated world and access those globals.
+ *
+ * In the script element, we periodically check if qtk and qtv had been set by
+ * Tencent scripts. Once they were set, we post a message to tell content script
+ * about it, The content script then close the tab and ask TencentTranslator
+ * to go on translating.
+ */
+const HOME_PAGE_LOADING_WATCHER = `
+    let watcher = document.createElement("script");
+    watcher.textContent = \`
+        let intervalId = setInterval(() => {
+            if (window.qtk && window.qtv && window.qtk.length > 0 && window.qtv.length > 0) {
+                window.postMessage("et_tencent_token_updated", "*");
+                clearInterval(intervalId);
+            }
+        }, 50);
+    \`;
+    document.body.appendChild(watcher);
+
+    window.addEventListener("message", event => {
+        if (event.data === "et_tencent_token_updated") {
+            chrome.runtime.sendMessage(
+                JSON.stringify({
+                    to: { ${RECEIVER}: true },
+                    title: "${TENCENT_TOKEN_UPDATED}"
+                }),
+                () => window.close()
+            );
+        }
+    });
+`;
+
+/**
+ * Tencent translator.
+ */
 class TencentTranslator {
     constructor() {
         /**
@@ -96,32 +146,26 @@ class TencentTranslator {
         );
 
         /**
-         * Check if the tab has been loaded.
+         * After token updated by Tencent home page, a message will be sent to background page
+         * so that TencentTranslator will know that it can go on translating.
          */
-        return new Promise((resolve, reject) => {
-            let tabUpdateListener = (id, change, tab) => {
-                if (id !== tabId || tab.status === "loading") {
-                    return;
-                }
+        chrome.tabs.executeScript(tabId, {
+            code: HOME_PAGE_LOADING_WATCHER,
+            runAt: "document_end"
+        });
 
-                // Finished loading, remove the tab.
-                chrome.tabs.remove(tabId, () => {
-                    if (chrome.runtime.lastError) {
-                        log(chrome.runtime.lastError.message);
-                    }
-
-                    // Remove added listener.
-                    chrome.tabs.onUpdated.removeListener(tabUpdateListener);
-
-                    // It has been loaded, call resolve.
-                    if (tab.status === "complete") resolve();
-                    // It can not be loaded, call reject.
-                    else reject();
-                });
-            };
-
-            // Add listener.
-            chrome.tabs.onUpdated.addListener(tabUpdateListener);
+        /**
+         * Wait until token updated.
+         */
+        await new Promise(resolve => {
+            Messager.receive(
+                RECEIVER,
+                message => {
+                    if (message.title === TENCENT_TOKEN_UPDATED) resolve();
+                    return Promise.resolve();
+                },
+                true
+            );
         });
     }
 
@@ -158,9 +202,23 @@ class TencentTranslator {
      * @returns {Object} parsed result
      */
     parseResult(response, originalText) {
-        let result = {};
-        result.originalText = response.translate.records[0].sourceText;
-        result.mainMeaning = response.translate.records[0].targetText.split(/\s*\/\s*/g)[0];
+        // Parse original text and main meaning.
+        let result = { originalText: "", mainMeaning: "" };
+        for (let record of response.translate.records) {
+            result.originalText += record.sourceText;
+            result.mainMeaning += record.targetText.split(/\s*\/\s*/g)[0];
+        }
+
+        // Unescape html characters.
+        let parser = new DOMParser();
+        result.originalText = parser.parseFromString(
+            result.originalText,
+            "text/html"
+        ).documentElement.textContent;
+        result.mainMeaning = parser.parseFromString(
+            result.mainMeaning,
+            "text/html"
+        ).documentElement.textContent;
 
         // In case the original text is not returned by the API.
         if (!result.originalText || result.originalText.length <= 0) {
@@ -255,8 +313,23 @@ class TencentTranslator {
                 })
             });
 
+            // Succeed flag.
+            let succeeded = false;
+
+            if (response.data.dict) {
+                // Translated text is a word with detailed meanings.
+                succeeded = true;
+            } else if (
+                response.data.translate &&
+                response.data.translate.records[0].targetText.length > 0 &&
+                (text.trim().indexOf(" ") > -1 || retryCount >= this.MAX_RETRY)
+            ) {
+                // Translated text is either a word without detailed meanings or a sentence.
+                succeeded = true;
+            }
+
             // Translate succeeded.
-            if (response.data.dict || (response.data.translate && retryCount >= this.MAX_RETRY)) {
+            if (succeeded) {
                 let result = this.parseResult(response.data, text);
                 return result;
             }

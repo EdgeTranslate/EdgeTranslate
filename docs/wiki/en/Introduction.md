@@ -75,3 +75,9 @@ Edge Translate were developed by us ( [nickyc975](https://github.com/nickyc975) 
 * Firefox Add-ons Store: [Edge Translate](https://addons.mozilla.org/en-US/firefox/addon/edge_translate/reviews)
 
 In addition, developers are welcome to give us issues and pull requests. If you like this project, welcome to fork & star.
+
+## Sponsor
+
+It took us much time and energy to develop this project. If it truly helped you in some way, you could reward us with cans of Coke to support us to keep improving it: [PayPal](https://paypal.me/EdgeTranslate).
+
+But, this is completely __voluntary__. Sponsoring won't bring any special treatment and you can still use Edge Translate freely without sponsoring. Do it according to your capability!

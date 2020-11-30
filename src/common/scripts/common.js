@@ -25,3 +25,23 @@ function log(message) {
     // eslint-disable-next-line no-console
     console.log(message);
 }
+
+/**
+ * set the content text of HTML tags, which have "i18n" class name, with i18n value
+ */
+export function i18nHTML() {
+    var i18nElements = document.getElementsByClassName("i18n");
+    for (let i = 0; i < i18nElements.length; i++) {
+        // Default "beforeEnd".
+        let pos = "beforeEnd";
+        if (i18nElements[i].hasAttribute("data-insert-pos")) {
+            pos = i18nElements[i].getAttribute("data-insert-pos");
+        }
+
+        // 跟随浏览器的语言设置显示内容
+        i18nElements[i].insertAdjacentText(
+            pos,
+            chrome.i18n.getMessage(i18nElements[i].getAttribute("data-i18n-name"))
+        );
+    }
+}
