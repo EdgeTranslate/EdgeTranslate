@@ -80,20 +80,36 @@ class Messager {
      *
      * @param {String} receiver message receiver
      * @param {Function} messageHandler message handler
+     * @param {Boolean} onceOnly if this handler should be executed for only once
      *
      * @returns {void} nothing
      */
-    static receive(receiver, messageHandler) {
-        chrome.runtime.onMessage.addListener((message, sender, callback) => {
+    static receive(receiver, messageHandler, onceOnly = false) {
+        /**
+         * The message handler wrapper.
+         *
+         * @param {String} message message
+         * @param {chrome.tabs.Tab} sender sender tab
+         * @param {Function?} callback callback
+         *
+         * @returns {Boolean} true
+         */
+        let handlerWrapper = (message, sender, callback) => {
             let parsed = JSON.parse(message);
             if (parsed.to && parsed.to[receiver]) {
                 messageHandler(parsed, sender).then(result => {
                     if (callback) callback(result);
+
+                    // If the handler should be executed for only once, remove it after executing.
+                    if (onceOnly) chrome.runtime.onMessage.removeListener(handlerWrapper);
                 });
             }
 
             return true;
-        });
+        };
+
+        // Add listener.
+        chrome.runtime.onMessage.addListener(handlerWrapper);
     }
 }
 
