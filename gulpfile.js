@@ -191,7 +191,7 @@ function manifest() {
 function html() {
     let output_dir = "./build/" + browser + "/";
     return gulp
-        .src(["./src/**/!(result|loading|error).html"], { base: "src" })
+        .src(["./src/**/!(common|result|loading|error|message).html"], { base: "src" })
         .pipe(gulp.dest(output_dir));
 }
 
