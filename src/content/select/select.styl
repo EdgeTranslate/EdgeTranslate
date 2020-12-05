@@ -1,8 +1,11 @@
+@import '../display/library/message/messageContainer.styl';
+
 image-size = 20px;
+
 /*
  * 划词翻译按钮样式
  */
-#translate-button
+#translate-button {
     width: image-size;
     height: image-size;
     padding: 0.4%;
@@ -15,23 +18,30 @@ image-size = 20px;
     z-index: 2147483648;
     box-sizing: content-box;
     overflow: hidden;
-    transition: box-shadow 200ms ease-in-out,transform 300ms ease; // set transtition effect when hover occurs
+    transition: box-shadow 200ms ease-in-out, transform 300ms ease; // set transtition effect when hover occurs
     animation: fade-in 300ms ease-in-out; // set fade-in animation on selection icon
 
-    &&:hover
+    &&:hover {
         box-shadow: 0px 0px 8px 3px #bbb;
         transform: rotate(180deg);
+    }
 
-    img
+    img {
         width: image-size;
         height: image-size;
         padding: 0;
         border: 0;
         margin: 0;
         vertical-align: top; // fix the style problem in some websites
-
-
-    @keyframes fade-in{
-        0%{ opacity: 0;}
-        100%{ opacity: 1;}
     }
+
+    @keyframes fade-in {
+        0% {
+            opacity: 0;
+        }
+
+        100% {
+            opacity: 1;
+        }
+    }
+}
