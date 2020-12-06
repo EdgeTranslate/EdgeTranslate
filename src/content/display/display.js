@@ -11,7 +11,6 @@ import common from "./templates/common.html"; // template of panel's structure(c
 import result from "./templates/result.html"; // template of translate result
 import loading from "./templates/loading.html"; // template of loading icon
 import error from "./templates/error.html"; // template of error message
-import Message from "./library/message/message";
 
 const Template = {
     result: result,
@@ -65,9 +64,6 @@ const transitionDuration = 500;
 var resizeFlag = false;
 // store original css text on document.body
 var documentBodyCSS;
-
-var message = new Message();
-message.showMessage();
 
 /**
  * initiate panel elements to display translation result
