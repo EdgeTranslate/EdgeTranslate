@@ -1,5 +1,6 @@
 import render from "./library/render.js";
 import moveable from "./library/moveable/moveable.js";
+// import Message from "./library/message/message.js";
 import { isChromePDFViewer } from "../common.js";
 import Messager from "common/scripts/messager.js";
 import { delayPromise } from "common/scripts/promise.js";
@@ -316,34 +317,35 @@ Messager.receive("content", message => {
 
     // 避免从file://跳转到pdf viewer的消息传递对此的影响
     switch (message.title) {
-        // 发送的是翻译结果
-        case "translateResult":
+        case "before_translating":
+            // the translator send this message to make sure current tab can display result panel
+            break;
+        case "start_translating":
+            // Remember translating text.
+            translateResult.originalText = message.detail.text;
+            showPanel(message.detail, "loading");
+            break;
+        case "translating_finished":
             translateResult = message.detail;
             sourceTTSSpeed = "fast";
             targetTTSSpeed = "fast";
             showPanel(message.detail, "result");
             break;
-        // 发送的是翻译状态信息
-        case "info":
-            switch (message.detail.info) {
-                case "before_translating":
-                    // the translator send this message to make sure current tab can display result panel
-                    break;
-                case "start_translating":
-                    // Remember translating text.
-                    translateResult.originalText = message.detail.text;
-                    showPanel(message.detail, "loading");
-                    break;
-                case "pronouncing_finished":
-                    onPronouncingFinished(message.detail.pronouncing);
-                    break;
-                case "request_error":
-                    onPronouncingFinished(message.detail.pronouncing);
-                    showPanel(message.detail, "error");
-                    break;
-                default:
-                    break;
-            }
+        case "translating_error":
+            showPanel(message.detail, "error");
+            break;
+        case "pronouncing_finished":
+            onPronouncingFinished(message.detail.pronouncing);
+            break;
+        case "pronouncing_error":
+            onPronouncingFinished(message.detail.pronouncing);
+            // TODO: Change to new notification popup
+            // new Message("right").showMessage({
+            //     type: "error",
+            //     title: "Error",
+            //     detail: "Pronouncing error"
+            // });
+            showPanel(message.detail, "error");
             break;
         case "update_translator_options":
             setUpTranslateConfig(
