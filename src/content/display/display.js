@@ -1,4 +1,4 @@
-import render from "./library/render.js";
+import format from "./library/render.js";
 import moveable from "./library/moveable/moveable.js";
 // import Message from "./library/message/message.js";
 import { isChromePDFViewer } from "../common.js";
@@ -8,10 +8,10 @@ import { delayPromise } from "common/scripts/promise.js";
 /**
  * load templates
  */
-import common from "./templates/common.html"; // template of panel's structure(common part of the result panel)
-import result from "./templates/result.html"; // template of translate result
-import loading from "./templates/loading.html"; // template of loading icon
-import error from "./templates/error.html"; // template of error message
+import common from "./templates/common.xhtml"; // template of panel's structure(common part of the result panel)
+import result from "./templates/result.xhtml"; // template of translate result
+import loading from "./templates/loading.xhtml"; // template of loading icon
+import error from "./templates/error.xhtml"; // template of error message
 
 const Template = {
     result: result,
@@ -77,7 +77,7 @@ var documentBodyCSS;
     panelContainer = document.createElement("div");
     // store a shadow dom which is used to attach panel elements
     shadowDom = panelContainer.attachShadow({ mode: "open" });
-    shadowDom.innerHTML = render(common);
+    shadowDom.innerHTML = common.apply({});
     // the first child element of shadow dom. It contains all of the panel content elements
     resultPanel = shadowDom.firstChild;
     // store the panel body element
@@ -240,7 +240,10 @@ var documentBodyCSS;
  */
 async function showPanel(content, template) {
     // Write contents into iframe.
-    bodyPanel.innerHTML = render(Template[template], content);
+    bodyPanel.innerHTML = Template[template].apply({
+        format: format,
+        ...content
+    });
     addBodyEventListener(template);
     // if panel hasn't been displayed, locate the panel and show it
     if (!document.documentElement.contains(panelContainer)) {

@@ -4,8 +4,7 @@
  * function: show users messages including(info, success, warning, error)
  */
 
-import messageTemplate from "./message.html";
-import render from "../render";
+import messageTemplate from "./message.xhtml";
 import { delayPromise } from "common/scripts/promise.js";
 
 // prefix for CSS selector name
@@ -79,7 +78,7 @@ export default class Message {
         if (option.duration < ANIMATION_DURATION) option.duration = 0;
 
         let messageElement = document.createElement("div");
-        messageElement.innerHTML = render(messageTemplate, option);
+        messageElement.innerHTML = messageTemplate.apply(option);
         messageElement = messageElement.firstChild;
         option.element = messageElement;
         this.shadowDom.insertBefore(messageElement, this.shadowDom.firstChild);
