@@ -1,6 +1,6 @@
 import format from "./library/render.js";
 import moveable from "./library/moveable/moveable.js";
-// import Message from "./library/message/message.js";
+import Message from "./library/message/message.js";
 import { isChromePDFViewer } from "../common.js";
 import Messager from "common/scripts/messager.js";
 import { delayPromise } from "common/scripts/promise.js";
@@ -65,6 +65,9 @@ const transitionDuration = 500;
 var resizeFlag = false;
 // store original css text on document.body
 var documentBodyCSS;
+
+// Send notifications to users.
+const notifier = new Message("center");
 
 /**
  * initiate panel elements to display translation result
@@ -342,13 +345,11 @@ Messager.receive("content", message => {
             break;
         case "pronouncing_error":
             onPronouncingFinished(message.detail.pronouncing);
-            // TODO: Change to new notification popup
-            // new Message("right").showMessage({
-            //     type: "error",
-            //     title: "Error",
-            //     detail: "Pronouncing error"
-            // });
-            showPanel(message.detail, "error");
+            notifier.showMessage({
+                type: "error",
+                title: chrome.i18n.getMessage("AppName"),
+                detail: chrome.i18n.getMessage("PRONOUN_ERR")
+            });
             break;
         case "update_translator_options":
             setUpTranslateConfig(
