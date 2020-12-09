@@ -613,6 +613,22 @@ function addHeadEventListener() {
     shadowDom
         .getElementById("icon-edge-translate-options")
         .addEventListener("click", openOptionsPage);
+
+    /**
+     * This fixes the issue: https://github.com/EdgeTranslate/EdgeTranslate/issues/141
+     *
+     * On Firefox, clicking the <path> elements doesn't cancel text selections, so
+     * we have to add additional listeners on <path> elements to do it manually.
+     */
+    if (BROWSER_ENV === "firefox") {
+        // Add listeners on <path> elements in head panel.
+        for (let element of resultPanel.getElementsByTagName("path")) {
+            element.addEventListener("mousedown", () => {
+                window.getSelection().removeAllRanges();
+            });
+        }
+    }
+
     // 给点击侧边栏之外区域事件添加监听，点击侧边栏之外的部分就会让侧边栏关闭
     chrome.storage.sync.get("fixSetting", function(result) {
         if (!result.fixSetting) {
@@ -658,6 +674,21 @@ function addBodyEventListener(template) {
                 .getElementsByClassName("original-text")[0]
                 .getElementsByTagName("p")[0];
             originalTextEle.addEventListener("mousedown", expandOriginalText);
+
+            /**
+             * This fixes the issue: https://github.com/EdgeTranslate/EdgeTranslate/issues/141
+             *
+             * On Firefox, clicking the <path> elements doesn't cancel text selections, so
+             * we have to add additional listeners on <path> elements to do it manually.
+             */
+            if (BROWSER_ENV === "firefox") {
+                // Add listeners on <path> elements in body panel.
+                for (let element of bodyPanel.getElementsByTagName("path")) {
+                    element.addEventListener("mousedown", () => {
+                        window.getSelection().removeAllRanges();
+                    });
+                }
+            }
 
             // 根据用户设定决定是否采用从右到左布局（用于阿拉伯语等从右到左书写的语言）
             chrome.storage.sync.get("LayoutSettings", result => {
