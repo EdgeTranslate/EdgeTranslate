@@ -87,9 +87,8 @@ window.addEventListener("DOMContentLoaded", () => {
  * Handle double click event
  */
 function dblClickHandler(event) {
-    executeIfNotInBlacklist(function() {
-        if (isSelected()) {
-            // 检查页面中是否有内容被选中
+    if (shouldTranslate()) {
+        executeIfNotInBlacklist(function() {
             chrome.storage.sync.get("OtherSettings", function(result) {
                 var OtherSettings = result.OtherSettings;
                 // Show translating result instantly.
@@ -104,19 +103,18 @@ function dblClickHandler(event) {
                     translateSubmit();
                 }
             });
-        } else {
-            disappearButton(); // 使翻译按钮隐藏
-        }
-    });
+        });
+    } else {
+        disappearButton(); // 使翻译按钮隐藏
+    }
 }
 
 /**
  * Handle mouse up event.
  */
 function mouseUpHandler(event) {
-    executeIfNotInBlacklist(function() {
-        if (isSelected()) {
-            // 检查页面中是否有内容被选中
+    if (shouldTranslate()) {
+        executeIfNotInBlacklist(function() {
             chrome.storage.sync.get("OtherSettings", function(result) {
                 var OtherSettings = result.OtherSettings;
                 // Show translating result instantly.
@@ -135,10 +133,10 @@ function mouseUpHandler(event) {
                     }, 0);
                 }
             });
-        } else {
-            disappearButton(); // 使翻译按钮隐藏
-        }
-    });
+        });
+    } else {
+        disappearButton(); // 使翻译按钮隐藏
+    }
 }
 
 /**
@@ -223,15 +221,22 @@ function translateSubmit() {
 }
 
 /**
- * To judge if there is normal text selected
- * @returns boolean true-> normal text selected
+ * Check if we should start translating.
+ *
+ * @returns {boolean} if we should start translating
  */
-function isSelected() {
+function shouldTranslate() {
     let selectionObject = window.getSelection();
+    let selectionText = selectionObject.toString().trim();
+
     return (
-        selectionObject.toString().trim() &&
-        (selectionObject.anchorNode.nodeType === 3 || selectionObject.focusNode.nodeType === 3)
-    ); // to make sure the selected text is not in the input elements. Value "3" map to Node.TEXT_NODE
+        selectionText.length > 0 &&
+        // Make sure the selected text is not in input elements.
+        (selectionObject.anchorNode.nodeType === Node.TEXT_NODE ||
+            selectionObject.focusNode.nodeType === Node.TEXT_NODE) &&
+        // Do not re-translate translated text.
+        (!window.isDisplayingResult || window.translateResult.originalText !== selectionText)
+    );
 }
 
 /**
@@ -255,8 +260,10 @@ function pronounceSubmit() {
  * execute this function to make the translation button disappear
  */
 function disappearButton() {
-    translateButton.style.display = "none";
-    HasButtonShown = false;
+    if (HasButtonShown) {
+        translateButton.style.display = "none";
+        HasButtonShown = false;
+    }
 }
 
 /**

@@ -54,8 +54,13 @@ var displaySetting = {
     }
 };
 
-// store the translation result
-var translateResult = {};
+// Store the translation result and attach it to window
+window.translateResult = {};
+
+// Flag of showing result.
+window.isDisplayingResult = false;
+
+// TTS speeds
 var sourceTTSSpeed, targetTTSSpeed;
 // store the width of scroll bar
 const scrollbarWidth = getScrollbarWidth();
@@ -242,6 +247,9 @@ const notifier = new Notifier("center");
  * @param {String} template the name of render template
  */
 async function showPanel(content, template) {
+    // Tell select.js that we are displaying results.
+    window.isDisplayingResult = true;
+
     // Write contents into iframe.
     bodyPanel.innerHTML = Template[template].apply({
         format: format,
@@ -301,12 +309,12 @@ Messager.receive("content", message => {
      *
      * translateResult keeps the latest(biggest) timestamp ever received.
      */
-    if (translateResult.timestamp && message.detail.timestamp) {
+    if (window.translateResult.timestamp && message.detail.timestamp) {
         /**
          * When a new message with timestamp arrived, we check if the timestamp stored in translateResult
          * is bigger than the timestamp of the arriving message.
          */
-        if (translateResult.timestamp > message.detail.timestamp) {
+        if (window.translateResult.timestamp > message.detail.timestamp) {
             /**
              * If it does, which means the corresponding translating request is out of date, we drop the
              * message.
@@ -317,7 +325,7 @@ Messager.receive("content", message => {
              * If it doesn't, which means the corresponding translating request is up to date, we update
              * the timestamp stored in translateResult and accept the message.
              */
-            translateResult.timestamp = message.detail.timestamp;
+            window.translateResult.timestamp = message.detail.timestamp;
         }
     }
 
@@ -328,11 +336,11 @@ Messager.receive("content", message => {
             break;
         case "start_translating":
             // Remember translating text.
-            translateResult.originalText = message.detail.text;
+            window.translateResult.originalText = message.detail.text;
             showPanel(message.detail, "loading");
             break;
         case "translating_finished":
-            translateResult = message.detail;
+            window.translateResult = message.detail;
             sourceTTSSpeed = "fast";
             targetTTSSpeed = "fast";
             showPanel(message.detail, "result");
@@ -379,7 +387,7 @@ Messager.receive("content", message => {
                     targetPronounce();
                     break;
                 case "copy_result":
-                    if (translateResult.mainMeaning) {
+                    if (window.translateResult.mainMeaning) {
                         copyContent();
                     }
                     break;
@@ -615,21 +623,6 @@ function addHeadEventListener() {
         .getElementById("icon-edge-translate-options")
         .addEventListener("click", openOptionsPage);
 
-    /**
-     * This fixes the issue: https://github.com/EdgeTranslate/EdgeTranslate/issues/141
-     *
-     * On Firefox, clicking the <path> elements doesn't cancel text selections, so
-     * we have to add additional listeners on <path> elements to do it manually.
-     */
-    if (BROWSER_ENV === "firefox") {
-        // Add listeners on <path> elements in head panel.
-        for (let element of resultPanel.getElementsByTagName("path")) {
-            element.addEventListener("mousedown", () => {
-                window.getSelection().removeAllRanges();
-            });
-        }
-    }
-
     // 给点击侧边栏之外区域事件添加监听，点击侧边栏之外的部分就会让侧边栏关闭
     chrome.storage.sync.get("fixSetting", function(result) {
         if (!result.fixSetting) {
@@ -676,21 +669,6 @@ function addBodyEventListener(template) {
                 .getElementsByTagName("p")[0];
             originalTextEle.addEventListener("mousedown", expandOriginalText);
 
-            /**
-             * This fixes the issue: https://github.com/EdgeTranslate/EdgeTranslate/issues/141
-             *
-             * On Firefox, clicking the <path> elements doesn't cancel text selections, so
-             * we have to add additional listeners on <path> elements to do it manually.
-             */
-            if (BROWSER_ENV === "firefox") {
-                // Add listeners on <path> elements in body panel.
-                for (let element of bodyPanel.getElementsByTagName("path")) {
-                    element.addEventListener("mousedown", () => {
-                        window.getSelection().removeAllRanges();
-                    });
-                }
-            }
-
             // 根据用户设定决定是否采用从右到左布局（用于阿拉伯语等从右到左书写的语言）
             chrome.storage.sync.get("LayoutSettings", result => {
                 if (result.LayoutSettings.RTL) {
@@ -734,6 +712,9 @@ function clickListener(event) {
  */
 function removePanel() {
     if (document.documentElement.contains(panelContainer)) {
+        // Tell select.js that the result panel has been removed.
+        window.isDisplayingResult = false;
+
         removeFixedPanel();
         document.documentElement.removeChild(panelContainer);
 
@@ -789,8 +770,8 @@ function sourcePronounce() {
 
         Messager.send("background", "pronounce", {
             pronouncing: "source",
-            text: translateResult.originalText,
-            language: translateResult.sourceLanguage,
+            text: window.translateResult.originalText,
+            language: window.translateResult.sourceLanguage,
             speed: sourceTTSSpeed
         }).then(() => {
             if (sourceTTSSpeed === "fast") {
@@ -810,8 +791,8 @@ function targetPronounce() {
 
         Messager.send("background", "pronounce", {
             pronouncing: "target",
-            text: translateResult.mainMeaning,
-            language: translateResult.targetLanguage,
+            text: window.translateResult.mainMeaning,
+            language: window.translateResult.targetLanguage,
             speed: targetTTSSpeed
         }).then(() => {
             if (targetTTSSpeed === "fast") {
@@ -1037,13 +1018,13 @@ function submitEditedText() {
     let text = originalTextEle.textContent.trim();
     if (text.length > 0) {
         // to make sure the new text is different from the original text
-        if (text.valueOf() !== translateResult.originalText.valueOf()) {
+        if (text.valueOf() !== window.translateResult.originalText.valueOf()) {
             // Do translating.
             Messager.send("background", "translate", { text: text });
         }
     } else {
         // Restore original text.
-        originalTextEle.textContent = translateResult.originalText;
+        originalTextEle.textContent = window.translateResult.originalText;
     }
 
     shadowDom.getElementById("icon-edit").style.display = "block";
@@ -1082,7 +1063,7 @@ function setUpTranslateConfig(selectedTranslator, availableTranslators) {
         Messager.send("background", "update_default_translator", {
             translator: translatorsEle.options[translatorsEle.selectedIndex].value
         }).then(() => {
-            Messager.send("background", "translate", { text: translateResult.originalText });
+            Messager.send("background", "translate", { text: window.translateResult.originalText });
         });
     };
 }
