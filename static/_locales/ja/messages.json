@@ -375,6 +375,10 @@
         "message": "Request parameters error. Please try using other translators or wait a moment and retry. If translation is still broken, please contact developers.",
         "description": "API parameters error."
     },
+    "PRONOUN_ERR": {
+        "message": "Pronouncing failed, please check your network or choose another translator.",
+        "description": "Pronouncing failed message."
+    },
     "ERR_CODE": {
         "message": "Error code",
         "description": "Error code."

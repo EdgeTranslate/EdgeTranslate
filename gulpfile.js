@@ -108,12 +108,12 @@ function packToZip() {
  */
 function watcher(done) {
     gulp.watch("./src/**/*.js").on("change", gulp.series(eslintJS));
-    gulp.watch("./src/display/templates/*.html").on("change", gulp.series(eslintJS));
+    gulp.watch("./src/display/**/*.xhtml").on("change", gulp.series(eslintJS));
     gulp.watch("./src/(manifest|manifest_chrome|manifest_firefox).json").on(
         "change",
         gulp.series(manifest)
     );
-    gulp.watch("./src/**/!(result|loading|error).html").on("change", gulp.series(html));
+    gulp.watch("./src/**/*.html").on("change", gulp.series(html));
     gulp.watch("./static/**/*").on("change", gulp.series(packStatic));
     gulp.watch("./src/**/*.styl").on("change", gulp.series(styl));
     done();
@@ -190,9 +190,7 @@ function manifest() {
  */
 function html() {
     let output_dir = "./build/" + browser + "/";
-    return gulp
-        .src(["./src/**/!(result|loading|error).html"], { base: "src" })
-        .pipe(gulp.dest(output_dir));
+    return gulp.src(["./src/**/*.html"], { base: "src" }).pipe(gulp.dest(output_dir));
 }
 
 /**

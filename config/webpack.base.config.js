@@ -18,8 +18,12 @@ module.exports = {
     module: {
         rules: [
             {
-                test: [/\.html$/, /\.css$/],
+                test: [/\.css$/],
                 use: "raw-loader"
+            },
+            {
+                test: [/\.xhtml$/],
+                use: path.resolve(__dirname, "../tools/xhtml-loader.js")
             }
         ]
     },

@@ -3,22 +3,25 @@
 /**
  * 检测用户语言，并设定翻译组件的语言。
  */
-chrome.runtime.sendMessage({ to: { background: true }, title: "get_lang" }, function(response) {
-    var s = document.getElementById("google-translate-injection");
-    if (s !== null) {
-        s.remove();
+chrome.runtime.sendMessage(
+    JSON.stringify({ to: { background: true }, title: "get_lang" }),
+    function(response) {
+        var s = document.getElementById("google-translate-injection");
+        if (s !== null) {
+            s.remove();
+        }
+
+        s = document.createElement("script");
+        var user_lang = response && response.lang ? response.lang : "zh-CN";
+
+        s.id = "google-translate-injection";
+        s.setAttribute("user-lang", user_lang);
+        s.setAttribute("edge-translate-url", chrome.runtime.getURL(""));
+        s.innerHTML = "(function(){(" + injection.toString() + ")();})();";
+        document.getElementsByTagName("head")[0].appendChild(s);
+        return true;
     }
-
-    s = document.createElement("script");
-    var user_lang = response && response.lang ? response.lang : "zh-CN";
-
-    s.id = "google-translate-injection";
-    s.setAttribute("user-lang", user_lang);
-    s.setAttribute("edge-translate-url", chrome.runtime.getURL(""));
-    s.innerHTML = "(function(){(" + injection.toString() + ")();})();";
-    document.getElementsByTagName("head")[0].appendChild(s);
-    return true;
-});
+);
 
 function injection() {
     var uid = "1E07F158C6FA4460B352973E9693B329";
