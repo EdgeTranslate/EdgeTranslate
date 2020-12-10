@@ -100,9 +100,7 @@ class TranslatorManager {
         tabId = tabs[0].id;
 
         // to test whether the current tab can receive message(display results)
-        await Messager.sendToTab(tabId, "content", "info", {
-            info: "before_translating"
-        }).catch(async () => {
+        await Messager.sendToTab(tabId, "content", "before_translating", {}).catch(async () => {
             /**
              * the current tab can't display the result panel
              * so we open a notice page to display the result and explain why this page shows
@@ -429,97 +427,59 @@ const TRANSLATOR_MANAGER = new TranslatorManager();
 
 /* EXPORTED OBJECTS AND FUNCTIONS END */
 
-/* INNER OBJECTS AND FUNCTIONS START */
-
-/**
- * 展示翻译结果。
- *
- * @param {Object} content 翻译结果
- * @param {Object} tabId 展示翻译结果页面的id
- *
- * @returns {Promise<Object>} show translate result Promise
- */
-async function showTranslate(content, tabId) {
-    if (!content) {
-        return Promise.resolve();
-    }
-
-    try {
-        return await Messager.sendToTab(tabId, "content", "translateResult", content);
-    } catch (error) {
-        // user closed the translating page
-    }
-}
-
-/* INNER OBJECTS AND FUNCTIONS END */
-
 /**
  * Tell display that translating started.
  */
 EVENT_MANAGER.addEventListener(EVENT_MANAGER.EVENTS.TRANSLATE_START, detail => {
-    Messager.sendToTab(detail.tabId, "content", "info", {
-        info: "start_translating",
-        // Send translating text back to content scripts.
-        text: detail.text,
-        position: detail.position,
-        timestamp: detail.timestamp
-    }).catch(() => {
-        // user closed the translating page
-    });
+    Messager.sendToTab(detail.tabId, "content", "start_translating", detail).catch(error =>
+        log(error)
+    );
 });
 
 /**
  * Send translating result to display.
  */
 EVENT_MANAGER.addEventListener(EVENT_MANAGER.EVENTS.TRANSLATE_FINISHED, detail => {
-    showTranslate(
-        {
-            timestamp: detail.timestamp,
-            ...detail.content
-        },
-        detail.tabId
-    );
+    Messager.sendToTab(detail.tabId, "content", "translating_finished", {
+        timestamp: detail.timestamp,
+        ...detail.content
+    }).catch(error => log(error));
 });
 
 /**
  * Tell display translating error.
  */
 EVENT_MANAGER.addEventListener(EVENT_MANAGER.EVENTS.TRANSLATE_ERROR, detail => {
-    Messager.sendToTab(detail.tabId, "content", "info", {
-        info: "request_error",
-        error: detail.error,
-        timestamp: detail.timestamp
-    }).catch(error => log(error));
+    Messager.sendToTab(detail.tabId, "content", "translating_error", detail).catch(error =>
+        log(error)
+    );
 });
 
 /**
  * Tell display pronouncing start.
  */
 EVENT_MANAGER.addEventListener(EVENT_MANAGER.EVENTS.PRONOUNCE_START, detail => {
-    Messager.sendToTab(detail.tabId, "content", "info", {
-        info: "start_pronouncing",
-        ...detail
-    }).catch(error => log(error));
+    Messager.sendToTab(detail.tabId, "content", "start_pronouncing", detail).catch(error =>
+        log(error)
+    );
 });
 
 /**
  * Tell display pronouncing finished.
  */
 EVENT_MANAGER.addEventListener(EVENT_MANAGER.EVENTS.PRONOUNCE_FINISHED, detail => {
-    Messager.sendToTab(detail.tabId, "content", "info", {
-        info: "pronouncing_finished",
-        ...detail
-    }).catch(error => log(error));
+    Messager.sendToTab(detail.tabId, "content", "pronouncing_finished", detail).catch(error =>
+        log(error)
+    );
 });
 
 /**
  * Tell display pronouncing error.
  */
 EVENT_MANAGER.addEventListener(EVENT_MANAGER.EVENTS.PRONOUNCE_ERROR, detail => {
-    Messager.sendToTab(detail.tabId, "content", "info", {
-        info: "request_error",
-        ...detail
-    }).catch(error => log(error));
+    Messager.sendToTab(detail.tabId, "content", "pronouncing_error", detail).catch(error =>
+        log(error)
+    );
 });
 
 export {

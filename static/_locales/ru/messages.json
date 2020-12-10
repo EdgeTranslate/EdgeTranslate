@@ -315,26 +315,6 @@
         "message": "Hybrid Translate",
         "description": "Translate with multiple translators."
     },
-    "NETERR": {
-        "message": "Ошибка сети! Проверьте ваше сетевое соединение.",
-        "description": "Сообщение об ошибке сети."
-    },
-    "APIERR": {
-        "message": "Request parameters error. Please try using other translators or wait a moment and retry. If translation is still broken, please contact developers.",
-        "description": "API parameters error."
-    },
-    "ERR_CODE": {
-        "message": "Error code",
-        "description": "Error code."
-    },
-    "ERR_MSG": {
-        "message": "Error message",
-        "description": "Error message."
-    },
-    "ERR_ACT": {
-        "message": "Error action",
-        "description": "Error action."
-    },
     "NOTICE": {
         "message": "Notice from Edge Translate",
         "description": "Notice from Edge Translate"
@@ -386,6 +366,30 @@
     "BugReport": {
         "message": "report a bug",
         "description": "report a bug"
+    },
+    "NETERR": {
+        "message": "Ошибка сети! Проверьте ваше сетевое соединение.",
+        "description": "Сообщение об ошибке сети."
+    },
+    "APIERR": {
+        "message": "Request parameters error. Please try using other translators or wait a moment and retry. If translation is still broken, please contact developers.",
+        "description": "API parameters error."
+    },
+    "PRONOUN_ERR": {
+        "message": "Pronouncing failed, please check your network or choose another translator.",
+        "description": "Pronouncing failed message."
+    },
+    "ERR_CODE": {
+        "message": "Error code",
+        "description": "Error code."
+    },
+    "ERR_MSG": {
+        "message": "Error message",
+        "description": "Error message."
+    },
+    "ERR_ACT": {
+        "message": "Error action",
+        "description": "Error action."
     },
     "English": {
         "message": "English",

@@ -315,26 +315,6 @@
         "message": "混合翻译",
         "description": "混合使用多个翻译源。"
     },
-    "NETERR": {
-        "message": "网络错误！请检查您的网络连接。",
-        "description": "网络错误信息。"
-    },
-    "APIERR": {
-        "message": "请求参数错误，请更换其他翻译源或过段时间再翻译，如还是无法使用，请联系开发者。",
-        "description": "接口参数配置错误。"
-    },
-    "ERR_CODE": {
-        "message": "错误代码",
-        "description": "错误代码。"
-    },
-    "ERR_MSG": {
-        "message": "错误信息",
-        "description": "错误信息。"
-    },
-    "ERR_ACT": {
-        "message": "错误操作",
-        "description": "错误操作。"
-    },
     "NOTICE": {
         "message": "提示",
         "description": "提示"
@@ -386,6 +366,30 @@
     "BugReport": {
         "message": "报告一个bug",
         "description": "报告一个bug"
+    },
+    "NETERR": {
+        "message": "网络错误！请检查您的网络连接。",
+        "description": "网络错误信息。"
+    },
+    "APIERR": {
+        "message": "请求参数错误，请更换其他翻译源或过段时间再翻译，如还是无法使用，请联系开发者。",
+        "description": "接口参数配置错误。"
+    },
+    "PRONOUN_ERR": {
+        "message": "朗读失败，请检查网络连接或更换翻译源。",
+        "description": "朗读失败信息。"
+    },
+    "ERR_CODE": {
+        "message": "错误代码",
+        "description": "错误代码。"
+    },
+    "ERR_MSG": {
+        "message": "错误信息",
+        "description": "错误信息。"
+    },
+    "ERR_ACT": {
+        "message": "错误操作",
+        "description": "错误操作。"
     },
     "English": {
         "message": "英语",

@@ -1,0 +1,113 @@
+/**
+ * style for notification items
+ */
+final-opacity = 0.95;
+animation-duration = 400ms;
+
+.edge-translate-notifier-item {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: flex-start;
+	max-width: 25vw;
+	padding: 1.5vh 1vw 1.5vh 1vw;
+	margin: 1.5vh 0;
+	pointer-events: all;
+	border-radius: 4px;
+	background-color: white;
+	box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.08);
+	opacity: final-opacity;
+}
+
+.edge-translate-notifier-success {
+	background-color: #f6ffed;
+	border: 1px solid #b7eb8f;
+}
+
+.edge-translate-notifier-info {
+	background-color: #e6f7ff;
+	border: 1px solid #91d5ff;
+}
+
+.edge-translate-notifier-warning {
+	background-color: #fffbe6;
+	border: 1px solid #ffe58f;
+}
+
+.edge-translate-notifier-error {
+	background-color: #fff2f0;
+	border: 1px solid #ffccc7;
+}
+
+.edge-translate-notifier-icon {
+	font-size: large;
+	margin-right: 15px;
+	position: relative;
+	top: 3px;
+}
+
+.edge-translate-notifier-content {
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: flex-start;
+}
+
+.edge-translate-notifier-title {
+	font-size: 16px;
+}
+
+.edge-translate-notifier-detail {
+	font-size: 14px;
+	padding-top: 10px;
+}
+
+.edge-translate-notifier-close {
+	cursor: pointer;
+	font-size: x-small;
+	margin-left: 15px;
+	position: relative;
+	top: 6px;
+	fill: rgba(0, 0, 0, 0.45);
+
+	:hover {
+		fill: rgba(0, 0, 0, 0.9);
+	}
+}
+
+.edge-translate-notifier-show-animation {
+	animation-name: edge-translate-notifier-show-animation;
+	animation-duration: animation-duration;
+	animation-timing-function: cubic-bezier(0.45, 1.45, 0.75, 1);
+}
+
+.edge-translate-notifier-disappear-animation {
+	animation-name: edge-translate-notifier-disappear-animation;
+	animation-duration: animation-duration;
+	animation-timing-function: ease;
+}
+
+@keyframes edge-translate-notifier-show-animation {
+	from {
+		transform: translate(0, -30px) scale(0.75);
+		opacity: 0;
+	}
+
+	to {
+		transform: translate(0, 0) scale(1);
+		opacity: final-opacity;
+	}
+}
+
+@keyframes edge-translate-notifier-disappear-animation {
+	from {
+		transform: translate(0, 0) scale(1);
+		opacity: final-opacity;
+	}
+
+	to {
+		transform: translate(0, -30px) scale(0.75);
+		opacity: 0;
+	}
+}
