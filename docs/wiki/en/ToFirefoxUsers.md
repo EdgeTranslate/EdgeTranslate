@@ -12,7 +12,13 @@ This extension is a work we have developed in our free time, which has accumulat
 
 If you really need web translation function, you may consider the following two options: 
 
-1. Download and install the last version that support it at [here](https://github.com/EdgeTranslate/EdgeTranslate/releases/download/1.7.2/EdgeTranslate_firefox_v1.7.2.xpi).
+1. If it's possible, we will provide packages with beta signature which can be downloaded and installed directly. The steps are:
+   
+   1. Go to [Releases](https://github.com/EdgeTranslate/EdgeTranslate/releases/latest).
+   
+   2. If you find a package with its name like `EdgeTranslate_vx.x.x.x_firefox.xpi` (__4__ version numbers) in the download options at the bottom of the page, just download and install it.
+   
+   3. If you cannot find any package like that, it means we cannot provide that kind of packages. You'll need to follow next option.
 
 2. Manually download and install the unsigned complete version, following these steps:
    
