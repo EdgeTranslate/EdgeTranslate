@@ -1,6 +1,6 @@
 import format from "./library/render.js";
 import moveable from "./library/moveable/moveable.js";
-import Message from "./library/message/message.js";
+import Notifier from "./library/notifier/notifier.js";
 import { isChromePDFViewer } from "../common.js";
 import Messager from "common/scripts/messager.js";
 import { delayPromise } from "common/scripts/promise.js";
@@ -67,7 +67,7 @@ var resizeFlag = false;
 var documentBodyCSS;
 
 // Send notifications to users.
-const notifier = new Message("center");
+const notifier = new Notifier("center");
 
 /**
  * initiate panel elements to display translation result
@@ -345,7 +345,7 @@ Messager.receive("content", message => {
             break;
         case "pronouncing_error":
             onPronouncingFinished(message.detail.pronouncing);
-            notifier.showMessage({
+            notifier.notify({
                 type: "error",
                 title: chrome.i18n.getMessage("AppName"),
                 detail: chrome.i18n.getMessage("PRONOUN_ERR")
