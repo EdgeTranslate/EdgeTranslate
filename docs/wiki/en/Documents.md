@@ -37,7 +37,8 @@ Contains two content scripts for the extension
 
 + pdf.js is used to automatically jump to the built-in pdf reader when the pdf files are read by the browser (introduced [pdf.js](https://github.com/mozilla/pdf.js))
 
-+ select.js is used to implement word translation
++ select.js is used to implement select translation
+  + logic diagram of select translation![diagram](../../images/selecting_translate_diagram.jpg)
 
 #### display
 
