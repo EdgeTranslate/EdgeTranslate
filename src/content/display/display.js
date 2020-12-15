@@ -1,7 +1,7 @@
 import format from "./library/render.js";
 import moveable from "./library/moveable/moveable.js";
 import Notifier from "./library/notifier/notifier.js";
-import { isChromePDFViewer } from "../common.js";
+import { isChromePDFViewer, detectSelect } from "../common.js";
 import Messager from "common/scripts/messager.js";
 import { delayPromise } from "common/scripts/promise.js";
 
@@ -897,33 +897,16 @@ function foldOriginalText() {
         .getElementsByClassName("original-text")[0]
         .getElementsByTagName("p")[0];
 
-    // Remember whether mouse moved.
-    let moved = false;
+    detectSelect(originalTextEle, null, () => {
+        // Fold text.
+        originalTextEle.style.overflow = "hidden";
+        originalTextEle.style["white-space"] = "nowrap";
+        originalTextEle.title = chrome.i18n.getMessage("ClickToExpand");
 
-    // Inner event listeners for detecting mousemove and mouseup.
-    let detectMouseMove = () => {
-        moved = true;
-    };
-    let detectMouseUp = () => {
-        if (!moved) {
-            // Fold text.
-            originalTextEle.style.overflow = "hidden";
-            originalTextEle.style["white-space"] = "nowrap";
-            originalTextEle.title = chrome.i18n.getMessage("ClickToExpand");
-
-            // Update mousedown event listener.
-            originalTextEle.removeEventListener("mousedown", foldOriginalText);
-            originalTextEle.addEventListener("mousedown", expandOriginalText);
-        }
-
-        // Remove inner event listener.
-        originalTextEle.removeEventListener("mousemove", detectMouseMove);
-        originalTextEle.removeEventListener("mouseup", detectMouseUp);
-    };
-
-    // Add inner event listeners.
-    originalTextEle.addEventListener("mousemove", detectMouseMove);
-    originalTextEle.addEventListener("mouseup", detectMouseUp);
+        // Update mousedown event listener.
+        originalTextEle.removeEventListener("mousedown", foldOriginalText);
+        originalTextEle.addEventListener("mousedown", expandOriginalText);
+    });
 }
 
 /**
