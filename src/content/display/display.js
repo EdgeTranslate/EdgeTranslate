@@ -919,33 +919,16 @@ function expandOriginalText() {
         .getElementsByClassName("original-text")[0]
         .getElementsByTagName("p")[0];
 
-    // Remember whether mouse moved.
-    let moved = false;
+    detectSelect(originalTextEle, null, () => {
+        // Expand text.
+        originalTextEle.style.overflow = "inherit";
+        originalTextEle.style["white-space"] = "inherit";
+        originalTextEle.title = chrome.i18n.getMessage("ClickToFold");
 
-    // Inner event listeners for detecting mousemove and mouseup.
-    let detectMouseMove = () => {
-        moved = true;
-    };
-    let detectMouseUp = () => {
-        if (!moved) {
-            // Fold text.
-            originalTextEle.style.overflow = "inherit";
-            originalTextEle.style["white-space"] = "inherit";
-            originalTextEle.title = chrome.i18n.getMessage("ClickToFold");
-
-            // Update mousedown event listener.
-            originalTextEle.removeEventListener("mousedown", expandOriginalText);
-            originalTextEle.addEventListener("mousedown", foldOriginalText);
-        }
-
-        // Remove inner event listeners.
-        originalTextEle.removeEventListener("mousemove", detectMouseMove);
-        originalTextEle.removeEventListener("mouseup", detectMouseUp);
-    };
-
-    // Add inner event listeners.
-    originalTextEle.addEventListener("mousemove", detectMouseMove);
-    originalTextEle.addEventListener("mouseup", detectMouseUp);
+        // Update mousedown event listener.
+        originalTextEle.removeEventListener("mousedown", expandOriginalText);
+        originalTextEle.addEventListener("mousedown", foldOriginalText);
+    });
 }
 
 /**
