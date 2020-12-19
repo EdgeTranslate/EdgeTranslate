@@ -1,7 +1,7 @@
 import resizable from "content/display/library/moveable/resizable.js";
 
 describe("test resizable api in content module", () => {
-    it("to parse the direction option", done => {
+    it("to parse the direction option", () => {
         // test undefined type
         expect(resizable.parseDirection()).toEqual({
             s: null,
@@ -11,7 +11,7 @@ describe("test resizable api in content module", () => {
             n: null,
             nw: null,
             w: null,
-            sw: null
+            sw: null,
         });
 
         // test array type
@@ -21,7 +21,7 @@ describe("test resizable api in content module", () => {
             se: null,
             ne: null,
             nw: null,
-            sw: null
+            sw: null,
         };
         // test array type
         expect(resizable.parseDirection(["se", "ne", "nw", "sw"])).toEqual(directionTarget);
@@ -33,11 +33,9 @@ describe("test resizable api in content module", () => {
 
         // test object type
         expect(resizable.parseDirection(directionTarget)).toEqual(directionTarget);
-
-        done();
     });
 
-    it("to parse the resize threshold option", done => {
+    it("to parse the resize threshold option", () => {
         // test undefined type
         let thresholdValue = 10;
         expect(resizable.parseThreshold()).toEqual({
@@ -48,7 +46,7 @@ describe("test resizable api in content module", () => {
             n: thresholdValue,
             nw: thresholdValue,
             w: thresholdValue,
-            sw: thresholdValue
+            sw: thresholdValue,
         });
 
         // test number type
@@ -61,7 +59,7 @@ describe("test resizable api in content module", () => {
             n: thresholdValue,
             nw: thresholdValue,
             w: thresholdValue,
-            sw: thresholdValue
+            sw: thresholdValue,
         });
 
         // test object type
@@ -70,7 +68,7 @@ describe("test resizable api in content module", () => {
         expect(
             resizable.parseThreshold({
                 edge: edgeValue,
-                corner: cornerValue
+                corner: cornerValue,
             })
         ).toEqual({
             s: edgeValue,
@@ -80,7 +78,7 @@ describe("test resizable api in content module", () => {
             n: edgeValue,
             nw: cornerValue,
             w: edgeValue,
-            sw: cornerValue
+            sw: cornerValue,
         });
 
         edgeValue = 5;
@@ -91,7 +89,7 @@ describe("test resizable api in content module", () => {
                 edge: edgeValue,
                 s: 1,
                 e: 2,
-                sw: 7
+                sw: 7,
             })
         ).toEqual({
             s: 1,
@@ -101,7 +99,7 @@ describe("test resizable api in content module", () => {
             n: edgeValue,
             nw: thresholdValue,
             w: edgeValue,
-            sw: 7
+            sw: 7,
         });
 
         expect(
@@ -110,7 +108,7 @@ describe("test resizable api in content module", () => {
                 ne: 2,
                 n: 3,
                 nw: 4,
-                w: 6
+                w: 6,
             })
         ).toEqual({
             s: thresholdValue,
@@ -120,9 +118,7 @@ describe("test resizable api in content module", () => {
             n: 3,
             nw: 4,
             w: 6,
-            sw: thresholdValue
+            sw: thresholdValue,
         });
-
-        done();
     });
 });

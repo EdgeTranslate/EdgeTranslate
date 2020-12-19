@@ -31,11 +31,11 @@ export default class draggable {
         this.dragEnd();
         this.setBounds(this.options.bounds);
         // wrap a drag start event handler
-        this.dragStartHandler = e => {
+        this.dragStartHandler = (e) => {
             this.dragStart(e);
         };
         // wrap a drag(dragging) event handler
-        this.dragHandler = e => {
+        this.dragHandler = (e) => {
             this.drag(e);
         };
         this.targetElement.addEventListener("mousedown", this.dragStartHandler);
@@ -80,20 +80,20 @@ export default class draggable {
         this.store.startMouse = [e.pageX, e.pageY];
         let offset = [
             this.targetElement.getBoundingClientRect().left + document.documentElement.scrollLeft,
-            this.targetElement.getBoundingClientRect().top + document.documentElement.scrollTop
+            this.targetElement.getBoundingClientRect().top + document.documentElement.scrollTop,
         ];
         // store the start element absolute position. {left:leftOffset,top: topOffset,right:rightOffset,bottom:bottomOffset}
         this.store.startElement = {
             left: offset[0],
             top: offset[1],
             right: offset[0] + this.targetElement.offsetWidth,
-            bottom: offset[1] + this.targetElement.offsetHeight
+            bottom: offset[1] + this.targetElement.offsetHeight,
         };
 
         this.handlers.dragStart &&
             this.handlers.dragStart({
                 inputEvent: e,
-                set: position => {
+                set: (position) => {
                     this.store.startTranslate = [position[0], position[1]]; // deep copy
                     this.targetElement.style.transform = `translate(${position[0]}px,${position[1]}px)`;
                 },
@@ -103,7 +103,7 @@ export default class draggable {
                 clientX: e.clientX,
                 clientY: e.clientY,
                 pageX: e.pageX,
-                pageY: e.pageY
+                pageY: e.pageY,
             });
 
         // store the current translate value
@@ -127,7 +127,7 @@ export default class draggable {
         // calculate the current translate value
         let currentTranslate = [
             delta[0] + this.store.startTranslate[0],
-            delta[1] + this.store.startTranslate[1]
+            delta[1] + this.store.startTranslate[1],
         ];
         // update right and bottom value. cause the size of the target value might change
         this.store.startElement.right =
@@ -139,7 +139,7 @@ export default class draggable {
             left: this.bounds.left - (delta[0] + this.store.startElement.left),
             top: this.bounds.top - (delta[1] + this.store.startElement.top),
             right: delta[0] + this.store.startElement.right - this.bounds.right,
-            bottom: delta[1] + this.store.startElement.bottom - this.bounds.bottom
+            bottom: delta[1] + this.store.startElement.bottom - this.bounds.bottom,
         };
         // flag whether the current position beyond the drag area
         let flag = false;
@@ -192,7 +192,7 @@ export default class draggable {
                 target: this.targetElement,
                 transform: `translate(${this.store.currentTranslate[0]}px,${this.store.currentTranslate[1]}px)`,
                 translate: this.store.currentTranslate,
-                delta: delta // delta position
+                delta, // delta position
             });
     }
 
@@ -201,14 +201,14 @@ export default class draggable {
      * remove the dragging event listener
      */
     dragEnd() {
-        document.documentElement.addEventListener("mouseup", e => {
+        document.documentElement.addEventListener("mouseup", (e) => {
             if (this.dragging) {
                 this.dragging = false;
                 document.documentElement.removeEventListener("mousemove", this.dragHandler);
                 if (this.handlers.dragEnd)
                     this.handlers.dragEnd({
                         inputEvent: e,
-                        translate: [this.store.currentTranslate[0], this.store.currentTranslate[1]]
+                        translate: [this.store.currentTranslate[0], this.store.currentTranslate[1]],
                     }); // deep copy
             }
         });
@@ -221,7 +221,7 @@ export default class draggable {
     boundStart(direction) {
         this.handlers.boundStart &&
             this.handlers.boundStart({
-                direction: direction
+                direction,
             });
     }
 
@@ -234,8 +234,8 @@ export default class draggable {
         // if the user set the bound event handler, call it
         this.handlers.bound &&
             this.handlers.bound({
-                direction: direction,
-                distance: distance
+                direction,
+                distance,
             });
     }
 
@@ -262,7 +262,7 @@ export default class draggable {
         ) {
             translate = [
                 this.store.startTranslate[0] + draggableParameter.deltaX,
-                this.store.startTranslate[1] + draggableParameter.deltaY
+                this.store.startTranslate[1] + draggableParameter.deltaY,
             ];
         } else return false;
 
@@ -273,12 +273,12 @@ export default class draggable {
 
         this.handlers.dragStart &&
             this.handlers.dragStart({
-                set: position => {
+                set: (position) => {
                     this.store.startTranslate = position;
                 },
                 stop: () => {
                     this.dragging = false;
-                }
+                },
             });
 
         /* dragging event */
@@ -286,14 +286,14 @@ export default class draggable {
             this.handlers.drag({
                 target: this.targetElement,
                 transform: `translate(${translate[0]}px,${translate[1]}px)`,
-                translate: translate
+                translate,
             });
 
         /* dragging end */
         this.dragging = false;
         this.handlers.dragEnd &&
             this.handlers.dragEnd({
-                translate: [translate[0], translate[1]] // deep copy
+                translate: [translate[0], translate[1]], // deep copy
             });
         return true;
     }

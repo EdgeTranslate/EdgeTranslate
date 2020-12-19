@@ -8,18 +8,18 @@ window.onload = () => {
     i18nHTML();
 
     // 设置不同语言的隐私政策链接
-    var PrivacyPolicyLink = document.getElementById("PrivacyPolicyLink");
+    let PrivacyPolicyLink = document.getElementById("PrivacyPolicyLink");
     PrivacyPolicyLink.setAttribute("href", chrome.i18n.getMessage("PrivacyPolicyLink"));
 
     /**
      * Set up hybrid translate config.
      */
-    chrome.storage.sync.get(["languageSetting", "HybridTranslatorConfig"], async result => {
+    chrome.storage.sync.get(["languageSetting", "HybridTranslatorConfig"], async (result) => {
         let config = result.HybridTranslatorConfig;
         let languageSetting = result.languageSetting;
         let availableTranslators = await Messager.send("background", "get_available_translators", {
             from: languageSetting.sl,
-            to: languageSetting.tl
+            to: languageSetting.tl,
         });
         setUpTranslateConfig(
             config,
@@ -31,13 +31,13 @@ window.onload = () => {
     /**
      * Update translator config options on translator config update.
      */
-    Messager.receive("options", message => {
+    Messager.receive("options", (message) => {
         switch (message.title) {
             case "hybrid_translator_config_updated":
                 setUpTranslateConfig(message.detail.config, message.detail.availableTranslators);
                 break;
             default:
-                log("Unknown message title: " + message.title);
+                log(`Unknown message title: ${message.title}`);
                 break;
         }
         return Promise.resolve();
@@ -48,20 +48,20 @@ window.onload = () => {
      * attribute "setting-type": indicate the setting type of one option
      * attribute "setting-path": indicate the nested setting path. used to locate the path of one setting item in chrome storage
      */
-    chrome.storage.sync.get(result => {
-        var inputElements = document.getElementsByTagName("input");
+    chrome.storage.sync.get((result) => {
+        let inputElements = document.getElementsByTagName("input");
         for (let element of inputElements) {
-            var settingItemPath = element.getAttribute("setting-path").split(/\s/g);
-            var settingItemValue = getSetting(result, settingItemPath);
+            let settingItemPath = element.getAttribute("setting-path").split(/\s/g);
+            let settingItemValue = getSetting(result, settingItemPath);
 
             switch (element.getAttribute("setting-type")) {
                 case "checkbox":
                     element.checked = settingItemValue.indexOf(element.value) !== -1;
                     // update setting value
-                    element.onchange = event => {
+                    element.onchange = (event) => {
                         let target = event.target;
-                        var settingItemPath = target.getAttribute("setting-path").split(/\s/g);
-                        var settingItemValue = getSetting(result, settingItemPath);
+                        let settingItemPath = target.getAttribute("setting-path").split(/\s/g);
+                        let settingItemValue = getSetting(result, settingItemPath);
 
                         // if user checked this option, add value to setting array
                         if (target.checked) settingItemValue.push(target.value);
@@ -73,9 +73,9 @@ window.onload = () => {
                 case "radio":
                     element.checked = settingItemValue === element.value;
                     // update setting value
-                    element.onchange = event => {
+                    element.onchange = (event) => {
                         let target = event.target;
-                        var settingItemPath = target.getAttribute("setting-path").split(/\s/g);
+                        let settingItemPath = target.getAttribute("setting-path").split(/\s/g);
                         if (target.checked) {
                             saveOption(result, settingItemPath, target.value);
                         }
@@ -84,8 +84,8 @@ window.onload = () => {
                 case "switch":
                     element.checked = settingItemValue;
                     // update setting value
-                    element.onchange = event => {
-                        var settingItemPath = event.target
+                    element.onchange = (event) => {
+                        let settingItemPath = event.target
                             .getAttribute("setting-path")
                             .split(/\s/g);
                         saveOption(result, settingItemPath, event.target.checked);
@@ -160,8 +160,8 @@ function setUpTranslateConfig(config, availableTranslators) {
  * @returns {*} setting value
  */
 function getSetting(localSettings, settingItemPath) {
-    var result = localSettings;
-    settingItemPath.forEach(key => {
+    let result = localSettings;
+    settingItemPath.forEach((key) => {
         result = result[key];
     });
     return result;
@@ -176,7 +176,7 @@ function getSetting(localSettings, settingItemPath) {
  */
 function saveOption(localSettings, settingItemPath, value) {
     // update local settings
-    var pointer = localSettings; // point to children of local setting or itself
+    let pointer = localSettings; // point to children of local setting or itself
 
     // point to the leaf item recursively
     for (let i = 0; i < settingItemPath.length - 1; i++) {
@@ -185,7 +185,7 @@ function saveOption(localSettings, settingItemPath, value) {
     // update the setting leaf value
     pointer[settingItemPath[settingItemPath.length - 1]] = value;
 
-    var result = {};
+    let result = {};
     result[settingItemPath[0]] = localSettings[settingItemPath[0]];
     chrome.storage.sync.set(result);
 }

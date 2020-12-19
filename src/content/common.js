@@ -44,13 +44,13 @@ export function detectSelect(targetElement, actionAfterSelect, actionAfterNotSel
         moved = true;
     };
 
-    const detectMouseUp = event => {
+    const detectMouseUp = (event) => {
         // select action detected
         if (moved) {
             if (typeof actionAfterSelect === "function") actionAfterSelect(event);
-        } else {
+        } else if (typeof actionAfterNotSelect === "function") {
             // select action isn't detected
-            if (typeof actionAfterNotSelect === "function") actionAfterNotSelect(event);
+            actionAfterNotSelect(event);
         }
         // remove inner event listeners.
         targetElement.removeEventListener("mousemove", detectMouseMove);

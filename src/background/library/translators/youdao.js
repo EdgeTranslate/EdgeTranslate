@@ -103,7 +103,7 @@ const LANGUAGES = [
     ["xh", "xh"],
     ["yi", "yi"],
     ["yo", "yo"],
-    ["zu", "zu"]
+    ["zu", "zu"],
 ];
 
 /**
@@ -125,7 +125,7 @@ class YoudaoTranslator {
             "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
             Cookie:
                 "OUTFOX_SEARCH_USER_ID=350012125@101.224.253.176;  UM_distinctid=1746d0c442e97f-042f749d1c0fb3-1711424a-1fa400-1746d0c442f8a3; OUTFOX_SEARCH_USER_ID_NCOO=608404064.645282; _ntes_nnid=15061f9646bde23f26634549a2af10f6,1599559922661; DICT_UGC=be3af0da19b5c5e6aa4e17bd8d90b28a|; JSESSIONID=abcEdBWwXs8mW8MJ2vXrx; ___rl__test__cookies=1599639537705",
-            Referer: "http://fanyi.youdao.com/?keyfrom=dict2.index"
+            Referer: "http://fanyi.youdao.com/?keyfrom=dict2.index",
         };
 
         /**
@@ -264,7 +264,7 @@ class YoudaoTranslator {
      * @param {String} text text to detect
      * @returns {Promise} then(result) used to return request result. catch(error) used to catch error
      */
-    detect(text) {
+    detect() {
         // return axios({
         //     url: "langdetect",
         //     method: "post",
@@ -289,18 +289,18 @@ class YoudaoTranslator {
      * @param {String} to target language
      * @returns {Promise} then(result) used to return request result. catch(error) used to catch error
      */
-    translate(text, from = "AUTO", to = "AUTO") {
+    translate(text, from = "AUTO") {
         let reTryCount = 0;
         // send translation request one time
         // if the first request fails, resend requests no more than {this.MAX_RETRY} times
-        let translateOneTime = async function() {
+        let translateOneTime = async function () {
             let detectedFrom = from;
             if (detectedFrom === "auto") {
                 // detectedFrom = await this.detect(text);
             }
 
-            let toCode = this.LAN_TO_CODE.get(to),
-                fromCode = this.LAN_TO_CODE.get(detectedFrom);
+            // let toCode = this.LAN_TO_CODE.get(to),
+            //     fromCode = this.LAN_TO_CODE.get(detectedFrom);
 
             return axios({
                 url: "/translate_o", // + "?" + "from=" + fromCode + "&to=" + toCode,
@@ -308,8 +308,8 @@ class YoudaoTranslator {
                 baseURL: this.HOST,
                 headers: this.HEADERS,
                 data: this.getQueryStr(text), // includes sign
-                timeout: 5000
-            }).then(result => {
+                timeout: 5000,
+            }).then((result) => {
                 //console.log("HTTP status:", result.status);
                 // console.log("HTTP statusText:", result.statusText);
                 // console.log("result.data\n", result.data);
@@ -319,8 +319,10 @@ class YoudaoTranslator {
                         reTryCount++;
                         // get new token and gtk
                         return translateOneTime();
-                    } else return Promise.reject(result);
-                } else return Promise.resolve(this.parseResult(result.data));
+                    }
+                    return Promise.reject(result);
+                }
+                return Promise.resolve(this.parseResult(result.data));
             });
         }.bind(this);
 
@@ -389,7 +391,7 @@ class YoudaoTranslator {
             version: "2.1",
             keyfrom: "fanyi.web",
             action: "FY_BY_REALTlME",
-            ...sign
+            ...sign,
         };
         const qs = querystring.stringify(QSObj);
         // console.log("qs\n", qs);
@@ -403,22 +405,16 @@ class YoudaoTranslator {
      * @returns {Object} sign object
      */
     generateSign(text = "") {
-        let t = crypto
-                .createHash("md5")
-                .update(navigator.appVersion)
-                .digest("hex"), // n.md5(navigator.appVersion)
+        let t = crypto.createHash("md5").update(navigator.appVersion).digest("hex"), // n.md5(navigator.appVersion)
             r = "" + new Date().getTime(),
             i = r + parseInt(10 * Math.random(), 10);
         let raw = "fanyideskweb" + text + i + "]BjuETDhU)zqSxf-=B#7m";
-        let sign = crypto
-            .createHash("md5")
-            .update(raw)
-            .digest("hex");
+        let sign = crypto.createHash("md5").update(raw).digest("hex");
         return {
             lts: r, // date getTime ms
             bv: t, // md5 navigator.appVersion string
             salt: i, // radom number
-            sign
+            sign,
         };
     }
     /* eslint-enable */

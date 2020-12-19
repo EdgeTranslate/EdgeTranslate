@@ -15,10 +15,11 @@ const GA_URL = "https://www.google-analytics.com/collect";
 function sendHitRequest(page, type, extraHitData) {
     let documentLocation =
         document.location.origin + document.location.pathname + document.location.search;
-    useGoogleAnalytics(function() {
-        getUUID(function(UUID) {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    useGoogleAnalytics(() => {
+        getUUID((UUID) => {
             // establish basic hit data(payload)
-            var hitData = {
+            let hitData = {
                 v: 1, // analytics protocol version
                 tid: ANALYTICS_ACCOUNT, // analytics protocol version
                 cid: UUID, // unique user ID
@@ -27,8 +28,8 @@ function sendHitRequest(page, type, extraHitData) {
                 av: chrome.runtime.getManifest().version, // the version number of this extension
                 t: type, // hit(request) type
                 dl: documentLocation, // document location
-                dp: "/" + page, // document page
-                dt: page // document title
+                dp: `/${page}`, // document page
+                dt: page, // document title
             };
             // merge hitData and extraHitData
             Object.assign(hitData, extraHitData);
@@ -49,7 +50,7 @@ function generateURLRequest(requestData) {
     let url = "";
     if (requestData) {
         for (let key in requestData) {
-            url += key + "=" + requestData[key] + "&";
+            url += `${key}=${requestData[key]}&`;
         }
     }
     return url;
@@ -60,7 +61,7 @@ function generateURLRequest(requestData) {
  * @param {function} callback the callback function executed when the result of settings is ready and value of UseGoogleAnalytics is true
  */
 function useGoogleAnalytics(callback) {
-    chrome.storage.sync.get("OtherSettings", function(result) {
+    chrome.storage.sync.get("OtherSettings", (result) => {
         if (result.OtherSettings.UseGoogleAnalytics) callback();
     });
 }
@@ -70,12 +71,12 @@ function useGoogleAnalytics(callback) {
  * @param {function(UUID)} callback the callback function to be executed when the result is returned. If user is new, set a new UUID. UUID is a function parameter as result
  */
 function getUUID(callback) {
-    chrome.storage.sync.get("UUID", function(result) {
+    chrome.storage.sync.get("UUID", (result) => {
         let UUID = result.UUID;
         if (!UUID) {
             UUID = generateUUID();
             chrome.storage.sync.set({
-                UUID: UUID
+                UUID,
             });
         }
         callback(UUID);
@@ -83,12 +84,12 @@ function getUUID(callback) {
 }
 
 function generateUUID() {
-    var d = new Date().getTime();
+    let d = new Date().getTime();
     if (window.performance && typeof window.performance.now === "function") {
         d += performance.now(); //use high-precision timer if available
     }
-    var uuid = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(c) {
-        var r = (d + Math.random() * 16) % 16 | 0;
+    let uuid = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
+        let r = (d + Math.random() * 16) % 16 | 0;
         d = Math.floor(d / 16);
         return (c == "x" ? r : (r & 0x3) | 0x8).toString(16);
     });

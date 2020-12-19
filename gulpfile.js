@@ -13,9 +13,9 @@ const mergeStream = require("merge-stream");
 const minimist = require("minimist");
 const spawn = require("child_process").spawn;
 
-var args = minimist(process.argv.slice(2));
-var browser = args.browser || "chrome"; // store the name of browser: enum{chrome,firefox}
-var environment; // store the type of environment: enum{production,development}
+let args = minimist(process.argv.slice(2));
+let browser = args.browser || "chrome"; // store the name of browser: enum{chrome,firefox}
+let environment; // store the type of environment: enum{production,development}
 
 /**
  * Define public tasks of gulp
@@ -85,21 +85,18 @@ function setProductEnvironment(done) {
  * A private task to clean old packages before building new ones
  */
 function clean() {
-    let output_dir = "./build/" + browser + "/";
-    let packageName = "edge_translate_" + browser + ".zip";
-    return del([output_dir, "./build/" + packageName]);
+    let output_dir = `./build/${browser}/`;
+    let packageName = `edge_translate_${browser}.zip`;
+    return del([output_dir, `./build/${packageName}`]);
 }
 
 /**
  * 将build的扩展打包成zip文件以备发布
  */
 function packToZip() {
-    let match_dir = "./build/" + browser + "/**/*";
-    let packageName = "edge_translate_" + browser + ".zip";
-    return gulp
-        .src(match_dir)
-        .pipe(zip(packageName))
-        .pipe(gulp.dest("./build/"));
+    let match_dir = `./build/${browser}/**/*`;
+    let packageName = `edge_translate_${browser}.zip`;
+    return gulp.src(match_dir).pipe(zip(packageName)).pipe(gulp.dest("./build/"));
 }
 
 /**
@@ -127,7 +124,7 @@ function eslintJS() {
         .src("./src/**/*.js", { base: "src" })
         .pipe(
             eslint({
-                configFile: "./.eslintrc.js"
+                configFile: "./.eslintrc.js",
             })
         )
         .pipe(eslint.format());
@@ -137,7 +134,7 @@ function eslintJS() {
  * A private code to build JS code
  */
 function buildJS() {
-    let output_dir = "./build/" + browser + "/";
+    let output_dir = `./build/${browser}/`;
     let webpack_path =
         environment === "production"
             ? "./config/webpack.prod.config.js"
@@ -152,7 +149,7 @@ function buildJS() {
         .src("./src/**/*.js", { base: "src" })
         .pipe(webpack_stream(webpack_config, webpack))
         .pipe(gulp.dest(output_dir))
-        .on("error", error => log(error));
+        .on("error", (error) => log(error));
 }
 
 /**
@@ -164,10 +161,10 @@ function buildJS() {
  */
 function buildJSDev(done) {
     let result = spawn("gulp", ["buildJS", "--browser", browser, "--color"]);
-    result.stdout.on("data", data => {
+    result.stdout.on("data", (data) => {
         log(data);
     });
-    result.stderr.on("data", data => {
+    result.stderr.on("data", (data) => {
         log(data);
     });
     done();
@@ -177,8 +174,8 @@ function buildJSDev(done) {
  * A private task to merge manifest json files to one json file
  */
 function manifest() {
-    let output_dir = "./build/" + browser + "/";
-    let manifest_patch = "./src/manifest_" + browser + ".json";
+    let output_dir = `./build/${browser}/`;
+    let manifest_patch = `./src/manifest_${browser}.json`;
     return gulp
         .src("./src/manifest.json", { base: "src" })
         .pipe(merge_json(manifest_patch))
@@ -189,7 +186,7 @@ function manifest() {
  * A private task to pack HTML files except HTML templates
  */
 function html() {
-    let output_dir = "./build/" + browser + "/";
+    let output_dir = `./build/${browser}/`;
     return gulp.src(["./src/**/*.html"], { base: "src" }).pipe(gulp.dest(output_dir));
 }
 
@@ -197,13 +194,13 @@ function html() {
  * A private task to convert styl to css files
  */
 function styl() {
-    let output_dir = "./build/" + browser + "/";
+    let output_dir = `./build/${browser}/`;
     return gulp
         .src("./src/!(common)/**/*.styl", { base: "src" })
         .pipe(
             stylus({
-                compress: true // 需要压缩
-            }).on("error", error => log(error))
+                compress: true, // 需要压缩
+            }).on("error", (error) => log(error))
         )
         .pipe(gulp.dest(output_dir));
 }
@@ -212,15 +209,15 @@ function styl() {
  * A private task to pack static files under "./static/"
  */
 function packStatic() {
-    let output_dir = "./build/" + browser + "/";
+    let output_dir = `./build/${browser}/`;
     if (browser === "chrome") {
         // static JS files except google JS
         let staticJSFiles = gulp
             .src("./static/**/!(element_main).js", {
                 base: "static",
-                since: gulp.lastRun(packStatic)
+                since: gulp.lastRun(packStatic),
             })
-            .pipe(terser().on("error", error => log(error)))
+            .pipe(terser().on("error", (error) => log(error)))
             .pipe(gulp.dest(output_dir));
 
         // google page translation files
@@ -228,7 +225,7 @@ function packStatic() {
         let googleJS = gulp
             .src("./static/google/element_main.js", {
                 base: "static",
-                since: gulp.lastRun(packStatic)
+                since: gulp.lastRun(packStatic),
             })
             .pipe(gulp.dest(output_dir));
 
@@ -237,25 +234,24 @@ function packStatic() {
             .src("./static/**/!(*.js)", { base: "static" })
             .pipe(gulp.dest(output_dir));
         return mergeStream([staticJSFiles, googleJS, staticOtherFiles]);
-    } else {
-        // static JS files except google JS
-        let staticJSFiles = gulp
-            .src("./static/!(pdf)/**/!(element_main).js", { base: "static" })
-            .pipe(terser().on("error", error => log(error)))
-            .pipe(gulp.dest(output_dir));
-
-        // google page translation files
-        // Do not uglify element_main.js
-        let googleJS = gulp
-            .src("./static/google/element_main.js", { base: "static" })
-            .pipe(gulp.dest(output_dir));
-
-        // non-js static files
-        let staticOtherFiles = gulp
-            .src("./static/!(pdf)/**/!(*.js)", { base: "static" })
-            .pipe(gulp.dest(output_dir));
-        return mergeStream([staticJSFiles, googleJS, staticOtherFiles]);
     }
+    // static JS files except google JS
+    let staticJSFiles = gulp
+        .src("./static/!(pdf)/**/!(element_main).js", { base: "static" })
+        .pipe(terser().on("error", (error) => log(error)))
+        .pipe(gulp.dest(output_dir));
+
+    // google page translation files
+    // Do not uglify element_main.js
+    let googleJS = gulp
+        .src("./static/google/element_main.js", { base: "static" })
+        .pipe(gulp.dest(output_dir));
+
+    // non-js static files
+    let staticOtherFiles = gulp
+        .src("./static/!(pdf)/**/!(*.js)", { base: "static" })
+        .pipe(gulp.dest(output_dir));
+    return mergeStream([staticJSFiles, googleJS, staticOtherFiles]);
 }
 /**
  * End private tasks' definition
@@ -265,16 +261,15 @@ function packStatic() {
  * 一个简易gulp插件，接收一组json文件作为参数，将它们合并到gulp.src引用的基本json文件；
  * 在这里的作用是合并公共manifest和不同浏览器特有的manifest。
  */
-function merge_json() {
+function merge_json(...args) {
     let objs = [];
-    for (let i in arguments) {
-        objs.push(JSON.parse(fs.readFileSync(arguments[i])));
+    for (let i in args) {
+        objs.push(JSON.parse(fs.readFileSync(args[i])));
     }
 
-    let stream = through.obj(function(file, enc, callback) {
+    let stream = through.obj(function (file, enc, callback) {
         let obj = JSON.parse(file.contents.toString(enc));
         for (let i in objs) {
-            // log(JSON.stringify(objs[i]));
             obj = _.defaultsDeep(obj, objs[i]);
         }
 
@@ -288,5 +283,5 @@ function merge_json() {
 
 // 定义 log函数 ，便于输出task的执行情况
 function log(d) {
-    process.stdout.write(d + "\n");
+    process.stdout.write(`${d}\n`);
 }

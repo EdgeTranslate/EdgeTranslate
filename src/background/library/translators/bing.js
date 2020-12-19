@@ -80,7 +80,7 @@ const LANGUAGES = [
     ["yue", "yua"],
     ["vi", "vi"],
     ["ku", "ku"],
-    ["kmr", "kmr"]
+    ["kmr", "kmr"],
 ];
 
 /**
@@ -124,7 +124,7 @@ const READERS = {
     vi: ["vi-VN", "Male", "vi-VN-An"],
     "zh-Hans": ["zh-CN", "Female", "zh-CN-HuihuiRUS"],
     "zh-Hant": ["zh-CN", "Female", "zh-CN-HuihuiRUS"],
-    yue: ["zh-HK", "Female", "zh-HK-TracyRUS"]
+    yue: ["zh-HK", "Female", "zh-HK-TracyRUS"],
 };
 
 /**
@@ -157,7 +157,7 @@ const TTS_LAN_CODE = {
     mr: "mr-IN",
     ta: "ta-IN",
     te: "te-IN",
-    tr: "tr-TR"
+    tr: "tr-TR",
 };
 
 /**
@@ -204,7 +204,7 @@ class BingTranslator {
         this.HEADERS = {
             accept: "*/*",
             "accept-language": "zh-CN,zh-TW;q=0.9,zh;q=0.8,en;q=0.7",
-            "content-type": "application/x-www-form-urlencoded"
+            "content-type": "application/x-www-form-urlencoded",
         };
 
         /**
@@ -287,7 +287,7 @@ class BingTranslator {
                 detailedMeanings.push({
                     pos: translations[i].posTag,
                     meaning: translations[i].displayTarget,
-                    synonyms: synonyms
+                    synonyms,
                 });
             }
 
@@ -308,15 +308,11 @@ class BingTranslator {
             return {
                 method: "POST",
                 baseURL: this.HOST,
-                url:
-                    "tfetspktok?isVertical=1&&IG=" +
-                    this.IG +
-                    "&IID=" +
-                    this.IID +
-                    "." +
-                    this.count.toString(),
+                url: `tfetspktok?isVertical=1&&IG=${this.IG}&IID=${
+                    this.IID
+                }.${this.count.toString()}`,
                 headers: this.HEADERS,
-                data: ""
+                data: "",
             };
         };
 
@@ -339,21 +335,7 @@ class BingTranslator {
         let reader = READERS[lanCode];
         let ttsLanCode = TTS_LAN_CODE[lanCode];
         let speedValue = speed === "fast" ? "-10.00%" : "-30.00%";
-        return (
-            "<speak version='1.0' xml:lang='" +
-            ttsLanCode +
-            "'><voice xml:lang='" +
-            ttsLanCode +
-            "' xml:gender='" +
-            reader[1] +
-            "' name='" +
-            reader[2] +
-            "'><prosody rate='" +
-            speedValue +
-            "'>" +
-            text +
-            "</prosody></voice></speak>"
-        );
+        return `<speak version='1.0' xml:lang='${ttsLanCode}'><voice xml:lang='${ttsLanCode}' xml:gender='${reader[1]}' name='${reader[2]}'><prosody rate='${speedValue}'>${text}</prosody></voice></speak>`;
     }
 
     /**
@@ -382,21 +364,17 @@ class BingTranslator {
      * @returns {Object} constructed parameters
      */
     constructDetectParams(text) {
-        let url =
-                "ttranslatev3?isVertical=1&IG=" +
-                this.IG +
-                "&IID=" +
-                this.IID +
-                "." +
-                this.count.toString(),
-            data = "&fromLang=auto-detect&to=zh-Hans&text=" + encodeURIComponent(text);
+        let url = `ttranslatev3?isVertical=1&IG=${this.IG}&IID=${
+                this.IID
+            }.${this.count.toString()}`,
+            data = `&fromLang=auto-detect&to=zh-Hans&text=${encodeURIComponent(text)}`;
 
         return {
             method: "POST",
             baseURL: this.HOST,
-            url: url,
+            url,
             headers: this.HEADERS,
-            data: data
+            data,
         };
     }
 
@@ -425,7 +403,7 @@ class BingTranslator {
             baseURL: this.HOST,
             url: translateURL,
             headers: this.HEADERS,
-            data: translateData
+            data: translateData,
         };
     }
 
@@ -455,7 +433,7 @@ class BingTranslator {
             baseURL: this.HOST,
             url: lookupURL,
             headers: this.HEADERS,
-            data: lookupData
+            data: lookupData,
         };
     }
 
@@ -469,22 +447,21 @@ class BingTranslator {
      * @returns {Object} constructed parameters
      */
     constructTTSParams(text, lang, speed) {
-        let url =
-            "https://" + this.TTS_AUTH.region + ".tts.speech.microsoft.com/cognitiveservices/v1?";
+        let url = `https://${this.TTS_AUTH.region}.tts.speech.microsoft.com/cognitiveservices/v1?`;
 
         let headers = {
             "Content-Type": "application/ssml+xml",
-            Authorization: "Bearer " + this.TTS_AUTH.token,
+            Authorization: `Bearer ${this.TTS_AUTH.token}`,
             "X-MICROSOFT-OutputFormat": "audio-16khz-32kbitrate-mono-mp3",
-            "cache-control": "no-cache"
+            "cache-control": "no-cache",
         };
 
         return {
             method: "POST",
             baseURL: url,
-            headers: headers,
+            headers,
             data: this.generateTTSData(text, lang, speed),
-            responseType: "arraybuffer"
+            responseType: "arraybuffer",
         };
     }
 
@@ -523,7 +500,7 @@ class BingTranslator {
                  */
                 if (responseHost && responseHost[1] !== this.HOST) {
                     this.HOST = responseHost[1];
-                    this.HOME_PAGE = this.HOST + "translator";
+                    this.HOME_PAGE = `${this.HOST}translator`;
                 } else {
                     return response.data;
                 }
@@ -539,7 +516,7 @@ class BingTranslator {
             throw {
                 errorType: "API_ERR",
                 errorCode: response.data.statusCode,
-                errorMsg: "Request failed."
+                errorMsg: "Request failed.",
             };
         };
 
@@ -576,9 +553,9 @@ class BingTranslator {
             error.errorAct = {
                 api: "bing",
                 action: "detect",
-                text: text,
+                text,
                 from: null,
-                to: null
+                to: null,
             };
             throw error;
         }
@@ -601,26 +578,27 @@ class BingTranslator {
      * @returns {Promise<Object>} translation Promise
      */
     async translate(text, from, to) {
+        let transResponse;
         try {
             /*
              * Use var to prevent putting all of the code that referenced transResponse
              * into this try-catch scope.
              */
-            var transResponse = await this.request(this.constructTranslateParams, [text, from, to]);
+            transResponse = await this.request(this.constructTranslateParams, [text, from, to]);
         } catch (error) {
             error.errorAct = {
                 api: "bing",
                 action: "translate",
-                text: text,
-                from: from,
-                to: to
+                text,
+                from,
+                to,
             };
             throw error;
         }
 
         // Set up originalText in case that lookup failed.
         let transResult = this.parseTranslateResult(transResponse, {
-            originalText: text
+            originalText: text,
         });
 
         try {
@@ -656,33 +634,32 @@ class BingTranslator {
                     [text, language, speed],
                     false
                 );
-                this.AUDIO.src = "data:audio/mp3;base64," + this.arrayBufferToBase64(TTSResponse);
+                this.AUDIO.src = `data:audio/mp3;base64,${this.arrayBufferToBase64(TTSResponse)}`;
                 await this.AUDIO.play();
             } catch (error) {
                 if (retryCount < this.MAX_RETRY) {
                     retryCount++;
                     return this.updateTTSAuth().then(pronounceOnce);
-                } else {
-                    let errorAct = {
-                        api: "bing",
-                        action: "pronounce",
-                        text: text,
-                        from: language,
-                        to: null
-                    };
-
-                    if (error.errorType) {
-                        error.errorAct = errorAct;
-                        throw error;
-                    }
-
-                    throw {
-                        errorType: "NET_ERR",
-                        errorCode: 0,
-                        errorMsg: error.message,
-                        errorAct: errorAct
-                    };
                 }
+                let errorAct = {
+                    api: "bing",
+                    action: "pronounce",
+                    text,
+                    from: language,
+                    to: null,
+                };
+
+                if (error.errorType) {
+                    error.errorAct = errorAct;
+                    throw error;
+                }
+
+                throw {
+                    errorType: "NET_ERR",
+                    errorCode: 0,
+                    errorMsg: error.message,
+                    errorAct,
+                };
             }
         };
 

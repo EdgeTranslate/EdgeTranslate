@@ -14,16 +14,16 @@ export { sendMessageToCurrentTab };
  */
 function sendMessageToCurrentTab(title, detail, tab = null) {
     if (tab && tab.id && tab.id >= 0) {
-        return Messager.sendToTab(tab.id, "content", title, detail).catch(error =>
-            Promise.reject({ error: error, tab: tab })
+        return Messager.sendToTab(tab.id, "content", title, detail).catch((error) =>
+            Promise.reject({ error, tab })
         );
     }
 
     return promiseTabs
         .query({ active: true, currentWindow: true })
-        .then(tabs => {
-            return Messager.sendToTab(tabs[0].id, "content", title, detail).catch(error =>
-                Promise.reject({ error: error, tab: tabs[0] })
+        .then((tabs) => {
+            return Messager.sendToTab(tabs[0].id, "content", title, detail).catch((error) =>
+                Promise.reject({ error, tab: tabs[0] })
             );
         })
         .catch(() => {

@@ -12,7 +12,7 @@ class EventManager {
             TRANSLATE_ERROR: 2,
             PRONOUNCE_START: 3,
             PRONOUNCE_FINISHED: 4,
-            PRONOUNCE_ERROR: 5
+            PRONOUNCE_ERROR: 5,
         });
 
         /**

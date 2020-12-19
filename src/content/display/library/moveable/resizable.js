@@ -35,11 +35,11 @@ export default class resizable {
     resizeInitiate() {
         this.resizeEnd();
         // wrap a resize start event handler
-        this.resizeStartHandler = e => {
+        this.resizeStartHandler = (e) => {
             this.resizeStart(e);
         };
         // wrap a resize(resizing) event handler
-        this.resizeHandler = e => {
+        this.resizeHandler = (e) => {
             this.resize(e);
         };
 
@@ -63,7 +63,7 @@ export default class resizable {
             maxHeight:
                 this.options.maxHeight !== undefined
                     ? this.options.maxHeight
-                    : Number.POSITIVE_INFINITY
+                    : Number.POSITIVE_INFINITY,
         };
     }
 
@@ -114,8 +114,9 @@ export default class resizable {
                     break;
                 default:
                     if (getVarType(this.options.thresholdPosition) === "number")
-                        positionThresholdCSSValue = `-${this.options.thresholdPosition *
-                            this.resizeThreshold[direction]}px`;
+                        positionThresholdCSSValue = `-${
+                            this.options.thresholdPosition * this.resizeThreshold[direction]
+                        }px`;
                     break;
             }
             /* change css setting according to direction */
@@ -213,7 +214,7 @@ export default class resizable {
                     n: null,
                     nw: null,
                     w: null,
-                    sw: null
+                    sw: null,
                 };
         }
         return directions;
@@ -247,7 +248,7 @@ export default class resizable {
             n: defaultThreshold,
             nw: defaultThreshold,
             w: defaultThreshold,
-            sw: defaultThreshold
+            sw: defaultThreshold,
         };
         switch (getVarType(option)) {
             // set all directions to the given number
@@ -297,7 +298,7 @@ export default class resizable {
         // store the start element absolute position. [x,y]
         this.store.startElement = [
             this.targetElement.getBoundingClientRect().left + document.documentElement.scrollLeft,
-            this.targetElement.getBoundingClientRect().top + document.documentElement.scrollTop
+            this.targetElement.getBoundingClientRect().top + document.documentElement.scrollTop,
         ];
         // store the start size(width and height) of the element
         this.store.startSize = [this.targetElement.offsetWidth, this.targetElement.offsetHeight];
@@ -310,7 +311,7 @@ export default class resizable {
         this.handlers.resizeStart &&
             this.handlers.resizeStart({
                 // set the start position
-                set: position => {
+                set: (position) => {
                     this.store.startTranslate = [position[0], position[1]]; // deep copy
                     this.targetElement.style.transform = `translate(${position[0]}px,${position[1]}px)`;
                 },
@@ -321,7 +322,7 @@ export default class resizable {
                 clientX: e.clientX,
                 clientY: e.clientY,
                 pageX: e.pageX,
-                pageY: e.pageY
+                pageY: e.pageY,
             });
 
         // store the current translate value. used in resize end handler
@@ -412,9 +413,9 @@ export default class resizable {
             this.handlers.resize({
                 inputEvent: e,
                 target: this.targetElement,
-                width: width,
-                height: height,
-                translate: [translate[0], translate[1]] // the target translate(deep copied) value the element should move
+                width,
+                height,
+                translate: [translate[0], translate[1]], // the target translate(deep copied) value the element should move
             });
     }
 
@@ -423,7 +424,7 @@ export default class resizable {
      * remove the resizing event listener
      */
     resizeEnd() {
-        document.documentElement.addEventListener("mouseup", e => {
+        document.documentElement.addEventListener("mouseup", (e) => {
             if (this.resizing) {
                 this.resizing = false;
                 document.documentElement.removeEventListener("mousemove", this.resizeHandler);
@@ -433,7 +434,7 @@ export default class resizable {
                         inputEvent: e,
                         translate: [this.store.currentTranslate[0], this.store.currentTranslate[1]], // deep copy
                         width: this.store.currentSize[0],
-                        height: this.store.currentSize[1]
+                        height: this.store.currentSize[1],
                     });
             }
         });
@@ -453,10 +454,10 @@ export default class resizable {
         this.store.startTranslate = [];
         this.handlers.resizeStart &&
             this.handlers.resizeStart({
-                set: position => {
+                set: (position) => {
                     this.store.startTranslate = position;
                     this.targetElement.style.transform = `translate(${position[0]}px,${position[1]}px)`;
-                }
+                },
             });
 
         /* resize the element */
@@ -465,13 +466,13 @@ export default class resizable {
                 target: this.targetElement,
                 width: resizeParameter.width,
                 height: resizeParameter.height,
-                translate: this.store.startTranslate
+                translate: this.store.startTranslate,
             });
         /* resize end */
         this.handlers.resizeEnd &&
             this.handlers.resizeEnd({
                 translate: this.store.startTranslate,
-                target: this.targetElement
+                target: this.targetElement,
             });
         return true;
     }
@@ -497,14 +498,14 @@ function cssPreProcess(style) {
      * stringify css entries of property and value
      * @param {Object} items {cssProperty: value}
      */
-    result.stringifyItems = function(items) {
+    result.stringifyItems = function (items) {
         let text = "";
         for (let key in items) {
             text += `${key}: ${items[key]};\n`;
         }
         return text;
     };
-    result.toString = function() {
+    result.toString = function () {
         let text = "";
         for (let selector in this) {
             if (typeof this[selector] !== "function")

@@ -3,7 +3,7 @@
  *
  * @param {String} source xhtml source
  */
-module.exports = function(source) {
+module.exports = function (source) {
     // process the template in advance
     let template = source.toString().replace(/\n+|\s{2,}|\r+/g, " ");
 
@@ -27,7 +27,7 @@ module.exports = function(source) {
         if (match.index > lastIndex) {
             let str = template.substring(lastIndex, match.index);
             if (!SPACE_REGEX.test(str)) {
-                code.push("result.push('" + str + "');");
+                code.push(`result.push('${str}');`);
             }
         }
 
@@ -37,7 +37,7 @@ module.exports = function(source) {
             code.push(expression);
         } else {
             // 如果是一个变量，获取它的值用于填充它所在的位置
-            code.push("result.push(" + expression + ");");
+            code.push(`result.push(${expression});`);
         }
 
         lastIndex = match.index + match[0].length;
@@ -45,7 +45,7 @@ module.exports = function(source) {
 
     // 处理模板末尾的非待填充文本。
     if (lastIndex < template.length - 1) {
-        code.push("result.push('" + template.substring(lastIndex, template.length) + "');");
+        code.push(`result.push('${template.substring(lastIndex, template.length)}');`);
     }
 
     code.push("return result.join('');");

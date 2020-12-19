@@ -199,7 +199,7 @@ const LANGUAGES = [
     ["yi", "yid"],
     ["yo", "yor"],
     ["zaz", "zaz"],
-    ["zu", "zul"]
+    ["zu", "zul"],
 ];
 
 /**
@@ -220,7 +220,7 @@ class BaiduTranslator {
             accept: "*/*",
             "accept-language":
                 "en,zh;q=0.9,en-GB;q=0.8,en-CA;q=0.7,en-AU;q=0.6,en-ZA;q=0.5,en-NZ;q=0.4,en-IN;q=0.3,zh-CN;q=0.2",
-            "content-type": "application/x-www-form-urlencoded; charset=UTF-8"
+            "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
         };
 
         /**
@@ -259,11 +259,11 @@ class BaiduTranslator {
             errorMsg: msg,
             errorAct: {
                 api: "baidu",
-                action: action,
-                text: text,
-                from: from,
-                to: to
-            }
+                action,
+                text,
+                from,
+                to,
+            },
         };
     }
 
@@ -277,7 +277,7 @@ class BaiduTranslator {
             const response = await axios({
                 method: "get",
                 baseURL: this.HOST,
-                timeout: 5000
+                timeout: 5000,
             });
 
             this.token = response.data.match(/token: '(.*?)',/)[1];
@@ -309,8 +309,8 @@ class BaiduTranslator {
 
         if (result.trans_result.phonetic) {
             parsed.tPronunciation = result.trans_result.phonetic
-                .map(e => (e.trg_str !== " " ? e.trg_str : e.src_str))
-                .reduce((t1, t2) => t1 + " " + t2); // get the result by splicing the array
+                .map((e) => (e.trg_str !== " " ? e.trg_str : e.src_str))
+                .reduce((t1, t2) => `${t1} ${t2}`); // get the result by splicing the array
         }
 
         // japanese target pronunciation
@@ -326,11 +326,11 @@ class BaiduTranslator {
                 parsed.detailedMeanings = [];
 
                 // Parse one detailed meaning.
-                let appendDetailedMeaning = part => {
+                let appendDetailedMeaning = (part) => {
                     let meaning = {};
                     meaning.pos = part.part; // part of speech
                     meaning.meaning = part.means.reduce(
-                        (meaning1, meaning2) => meaning1 + "\n" + meaning2
+                        (meaning1, meaning2) => `${meaning1}\n${meaning2}`
                     );
                     parsed.detailedMeanings.push(meaning);
                 };
@@ -385,7 +385,7 @@ class BaiduTranslator {
 
                 // source language examples
                 example.source = sentence[0]
-                    .map(a => {
+                    .map((a) => {
                         if (a.length > 4) return a[0] + a[4];
                         return a[0];
                     })
@@ -393,7 +393,7 @@ class BaiduTranslator {
 
                 // target language examples
                 example.target = sentence[1]
-                    .map(a => {
+                    .map((a) => {
                         if (a.length > 4) return a[0] + a[4];
                         return a[0];
                     })
@@ -427,16 +427,15 @@ class BaiduTranslator {
             baseURL: this.HOST,
             headers: this.HEADERS,
             data: new URLSearchParams({
-                query: text
+                query: text,
             }),
-            timeout: 5000
+            timeout: 5000,
         });
 
         if (response.data.msg === "success") {
             return this.CODE_TO_LAN.get(response.data.lan);
-        } else {
-            this.throwError(response.data.errno, response.data.msg, "detect", text);
         }
+        this.throwError(response.data.errno, response.data.msg, "detect", text);
     }
 
     /**
@@ -462,7 +461,7 @@ class BaiduTranslator {
                 fromCode = this.LAN_TO_CODE.get(detectedFrom);
 
             const response = await axios({
-                url: "/v2transapi?" + "from=" + fromCode + "&to=" + toCode,
+                url: `/v2transapi?from=${fromCode}&to=${toCode}`,
                 method: "post",
                 baseURL: this.HOST,
                 headers: this.HEADERS,
@@ -474,9 +473,9 @@ class BaiduTranslator {
                     simple_means_flag: 3,
                     sign: this.generateSign(text, this.gtk),
                     token: this.token,
-                    domain: "common"
+                    domain: "common",
                 }),
-                timeout: 5000
+                timeout: 5000,
             });
 
             let data = response.data;
@@ -521,15 +520,9 @@ class BaiduTranslator {
         // Set actual speed value.
         let speedValue = speed === "fast" ? "7" : "3";
 
-        this.AUDIO.src =
-            this.HOST +
-            "gettts?lan=" +
-            this.LAN_TO_CODE.get(language) +
-            "&text=" +
-            encodeURIComponent(text) +
-            "&spd=" +
-            speedValue +
-            "&source=web";
+        this.AUDIO.src = `${this.HOST}gettts?lan=${this.LAN_TO_CODE.get(
+            language
+        )}&text=${encodeURIComponent(text)}&spd=${speedValue}&source=web`;
 
         try {
             await this.AUDIO.play();
@@ -542,10 +535,10 @@ class BaiduTranslator {
                 errorAct: {
                     api: "baidu",
                     action: "pronounce",
-                    text: text,
+                    text,
                     from: language,
-                    to: null
-                }
+                    to: null,
+                },
             };
         }
     }

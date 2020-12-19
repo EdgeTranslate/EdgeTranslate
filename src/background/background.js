@@ -3,14 +3,14 @@ import {
     translatePage,
     youdaoPageTranslate,
     executeYouDaoScript,
-    executeGoogleScript
+    executeGoogleScript,
 } from "./library/translate.js";
 import {
     addUrlBlacklist,
     addDomainBlacklist,
     removeUrlBlacklist,
     removeDomainBlacklist,
-    updateBLackListMenu
+    updateBLackListMenu,
 } from "./library/blacklist.js";
 import { sendHitRequest } from "./library/analytics.js";
 import { sendMessageToCurrentTab } from "./library/common.js";
@@ -22,7 +22,7 @@ import { BROWSER_LANGUAGES_MAP } from "common/scripts/languages.js";
 /**
  * 选中文本TTS语速
  */
-var selectedTTSSpeed = "fast";
+let selectedTTSSpeed = "fast";
 
 /**
  * default settings for this extension
@@ -30,14 +30,14 @@ var selectedTTSSpeed = "fast";
 const DEFAULT_SETTINGS = {
     blacklist: {
         urls: {},
-        domains: { "chrome.google.com": true, extensions: true }
+        domains: { "chrome.google.com": true, extensions: true },
     },
     // PopupPosition: determine the location of translation block
     // Resize: determine whether the web page will resize when showing translation result
     // RTL: determine whether the text in translation block should display from right to left
     LayoutSettings: {
         Resize: false,
-        RTL: false
+        RTL: false,
     },
     // Default settings of source language and target language
     languageSetting: { sl: "auto", tl: BROWSER_LANGUAGES_MAP[chrome.i18n.getUILanguage()] },
@@ -48,7 +48,7 @@ const DEFAULT_SETTINGS = {
         TranslateAfterSelect: false,
         CancelTextSelection: false,
         UseGoogleAnalytics: true,
-        UsePDFjs: true
+        UsePDFjs: true,
     },
     DefaultTranslator: "GoogleTranslate",
     DefaultPageTranslator: "YouDaoPageTranslate",
@@ -64,9 +64,9 @@ const DEFAULT_SETTINGS = {
             sPronunciation: "BaiduTranslate",
             detailedMeanings: "BingTranslate",
             definitions: "GoogleTranslate",
-            examples: "BaiduTranslate"
-        }
-    }
+            examples: "BaiduTranslate",
+        },
+    },
 };
 
 /**
@@ -74,32 +74,32 @@ const DEFAULT_SETTINGS = {
  */
 chrome.contextMenus.create({
     id: "translate",
-    title: chrome.i18n.getMessage("Translate") + " '%s'",
-    contexts: ["selection"]
+    title: `${chrome.i18n.getMessage("Translate")} '%s'`,
+    contexts: ["selection"],
 });
 
 chrome.contextMenus.create({
     id: "shortcut",
     title: chrome.i18n.getMessage("ShortcutSetting"),
-    contexts: ["browser_action"]
+    contexts: ["browser_action"],
 });
 
 chrome.contextMenus.create({
     id: "translate_page",
     title: chrome.i18n.getMessage("TranslatePage"),
-    contexts: ["page"]
+    contexts: ["page"],
 });
 
 chrome.contextMenus.create({
     id: "translate_page_youdao",
     title: chrome.i18n.getMessage("TranslatePageYouDao"),
-    contexts: ["browser_action"]
+    contexts: ["browser_action"],
 });
 
 chrome.contextMenus.create({
     id: "translate_page_google",
     title: chrome.i18n.getMessage("TranslatePageGoogle"),
-    contexts: ["browser_action"]
+    contexts: ["browser_action"],
 });
 
 chrome.contextMenus.create({
@@ -107,7 +107,7 @@ chrome.contextMenus.create({
     title: chrome.i18n.getMessage("AddUrlBlacklist"),
     contexts: ["browser_action"],
     enabled: false,
-    visible: false
+    visible: false,
 });
 
 chrome.contextMenus.create({
@@ -115,7 +115,7 @@ chrome.contextMenus.create({
     title: chrome.i18n.getMessage("AddDomainBlacklist"),
     contexts: ["browser_action"],
     enabled: false,
-    visible: false
+    visible: false,
 });
 
 chrome.contextMenus.create({
@@ -123,7 +123,7 @@ chrome.contextMenus.create({
     title: chrome.i18n.getMessage("RemoveUrlBlacklist"),
     contexts: ["browser_action"],
     enabled: false,
-    visible: false
+    visible: false,
 });
 
 chrome.contextMenus.create({
@@ -131,7 +131,7 @@ chrome.contextMenus.create({
     title: chrome.i18n.getMessage("RemoveDomainBlacklist"),
     contexts: ["browser_action"],
     enabled: false,
-    visible: false
+    visible: false,
 });
 /**
  * END SETTING UP CONTEXT MENUS
@@ -140,10 +140,10 @@ chrome.contextMenus.create({
 /**
  * 初始化插件配置。
  */
-chrome.runtime.onInstalled.addListener(function(details) {
+chrome.runtime.onInstalled.addListener((details) => {
     // assign default value to settings of this extension
-    chrome.storage.sync.get(function(result) {
-        var buffer = result; // use var buffer as a pointer
+    chrome.storage.sync.get((result) => {
+        let buffer = result; // use var buffer as a pointer
         setDefaultSettings(buffer, DEFAULT_SETTINGS); // assign default value to buffer
         chrome.storage.sync.set(buffer);
     });
@@ -154,7 +154,7 @@ chrome.runtime.onInstalled.addListener(function(details) {
             // 首次安装，引导用户查看wiki
             chrome.tabs.create({
                 // 为wiki页面创建一个新的标签页
-                url: chrome.i18n.getMessage("WikiLink")
+                url: chrome.i18n.getMessage("WikiLink"),
             });
 
             // 告知用户数据收集相关信息
@@ -162,19 +162,19 @@ chrome.runtime.onInstalled.addListener(function(details) {
                 type: "basic",
                 iconUrl: "./icon/icon128.png",
                 title: chrome.i18n.getMessage("AppName"),
-                message: chrome.i18n.getMessage("DataCollectionNotice")
+                message: chrome.i18n.getMessage("DataCollectionNotice"),
             });
 
             // 尝试发送安装事件
             setTimeout(() => {
                 sendHitRequest("background", "event", {
                     ec: "installation", // event category
-                    ea: "installation" // event label
+                    ea: "installation", // event label
                 });
             }, 10 * 60 * 1000); // 10 min
         } else if (details.reason === "update") {
             // Fix language setting compatibility between Edge Translate 2.x and 1.x.x.
-            chrome.storage.sync.get("languageSetting", result => {
+            chrome.storage.sync.get("languageSetting", (result) => {
                 if (result.languageSetting.sl === "zh-cn") {
                     result.languageSetting.sl = "zh-CN";
                 } else if (result.languageSetting.sl === "zh-tw") {
@@ -194,7 +194,7 @@ chrome.runtime.onInstalled.addListener(function(details) {
                 type: "basic",
                 iconUrl: "./icon/icon128.png",
                 title: chrome.i18n.getMessage("AppName"),
-                message: chrome.i18n.getMessage("ExtensionUpdated")
+                message: chrome.i18n.getMessage("ExtensionUpdated"),
             });
         }
 
@@ -206,18 +206,18 @@ chrome.runtime.onInstalled.addListener(function(details) {
 /**
  * 监听用户点击通知事件
  */
-chrome.notifications.onClicked.addListener(function(notificationId) {
+chrome.notifications.onClicked.addListener((notificationId) => {
     switch (notificationId) {
         case "update_notification":
             chrome.tabs.create({
                 // 为releases页面创建一个新的标签页
-                url: "https://github.com/EdgeTranslate/EdgeTranslate/releases"
+                url: "https://github.com/EdgeTranslate/EdgeTranslate/releases",
             });
             break;
         case "data_collection_notification":
             chrome.tabs.create({
                 // 为设置页面单独创建一个标签页
-                url: chrome.runtime.getURL("options/options.html#google-analytics")
+                url: chrome.runtime.getURL("options/options.html#google-analytics"),
             });
             break;
         default:
@@ -228,7 +228,7 @@ chrome.notifications.onClicked.addListener(function(notificationId) {
 /**
  * 添加点击菜单后的处理事件
  */
-chrome.contextMenus.onClicked.addListener(function(info) {
+chrome.contextMenus.onClicked.addListener((info) => {
     switch (info.menuItemId) {
         case "translate":
             sendMessageToCurrentTab("get_selection", {})
@@ -238,7 +238,7 @@ chrome.contextMenus.onClicked.addListener(function(info) {
                     }
                     return Promise.reject();
                 })
-                .catch(error => {
+                .catch((error) => {
                     // If content scripts can not access the tab the selection, use info.selectionText instead.
                     if (info.selectionText.trim()) {
                         return TRANSLATOR_MANAGER.translate(info.selectionText, null);
@@ -257,7 +257,7 @@ chrome.contextMenus.onClicked.addListener(function(info) {
             break;
         case "shortcut":
             chrome.tabs.create({
-                url: "chrome://extensions/shortcuts"
+                url: "chrome://extensions/shortcuts",
             });
             break;
         case "add_url_blacklist":
@@ -280,8 +280,8 @@ chrome.contextMenus.onClicked.addListener(function(info) {
 /**
  * 添加tab切换事件监听，用于更新黑名单信息
  */
-chrome.tabs.onActivated.addListener(function(activeInfo) {
-    chrome.tabs.get(activeInfo.tabId, function(tab) {
+chrome.tabs.onActivated.addListener((activeInfo) => {
+    chrome.tabs.get(activeInfo.tabId, (tab) => {
         if (tab.url && tab.url.length > 0) {
             updateBLackListMenu(tab.url);
         }
@@ -291,7 +291,7 @@ chrome.tabs.onActivated.addListener(function(activeInfo) {
 /**
  * 添加tab刷新事件监听，用于更新黑名单信息
  */
-chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     if (tab.active && tab.url && tab.url.length > 0) {
         updateBLackListMenu(tab.url);
     }
@@ -354,7 +354,7 @@ async function messageHandler(message, sender) {
             chrome.runtime.openOptionsPage();
             return Promise.resolve();
         default:
-            log("Unknown message title: " + message.title);
+            log(`Unknown message title: ${message.title}`);
             return Promise.reject();
     }
 }
@@ -367,15 +367,15 @@ Messager.receive("background", messageHandler);
 /**
  *  将快捷键消息转发给content_scripts
  */
-chrome.commands.onCommand.addListener(function(command) {
+chrome.commands.onCommand.addListener((command) => {
     switch (command) {
         case "translate_page":
             translatePage();
             break;
         default:
             sendMessageToCurrentTab("command", {
-                command: command
-            }).catch(error => log(error));
+                command,
+            }).catch((error) => log(error));
             break;
     }
 });
@@ -384,9 +384,9 @@ chrome.commands.onCommand.addListener(function(command) {
  * Modify the origin header of translate requests.
  */
 chrome.webRequest.onBeforeSendHeaders.addListener(
-    details => {
+    (details) => {
         let modified = false;
-        let origin = "https://" + getDomain(details.url);
+        let origin = `https://${getDomain(details.url)}`;
 
         // log("requesting " + details.url);
         for (let header of details.requestHeaders) {
@@ -424,7 +424,7 @@ setTimeout(() => {
  * @param {*} settings default settings
  */
 function setDefaultSettings(result, settings) {
-    for (var i in settings) {
+    for (let i in settings) {
         // settings[i] contains key-value settings
         if (
             typeof settings[i] === "object" &&

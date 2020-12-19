@@ -32,7 +32,7 @@ export class promiseTabs {
      */
     static create(createProperties) {
         return new Promise((resolve, reject) => {
-            chrome.tabs.create(createProperties, function(tab) {
+            chrome.tabs.create(createProperties, (tab) => {
                 if (chrome.runtime.lastError) {
                     return reject(chrome.runtime.lastError.message);
                 }
@@ -46,10 +46,10 @@ export class promiseTabs {
      */
     static query(queryInfo) {
         return new Promise((resolve, reject) => {
-            chrome.tabs.query(queryInfo, function(tabs) {
+            chrome.tabs.query(queryInfo, (tabs) => {
                 if (chrome.runtime.lastError || !tabs[0] || tabs[0].id < 0) {
                     return reject({
-                        error: chrome.runtime.lastError || "The query has no results"
+                        error: chrome.runtime.lastError || "The query has no results",
                     });
                 }
                 return resolve(tabs);

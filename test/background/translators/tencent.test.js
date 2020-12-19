@@ -11,7 +11,8 @@ describe("tencent translator api", () => {
         TRANSLATOR.HEADERS["Origin"] = TRANSLATOR.BASE_URL;
     });
 
-    it("to update tokens", done => {
+    // eslint-disable-next-line jest/no-test-callback
+    it("to update tokens", (done) => {
         TRANSLATOR.updateTokens()
             .then(() => {
                 expect(typeof TRANSLATOR.qtk).toEqual("string");
@@ -36,31 +37,22 @@ describe("tencent translator api", () => {
             });
     });
 
-    it("to detect language of English text", done => {
-        TRANSLATOR.detect("hello")
-            .then(result => {
-                expect(result).toEqual("en");
-                done();
-            })
-            .catch(error => {
-                done(error);
-            });
+    it("to detect language of English text", () => {
+        return TRANSLATOR.detect("hello").then((result) => {
+            expect(result).toEqual("en");
+        });
     });
 
-    it("to detect language of Chinese text", done => {
-        TRANSLATOR.detect("你好")
-            .then(result => {
-                expect(result).toEqual("zh-CN");
-                done();
-            })
-            .catch(error => {
-                done(error);
-            });
+    it("to detect language of Chinese text", () => {
+        return TRANSLATOR.detect("你好").then((result) => {
+            expect(result).toEqual("zh-CN");
+        });
     });
 
-    it("to translate a piece of English text", done => {
+    // eslint-disable-next-line jest/no-test-callback
+    it("to translate a piece of English text", (done) => {
         TRANSLATOR.translate("hello", "en", "zh-CN")
-            .then(result => {
+            .then((result) => {
                 expect(result.mainMeaning).toEqual("“喂”的招呼声");
                 expect(result.originalText).toEqual("hello");
                 done();
@@ -71,9 +63,10 @@ describe("tencent translator api", () => {
             });
     });
 
-    it("to translate a piece of Chinese text", done => {
+    // eslint-disable-next-line jest/no-test-callback
+    it("to translate a piece of Chinese text", (done) => {
         TRANSLATOR.translate("你好", "zh-CN", "en")
-            .then(result => {
+            .then((result) => {
                 expect(result.mainMeaning).toEqual("Hello");
                 expect(result.originalText).toEqual("你好");
                 done();

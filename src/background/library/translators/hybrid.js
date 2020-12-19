@@ -13,7 +13,7 @@ class HybridTranslator {
             BaiduTranslate: BAIDU,
             BingTranslate: BING,
             GoogleTranslate: GOOGLE,
-            TencentTranslate: TENCENT
+            TencentTranslate: TENCENT,
         };
 
         /**
@@ -47,7 +47,7 @@ class HybridTranslator {
                 return;
             }
 
-            chrome.storage.sync.get("HybridTranslatorConfig", res => {
+            chrome.storage.sync.get("HybridTranslatorConfig", (res) => {
                 if (chrome.runtime.lastError) {
                     reject(chrome.runtime.lastError);
                     return;
@@ -163,7 +163,7 @@ class HybridTranslator {
             requests.push(
                 this.REAL_TRANSLATORS[translator]
                     .translate(text, from, to)
-                    .then(result => [translator, result])
+                    .then((result) => [translator, result])
             );
         }
 
@@ -175,7 +175,7 @@ class HybridTranslator {
                 let selectedTranslator = this.CONFIG.selections[item];
                 translation[item] = results.get(selectedTranslator)[item];
             } catch (error) {
-                log(item + " " + this.CONFIG.selections[item]);
+                log(`${item} ${this.CONFIG.selections[item]}`);
                 log(error);
             }
         }

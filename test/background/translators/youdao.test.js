@@ -43,37 +43,22 @@ describe("youdao translator api", () => {
     //     done();
     // });
 
-    it("to auto detect & translate a piece of English text", done => {
-        TRANSLATOR.translate("hello")
-            .then(result => {
-                expect(result.mainMeaning).toEqual("你好");
-                expect(result.originalText).toEqual("hello");
-                done();
-            })
-            .catch(error => {
-                done(error);
-            });
+    it("to auto detect & translate a piece of English text", () => {
+        return TRANSLATOR.translate("hello").then((result) => {
+            expect(result.mainMeaning).toEqual("你好");
+            expect(result.originalText).toEqual("hello");
+        });
     });
-    it("to auto detect & translate a piece of Chinese text", done => {
-        TRANSLATOR.translate("你好")
-            .then(result => {
-                expect(result.mainMeaning).toEqual("hello");
-                expect(result.originalText).toEqual("你好");
-                done();
-            })
-            .catch(error => {
-                done(error);
-            });
+    it("to auto detect & translate a piece of Chinese text", () => {
+        return TRANSLATOR.translate("你好").then((result) => {
+            expect(result.mainMeaning).toEqual("hello");
+            expect(result.originalText).toEqual("你好");
+        });
     });
-    it("to auto detect & translate a piece of Japanese text", done => {
-        TRANSLATOR.translate("おはよう")
-            .then(result => {
-                expect(result.mainMeaning).toEqual("早上好");
-                expect(result.originalText).toEqual("おはよう");
-                done();
-            })
-            .catch(error => {
-                done(error);
-            });
+    it("to auto detect & translate a piece of Japanese text", () => {
+        return TRANSLATOR.translate("おはよう").then((result) => {
+            expect(result.mainMeaning).toEqual("早上好");
+            expect(result.originalText).toEqual("おはよう");
+        });
     });
 });

@@ -11,7 +11,7 @@ import Messager from "../common/scripts/messager.js";
  */
 window.addEventListener("load", () => {
     if (isChromePDFViewer()) {
-        var state = history.state;
+        let state = history.state;
         if (state === null) {
             // 第一次打开页面，直接跳转到PDF.js阅读器，并将ET_visited设为真
             state = { ET_visited: true };
@@ -34,13 +34,13 @@ window.addEventListener("load", () => {
  * 向background.js发送消息实现跳转。
  */
 function redirect() {
-    chrome.storage.sync.get("OtherSettings", function(result) {
-        var OtherSettings = result.OtherSettings;
+    chrome.storage.sync.get("OtherSettings", (result) => {
+        let OtherSettings = result.OtherSettings;
         if (OtherSettings && OtherSettings["UsePDFjs"]) {
             Messager.send("background", "redirect", {
                 url: chrome.runtime.getURL(
-                    "pdf/viewer.html?file=" + encodeURIComponent(window.location.href)
-                )
+                    `pdf/viewer.html?file=${encodeURIComponent(window.location.href)}`
+                ),
             });
         }
     });

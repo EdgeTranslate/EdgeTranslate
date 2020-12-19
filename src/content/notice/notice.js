@@ -11,7 +11,7 @@ window.onload = () => {
 
     document.getElementById("permissionPage").addEventListener("click", () => {
         chrome.tabs.create({
-            url: "chrome://extensions/?id=" + chrome.runtime.id
+            url: `chrome://extensions/?id=${chrome.runtime.id}`,
         });
     });
 
