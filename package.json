@@ -31,7 +31,8 @@
         "build:chrome": "gulp build --browser chrome",
         "build:firefox": "gulp build --browser firefox",
         "pack:chrome": "gulp pack --browser chrome",
-        "pack:firefox": "gulp pack --browser firefox"
+        "pack:firefox": "gulp pack --browser firefox",
+        "storybook": "start-storybook -p 6006"
     },
     "devDependencies": {
         "@babel/core": "^7.12.10",
@@ -39,10 +40,15 @@
         "@babel/preset-env": "^7.12.11",
         "@commitlint/cli": "^11.0.0",
         "@commitlint/config-conventional": "^11.0.0",
+        "@storybook/addon-actions": "^6.1.11",
+        "@storybook/addon-essentials": "^6.1.11",
+        "@storybook/addon-links": "^6.1.11",
+        "@storybook/preact": "^6.1.11",
         "axios": "^0.19.2",
         "axios-mock-adapter": "^1.19.0",
         "babel-eslint": "^10.1.0",
         "babel-loader": "^8.2.1",
+        "core-js": "^3.8.1",
         "crypto": "^1.0.1",
         "css": "^3.0.0",
         "cz-conventional-changelog": "^3.3.0",
