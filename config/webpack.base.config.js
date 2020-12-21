@@ -28,6 +28,10 @@ module.exports = {
                 use: "raw-loader",
             },
             {
+                test: [/\.svg$/],
+                use: "@svgr/webpack",
+            },
+            {
                 test: [/\.xhtml$/],
                 use: path.resolve(__dirname, "../tools/xhtml-loader.js"),
             },
@@ -37,6 +41,9 @@ module.exports = {
         alias: {
             "@": path.resolve(__dirname, "../src"),
             common: path.resolve(__dirname, "../src/common"),
+            react: "preact/compat",
+            "react-dom/test-utils": "preact/test-utils",
+            "react-dom": "preact/compat",
         },
     },
     node: {
