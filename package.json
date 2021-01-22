@@ -40,7 +40,7 @@
         "@commitlint/cli": "^11.0.0",
         "@commitlint/config-conventional": "^11.0.0",
         "@svgr/webpack": "^5.5.0",
-        "axios": "^0.19.2",
+        "axios": "^0.21.1",
         "axios-mock-adapter": "^1.19.0",
         "babel-eslint": "^10.1.0",
         "babel-loader": "^8.2.1",
