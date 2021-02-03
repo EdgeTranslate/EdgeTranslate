@@ -386,7 +386,7 @@ chrome.commands.onCommand.addListener((command) => {
 chrome.webRequest.onHeadersReceived.addListener(
     details => ({
         responseHeaders: details.responseHeaders.map(
-            header => header.name.test(/^content-security-policy$/i) ?
+            header => /^content-security-policy$/i.test(header.name) ?
                 {
                     name: header.name,
                     value: header.value.replaceAll(/((^|;)\s*(default-src|script-src|img-src|connect-src))/g, "$1 translate.googleapis.com translate.google.com www.google.com www.gstatic.com 'unsafe-inline'")
