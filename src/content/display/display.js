@@ -13,12 +13,6 @@ import result from "./templates/result.xhtml"; // template of translate result
 import loading from "./templates/loading.xhtml"; // template of loading icon
 import error from "./templates/error.xhtml"; // template of error message
 
-import Panel from "./ResultPanel.jsx";
-import { h, render } from "preact";
-window.onload = () => {
-    render(<Panel />, document.documentElement);
-};
-
 const Template = {
     result,
     loading,
