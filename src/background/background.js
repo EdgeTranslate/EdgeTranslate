@@ -384,20 +384,22 @@ chrome.commands.onCommand.addListener((command) => {
  * Modify the CSP header of translate requests.
  */
 chrome.webRequest.onHeadersReceived.addListener(
-    details => ({
-        responseHeaders: details.responseHeaders.map(
-            header => /^content-security-policy$/i.test(header.name) ?
-                {
-                    name: header.name,
-                    value: header.value.replaceAll(/((^|;)\s*(default-src|script-src|img-src|connect-src))/g, "$1 translate.googleapis.com translate.google.com www.google.com www.gstatic.com 'unsafe-inline'")
-                } :
-                header
-        )
+    (details) => ({
+        responseHeaders: details.responseHeaders.map((header) =>
+            /^content-security-policy$/i.test(header.name)
+                ? {
+                      name: header.name,
+                      value: header.value.replaceAll(
+                          /((^|;)\s*(default-src|script-src|img-src|connect-src))/g,
+                          "$1 translate.googleapis.com translate.google.com www.google.com www.gstatic.com 'unsafe-inline'"
+                      ),
+                  }
+                : header
+        ),
     }),
-    { urls: ['*://*/*'], types: ['main_frame', 'sub_frame'] },
-    ['blocking', 'responseHeaders']
+    { urls: ["*://*/*"], types: ["main_frame", "sub_frame"] },
+    ["blocking", "responseHeaders"]
 );
-
 
 /**
  * Modify the origin header of translate requests.
