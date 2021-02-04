@@ -8,8 +8,7 @@
         "storage",
         "cookies",
         "tabs",
-        "activeTab",
-        "*://fanyi.qq.com/*",
+        "<all_urls>",
         "webRequest",
         "webRequestBlocking"
     ],
