@@ -139,6 +139,8 @@ QQ 群: [側邊翻譯用戶交流群](https://jq.qq.com/?_wv=1027&k=gT5EYfFB)
 
 ## 貢獻者
 
+* [Yang, Bo](https://github.com/Atry)
+
 * [ArielAxionL](https://github.com/axionl) 
 
 * [ElectroLom](https://github.com/electrolom42)
@@ -146,6 +148,8 @@ QQ 群: [側邊翻譯用戶交流群](https://jq.qq.com/?_wv=1027&k=gT5EYfFB)
 * [knlyknly](https://github.com/knlyknly)
 
 * [ykyuki](https://github.com/ykyuki)
+
+* [Isildur46](https://github.com/Isildur46)
 
 ## 幫助本地化
 

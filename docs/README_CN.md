@@ -138,6 +138,8 @@ QQ 群: [侧边翻译用户交流群](https://jq.qq.com/?_wv=1027&k=gT5EYfFB)
 
 ## 贡献者
 
+* [Yang, Bo](https://github.com/Atry)
+
 * [ArielAxionL](https://github.com/axionl) 
 
 * [ElectroLom](https://github.com/electrolom42)
@@ -145,6 +147,8 @@ QQ 群: [侧边翻译用户交流群](https://jq.qq.com/?_wv=1027&k=gT5EYfFB)
 * [knlyknly](https://github.com/knlyknly)
 
 * [ykyuki](https://github.com/ykyuki)
+
+* [Isildur46](https://github.com/Isildur46)
 
 ## 帮助本地化
 
@@ -158,6 +162,6 @@ QQ 群: [侧边翻译用户交流群](https://jq.qq.com/?_wv=1027&k=gT5EYfFB)
 
 当然，这 __纯属自愿__，打赏并不能获得什么优待，不打赏也不会有任何影响，请量力而为！
 
-| 微信 | 支付宝 |
-| :-: | :-: |
+|                                                                    微信                                                                     |                                                                    支付宝                                                                     |
+| :-----------------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------------------: |
 | <img src="https://user-images.githubusercontent.com/25877145/80864662-b6617c00-8cb6-11ea-915a-582ca046118c.png" height=200 alt="微信支付"/> | <img src="https://user-images.githubusercontent.com/25877145/80864685-ced19680-8cb6-11ea-94e5-f5ca8e4389b9.jpg" height=200 alt="支付宝支付"/> |

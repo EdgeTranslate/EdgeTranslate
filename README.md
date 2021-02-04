@@ -145,6 +145,8 @@ Join the channel or group to get Edge Translate beta packages before releases.
 
 ## Contributors
 
+* [Yang, Bo](https://github.com/Atry)
+
 * [ArielAxionL](https://github.com/axionl) 
 
 * [ElectroLom](https://github.com/electrolom42)
@@ -152,6 +154,8 @@ Join the channel or group to get Edge Translate beta packages before releases.
 * [knlyknly](https://github.com/knlyknly)
 
 * [ykyuki](https://github.com/ykyuki)
+
+* [Isildur46](https://github.com/Isildur46)
 
 ## Help Localization
 
