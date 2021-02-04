@@ -386,7 +386,7 @@ chrome.commands.onCommand.addListener((command) => {
 chrome.webRequest.onHeadersReceived.addListener(
     (details) => ({
         responseHeaders: details.responseHeaders.map((header) =>
-            header.name.match(/^content-security-policy$/i)
+            /^content-security-policy$/i.test(header.name)
                 ? {
                       name: header.name,
                       value: header.value.replaceAll(
