@@ -34,9 +34,9 @@
         "pack:firefox": "gulp pack --browser firefox"
     },
     "devDependencies": {
-        "@babel/core": "^7.12.10",
-        "@babel/plugin-transform-react-jsx": "^7.12.11",
-        "@babel/preset-env": "^7.12.11",
+        "@babel/core": "^7.13.8",
+        "@babel/plugin-transform-react-jsx": "^7.12.17",
+        "@babel/preset-env": "^7.13.9",
         "@commitlint/cli": "^11.0.0",
         "@commitlint/config-conventional": "^11.0.0",
         "@svgr/webpack": "^5.5.0",
@@ -59,16 +59,16 @@
         "gulp-stylus": "^2.7.0",
         "gulp-terser": "^1.4.1",
         "gulp-zip": "^4.2.0",
-        "husky": "^4.3.5",
+        "husky": "^4.3.8",
         "jest": "^26.6.3",
         "jest-raw-loader": "^1.0.1",
-        "lodash": "^4.17.20",
+        "lodash": "^4.17.21",
         "merge-stream": "^2.0.0",
         "minimist": "^1.2.5",
         "prettier": "^2.2.1",
-        "querystring": "^0.2.0",
+        "querystring": "^0.2.1",
         "raw-loader": "^0.5.1",
-        "webpack": "^4.44.2",
+        "webpack": "^4.46.0",
         "webpack-merge": "^4.2.2",
         "webpack-stream": "^5.2.1"
     },
@@ -95,7 +95,7 @@
         }
     },
     "dependencies": {
-        "preact": "^10.5.7",
+        "preact": "^10.5.12",
         "preact-render-to-string": "^5.1.12"
     }
 }
