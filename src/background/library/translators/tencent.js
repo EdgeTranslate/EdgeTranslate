@@ -149,10 +149,25 @@ class TencentTranslator {
          * After token updated by Tencent home page, a message will be sent to background page
          * so that TencentTranslator will know that it can go on translating.
          */
-        chrome.tabs.executeScript(tabId, {
-            code: HOME_PAGE_LOADING_WATCHER,
-            runAt: "document_end",
-        });
+        await new Promise((resolve, reject) =>
+            chrome.tabs.executeScript(
+                tabId,
+                {
+                    code: HOME_PAGE_LOADING_WATCHER,
+                    runAt: "document_end",
+                },
+                () => {
+                    if (chrome.runtime.lastError) {
+                        reject(chrome.runtime.lastError.message);
+
+                        // Try removing the tab and check runtime.lastError incase it has been removed.
+                        chrome.tabs.remove(tabId, () => chrome.runtime.lastError);
+                    } else {
+                        resolve();
+                    }
+                }
+            )
+        );
 
         /**
          * Wait until token updated.
@@ -337,7 +352,8 @@ class TencentTranslator {
             // Retry.
             if (retryCount < this.MAX_RETRY) {
                 retryCount++;
-                return this.updateTokens().then(translateOnce);
+                await this.updateTokens();
+                return translateOnce();
             }
 
             throw {
@@ -397,7 +413,8 @@ class TencentTranslator {
                 // Update cookies on failure.
                 if (retryCount < this.MAX_RETRY) {
                     retryCount++;
-                    return this.requestHomePage().then(pronounceOnce);
+                    await this.requestHomePage();
+                    return pronounceOnce();
                 }
 
                 // TODO: handle NET_ERR and API_ERR differently.
