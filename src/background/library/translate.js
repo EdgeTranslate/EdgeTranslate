@@ -417,7 +417,7 @@ function executeYouDaoScript() {
  * 执行谷歌网页翻译相关脚本。
  */
 function executeGoogleScript() {
-    chrome.tabs.executeScript({ file: "/google/injection.js" }, (result) => {
+    chrome.tabs.executeScript({ file: "/google/init.js" }, (result) => {
         if (chrome.runtime.lastError) {
             log(`Chrome runtime error: ${chrome.runtime.lastError}`);
             log(`Detail: ${result}`);
