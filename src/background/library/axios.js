@@ -16,7 +16,7 @@ async function applyTrap(target, thisArg, args) {
         throw {
             errorType: "NET_ERR",
             errorCode: 0,
-            errorMsg: error.message
+            errorMsg: error.message,
         };
     }
 }
@@ -47,7 +47,7 @@ function getTrap(target, propName) {
             throw {
                 errorType: "NET_ERR",
                 errorCode: 0,
-                errorMsg: error.message
+                errorMsg: error.message,
             };
         }
     };
@@ -58,7 +58,7 @@ function getTrap(target, propName) {
  */
 const AxiosProxy = new Proxy(axios, {
     apply: applyTrap,
-    get: getTrap
+    get: getTrap,
 });
 
 export default AxiosProxy;

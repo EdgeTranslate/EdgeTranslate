@@ -3,25 +3,25 @@ import Messager from "common/scripts/messager";
 import { i18nHTML } from "common/scripts/common.js";
 
 // 获取下拉列表元素
-var sourceLanguage = document.getElementById("sl");
-var targetLanguage = document.getElementById("tl");
+let sourceLanguage = document.getElementById("sl");
+let targetLanguage = document.getElementById("tl");
 // 获取交换按钮
-var exchangeButton = document.getElementById("exchange");
+let exchangeButton = document.getElementById("exchange");
 // 获取互译模式开关
-var mutualTranslate = document.getElementById("mutual-translate");
+let mutualTranslate = document.getElementById("mutual-translate");
 
 /**
  * 初始化设置列表
  */
-window.onload = function() {
+window.onload = function () {
     i18nHTML();
 
-    var arrowUp = document.getElementById("arrow-up");
-    var arrowDown = document.getElementById("arrow-down");
+    let arrowUp = document.getElementById("arrow-up");
+    let arrowDown = document.getElementById("arrow-down");
     arrowDown.setAttribute("title", chrome.i18n.getMessage("Unfold"));
     arrowUp.setAttribute("title", chrome.i18n.getMessage("Fold"));
 
-    sourceLanguage.onchange = function() {
+    sourceLanguage.onchange = function () {
         // 如果源语言是自动判断语言类型(值是auto),则按钮显示灰色，避免用户点击,如果不是，则显示蓝色，可以点击
         judgeValue(exchangeButton, sourceLanguage);
         updateLanguageSetting(
@@ -31,7 +31,7 @@ window.onload = function() {
         showSourceTarget(); // update source language and target language in input placeholder
     };
 
-    targetLanguage.onchange = function() {
+    targetLanguage.onchange = function () {
         updateLanguageSetting(
             sourceLanguage.options[sourceLanguage.selectedIndex].value,
             targetLanguage.options[targetLanguage.selectedIndex].value
@@ -44,8 +44,8 @@ window.onload = function() {
 
     // 添加互译模式开关的事件监听
     mutualTranslate.onchange = () => {
-        chrome.storage.sync.get("OtherSettings", result => {
-            var OtherSettings = result.OtherSettings;
+        chrome.storage.sync.get("OtherSettings", (result) => {
+            let OtherSettings = result.OtherSettings;
             OtherSettings["MutualTranslate"] = mutualTranslate.checked;
             saveOption("OtherSettings", OtherSettings);
         });
@@ -53,9 +53,9 @@ window.onload = function() {
     };
 
     // 获得用户之前选择的语言翻译选项和互译设置
-    chrome.storage.sync.get(["languageSetting", "OtherSettings"], result => {
-        var OtherSettings = result.OtherSettings;
-        var languageSetting = result.languageSetting;
+    chrome.storage.sync.get(["languageSetting", "OtherSettings"], (result) => {
+        let OtherSettings = result.OtherSettings;
+        let languageSetting = result.languageSetting;
 
         // 根据源语言设定更新
         if (languageSetting.sl === "auto") {
@@ -99,7 +99,7 @@ window.onload = function() {
 /**
  * 监听展开语言设置的快捷键
  */
-chrome.commands.onCommand.addListener(function(command) {
+chrome.commands.onCommand.addListener((command) => {
     switch (command) {
         case "change_language_setting":
             settingSwitch();
@@ -125,7 +125,7 @@ function updateLanguageSetting(sourceLanguage, targetLanguage) {
     // Update translator config.
     Messager.send("background", "language_setting_update", {
         from: sourceLanguage,
-        to: targetLanguage
+        to: targetLanguage,
     });
 
     saveOption("languageSetting", { sl: sourceLanguage, tl: targetLanguage });
@@ -147,7 +147,7 @@ function updateLanguageSetting(sourceLanguage, targetLanguage) {
  * @param {*} value 设置项
  */
 function saveOption(key, value) {
-    var item = {};
+    let item = {};
     item[key] = value;
     chrome.storage.sync.set(item);
 }
@@ -176,7 +176,7 @@ function addEventListener() {
  * 负责在option页面中输入内容后进行翻译
  */
 function translateSubmit() {
-    var content = document.getElementById("translate_input").value;
+    let content = document.getElementById("translate_input").value;
     if (content.replace(/\s*/, "") !== "") {
         // 判断值是否为
         document.getElementById("hint_message").style.display = "none";
@@ -198,10 +198,10 @@ function translateSubmit() {
  * @param {*HTMLElement} exchangeButton 特定的一个element,是一个交换按钮图
  * @param {*HTMLElement} sourceLanguage 特定的一个element,源语言的选项
  */
-var judgeValue = function(exchangeButton, sourceLanguage) {
+function judgeValue(exchangeButton, sourceLanguage) {
     if (sourceLanguage.value === "auto") exchangeButton.style.color = "gray";
     else exchangeButton.style.color = "#4a8cf7";
-};
+}
 
 /**
  * 交换源语言和目标语言
@@ -220,9 +220,9 @@ function exchangeLanguage() {
  * 负责在option中隐藏或显示设置选项
  */
 function settingSwitch() {
-    var setting = document.getElementById("setting");
-    var arrowUp = document.getElementById("arrow-up");
-    var arrowDown = document.getElementById("arrow-down");
+    let setting = document.getElementById("setting");
+    let arrowUp = document.getElementById("arrow-up");
+    let arrowDown = document.getElementById("arrow-down");
     if (!setting.style.display || setting.style.display == "none") {
         setting.style.display = "block";
         arrowDown.style.display = "none";
@@ -241,7 +241,7 @@ function settingSwitch() {
  * 判断如果按下的是按钮是enter键，就调用翻译的函数
  */
 function translatePreSubmit(event) {
-    var int_keycode = event.charCode || event.keyCode;
+    let int_keycode = event.charCode || event.keyCode;
     if (int_keycode == "13") {
         translateSubmit();
     }
@@ -251,16 +251,16 @@ function translatePreSubmit(event) {
  * show source language and target language hint in placeholder of input element
  */
 function showSourceTarget() {
-    var inputElement = document.getElementById("translate_input");
-    var sourceLanguageString = sourceLanguage.options[sourceLanguage.selectedIndex].text;
-    var targetLanguageString = targetLanguage.options[targetLanguage.selectedIndex].text;
+    let inputElement = document.getElementById("translate_input");
+    let sourceLanguageString = sourceLanguage.options[sourceLanguage.selectedIndex].text;
+    let targetLanguageString = targetLanguage.options[targetLanguage.selectedIndex].text;
     if (
         sourceLanguage.options[sourceLanguage.selectedIndex].value === "auto" ||
         !mutualTranslate.checked
     ) {
-        inputElement.placeholder = sourceLanguageString + " ==> " + targetLanguageString;
+        inputElement.placeholder = `${sourceLanguageString} ==> ${targetLanguageString}`;
     } else {
-        inputElement.placeholder = sourceLanguageString + " <=> " + targetLanguageString;
+        inputElement.placeholder = `${sourceLanguageString} <=> ${targetLanguageString}`;
     }
 }
 

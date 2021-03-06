@@ -12,26 +12,26 @@ describe("baidu translator api", () => {
     });
 
     it("to detect language of English text", () => {
-        return TRANSLATOR.detect("hello").then(result => {
+        return TRANSLATOR.detect("hello").then((result) => {
             expect(result).toEqual("en");
         });
     });
 
     it("to detect language of Chinese text", () => {
-        return TRANSLATOR.detect("你好").then(result => {
+        return TRANSLATOR.detect("你好").then((result) => {
             expect(result).toEqual("zh-CN");
         });
     });
 
     it("to get token and gtk", () => {
-        return TRANSLATOR.getTokenGtk().then(translator => {
+        return TRANSLATOR.getTokenGtk().then((translator) => {
             expect(translator).toBeUndefined();
             expect(TRANSLATOR.token).not.toEqual("");
             expect(TRANSLATOR.gtk).not.toEqual("");
         });
     });
 
-    it("to parse translation result", done => {
+    it("to parse translation result", () => {
         let result = fs.readFileSync("test/background/translators/baiduTransResult.json", "utf-8");
         result = JSON.parse(result);
         let parseResult = TRANSLATOR.parseResult(result);
@@ -42,11 +42,10 @@ describe("baidu translator api", () => {
         expect(parseResult.detailedMeanings[0].pos).toBeDefined();
         expect(parseResult.definitions[0].pos).toBeDefined();
         expect(parseResult.examples.length).toBeGreaterThan(0);
-        done();
     });
 
-    it("to translate a word", done => {
-        TRANSLATOR.getTokenGtk()
+    it("to translate a word", () => {
+        return TRANSLATOR.getTokenGtk()
             .then(() => {
                 // translation request using axios' http adapter always return errors
                 // I have to mock requests of axios to avoid crossing origin and the errors
@@ -54,8 +53,8 @@ describe("baidu translator api", () => {
                 let query = "hello",
                     from = "en",
                     to = TRANSLATOR.LAN_TO_CODE.get("zh-CN"),
-                    url = "/v2transapi?" + "from=" + from + "&to=" + to;
-                mock.onPost(url).reply(config => {
+                    url = `/v2transapi?from=${from}&to=${to}`;
+                mock.onPost(url).reply((config) => {
                     // to check post data
                     let data = new URLSearchParams(config.data);
                     expect(data.get("from")).toEqual(from);
@@ -71,7 +70,7 @@ describe("baidu translator api", () => {
                 });
                 return TRANSLATOR.translate(query, "en", "zh-CN");
             })
-            .then(parseResult => {
+            .then((parseResult) => {
                 expect(parseResult.originalText).toEqual("hello");
                 expect(parseResult.mainMeaning).toEqual("你好");
                 expect(parseResult.tPronunciation).toEqual("nǐ hǎo");
@@ -79,8 +78,6 @@ describe("baidu translator api", () => {
                 expect(parseResult.detailedMeanings[0].pos).toBeDefined();
                 expect(parseResult.definitions[0].pos).toBeDefined();
                 expect(parseResult.examples.length).toBeGreaterThan(0);
-                done();
-            })
-            .catch(error => done(error));
+            });
     });
 });

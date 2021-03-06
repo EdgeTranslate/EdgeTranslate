@@ -7,8 +7,8 @@ export { getDomain, log };
  */
 function getDomain(url) {
     if (url) {
-        var URL_PATTERN = /.+:\/+([\w.-]+).*/;
-        var groups = url.match(URL_PATTERN);
+        let URL_PATTERN = /.+:\/+([\w.-]+).*/;
+        let groups = url.match(URL_PATTERN);
         if (groups) {
             return groups[1];
         }
@@ -30,7 +30,7 @@ function log(message) {
  * set the content text of HTML tags, which have "i18n" class name, with i18n value
  */
 export function i18nHTML() {
-    var i18nElements = document.getElementsByClassName("i18n");
+    let i18nElements = document.getElementsByClassName("i18n");
     for (let i = 0; i < i18nElements.length; i++) {
         // Default "beforeEnd".
         let pos = "beforeEnd";

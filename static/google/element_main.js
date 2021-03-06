@@ -3,6 +3,12 @@
 
     Copyright The Closure Library Authors.
     SPDX-License-Identifier: Apache-2.0
+
+    Modifications:
+        2021-3-3 Edge Translate: resolved some error reports
+            1. Replace "javascript:void(0)" with "#" globally.
+            2. Replace "src="javascript:\'\'"" with "" globally.
+            3. Insert line 12954.
    */
     var aa = '" style="background-image:url(',
         ba = "-disabled",
@@ -80,7 +86,7 @@
         sb = "horizontal",
         tb = "https://translate.google.com",
         vb = "https://www.google.com/images/cleardot.gif",
-        wb = "javascript:void(0)",
+        wb = "#",
         xb = "keydown",
         yb = "keypress",
         zb = "load",
@@ -12945,6 +12951,7 @@
                 if (
                     a[b].target &&
                     a[b].target.className &&
+                    a[b].target.className.indexOf &&
                     (0 <= a[b].target.className.indexOf(ac) ||
                         0 == a[b].target.className.indexOf("goog-"))
                 )
@@ -13862,7 +13869,7 @@
         a.innerHTML = lk(
             '<iframe id="' +
                 X(b) +
-                '" frameBorder=0 src="javascript:\'\'" class="goog-te-ftab-frame skiptranslate" style="visibility:visible"></iframe>'
+                '" frameBorder=0 class="goog-te-ftab-frame skiptranslate" style="visibility:visible"></iframe>'
         );
         this.S(a);
     };
@@ -13910,7 +13917,7 @@
                         X(a) +
                         '"><a id="' +
                         X(c) +
-                        '" href="javascript:void(0)" class="goog-te-ftab-link"><img src="' +
+                        '" href="#" class="goog-te-ftab-link"><img src="' +
                         X(xk(vb)) +
                         aa +
                         X(xk(Lq)) +
@@ -13975,7 +13982,7 @@
         a.innerHTML = lk(
             '<iframe id="' +
                 X(b) +
-                '" class="goog-te-banner-frame skiptranslate" frameBorder=0 src="javascript:\'\'" style="visibility:visible"></iframe>'
+                '" class="goog-te-banner-frame skiptranslate" frameBorder=0 style="visibility:visible"></iframe>'
         );
         this.S(a);
     };
@@ -14074,7 +14081,7 @@
                         X(n) +
                         '" class="goog-te-banner-content"></span></td></tr></table></td><td><td class="goog-te-banner-margin"></td></td><td width=1 id="options"></td><td width=1><a id="' +
                         X(r) +
-                        '" class="goog-close-link" href="javascript:void(0)" title="' +
+                        '" class="goog-close-link" href="#" title="' +
                         X(Z.If) +
                         '"><img src="' +
                         X(xk(vb)) +

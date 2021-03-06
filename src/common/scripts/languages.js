@@ -212,7 +212,7 @@ const LANGUAGES = {
     yo: "Yoruba",
     yua: "YukatanMayan",
     zaz: "Zaza",
-    zu: "Zulu"
+    zu: "Zulu",
 };
 
 /**
@@ -449,7 +449,7 @@ const BROWSER_LANGUAGES_MAP = {
     "zh-HK": "zh-TW",
     "zh-SG": "zh-CN",
     "zh-TW": "zh-TW",
-    "zu-ZA": "zu"
+    "zu-ZA": "zu",
 };
 
 /**

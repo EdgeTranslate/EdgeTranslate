@@ -1,23 +1,22 @@
 <!DOCTYPE html>
 <html>
+    <head>
+        <meta charset="utf-8" />
+        <title class="i18n" data-i18n-name="Settings"></title>
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <link type="text/css" rel="stylesheet" href="./options.css" />
+    </head>
 
-<head>
-    <meta charset="utf-8">
-    <title class="i18n" data-i18n-name="Settings"></title>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <link type="text/css" rel="stylesheet" href="./options.css">
-</head>
-
-<body>        
-    <div id="option">
-        <header>
-            <img src="../icon/icon128.png"/>
-            <span class="space"></span>
-            <span class="space"></span>
-            Edge Translate
-        </header>
-        <div class="content">
-            <!-- <label for="content-settings" class="setting-title i18n" data-i18n-name="ContentSettings"></label>
+    <body>
+        <div id="option">
+            <header>
+                <img src="../icon/icon128.png" />
+                <span class="space"></span>
+                <span class="space"></span>
+                Edge Translate
+            </header>
+            <div class="content">
+                <!-- <label for="content-settings" class="setting-title i18n" data-i18n-name="ContentSettings"></label>
             <div id="content-settings">
                 <div class="row">
                     <div class="column">
@@ -64,33 +63,69 @@
                 </div>
             </div> -->
 
-            <label class="setting-title i18n" data-i18n-name="HybridTranslatorConfig"></label>
-            <div class="row">
+                <label class="setting-title i18n" data-i18n-name="HybridTranslatorConfig"></label>
+                <div class="row">
                     <div class="column">
-                        <label for="main-translator" class="checked-label i18n" data-i18n-name="MainTranslator" data-insert-pos="afterBegin">
-                            <select id="main-translator" class="translator-config" data-affected="originalText mainMeaning tPronunciation sPronunciation"></select>
+                        <label
+                            for="main-translator"
+                            class="checked-label i18n"
+                            data-i18n-name="MainTranslator"
+                            data-insert-pos="afterBegin"
+                        >
+                            <select
+                                id="main-translator"
+                                class="translator-config"
+                                data-affected="originalText mainMeaning tPronunciation sPronunciation"
+                            ></select>
                         </label>
                     </div>
                     <div class="column">
-                        <label for="detailed-translator" class="checked-label i18n" data-i18n-name="DetailedTranslator" data-insert-pos="afterBegin">
-                            <select id="detailed-translator" class="translator-config" data-affected="detailedMeanings"></select>
+                        <label
+                            for="detailed-translator"
+                            class="checked-label i18n"
+                            data-i18n-name="DetailedTranslator"
+                            data-insert-pos="afterBegin"
+                        >
+                            <select
+                                id="detailed-translator"
+                                class="translator-config"
+                                data-affected="detailedMeanings"
+                            ></select>
                         </label>
                     </div>
-            </div>
-            <div class="row">
+                </div>
+                <div class="row">
                     <div class="column">
-                        <label for="definition-translator" class="checked-label i18n" data-i18n-name="DefinitionTranslator" data-insert-pos="afterBegin">
-                            <select id="definition-translator" class="translator-config" data-affected="definitions"></select>
+                        <label
+                            for="definition-translator"
+                            class="checked-label i18n"
+                            data-i18n-name="DefinitionTranslator"
+                            data-insert-pos="afterBegin"
+                        >
+                            <select
+                                id="definition-translator"
+                                class="translator-config"
+                                data-affected="definitions"
+                            ></select>
                         </label>
                     </div>
                     <div class="column">
-                        <label for="example-translator" class="checked-label i18n" data-i18n-name="ExampleTranslator" data-insert-pos="afterBegin">
-                            <select id="example-translator" class="translator-config" data-affected="examples"></select>
+                        <label
+                            for="example-translator"
+                            class="checked-label i18n"
+                            data-i18n-name="ExampleTranslator"
+                            data-insert-pos="afterBegin"
+                        >
+                            <select
+                                id="example-translator"
+                                class="translator-config"
+                                data-affected="examples"
+                            ></select>
                         </label>
                     </div>
-            </div>
+                </div>
 
-            <!-- <label class="setting-title i18n" data-i18n-name="DefaultPageTranslator"></label>            
+                <!-- <label class="setting-title i18n" data-i18n-name="DefaultPageTranslator"></label>            
             <div class="row">
                 <div class="column">
                     <label for="youdao-page-translator" class="checked-label i18n" data-i18n-name="YouDaoPageTranslate">                            
@@ -104,60 +139,130 @@
                 </div>                    
             </div>             -->
 
-            <label for="layout-settings" class="setting-title i18n" data-i18n-name="LayoutSettings"></label>
-            <div id="layout-settings">                
-                <div class="row">
-                    <div class="column">
-                        <input type="checkbox" value="resize" setting-type="switch" setting-path="LayoutSettings Resize" class="switch" id="Resize">
-                        <span class="space"></span>
-                        <label for="Resize" class="checked-label i18n" data-i18n-name="ResizeSetting"></label>                    
-                    </div>
-                    <div class="column">
-                        <input type="checkbox" value="rtl" setting-type="switch" setting-path="LayoutSettings RTL" class="switch" id="RTL">
-                        <span class="space"></span>
-                        <label for="RTL" class="checked-label i18n" data-i18n-name="RTLSetting"></label>                    
+                <label
+                    for="layout-settings"
+                    class="setting-title i18n"
+                    data-i18n-name="LayoutSettings"
+                ></label>
+                <div id="layout-settings">
+                    <div class="row">
+                        <div class="column">
+                            <input
+                                type="checkbox"
+                                value="resize"
+                                setting-type="switch"
+                                setting-path="LayoutSettings Resize"
+                                class="switch"
+                                id="Resize"
+                            />
+                            <span class="space"></span>
+                            <label
+                                for="Resize"
+                                class="checked-label i18n"
+                                data-i18n-name="ResizeSetting"
+                            ></label>
+                        </div>
+                        <div class="column">
+                            <input
+                                type="checkbox"
+                                value="rtl"
+                                setting-type="switch"
+                                setting-path="LayoutSettings RTL"
+                                class="switch"
+                                id="RTL"
+                            />
+                            <span class="space"></span>
+                            <label
+                                for="RTL"
+                                class="checked-label i18n"
+                                data-i18n-name="RTLSetting"
+                            ></label>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <label for="other-settings" class="setting-title i18n" data-i18n-name="OtherSettings"></label>
-            <div id="other-settings">
-                <div class="row">
-                    <div class="column">
-                        <input type="checkbox" setting-type="switch" setting-path="OtherSettings SelectTranslate" class="switch" id="select-translate">
-                        <span class="space"></span>
-                        <label for="select-translate" class="checked-label i18n" data-i18n-name="SelectTranslate"></label>
+                <label
+                    for="other-settings"
+                    class="setting-title i18n"
+                    data-i18n-name="OtherSettings"
+                ></label>
+                <div id="other-settings">
+                    <div class="row">
+                        <div class="column">
+                            <input
+                                type="checkbox"
+                                setting-type="switch"
+                                setting-path="OtherSettings SelectTranslate"
+                                class="switch"
+                                id="select-translate"
+                            />
+                            <span class="space"></span>
+                            <label
+                                for="select-translate"
+                                class="checked-label i18n"
+                                data-i18n-name="SelectTranslate"
+                            ></label>
+                        </div>
                     </div>
-                </div>           
-                <!-- <div class="row">
+                    <!-- <div class="row">
                     <div class="column">
                         <input type="checkbox" setting-type="switch" setting-path="OtherSettings UsePDFjs" class="switch" id="use-pdf-js">
                         <span class="space"></span>
                         <label for="use-pdf-js" class="checked-label i18n" data-i18n-name="UsePDFjs"></label>                    
                     </div>
                 </div> -->
-                <div class="row">
-                    <div class="column">
-                        <input type="checkbox" setting-type="switch" setting-path="OtherSettings TranslateAfterSelect" class="switch" id="translate-after-select">
-                        <span class="space"></span>
-                        <label for="translate-after-select" class="checked-label i18n" data-i18n-name="TranslateAfterSelect"></label>                                        
+                    <div class="row">
+                        <div class="column">
+                            <input
+                                type="checkbox"
+                                setting-type="switch"
+                                setting-path="OtherSettings TranslateAfterSelect"
+                                class="switch"
+                                id="translate-after-select"
+                            />
+                            <span class="space"></span>
+                            <label
+                                for="translate-after-select"
+                                class="checked-label i18n"
+                                data-i18n-name="TranslateAfterSelect"
+                            ></label>
+                        </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="column">
-                        <input type="checkbox" setting-type="switch" setting-path="OtherSettings TranslateAfterDblClick" class="switch" id="translate-after-dbl-click">
-                        <span class="space"></span>
-                        <label for="translate-after-dbl-click" class="checked-label i18n" data-i18n-name="TranslateAfterDblClick"></label>
-                    </div>                
-                </div>                        
-                <div class="row">
-                    <div class="column">
-                        <input type="checkbox" setting-type="switch" setting-path="OtherSettings CancelTextSelection" class="switch" id="cancel-text-selection">
-                        <span class="space"></span>
-                        <label for="cancel-text-selection" class="checked-label i18n" data-i18n-name="CancelTextSelection"></label>
-                    </div>                
-                </div>   
-                <!-- <div class="row">
+                    <div class="row">
+                        <div class="column">
+                            <input
+                                type="checkbox"
+                                setting-type="switch"
+                                setting-path="OtherSettings TranslateAfterDblClick"
+                                class="switch"
+                                id="translate-after-dbl-click"
+                            />
+                            <span class="space"></span>
+                            <label
+                                for="translate-after-dbl-click"
+                                class="checked-label i18n"
+                                data-i18n-name="TranslateAfterDblClick"
+                            ></label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="column">
+                            <input
+                                type="checkbox"
+                                setting-type="switch"
+                                setting-path="OtherSettings CancelTextSelection"
+                                class="switch"
+                                id="cancel-text-selection"
+                            />
+                            <span class="space"></span>
+                            <label
+                                for="cancel-text-selection"
+                                class="checked-label i18n"
+                                data-i18n-name="CancelTextSelection"
+                            ></label>
+                        </div>
+                    </div>
+                    <!-- <div class="row">
                     <div class="column">
                         <input type="checkbox" setting-type="switch" setting-path="OtherSettings UseGoogleAnalytics" class="switch" id="google-analytics"/>
                         <span class="space"></span>
@@ -166,22 +271,19 @@
                         (<a id="PrivacyPolicyLink" target="blank" class="i18n" data-i18n-name="PrivacyPolicy"></a>)
                     </div>
                 </div> -->
+                </div>
             </div>
+            <footer>
+                ©2018-2021
+                <a href="https://github.com/EdgeTranslate/EdgeTranslate" target="blank">
+                    Edge Translate
+                </a>
+                <span class="space"></span>
+                Powered by
+                <a href="https://translate.google.cn" target="blank"> Google Translate </a>
+            </footer>
         </div>
-        <footer>                    
-            ©2018-2020
-            <a href="https://github.com/EdgeTranslate/EdgeTranslate" target="blank">
-                Edge Translate
-            </a>
-            <span class="space"></span>            
-            Powered by
-            <a href="https://translate.google.cn" target="blank">
-                Google Translate
-            </a>
-        </footer>
-    </div>    
-</body>
+    </body>
 
-<script src="./options.js"></script>
-
+    <script src="./options.js"></script>
 </html>

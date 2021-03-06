@@ -1,9 +1,9 @@
 import Moveable from "content/display/library/moveable/moveable.js";
 
 describe("test moveable api in content module", () => {
-    it("to test on function(set event handlers)", done => {
+    it("to test on function(set event handlers)", () => {
         let moveable = new Moveable(document.body, {});
-        let testFunction = function() {
+        let testFunction = () => {
             let a = 1;
             let b = 2;
             return a + b;
@@ -19,11 +19,9 @@ describe("test moveable api in content module", () => {
 
         moveable.on("resize", testFunction);
         expect(moveable.handlers.resize).toEqual(testFunction);
-
-        done();
     });
 
-    it("to test moveable request api", done => {
+    it("to test moveable request api", () => {
         let moveable = new Moveable(document.body, {});
         // draggable is false
         expect(moveable.request("drag", {})).toBeFalsy();
@@ -31,19 +29,15 @@ describe("test moveable api in content module", () => {
         expect(moveable.request("resize", {})).toBeFalsy();
         // options is undefined
         expect(moveable.request("resize")).toBeFalsy();
-
-        done();
     });
 
-    it("to set the the direction option", done => {
+    it("to set the the direction option", () => {
         let moveable = new Moveable(document.body, {});
         expect(moveable.setDirections({})).toBeFalsy();
-        done();
     });
 
-    it("to set the the threshold value option", done => {
+    it("to set the the threshold value option", () => {
         let moveable = new Moveable(document.body, {});
         expect(moveable.setThreshold({})).toBeFalsy();
-        done();
     });
 });

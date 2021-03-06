@@ -13,7 +13,7 @@ class TranslatorManager {
          */
         this.TRANSLATORS = {
             HybridTranslate: HYBRID_TRANSLATOR,
-            ...HYBRID_TRANSLATOR.REAL_TRANSLATORS
+            ...HYBRID_TRANSLATOR.REAL_TRANSLATORS,
         };
 
         /**
@@ -72,7 +72,7 @@ class TranslatorManager {
 
             chrome.storage.sync.get(
                 ["DefaultTranslator", "languageSetting", "OtherSettings"],
-                res => {
+                (res) => {
                     if (chrome.runtime.lastError) {
                         reject(chrome.runtime.lastError);
                         return;
@@ -111,14 +111,14 @@ class TranslatorManager {
                 const tab = (await promiseTabs.query({ url: noticePageUrl }))[0];
                 // jump to the existed page
                 chrome.tabs.highlight({
-                    tabs: tab.index
+                    tabs: tab.index,
                 });
                 tabId = tab.id;
             } catch (error) {
                 // create a new notice page
                 const tab = await promiseTabs.create({
                     url: noticePageUrl,
-                    active: true
+                    active: true,
                 });
                 // wait for browser to open a new page
                 await delayPromise(200);
@@ -176,10 +176,10 @@ class TranslatorManager {
 
         // Trigger translating start event.
         EVENT_MANAGER.triggerEvent(EVENT_MANAGER.EVENTS.TRANSLATE_START, {
-            text: text,
-            position: position,
-            timestamp: timestamp,
-            tabId: currentTabId
+            text,
+            position,
+            timestamp,
+            tabId: currentTabId,
         });
 
         let sl = this.LANGUAGE_SETTING.sl,
@@ -211,14 +211,14 @@ class TranslatorManager {
             EVENT_MANAGER.triggerEvent(EVENT_MANAGER.EVENTS.TRANSLATE_FINISHED, {
                 content: result,
                 tabId: currentTabId,
-                timestamp: timestamp
+                timestamp,
             });
         } catch (error) {
             // Trigger translating error event.
             EVENT_MANAGER.triggerEvent(EVENT_MANAGER.EVENTS.TRANSLATE_ERROR, {
-                error: error,
-                timestamp: timestamp,
-                tabId: currentTabId
+                error,
+                timestamp,
+                tabId: currentTabId,
             });
         }
     }
@@ -245,11 +245,11 @@ class TranslatorManager {
 
         // Trigger pronouncing start event.
         EVENT_MANAGER.triggerEvent(EVENT_MANAGER.EVENTS.PRONOUNCE_START, {
-            pronouncing: pronouncing,
-            text: text,
-            language: language,
-            timestamp: timestamp,
-            tabId: currentTabId
+            pronouncing,
+            text,
+            language,
+            timestamp,
+            tabId: currentTabId,
         });
 
         try {
@@ -261,19 +261,19 @@ class TranslatorManager {
 
             // Trigger pronouncing finished event.
             EVENT_MANAGER.triggerEvent(EVENT_MANAGER.EVENTS.PRONOUNCE_FINISHED, {
-                pronouncing: pronouncing,
-                text: text,
+                pronouncing,
+                text,
                 language: lang,
-                timestamp: timestamp,
-                tabId: currentTabId
+                timestamp,
+                tabId: currentTabId,
             });
         } catch (error) {
             // Trigger pronouncing error event.
             EVENT_MANAGER.triggerEvent(EVENT_MANAGER.EVENTS.PRONOUNCE_ERROR, {
-                pronouncing: pronouncing,
-                error: error,
-                timestamp: timestamp,
-                tabId: currentTabId
+                pronouncing,
+                error,
+                timestamp,
+                tabId: currentTabId,
             });
             return Promise.resolve();
         }
@@ -327,13 +327,13 @@ class TranslatorManager {
         // Send message to options page to update options.
         Messager.send("options", "hybrid_translator_config_updated", {
             config: newConfig,
-            availableTranslators: availableTranslators.slice(1)
+            availableTranslators: availableTranslators.slice(1),
         }).catch(() => {});
 
         // Send message to result frame to update options.
         sendMessageToCurrentTab("update_translator_options", {
-            selectedTranslator: selectedTranslator,
-            availableTranslators: availableTranslators
+            selectedTranslator,
+            availableTranslators,
         }).catch(() => {});
     }
 
@@ -345,7 +345,7 @@ class TranslatorManager {
      * @returns {Promise<void>} update finished promise.
      */
     updateDefaultTranslator(translator) {
-        return new Promise(resolve => {
+        return new Promise((resolve) => {
             chrome.storage.sync.set({ DefaultTranslator: translator }, () => {
                 resolve();
             });
@@ -430,8 +430,8 @@ const TRANSLATOR_MANAGER = new TranslatorManager();
 /**
  * Tell display that translating started.
  */
-EVENT_MANAGER.addEventListener(EVENT_MANAGER.EVENTS.TRANSLATE_START, detail => {
-    Messager.sendToTab(detail.tabId, "content", "start_translating", detail).catch(error =>
+EVENT_MANAGER.addEventListener(EVENT_MANAGER.EVENTS.TRANSLATE_START, (detail) => {
+    Messager.sendToTab(detail.tabId, "content", "start_translating", detail).catch((error) =>
         log(error)
     );
 });
@@ -439,18 +439,18 @@ EVENT_MANAGER.addEventListener(EVENT_MANAGER.EVENTS.TRANSLATE_START, detail => {
 /**
  * Send translating result to display.
  */
-EVENT_MANAGER.addEventListener(EVENT_MANAGER.EVENTS.TRANSLATE_FINISHED, detail => {
+EVENT_MANAGER.addEventListener(EVENT_MANAGER.EVENTS.TRANSLATE_FINISHED, (detail) => {
     Messager.sendToTab(detail.tabId, "content", "translating_finished", {
         timestamp: detail.timestamp,
-        ...detail.content
-    }).catch(error => log(error));
+        ...detail.content,
+    }).catch((error) => log(error));
 });
 
 /**
  * Tell display translating error.
  */
-EVENT_MANAGER.addEventListener(EVENT_MANAGER.EVENTS.TRANSLATE_ERROR, detail => {
-    Messager.sendToTab(detail.tabId, "content", "translating_error", detail).catch(error =>
+EVENT_MANAGER.addEventListener(EVENT_MANAGER.EVENTS.TRANSLATE_ERROR, (detail) => {
+    Messager.sendToTab(detail.tabId, "content", "translating_error", detail).catch((error) =>
         log(error)
     );
 });
@@ -458,8 +458,8 @@ EVENT_MANAGER.addEventListener(EVENT_MANAGER.EVENTS.TRANSLATE_ERROR, detail => {
 /**
  * Tell display pronouncing start.
  */
-EVENT_MANAGER.addEventListener(EVENT_MANAGER.EVENTS.PRONOUNCE_START, detail => {
-    Messager.sendToTab(detail.tabId, "content", "start_pronouncing", detail).catch(error =>
+EVENT_MANAGER.addEventListener(EVENT_MANAGER.EVENTS.PRONOUNCE_START, (detail) => {
+    Messager.sendToTab(detail.tabId, "content", "start_pronouncing", detail).catch((error) =>
         log(error)
     );
 });
@@ -467,8 +467,8 @@ EVENT_MANAGER.addEventListener(EVENT_MANAGER.EVENTS.PRONOUNCE_START, detail => {
 /**
  * Tell display pronouncing finished.
  */
-EVENT_MANAGER.addEventListener(EVENT_MANAGER.EVENTS.PRONOUNCE_FINISHED, detail => {
-    Messager.sendToTab(detail.tabId, "content", "pronouncing_finished", detail).catch(error =>
+EVENT_MANAGER.addEventListener(EVENT_MANAGER.EVENTS.PRONOUNCE_FINISHED, (detail) => {
+    Messager.sendToTab(detail.tabId, "content", "pronouncing_finished", detail).catch((error) =>
         log(error)
     );
 });
@@ -476,14 +476,14 @@ EVENT_MANAGER.addEventListener(EVENT_MANAGER.EVENTS.PRONOUNCE_FINISHED, detail =
 /**
  * Tell display pronouncing error.
  */
-EVENT_MANAGER.addEventListener(EVENT_MANAGER.EVENTS.PRONOUNCE_ERROR, detail => {
-    Messager.sendToTab(detail.tabId, "content", "pronouncing_error", detail).catch(error =>
+EVENT_MANAGER.addEventListener(EVENT_MANAGER.EVENTS.PRONOUNCE_ERROR, (detail) => {
+    Messager.sendToTab(detail.tabId, "content", "pronouncing_error", detail).catch((error) =>
         log(error)
     );
 });
 
 export {
-    TRANSLATOR_MANAGER
+    TRANSLATOR_MANAGER,
     // translatePage,
     // youdaoPageTranslate,
     // executeYouDaoScript,

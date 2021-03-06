@@ -1,7 +1,7 @@
 import format from "./library/render.js";
 import moveable from "./library/moveable/moveable.js";
 import Notifier from "./library/notifier/notifier.js";
-import { isChromePDFViewer } from "../common.js";
+import { isChromePDFViewer, detectSelect } from "../common.js";
 import Messager from "common/scripts/messager.js";
 import { delayPromise } from "common/scripts/promise.js";
 
@@ -14,9 +14,9 @@ import loading from "./templates/loading.xhtml"; // template of loading icon
 import error from "./templates/error.xhtml"; // template of error message
 
 const Template = {
-    result: result,
-    loading: loading,
-    error: error
+    result,
+    loading,
+    error,
 };
 
 /**
@@ -24,34 +24,34 @@ const Template = {
  */
 
 // the container of translation panel. the root element of panel
-var panelContainer;
+let panelContainer;
 
 // store a shadow dom which is used to attach panel elements
-var shadowDom;
+let shadowDom;
 
 // the first child element of shadow dom. It contains all of the panel content elements
-var resultPanel;
+let resultPanel;
 
 // store the panel body element
-var bodyPanel;
+let bodyPanel;
 
 // store the moveable object return by moveable.js
-var moveablePanel;
+let moveablePanel;
 // store the element for highlight part
-var highlightPart;
-var highlightPartShown = false;
+let highlightPart;
+let highlightPartShown = false;
 
 // store the display type(floating or fixed)
-var displaySetting = {
+let displaySetting = {
     type: "fixed",
     fixedData: {
         width: 0.2,
-        position: "right"
+        position: "right",
     },
     floatingData: {
         width: 0.15,
-        height: 0.6
-    }
+        height: 0.6,
+    },
 };
 
 // Store the translation result and attach it to window
@@ -61,15 +61,15 @@ window.translateResult = {};
 window.isDisplayingResult = false;
 
 // TTS speeds
-var sourceTTSSpeed, targetTTSSpeed;
+let sourceTTSSpeed, targetTTSSpeed;
 // store the width of scroll bar
 const scrollbarWidth = getScrollbarWidth();
 // the duration time of result panel's transition. unit: ms
 const transitionDuration = 500;
 // flag whether the user set to resize document body
-var resizeFlag = false;
+let resizeFlag = false;
 // store original css text on document.body
-var documentBodyCSS;
+let documentBodyCSS;
 
 // Send notifications to users.
 const notifier = new Notifier("center");
@@ -106,11 +106,11 @@ const notifier = new Notifier("center");
     /* initiate setting value */
     getDisplaySetting();
     // Set up translator options.
-    chrome.storage.sync.get(["languageSetting", "DefaultTranslator"], async result => {
+    chrome.storage.sync.get(["languageSetting", "DefaultTranslator"], async (result) => {
         let languageSetting = result.languageSetting;
         let availableTranslators = await Messager.send("background", "get_available_translators", {
             from: languageSetting.sl,
-            to: languageSetting.tl
+            to: languageSetting.tl,
         });
         setUpTranslateConfig(result.DefaultTranslator, availableTranslators);
     });
@@ -135,7 +135,7 @@ const notifier = new Notifier("center");
         // thresholdPosition: "out",
         thresholdPosition: 0.7,
         minWidth: 100,
-        minHeight: 150
+        minHeight: 150,
     });
 
     let startTranslate = [0, 0];
@@ -252,8 +252,8 @@ async function showPanel(content, template) {
 
     // Write contents into iframe.
     bodyPanel.innerHTML = Template[template].apply({
-        format: format,
-        ...content
+        format,
+        ...content,
     });
     addBodyEventListener(template);
     // if panel hasn't been displayed, locate the panel and show it
@@ -287,7 +287,7 @@ async function showPanel(content, template) {
                 position = [
                     (1 - displaySetting.floatingData.width) * window.innerWidth -
                         (hasScrollbar() ? scrollbarWidth : 0),
-                    0
+                    0,
                 ];
             showFloatingPanel();
             moveablePanel.request("draggable", { x: position[0], y: position[1] });
@@ -303,7 +303,7 @@ async function showPanel(content, template) {
  * @param {Object} message 后台发送的消息
  * @param {Object} sender 返送消息者的具体信息 如果sender是content module，会有tab属性，如果是background，则没有tab属性
  */
-Messager.receive("content", message => {
+Messager.receive("content", (message) => {
     /**
      * Check message timestamp.
      *
@@ -320,13 +320,12 @@ Messager.receive("content", message => {
              * message.
              */
             return Promise.resolve();
-        } else {
-            /**
-             * If it doesn't, which means the corresponding translating request is up to date, we update
-             * the timestamp stored in translateResult and accept the message.
-             */
-            window.translateResult.timestamp = message.detail.timestamp;
         }
+        /**
+         * If it doesn't, which means the corresponding translating request is up to date, we update
+         * the timestamp stored in translateResult and accept the message.
+         */
+        window.translateResult.timestamp = message.detail.timestamp;
     }
 
     // 避免从file://跳转到pdf viewer的消息传递对此的影响
@@ -356,7 +355,7 @@ Messager.receive("content", message => {
             notifier.notify({
                 type: "error",
                 title: chrome.i18n.getMessage("AppName"),
-                detail: chrome.i18n.getMessage("PRONOUN_ERR")
+                detail: chrome.i18n.getMessage("PRONOUN_ERR"),
             });
             break;
         case "update_translator_options":
@@ -369,7 +368,7 @@ Messager.receive("content", message => {
         case "command":
             switch (message.detail.command) {
                 case "fix_result_frame":
-                    chrome.storage.sync.get("fixSetting", function(result) {
+                    chrome.storage.sync.get("fixSetting", (result) => {
                         if (!result.fixSetting) {
                             fixOn();
                         } else {
@@ -410,7 +409,7 @@ function showFloatingPanel() {
     shadowDom.getElementById("edge-translate-panel-body").style["border-radius"] = "0 0 6px 6px";
     moveablePanel.request("resizable", {
         width: displaySetting.floatingData.width * window.innerWidth,
-        height: displaySetting.floatingData.height * window.innerHeight
+        height: displaySetting.floatingData.height * window.innerHeight,
     });
 }
 
@@ -423,7 +422,7 @@ function showFixedPanel() {
     let offsetLeft = 0;
     if (displaySetting.fixedData.position === "right")
         offsetLeft = window.innerWidth - width - (hasScrollbar() ? scrollbarWidth : 0);
-    chrome.storage.sync.get("LayoutSettings", async result => {
+    chrome.storage.sync.get("LayoutSettings", async (result) => {
         resizeFlag = result.LayoutSettings.Resize;
         // user set to resize the document body
         if (resizeFlag) {
@@ -516,8 +515,8 @@ function removeHighlightPart() {
  * @returns {Promise{undefined}} null promise
  */
 function getDisplaySetting() {
-    return new Promise(resolve => {
-        chrome.storage.sync.get("DisplaySetting", result => {
+    return new Promise((resolve) => {
+        chrome.storage.sync.get("DisplaySetting", (result) => {
             if (result.DisplaySetting) {
                 displaySetting = result.DisplaySetting;
             } else {
@@ -550,11 +549,11 @@ function hasScrollbar() {
  * @returns {number} the width of scroll bar
  */
 function getScrollbarWidth() {
-    var scrollDiv = document.createElement("div");
+    let scrollDiv = document.createElement("div");
     scrollDiv.style.cssText =
         "width: 99px; height: 99px; overflow: scroll; position: absolute; top: -9999px;";
     document.documentElement.appendChild(scrollDiv);
-    var scrollbarWidth = scrollDiv.offsetWidth - scrollDiv.clientWidth;
+    let scrollbarWidth = scrollDiv.offsetWidth - scrollDiv.clientWidth;
     document.documentElement.removeChild(scrollDiv);
     return scrollbarWidth;
 }
@@ -570,7 +569,7 @@ async function updateBounds() {
         left: scrollLeft,
         top: scrollTop,
         right: scrollLeft + window.innerWidth - (hasScrollbar() ? scrollbarWidth : 0),
-        bottom: scrollTop + (1 + displaySetting.floatingData.height) * window.innerHeight - 64
+        bottom: scrollTop + (1 + displaySetting.floatingData.height) * window.innerHeight - 64,
     });
 }
 
@@ -586,7 +585,7 @@ function windowResizeHandler() {
         else
             moveablePanel.request("resizable", {
                 width: displaySetting.floatingData.width * window.innerWidth,
-                height: displaySetting.floatingData.height * window.innerHeight
+                height: displaySetting.floatingData.height * window.innerHeight,
             });
     }
 }
@@ -601,11 +600,11 @@ function windowResizeHandler() {
 function move(width, height, left, top) {
     moveablePanel.request("draggable", {
         x: left,
-        y: top
+        y: top,
     });
     moveablePanel.request("resizable", {
-        width: width,
-        height: height
+        width,
+        height,
     });
 }
 
@@ -624,7 +623,7 @@ function addHeadEventListener() {
         .addEventListener("click", openOptionsPage);
 
     // 给点击侧边栏之外区域事件添加监听，点击侧边栏之外的部分就会让侧边栏关闭
-    chrome.storage.sync.get("fixSetting", function(result) {
+    chrome.storage.sync.get("fixSetting", (result) => {
         if (!result.fixSetting) {
             fixOff();
         } else {
@@ -670,7 +669,7 @@ function addBodyEventListener(template) {
             originalTextEle.addEventListener("mousedown", expandOriginalText);
 
             // 根据用户设定决定是否采用从右到左布局（用于阿拉伯语等从右到左书写的语言）
-            chrome.storage.sync.get("LayoutSettings", result => {
+            chrome.storage.sync.get("LayoutSettings", (result) => {
                 if (result.LayoutSettings.RTL) {
                     let contents = resultPanel.getElementsByClassName("may-need-rtl");
                     for (let i = 0; i < contents.length; i++) {
@@ -733,7 +732,7 @@ function removePanel() {
  */
 function fixOn() {
     chrome.storage.sync.set({
-        fixSetting: true
+        fixSetting: true,
     });
     shadowDom.getElementById("icon-tuding-full").style.display = "block";
     shadowDom.getElementById("icon-tuding-fix").style.display = "none";
@@ -745,7 +744,7 @@ function fixOn() {
  */
 function fixOff() {
     chrome.storage.sync.set({
-        fixSetting: false
+        fixSetting: false,
     });
     shadowDom.getElementById("icon-tuding-full").style.display = "none";
     shadowDom.getElementById("icon-tuding-fix").style.display = "block";
@@ -772,7 +771,7 @@ function sourcePronounce() {
             pronouncing: "source",
             text: window.translateResult.originalText,
             language: window.translateResult.sourceLanguage,
-            speed: sourceTTSSpeed
+            speed: sourceTTSSpeed,
         }).then(() => {
             if (sourceTTSSpeed === "fast") {
                 sourceTTSSpeed = "slow";
@@ -793,7 +792,7 @@ function targetPronounce() {
             pronouncing: "target",
             text: window.translateResult.mainMeaning,
             language: window.translateResult.targetLanguage,
-            speed: targetTTSSpeed
+            speed: targetTTSSpeed,
         }).then(() => {
             if (targetTTSSpeed === "fast") {
                 targetTTSSpeed = "slow";
@@ -839,7 +838,7 @@ function copyContent() {
     document.execCommand("copy");
 
     // on focus out, set the node to unedible
-    translateResultEle.addEventListener("blur", function() {
+    translateResultEle.addEventListener("blur", () => {
         translateResultEle.setAttribute("contenteditable", "false");
         window.getSelection().removeAllRanges();
     });
@@ -897,33 +896,16 @@ function foldOriginalText() {
         .getElementsByClassName("original-text")[0]
         .getElementsByTagName("p")[0];
 
-    // Remember whether mouse moved.
-    let moved = false;
+    detectSelect(originalTextEle, null, () => {
+        // Fold text.
+        originalTextEle.style.overflow = "hidden";
+        originalTextEle.style["white-space"] = "nowrap";
+        originalTextEle.title = chrome.i18n.getMessage("ClickToExpand");
 
-    // Inner event listeners for detecting mousemove and mouseup.
-    let detectMouseMove = () => {
-        moved = true;
-    };
-    let detectMouseUp = () => {
-        if (!moved) {
-            // Fold text.
-            originalTextEle.style.overflow = "hidden";
-            originalTextEle.style["white-space"] = "nowrap";
-            originalTextEle.title = chrome.i18n.getMessage("ClickToExpand");
-
-            // Update mousedown event listener.
-            originalTextEle.removeEventListener("mousedown", foldOriginalText);
-            originalTextEle.addEventListener("mousedown", expandOriginalText);
-        }
-
-        // Remove inner event listener.
-        originalTextEle.removeEventListener("mousemove", detectMouseMove);
-        originalTextEle.removeEventListener("mouseup", detectMouseUp);
-    };
-
-    // Add inner event listeners.
-    originalTextEle.addEventListener("mousemove", detectMouseMove);
-    originalTextEle.addEventListener("mouseup", detectMouseUp);
+        // Update mousedown event listener.
+        originalTextEle.removeEventListener("mousedown", foldOriginalText);
+        originalTextEle.addEventListener("mousedown", expandOriginalText);
+    });
 }
 
 /**
@@ -936,33 +918,16 @@ function expandOriginalText() {
         .getElementsByClassName("original-text")[0]
         .getElementsByTagName("p")[0];
 
-    // Remember whether mouse moved.
-    let moved = false;
+    detectSelect(originalTextEle, null, () => {
+        // Expand text.
+        originalTextEle.style.overflow = "inherit";
+        originalTextEle.style["white-space"] = "inherit";
+        originalTextEle.title = chrome.i18n.getMessage("ClickToFold");
 
-    // Inner event listeners for detecting mousemove and mouseup.
-    let detectMouseMove = () => {
-        moved = true;
-    };
-    let detectMouseUp = () => {
-        if (!moved) {
-            // Fold text.
-            originalTextEle.style.overflow = "inherit";
-            originalTextEle.style["white-space"] = "inherit";
-            originalTextEle.title = chrome.i18n.getMessage("ClickToFold");
-
-            // Update mousedown event listener.
-            originalTextEle.removeEventListener("mousedown", expandOriginalText);
-            originalTextEle.addEventListener("mousedown", foldOriginalText);
-        }
-
-        // Remove inner event listeners.
-        originalTextEle.removeEventListener("mousemove", detectMouseMove);
-        originalTextEle.removeEventListener("mouseup", detectMouseUp);
-    };
-
-    // Add inner event listeners.
-    originalTextEle.addEventListener("mousemove", detectMouseMove);
-    originalTextEle.addEventListener("mouseup", detectMouseUp);
+        // Update mousedown event listener.
+        originalTextEle.removeEventListener("mousedown", expandOriginalText);
+        originalTextEle.addEventListener("mousedown", foldOriginalText);
+    });
 }
 
 /**
@@ -1020,7 +985,7 @@ function submitEditedText() {
         // to make sure the new text is different from the original text
         if (text.valueOf() !== window.translateResult.originalText.valueOf()) {
             // Do translating.
-            Messager.send("background", "translate", { text: text });
+            Messager.send("background", "translate", { text });
         }
     } else {
         // Restore original text.
@@ -1061,7 +1026,7 @@ function setUpTranslateConfig(selectedTranslator, availableTranslators) {
     // Update and re-translate.
     translatorsEle.onchange = () => {
         Messager.send("background", "update_default_translator", {
-            translator: translatorsEle.options[translatorsEle.selectedIndex].value
+            translator: translatorsEle.options[translatorsEle.selectedIndex].value,
         }).then(() => {
             Messager.send("background", "translate", { text: window.translateResult.originalText });
         });

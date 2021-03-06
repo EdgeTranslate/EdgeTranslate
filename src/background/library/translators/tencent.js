@@ -22,7 +22,7 @@ const LANGUAGES = [
     ["th", "th"],
     ["ms", "ms"],
     ["ar", "ar"],
-    ["hi", "hi"]
+    ["hi", "hi"],
 ];
 
 /**
@@ -135,7 +135,7 @@ class TencentTranslator {
          * Create a tab to start requesting https://fanyi.qq.com
          */
         let tabId = await new Promise((resolve, reject) =>
-            chrome.tabs.create({ url: this.BASE_URL, active: false }, tab => {
+            chrome.tabs.create({ url: this.BASE_URL, active: false }, (tab) => {
                 if (chrome.runtime.lastError) {
                     reject(chrome.runtime.lastError.message);
                     return;
@@ -149,18 +149,33 @@ class TencentTranslator {
          * After token updated by Tencent home page, a message will be sent to background page
          * so that TencentTranslator will know that it can go on translating.
          */
-        chrome.tabs.executeScript(tabId, {
-            code: HOME_PAGE_LOADING_WATCHER,
-            runAt: "document_end"
-        });
+        await new Promise((resolve, reject) =>
+            chrome.tabs.executeScript(
+                tabId,
+                {
+                    code: HOME_PAGE_LOADING_WATCHER,
+                    runAt: "document_end",
+                },
+                () => {
+                    if (chrome.runtime.lastError) {
+                        reject(chrome.runtime.lastError.message);
+
+                        // Try removing the tab and check runtime.lastError incase it has been removed.
+                        chrome.tabs.remove(tabId, () => chrome.runtime.lastError);
+                    } else {
+                        resolve();
+                    }
+                }
+            )
+        );
 
         /**
          * Wait until token updated.
          */
-        await new Promise(resolve => {
+        await new Promise((resolve) => {
             Messager.receive(
                 RECEIVER,
-                message => {
+                (message) => {
                     if (message.title === TENCENT_TOKEN_UPDATED) resolve();
                     return Promise.resolve();
                 },
@@ -179,8 +194,8 @@ class TencentTranslator {
         await this.requestHomePage();
 
         // Get qtk and qrv from cookies.
-        return new Promise(resolve => {
-            chrome.cookies.getAll({ url: this.BASE_URL }, cookies => {
+        return new Promise((resolve) => {
+            chrome.cookies.getAll({ url: this.BASE_URL }, (cookies) => {
                 for (let cookie of cookies) {
                     if (cookie.name === "qtv") {
                         this.qtv = cookie.value;
@@ -232,7 +247,7 @@ class TencentTranslator {
 
             if (response.suggest.data[0].examples_json) {
                 result.examples = JSON.parse(response.suggest.data[0].examples_json).basic.map(
-                    item => {
+                    (item) => {
                         return { source: item.sourceText, target: item.targetText };
                     }
                 );
@@ -240,7 +255,7 @@ class TencentTranslator {
         }
 
         if (response.dict && response.dict.abstract && response.dict.abstract.length > 0) {
-            result.detailedMeanings = response.dict.abstract.map(item => {
+            result.detailedMeanings = response.dict.abstract.map((item) => {
                 return { pos: item.ps, meaning: item.explanation.join(", ") };
             });
         }
@@ -264,8 +279,8 @@ class TencentTranslator {
             data: new URLSearchParams({
                 source: this.LAN_TO_CODE.get("auto"),
                 target: this.LAN_TO_CODE.get("zh-CN"),
-                sourceText: text
-            })
+                sourceText: text,
+            }),
         });
 
         let result = response.data.translate.source;
@@ -277,10 +292,10 @@ class TencentTranslator {
                 errorAct: {
                     api: "tencent",
                     action: "detect",
-                    text: text,
+                    text,
                     from: null,
-                    to: null
-                }
+                    to: null,
+                },
             };
         }
         return this.CODE_TO_LAN.get(result);
@@ -309,8 +324,8 @@ class TencentTranslator {
                     sourceText: text,
                     qtv: this.qtv,
                     qtk: this.qtk,
-                    sessionUuid: "translate_uuid" + new Date().getTime()
-                })
+                    sessionUuid: `translate_uuid${new Date().getTime()}`,
+                }),
             });
 
             // Succeed flag.
@@ -337,7 +352,8 @@ class TencentTranslator {
             // Retry.
             if (retryCount < this.MAX_RETRY) {
                 retryCount++;
-                return this.updateTokens().then(translateOnce);
+                await this.updateTokens();
+                return translateOnce();
             }
 
             throw {
@@ -347,10 +363,10 @@ class TencentTranslator {
                 errorAct: {
                     api: "tencent",
                     action: "translate",
-                    text: text,
-                    from: from,
-                    to: to
-                }
+                    text,
+                    from,
+                    to,
+                },
             };
         };
 
@@ -376,7 +392,7 @@ class TencentTranslator {
             try {
                 // Get Tencent guid.
                 let guid = await new Promise((resolve, reject) => {
-                    chrome.cookies.get({ url: this.BASE_URL, name: "fy_guid" }, cookie => {
+                    chrome.cookies.get({ url: this.BASE_URL, name: "fy_guid" }, (cookie) => {
                         if (!cookie || !cookie.value) {
                             reject("Tencent guid not found!");
                             return;
@@ -397,7 +413,8 @@ class TencentTranslator {
                 // Update cookies on failure.
                 if (retryCount < this.MAX_RETRY) {
                     retryCount++;
-                    return this.requestHomePage().then(pronounceOnce);
+                    await this.requestHomePage();
+                    return pronounceOnce();
                 }
 
                 // TODO: handle NET_ERR and API_ERR differently.
@@ -408,10 +425,10 @@ class TencentTranslator {
                     errorAct: {
                         api: "tencent",
                         action: "pronounce",
-                        text: text,
+                        text,
                         from: language,
-                        to: null
-                    }
+                        to: null,
+                    },
                 };
             }
         };

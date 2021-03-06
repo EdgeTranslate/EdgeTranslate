@@ -5,7 +5,7 @@ export {
     addDomainBlacklist,
     removeUrlBlacklist,
     removeDomainBlacklist,
-    updateBLackListMenu
+    updateBLackListMenu,
 };
 
 const DISABLED_MARK = "X";
@@ -14,7 +14,7 @@ const DISABLED_MARK = "X";
  * 将当前页面的url添加到黑名单
  */
 function addUrlBlacklist() {
-    addBlacklist("urls", function() {
+    addBlacklist("urls", () => {
         disableItems(["add_url_blacklist", "add_domain_blacklist", "remove_domain_blacklist"]);
 
         enableItems(["remove_url_blacklist"]);
@@ -28,7 +28,7 @@ function addUrlBlacklist() {
  * 将当前页面的url移出黑名单
  */
 function removeUrlBlacklist() {
-    removeBlacklist("urls", function() {
+    removeBlacklist("urls", () => {
         disableItems(["remove_url_blacklist", "remove_domain_blacklist"]);
 
         enableItems(["add_url_blacklist", "add_domain_blacklist"]);
@@ -42,7 +42,7 @@ function removeUrlBlacklist() {
  * 将当前页面的域名添加到黑名单
  */
 function addDomainBlacklist() {
-    addBlacklist("domains", function() {
+    addBlacklist("domains", () => {
         disableItems(["add_url_blacklist", "add_domain_blacklist", "remove_url_blacklist"]);
 
         enableItems(["remove_domain_blacklist"]);
@@ -56,7 +56,7 @@ function addDomainBlacklist() {
  * 将当前页面的域名移出黑名单
  */
 function removeDomainBlacklist() {
-    removeBlacklist("domains", function(blacklist, url) {
+    removeBlacklist("domains", (blacklist, url) => {
         // 如果该url还在url黑名单中
         if (blacklist.urls[url]) {
             disableItems(["add_url_blacklist", "add_domain_blacklist", "remove_domain_blacklist"]);
@@ -80,13 +80,13 @@ function removeDomainBlacklist() {
  * @param {Function} callback 回调
  */
 function addBlacklist(field, callback) {
-    chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         if (tabs && tabs[0]) {
-            chrome.storage.sync.get("blacklist", function(result) {
-                var blacklist = result.blacklist;
-                var value = field === "urls" ? tabs[0].url : getDomain(tabs[0].url);
+            chrome.storage.sync.get("blacklist", (result) => {
+                let blacklist = result.blacklist;
+                let value = field === "urls" ? tabs[0].url : getDomain(tabs[0].url);
                 blacklist[field][value] = true;
-                chrome.storage.sync.set({ blacklist: blacklist }, function() {
+                chrome.storage.sync.set({ blacklist }, () => {
                     callback(blacklist, tabs[0].url);
                 });
             });
@@ -101,15 +101,15 @@ function addBlacklist(field, callback) {
  * @param {Function} callback 回调
  */
 function removeBlacklist(field, callback) {
-    chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         if (tabs && tabs[0]) {
-            chrome.storage.sync.get("blacklist", function(result) {
-                var blacklist = result.blacklist;
-                var value = field === "urls" ? tabs[0].url : getDomain(tabs[0].url);
+            chrome.storage.sync.get("blacklist", (result) => {
+                let blacklist = result.blacklist;
+                let value = field === "urls" ? tabs[0].url : getDomain(tabs[0].url);
                 if (blacklist[field][value]) {
                     delete blacklist[field][value];
                 }
-                chrome.storage.sync.set({ blacklist: blacklist }, function() {
+                chrome.storage.sync.set({ blacklist }, () => {
                     callback(blacklist, tabs[0].url);
                 });
             });
@@ -123,7 +123,7 @@ function removeBlacklist(field, callback) {
  * @param {String} url 切换到的页面的url
  */
 function updateBLackListMenu(url) {
-    chrome.storage.sync.get("blacklist", function(result) {
+    chrome.storage.sync.get("blacklist", (result) => {
         if (result.blacklist) {
             if (result.blacklist.domains[getDomain(url)]) {
                 disableItems(["add_url_blacklist", "remove_url_blacklist", "add_domain_blacklist"]);
@@ -136,7 +136,7 @@ function updateBLackListMenu(url) {
                 disableItems([
                     "add_url_blacklist",
                     "add_domain_blacklist",
-                    "remove_domain_blacklist"
+                    "remove_domain_blacklist",
                 ]);
 
                 enableItems(["remove_url_blacklist"]);
@@ -155,8 +155,8 @@ function updateBLackListMenu(url) {
             chrome.storage.sync.set({
                 blacklist: {
                     urls: {},
-                    domains: {}
-                }
+                    domains: {},
+                },
             });
         }
     });
@@ -168,16 +168,16 @@ function updateBLackListMenu(url) {
  * @param {String} items
  */
 function enableItems(items) {
-    items.forEach(item => {
+    items.forEach((item) => {
         chrome.contextMenus.update(
             item,
             {
                 enabled: true,
-                visible: true
+                visible: true,
             },
-            function() {
+            () => {
                 if (chrome.runtime.lastError) {
-                    log("Chrome runtime error: " + chrome.runtime.lastError);
+                    log(`Chrome runtime error: ${chrome.runtime.lastError}`);
                 }
             }
         );
@@ -190,16 +190,16 @@ function enableItems(items) {
  * @param {String} items
  */
 function disableItems(items) {
-    items.forEach(item => {
+    items.forEach((item) => {
         chrome.contextMenus.update(
             item,
             {
                 enabled: false,
-                visible: false
+                visible: false,
             },
-            function() {
+            () => {
                 if (chrome.runtime.lastError) {
-                    log("Chrome runtime error: " + chrome.runtime.lastError);
+                    log(`Chrome runtime error: ${chrome.runtime.lastError}`);
                 }
             }
         );

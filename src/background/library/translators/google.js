@@ -109,7 +109,7 @@ const LANGUAGES = [
     ["xh", "xh"],
     ["yi", "yi"],
     ["yo", "yo"],
-    ["zu", "zu"]
+    ["zu", "zu"],
 ];
 
 /**
@@ -129,10 +129,8 @@ class GoogleTranslator {
          * Translate API.
          */
         this.HOST = "https://translate.google.cn/";
-        this.TRANSLATE_URL =
-            this.HOST +
-            "translate_a/single?ie=UTF-8&client=webapp&otf=1&ssel=0&tsel=0&kc=5&dt=t&dt=at&dt=bd&dt=ex&dt=md&dt=rw&dt=ss&dt=rm";
-        this.TTS_URL = this.HOST + "translate_tts?ie=UTF-8&client=webapp";
+        this.TRANSLATE_URL = `${this.HOST}translate_a/single?ie=UTF-8&client=webapp&otf=1&ssel=0&tsel=0&kc=5&dt=t&dt=at&dt=bd&dt=ex&dt=md&dt=rw&dt=ss&dt=rm`;
+        this.TTS_URL = `${this.HOST}translate_tts?ie=UTF-8&client=webapp`;
 
         /**
          * Language to translator language code.
@@ -280,10 +278,10 @@ class GoogleTranslator {
                     // 单词的所有词性及对应的意思
                     case 1:
                         result.detailedMeanings = new Array();
-                        items.forEach(item =>
+                        items.forEach((item) =>
                             result.detailedMeanings.push({
                                 pos: item[0],
-                                meaning: item[1].join(", ")
+                                meaning: item[1].join(", "),
                             })
                         );
                         // log("detailedMeanings: " + JSON.stringify(result.detailedMeanings));
@@ -295,12 +293,12 @@ class GoogleTranslator {
                     // 单词的定义及对应例子
                     case 12:
                         result.definitions = new Array();
-                        items.forEach(item => {
-                            item[1].forEach(element => {
+                        items.forEach((item) => {
+                            item[1].forEach((element) => {
                                 result.definitions.push({
                                     pos: item[0],
                                     meaning: element[0],
-                                    example: element[2]
+                                    example: element[2],
                                 });
                             });
                         });
@@ -309,8 +307,8 @@ class GoogleTranslator {
                     // 单词的例句
                     case 13:
                         result.examples = new Array();
-                        items.forEach(item =>
-                            item.forEach(element =>
+                        items.forEach((item) =>
+                            item.forEach((element) =>
                                 result.examples.push({ source: null, target: element[0] })
                             )
                         );
@@ -344,18 +342,16 @@ class GoogleTranslator {
         let retryCount = 0;
         let detectOnce = async () => {
             let query = "&sl=auto&tl=zh-cn";
-            query +=
-                "&tk=" +
-                this.generateTK(text, this.TKK[0], this.TKK[1]) +
-                "&q=" +
-                encodeURIComponent(text);
+            query += `&tk=${this.generateTK(text, this.TKK[0], this.TKK[1])}&q=${encodeURIComponent(
+                text
+            )}`;
 
             /**
              * Google uses 4xx errors to indicate request parameters invalid, so axios should
              * not throw error when status code is less than 500.
              */
             const response = await axios.get(this.TRANSLATE_URL + query, {
-                validateStatus: status => status < 500
+                validateStatus: (status) => status < 500,
             });
 
             if (response.status === 200) {
@@ -377,10 +373,10 @@ class GoogleTranslator {
                 errorAct: {
                     api: "google",
                     action: "detect",
-                    text: text,
+                    text,
                     from: null,
-                    to: null
-                }
+                    to: null,
+                },
             };
         };
 
@@ -399,19 +395,17 @@ class GoogleTranslator {
     translate(text, from, to) {
         let retryCount = 0;
         let translateOnce = async () => {
-            let query = "&sl=" + this.LAN_TO_CODE.get(from) + "&tl=" + this.LAN_TO_CODE.get(to);
-            query +=
-                "&tk=" +
-                this.generateTK(text, this.TKK[0], this.TKK[1]) +
-                "&q=" +
-                encodeURIComponent(text);
+            let query = `&sl=${this.LAN_TO_CODE.get(from)}&tl=${this.LAN_TO_CODE.get(to)}`;
+            query += `&tk=${this.generateTK(text, this.TKK[0], this.TKK[1])}&q=${encodeURIComponent(
+                text
+            )}`;
 
             /**
              * Google uses 4xx errors to indicate request parameters invalid, so axios should
              * not throw error when status code is less than 500.
              */
             const response = await axios.get(this.TRANSLATE_URL + query, {
-                validateStatus: status => status < 500
+                validateStatus: (status) => status < 500,
             });
 
             if (response.status === 200) {
@@ -434,10 +428,10 @@ class GoogleTranslator {
                 errorAct: {
                     api: "google",
                     action: "translate",
-                    text: text,
-                    from: from,
-                    to: to
-                }
+                    text,
+                    from,
+                    to,
+                },
             };
         };
 
@@ -456,16 +450,9 @@ class GoogleTranslator {
     async pronounce(text, language, speed) {
         this.stopPronounce();
         let speedValue = speed === "fast" ? "0.8" : "0.2";
-        this.AUDIO.src =
-            this.TTS_URL +
-            "&q=" +
-            encodeURIComponent(text) +
-            "&tl=" +
-            this.LAN_TO_CODE.get(language) +
-            "&ttsspeed=" +
-            speedValue +
-            "&tk=" +
-            this.generateTK(text, this.TKK[0], this.TKK[1]);
+        this.AUDIO.src = `${this.TTS_URL}&q=${encodeURIComponent(text)}&tl=${this.LAN_TO_CODE.get(
+            language
+        )}&ttsspeed=${speedValue}&tk=${this.generateTK(text, this.TKK[0], this.TKK[1])}`;
         try {
             await this.AUDIO.play();
         } catch (error) {
@@ -477,10 +464,10 @@ class GoogleTranslator {
                 errorAct: {
                     api: "google",
                     action: "pronounce",
-                    text: text,
+                    text,
                     from: language,
-                    to: null
-                }
+                    to: null,
+                },
             };
         }
     }

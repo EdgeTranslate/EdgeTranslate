@@ -17,8 +17,8 @@ module.exports = {
                 "revert",
                 "style",
                 "test",
-                "wip"
-            ]
-        ]
-    }
+                "wip",
+            ],
+        ],
+    },
 };

@@ -16,7 +16,7 @@ function format(text) {
 
     if (typeof text !== "string") return text;
     return text
-        .replace(HTML_CHAR_REGEX, expression => {
+        .replace(HTML_CHAR_REGEX, (expression) => {
             let char = expression.charCodeAt(0);
             char = char == 0x20 ? 0xa0 : char;
             return `&#${char};`;

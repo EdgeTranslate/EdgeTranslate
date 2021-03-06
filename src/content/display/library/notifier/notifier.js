@@ -35,7 +35,7 @@ export default class Notifier {
         document.documentElement.appendChild(this.notifierContainer);
 
         // listen to click event for closeIcon
-        this.shadowDom.addEventListener("click", event => {
+        this.shadowDom.addEventListener("click", (event) => {
             const path = event.path;
             let closeIconClicked = false;
             for (let i = 0; i < path.length; i++) {
@@ -82,7 +82,7 @@ export default class Notifier {
              * whether to show the close icon
              * if duration <= 0, we will ignore this option and show the close icon
              */
-            closeIcon: false
+            closeIcon: false,
         };
         Object.assign(option, notificationOption);
         if (!option.title) return;

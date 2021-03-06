@@ -24,8 +24,8 @@ class Messager {
         }
 
         return new Promise((resolve, reject) => {
-            let message = JSON.stringify({ to: receivers, title: title, detail: detail });
-            chrome.runtime.sendMessage(message, result => {
+            let message = JSON.stringify({ to: receivers, title, detail });
+            chrome.runtime.sendMessage(message, (result) => {
                 if (chrome.runtime.lastError) {
                     reject(chrome.runtime.lastError);
                 } else {
@@ -57,11 +57,11 @@ class Messager {
             receivers[receiver] = true;
         }
 
-        let message = JSON.stringify({ to: receivers, title: title, detail: detail });
+        let message = JSON.stringify({ to: receivers, title, detail });
         if (BROWSER_ENV === "chrome") {
             // Chrome is using callback.
             return new Promise((resolve, reject) => {
-                chrome.tabs.sendMessage(tabId, message, result => {
+                chrome.tabs.sendMessage(tabId, message, (result) => {
                     if (chrome.runtime.lastError) {
                         reject(chrome.runtime.lastError);
                     } else {
@@ -69,10 +69,9 @@ class Messager {
                     }
                 });
             });
-        } else {
-            // Firefox is using Promise.
-            return browser.tabs.sendMessage(tabId, message);
         }
+        // Firefox is using Promise.
+        return browser.tabs.sendMessage(tabId, message);
     }
 
     /**
@@ -97,7 +96,7 @@ class Messager {
         let handlerWrapper = (message, sender, callback) => {
             let parsed = JSON.parse(message);
             if (parsed.to && parsed.to[receiver]) {
-                messageHandler(parsed, sender).then(result => {
+                messageHandler(parsed, sender).then((result) => {
                     if (callback) callback(result);
 
                     // If the handler should be executed for only once, remove it after executing.
