@@ -58,10 +58,13 @@ const DEFAULT_SETTINGS = {
 
         // The translators for each item.
         selections: {
-            originalText: "GoogleTranslate",
-            mainMeaning: "BingTranslate",
-            tPronunciation: "BingTranslate",
+            // ATTENTION: The following four items MUST HAVE THE SAME TRANSLATOR!
+            originalText: "BaiduTranslate",
+            mainMeaning: "BaiduTranslate",
+            tPronunciation: "BaiduTranslate",
             sPronunciation: "BaiduTranslate",
+
+            // For the following three items, any translator combination is OK.
             detailedMeanings: "BingTranslate",
             definitions: "GoogleTranslate",
             examples: "BaiduTranslate",

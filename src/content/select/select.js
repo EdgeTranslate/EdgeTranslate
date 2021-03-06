@@ -28,7 +28,10 @@ let originScrollX = 0; // record the original scroll X position(before scroll ev
 let originScrollY = 0; // record the original scroll Y position(before scroll event)
 let originPositionX = 0; // record the original X position of selection icon(before scroll event)
 let originPositionY = 0; // record the original Y position of selection icon(before scroll event)
-let scrollingElement = document.documentElement; // store the specific scrolling element. In normal web pages, document element is the scrolling element
+let scrollingElement = window; // store the specific scrolling element. In normal web pages, window is the scrolling object, while in pdf.js viewer, "#viewerContainer" is the scrolling element.
+// store the name of scroll property according to scrollingElement(pageXOffset for window and scrollLeft for pdf.js element)
+let scrollPropertyX = "pageXOffset";
+let scrollPropertyY = "pageYOffset";
 
 // this listener activated when document content is loaded
 // to make selection button available ASAP
@@ -37,12 +40,11 @@ window.addEventListener("DOMContentLoaded", () => {
     if (isPDFjsPDFViewer()) {
         // #viewerContainer element is the scrolling element in a pdf file
         scrollingElement = document.getElementById("viewerContainer");
-        // to make the selection icon move with the mouse scrolling
-        scrollingElement.addEventListener("scroll", scrollHandler);
-    } else {
-        // scrolling event listener has to be added to window and adding to document element doesn't work
-        window.addEventListener("scroll", scrollHandler);
+        scrollPropertyX = "scrollLeft";
+        scrollPropertyY = "scrollTop";
     }
+    // to make the selection icon move with the mouse scrolling
+    scrollingElement.addEventListener("scroll", scrollHandler);
 
     document.addEventListener("mousedown", () => {
         disappearButton();
@@ -138,8 +140,8 @@ function showButton(event) {
     translateButton.style.left = `${XPosition}px`;
 
     // record original position of the selection icon and the start mouse scrolling position
-    originScrollX = scrollingElement.scrollLeft;
-    originScrollY = scrollingElement.scrollTop;
+    originScrollX = scrollingElement[scrollPropertyX];
+    originScrollY = scrollingElement[scrollPropertyY];
     originPositionX = XPosition;
     originPositionY = YPosition;
     HasButtonShown = true;
@@ -222,8 +224,8 @@ function disappearButton() {
  */
 function scrollHandler() {
     if (HasButtonShown) {
-        let distanceX = originScrollX - scrollingElement.scrollLeft;
-        let distanceY = originScrollY - scrollingElement.scrollTop;
+        let distanceX = originScrollX - scrollingElement[scrollPropertyX];
+        let distanceY = originScrollY - scrollingElement[scrollPropertyY];
 
         translateButton.style.left = `${originPositionX + distanceX}px`;
         translateButton.style.top = `${originPositionY + distanceY}px`;
