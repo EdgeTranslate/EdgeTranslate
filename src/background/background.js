@@ -386,32 +386,32 @@ chrome.commands.onCommand.addListener((command) => {
 /**
  * Modify the CSP header of translate requests.
  */
-chrome.webRequest.onHeadersReceived.addListener(
-    (details) => ({
-        responseHeaders: details.responseHeaders.map((header) =>
-            /^content-security-policy$/i.test(header.name)
-                ? {
-                      name: header.name,
-                      value: header.value
-                          .replaceAll(
-                              // Remove 'none' and "none".
-                              /((^|;)\s*(default-src|script-src|img-src|connect-src))\s+['"]none['"]/g,
-                              "$1"
-                          )
-                          .replaceAll(
-                              // Add Google Page Translate related domains.
-                              /((^|;)\s*(default-src|script-src|img-src|connect-src))/g,
-                              // eslint-disable-next-line prefer-template
-                              "$1 translate.googleapis.com translate.google.com www.google.com www.gstatic.com " +
-                                  chrome.runtime.getURL("")
-                          ),
-                  }
-                : header
-        ),
-    }),
-    { urls: ["*://*/*"], types: ["main_frame", "sub_frame"] },
-    ["blocking", "responseHeaders"]
-);
+// chrome.webRequest.onHeadersReceived.addListener(
+//     (details) => ({
+//         responseHeaders: details.responseHeaders.map((header) =>
+//             /^content-security-policy$/i.test(header.name)
+//                 ? {
+//                       name: header.name,
+//                       value: header.value
+//                           .replaceAll(
+//                               // Remove 'none' and "none".
+//                               /((^|;)\s*(default-src|script-src|img-src|connect-src))\s+['"]none['"]/g,
+//                               "$1"
+//                           )
+//                           .replaceAll(
+//                               // Add Google Page Translate related domains.
+//                               /((^|;)\s*(default-src|script-src|img-src|connect-src))/g,
+//                               // eslint-disable-next-line prefer-template
+//                               "$1 translate.googleapis.com translate.google.com www.google.com www.gstatic.com " +
+//                                   chrome.runtime.getURL("")
+//                           ),
+//                   }
+//                 : header
+//         ),
+//     }),
+//     { urls: ["*://*/*"], types: ["main_frame", "sub_frame"] },
+//     ["blocking", "responseHeaders"]
+// );
 
 /**
  * Modify the origin header of translate requests.
