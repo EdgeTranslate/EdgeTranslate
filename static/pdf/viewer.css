@@ -458,6 +458,7 @@
   --toolbarButton-pageDown-icon: url(images/toolbarButton-pageDown.svg);
   --toolbarButton-zoomOut-icon: url(images/toolbarButton-zoomOut.svg);
   --toolbarButton-zoomIn-icon: url(images/toolbarButton-zoomIn.svg);
+  --toolbarButton-darkMode-auto-icon: url(images/toolbarButton-darkMode-auto.svg);
   --toolbarButton-darkMode-dark-icon: url(images/toolbarButton-darkMode-dark.svg);
   --toolbarButton-darkMode-light-icon: url(images/toolbarButton-darkMode-light.svg);
   --toolbarButton-presentationMode-icon: url(images/toolbarButton-presentationMode.svg);
@@ -532,6 +533,7 @@
     --toolbarButton-pageDown-icon: url(images/toolbarButton-pageDown-dark.svg);
     --toolbarButton-zoomOut-icon: url(images/toolbarButton-zoomOut-dark.svg);
     --toolbarButton-zoomIn-icon: url(images/toolbarButton-zoomIn-dark.svg);
+    --toolbarButton-darkMode-auto-icon: url(images/toolbarButton-darkMode-auto-dark.svg);
     --toolbarButton-darkMode-dark-icon: url(images/toolbarButton-darkMode-dark-dark.svg);
     --toolbarButton-darkMode-light-icon: url(images/toolbarButton-darkMode-light-dark.svg);
     --toolbarButton-presentationMode-icon: url(images/toolbarButton-presentationMode-dark.svg);

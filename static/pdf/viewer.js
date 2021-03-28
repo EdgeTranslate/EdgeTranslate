@@ -835,7 +835,7 @@ var PDFViewerApplication = {
               });
               _this5.pdfSidebar.onToggled = _this5.forceRendering.bind(_this5);
               _this5.pdfSidebarResizer = new _pdf_sidebar_resizer.PDFSidebarResizer(appConfig.sidebarResizer, eventBus, _this5.l10n);
-              _this5.darkMode = new _pdf_dark_mode.PDFDarkMode(appConfig.toolbar.darkModeButton, eventBus);
+              _this5.darkMode = new _pdf_dark_mode.PDFDarkMode(appConfig.toolbar.darkModeButton, eventBus, _this5.l10n);
 
             case 36:
             case "end":
@@ -6941,51 +6941,76 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 var STORAGE_KEY = "pdfjs.dark_mode";
 var STYLE_ELEMENT_ID = "pdfjs-dark-mode-style";
-var STYLE_ELEMENT_CONTENT_DARK = "\n.thumbnailImage, .pdfViewer .page {\n  filter: brightness(0.85) grayscale(0.15) invert(1.0) hue-rotate(0.5turn);\n  border-image: none;\n  box-shadow: none;\n}\n\n.toolbarButton.darkMode::before,\n.secondaryToolbarButton.darkMode::before {\n  content: var(--toolbarButton-darkMode-dark-icon);\n  transform: rotate(-0.1turn);\n}\n";
-var STYLE_ELEMENT_CONTENT_LIGHT = "\n.toolbarButton.darkMode::before,\n.secondaryToolbarButton.darkMode::before {\n  content: var(--toolbarButton-darkMode-light-icon);\n}\n";
+var DARK_STYLE = "\n  .thumbnailImage, .pdfViewer .page {\n    filter: brightness(0.85) grayscale(0.15) invert(1.0) hue-rotate(0.5turn);\n    border-image: none;\n    box-shadow: none;\n  }\n";
+var STYLE_ELEMENT_CONTENT_AUTO = "\n @media (prefers-color-scheme: dark) {".concat(DARK_STYLE, "}\n\n .toolbarButton.darkMode::before,\n .secondaryToolbarButton.darkMode::before {\n   content: var(--toolbarButton-darkMode-auto-icon);\n }\n");
+var STYLE_ELEMENT_CONTENT_LIGHT = "\n .toolbarButton.darkMode::before,\n .secondaryToolbarButton.darkMode::before {\n   content: var(--toolbarButton-darkMode-light-icon);\n }\n";
+var STYLE_ELEMENT_CONTENT_DARK = "\n  ".concat(DARK_STYLE, "\n\n  .toolbarButton.darkMode::before,\n  .secondaryToolbarButton.darkMode::before {\n    content: var(--toolbarButton-darkMode-dark-icon);\n    transform: rotate(-0.1turn);\n  }\n");
+var MODES = Object.freeze({
+  AUTO: "auto",
+  LIGHT: "light",
+  DARK: "dark"
+});
+var MODE_CONFIGS = Object.freeze({
+  auto: {
+    style: STYLE_ELEMENT_CONTENT_AUTO,
+    next: MODES.LIGHT,
+    l10nCode: 0,
+    l10nFallback: "Auto(Follow OS Settings)"
+  },
+  light: {
+    style: STYLE_ELEMENT_CONTENT_LIGHT,
+    next: MODES.DARK,
+    l10nCode: 1,
+    l10nFallback: "Original"
+  },
+  dark: {
+    style: STYLE_ELEMENT_CONTENT_DARK,
+    next: MODES.AUTO,
+    l10nCode: 2,
+    l10nFallback: "Dark"
+  }
+});
 
 var PDFDarkMode = /*#__PURE__*/function () {
-  function PDFDarkMode(button, eventBus) {
+  function PDFDarkMode(button, eventBus, l10n) {
     _classCallCheck(this, PDFDarkMode);
 
     this.button = button;
+    this.buttonAltText = button.children[0];
     this.eventBus = eventBus;
+    this.l10n = l10n;
     this.styleElement = document.createElement("style");
     document.head.appendChild(this.styleElement);
     this.styleElement.id = STYLE_ELEMENT_ID;
-    var inDarkMode = localStorage.getItem(STORAGE_KEY) || "false";
-
-    if (inDarkMode === "true") {
-      this.enable();
-    } else {
-      this.disable();
-    }
-
+    var mode = localStorage.getItem(STORAGE_KEY) || MODES.AUTO;
+    this.switchTo(mode);
     this.eventBus.on("darkmode", this.toggle.bind(this));
   }
 
   _createClass(PDFDarkMode, [{
     key: "toggle",
     value: function toggle() {
-      var inDarkMode = localStorage.getItem(STORAGE_KEY) || "false";
+      var curr = localStorage.getItem(STORAGE_KEY) || MODES.DARK;
+      this.switchTo(MODE_CONFIGS[curr].next);
+    }
+  }, {
+    key: "switchTo",
+    value: function switchTo(mode) {
+      var _this = this;
 
-      if (inDarkMode === "false") {
-        this.enable();
-        localStorage.setItem(STORAGE_KEY, "true");
-      } else {
-        this.disable();
-        localStorage.setItem(STORAGE_KEY, "false");
-      }
-    }
-  }, {
-    key: "enable",
-    value: function enable() {
-      this.styleElement.textContent = STYLE_ELEMENT_CONTENT_DARK;
-    }
-  }, {
-    key: "disable",
-    value: function disable() {
-      this.styleElement.textContent = STYLE_ELEMENT_CONTENT_LIGHT;
+      localStorage.setItem(STORAGE_KEY, mode);
+      var config = MODE_CONFIGS[mode];
+      this.styleElement.textContent = config.style;
+      var buttonTitle = this.l10n.get("dark_mode_title", {
+        mode: config.l10nCode
+      }, config.l10nFallback);
+      var buttonAltText = this.l10n.get("dark_mode_label", {
+        mode: config.l10nCode
+      }, config.l10nFallback);
+      Promise.all([buttonTitle, buttonAltText]).then(function (messages) {
+        _this.button.title = messages[0];
+        _this.buttonAltText.textContent = messages[1];
+      });
     }
   }]);
 
