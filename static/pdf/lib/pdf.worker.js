@@ -135,8 +135,8 @@ Object.defineProperty(exports, "WorkerMessageHandler", {
 
 var _worker = __w_pdfjs_require__(1);
 
-var pdfjsVersion = '2.7.91';
-var pdfjsBuild = 'd6559b4d5';
+var pdfjsVersion = '2.7.112';
+var pdfjsBuild = 'ea2fa8695';
 
 /***/ }),
 /* 1 */
@@ -279,7 +279,7 @@ var WorkerMessageHandler = /*#__PURE__*/function () {
       var WorkerTasks = [];
       var verbosity = (0, _util.getVerbosityLevel)();
       var apiVersion = docParams.apiVersion;
-      var workerVersion = '2.7.91';
+      var workerVersion = '2.7.112';
 
       if (apiVersion !== workerVersion) {
         throw new Error("The API version \"".concat(apiVersion, "\" does not match ") + "the Worker version \"".concat(workerVersion, "\"."));
@@ -32753,6 +32753,12 @@ var ButtonWidgetAnnotation = /*#__PURE__*/function (_WidgetAnnotation2) {
       this.data.exportValue = exportValues[0] === "Off" ? exportValues[1] : exportValues[0];
       this.checkedAppearance = normalAppearance.get(this.data.exportValue);
       this.uncheckedAppearance = normalAppearance.get("Off") || null;
+
+      this._streams.push(this.checkedAppearance);
+
+      if (this.uncheckedAppearance) {
+        this._streams.push(this.uncheckedAppearance);
+      }
     }
   }, {
     key: "_processRadioButton",
@@ -32801,6 +32807,12 @@ var ButtonWidgetAnnotation = /*#__PURE__*/function (_WidgetAnnotation2) {
 
       this.checkedAppearance = normalAppearance.get(this.data.buttonValue);
       this.uncheckedAppearance = normalAppearance.get("Off") || null;
+
+      this._streams.push(this.checkedAppearance);
+
+      if (this.uncheckedAppearance) {
+        this._streams.push(this.uncheckedAppearance);
+      }
     }
   }, {
     key: "_processPushButton",
