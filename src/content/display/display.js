@@ -1,3 +1,6 @@
+/** @jsx h */
+import { h } from "preact";
+import render from "preact-render-to-string";
 import format from "./library/render.js";
 import moveable from "./library/moveable/moveable.js";
 import Notifier from "./library/notifier/notifier.js";
@@ -8,10 +11,12 @@ import { delayPromise } from "common/scripts/promise.js";
 /**
  * load templates
  */
-import common from "./templates/common.xhtml"; // template of panel's structure(common part of the result panel)
 import result from "./templates/result.xhtml"; // template of translate result
 import loading from "./templates/loading.xhtml"; // template of loading icon
 import error from "./templates/error.xhtml"; // template of error message
+
+import Panel from "./templates/Panel.jsx";
+import Result from "./templates/Result.jsx";
 
 const Template = {
     result,
@@ -74,6 +79,8 @@ let documentBodyCSS;
 // Send notifications to users.
 const notifier = new Notifier("center");
 
+const CommonPrefix = "edge-translate-";
+
 /**
  * initiate panel elements to display translation result
  * create a shadow dom to contain panel elements
@@ -85,11 +92,11 @@ const notifier = new Notifier("center");
     panelContainer = document.createElement("div");
     // store a shadow dom which is used to attach panel elements
     shadowDom = panelContainer.attachShadow({ mode: "open" });
-    shadowDom.innerHTML = common.apply({});
+    shadowDom.innerHTML = render(<Panel />);
     // the first child element of shadow dom. It contains all of the panel content elements
     resultPanel = shadowDom.firstChild;
     // store the panel body element
-    bodyPanel = shadowDom.getElementById("edge-translate-panel-body");
+    bodyPanel = shadowDom.getElementById(`${CommonPrefix}body`);
 
     /* set attributes of elements */
     resultPanel.style.backgroundColor = "white"; // set style dynamically to be compatible with chrome extension "Dark Reader"
@@ -150,10 +157,7 @@ const notifier = new Notifier("center");
                 const path =
                     inputEvent.path || (inputEvent.composedPath && inputEvent.composedPath());
                 // if drag element isn't the head element, stop the drag event
-                if (
-                    !path ||
-                    !shadowDom.getElementById("edge-translate-panel-head").isSameNode(path[0])
-                ) {
+                if (!path || !shadowDom.getElementById(`${CommonPrefix}head`).isSameNode(path[0])) {
                     stop();
                     return;
                 }
@@ -251,11 +255,8 @@ async function showPanel(content, template) {
     window.isDisplayingResult = true;
 
     // Write contents into iframe.
-    bodyPanel.innerHTML = Template[template].apply({
-        format,
-        ...content,
-    });
-    addBodyEventListener(template);
+    bodyPanel.innerHTML = render(<Result result={content} />);
+    // addBodyEventListener(template);
     // if panel hasn't been displayed, locate the panel and show it
     if (!document.documentElement.contains(panelContainer)) {
         await getDisplaySetting();
@@ -405,8 +406,8 @@ Messager.receive("content", (message) => {
  */
 function showFloatingPanel() {
     /* set border radius for the floating type result panel */
-    shadowDom.getElementById("edge-translate-panel-head").style["border-radius"] = "6px 6px 0 0";
-    shadowDom.getElementById("edge-translate-panel-body").style["border-radius"] = "0 0 6px 6px";
+    shadowDom.getElementById(`${CommonPrefix}head`).style["border-radius"] = "6px 6px 0 0";
+    shadowDom.getElementById(`${CommonPrefix}body`).style["border-radius"] = "0 0 6px 6px";
     moveablePanel.request("resizable", {
         width: displaySetting.floatingData.width * window.innerWidth,
         height: displaySetting.floatingData.height * window.innerHeight,
@@ -613,13 +614,13 @@ function move(width, height, left, top) {
  */
 function addHeadEventListener() {
     // 给关闭按钮添加点击事件监听，用于关闭侧边栏
-    shadowDom.getElementById("icon-close").addEventListener("click", removePanel);
+    shadowDom.getElementById(`${CommonPrefix}icon-close`).addEventListener("click", removePanel);
     // 给固定侧边栏的按钮添加点击事件监听，用户侧边栏的固定与取消固定
-    shadowDom.getElementById("icon-tuding-fix").addEventListener("click", fixOn);
-    shadowDom.getElementById("icon-tuding-full").addEventListener("click", fixOff);
+    shadowDom.getElementById(`${CommonPrefix}icon-pin`).addEventListener("click", fixOn);
+    shadowDom.getElementById(`${CommonPrefix}icon-unpin`).addEventListener("click", fixOff);
     // Open options page.
     shadowDom
-        .getElementById("icon-edge-translate-options")
+        .getElementById(`${CommonPrefix}icon-options`)
         .addEventListener("click", openOptionsPage);
 
     // 给点击侧边栏之外区域事件添加监听，点击侧边栏之外的部分就会让侧边栏关闭
@@ -734,8 +735,8 @@ function fixOn() {
     chrome.storage.sync.set({
         fixSetting: true,
     });
-    shadowDom.getElementById("icon-tuding-full").style.display = "block";
-    shadowDom.getElementById("icon-tuding-fix").style.display = "none";
+    shadowDom.getElementById(`${CommonPrefix}icon-unpin`).style.display = "flex";
+    shadowDom.getElementById(`${CommonPrefix}icon-pin`).style.display = "none";
     document.documentElement.removeEventListener("mousedown", clickListener);
 }
 
@@ -746,8 +747,8 @@ function fixOff() {
     chrome.storage.sync.set({
         fixSetting: false,
     });
-    shadowDom.getElementById("icon-tuding-full").style.display = "none";
-    shadowDom.getElementById("icon-tuding-fix").style.display = "block";
+    shadowDom.getElementById(`${CommonPrefix}icon-unpin`).style.display = "none";
+    shadowDom.getElementById(`${CommonPrefix}icon-pin`).style.display = "flex";
     document.documentElement.addEventListener("mousedown", clickListener);
 }
 
@@ -1005,32 +1006,29 @@ function submitEditedText() {
  * @returns {void} nothing
  */
 function setUpTranslateConfig(selectedTranslator, availableTranslators) {
-    let translatorsEle = shadowDom.getElementById("translators");
-
-    // Remove existed options.
-    for (let i = translatorsEle.options.length; i > 0; i--) {
-        translatorsEle.options.remove(i - 1);
-    }
-
-    // Add translator options.
-    for (let translator of availableTranslators) {
-        if (translator === selectedTranslator) {
-            translatorsEle.options.add(
-                new Option(chrome.i18n.getMessage(translator), translator, true, true)
-            );
-        } else {
-            translatorsEle.options.add(new Option(chrome.i18n.getMessage(translator), translator));
-        }
-    }
-
-    // Update and re-translate.
-    translatorsEle.onchange = () => {
-        Messager.send("background", "update_default_translator", {
-            translator: translatorsEle.options[translatorsEle.selectedIndex].value,
-        }).then(() => {
-            Messager.send("background", "translate", { text: window.translateResult.originalText });
-        });
-    };
+    // let translatorsEle = shadowDom.getElementById("translators");
+    // // Remove existed options.
+    // for (let i = translatorsEle.options.length; i > 0; i--) {
+    //     translatorsEle.options.remove(i - 1);
+    // }
+    // // Add translator options.
+    // for (let translator of availableTranslators) {
+    //     if (translator === selectedTranslator) {
+    //         translatorsEle.options.add(
+    //             new Option(chrome.i18n.getMessage(translator), translator, true, true)
+    //         );
+    //     } else {
+    //         translatorsEle.options.add(new Option(chrome.i18n.getMessage(translator), translator));
+    //     }
+    // }
+    // // Update and re-translate.
+    // translatorsEle.onchange = () => {
+    //     Messager.send("background", "update_default_translator", {
+    //         translator: translatorsEle.options[translatorsEle.selectedIndex].value,
+    //     }).then(() => {
+    //         Messager.send("background", "translate", { text: window.translateResult.originalText });
+    //     });
+    // };
 }
 
 /**

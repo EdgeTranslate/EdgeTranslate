@@ -3,7 +3,7 @@
 /**
  * start content style
  */
-#edge-translate-result {
+#{CommonPrefix}result {
     width: 100%;
     box-sizing: border-box;
     padding: 5% 10%;
@@ -14,207 +14,16 @@
     flex-direction: column;
     align-items: flex-start;
 
-    .content-title { // 标题样式
-        color: gray;
-        font-size: larger;
-    }
-
-    ul, .list li {
-        list-style-type: none;
-    }
-
-    .main-meaning {
-        width: 100%;
-        padding: 0;
-        margin: 0;
+    .block {
+        box-sizing: border-box;
         display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        justify-items: flex-end;
-
-        p {
-            flex-grow: 3;
-            flex-shrink: 1;
-            padding: 0;
-            margin: 0;
-        }
-
-        #icon-copy {
-            font-size: x-large;
-            fill: lightgray;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-
-            &:hover {
-                fill: gray;
-            }
-        }
-
-        .main-meaning-content-larger {
-            font-size: 30px;
-            margin-bottom: 1%;
-        }
-
-        .main-meaning-content-large {
-            font-size: large;
-            margin-bottom: 1%;
-        }
-
-        .main-meaning-content-small {
-            font-size: medium;
-            margin-bottom: 1%;
-        }
-
-        .main-meaning-content-smaller {
-            font-size: small;
-            margin-bottom: 1%;
-        }
-    }
-
-    .original-text {
-        color: gray;
-        font-weight: lighter;
-
-        p {
-            overflow: hidden;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-        }
-
-        #icon-edit {
-            font-size: x-large;
-            fill: lightgray;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-
-            &:hover {
-                fill: gray;
-            }
-        }
-
-        #icon-edit-done {
-            font-size: x-large;
-            fill: lightgray;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-
-            &:hover {
-                fill: gray;
-            }
-        }
-
-        @extend #edge-translate-result .main-meaning;
-    }
-
-    .target-phonetic-symbol {
-        width: 100%;
-
-        .target-phonetic-symbol-large {
-            font-size: large;
-            margin-top: 1%;
-        }
-
-        .target-phonetic-symbol-medium {
-            font-size: medium;
-            margin-top: 1%;
-        }
-
-        .target-phonetic-symbol-small {
-            font-size: small;
-            margin-top: 1%;
-        }
-    }
-
-    .pronounce {
-        width: 100%;
-
-        .pronounce-item {
-            padding: 0;
-            display: flex;
-            justify-content: flex-start;
-            justify-items: center;
-        }
-
-        .icon-pronounce {
-            padding: 0;
-
-            svg {
-                fill: light-primary !important;
-
-                &:hover {
-                    fill: orange !important;
-                }
-            }
-        }
-
-        .icon-pronounce-loading {
-            padding: 0;
-
-            circle {
-                fill: none;
-                stroke: light-primary !important;
-            }
-        }
-    }
-
-    .phonetic-symbol {
-        width: 100%;
-
-        .phonetic-symbol-content {
-            display: block;
-            margin-left: 15%;
-            font-weight: lighter;
-        }
-    }
-
-    .common-meanings {
-        .common-meanings-content {
-            @extend #edge-translate-result .phonetic-symbol .phonetic-symbol-content;
-        }
-    }
-
-    .detailed-meanings {
-        width: 100%;
-
-        .word-type {
-            color: gray;
-            margin-left: 10%;
-        }
-
-        .content {
-            display: block;
-            margin-left: 15%;
-            font-weight: light;
-        }
-    }
-
-    .definitions {
-        @extend #edge-translate-result .detailed-meanings;
-
-        .definitions-content {
-            display: block;
-            margin-left: 5%;
-            font-weight: light;
-        }
-    }
-
-    .synonyms {
-        @extend #edge-translate-result .detailed-meanings;
-    }
-
-    .phrases {
-        .phrases {
-            @extend #edge-translate-result .phonetic-symbol .phonetic-symbol-content;
-        }
-    }
-
-    .examples {
-        .sentences {
-            font-weight: light;
-        }
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        padding: 0.5rem PaddingHorizon;
+        margin: 0.2rem MarginHorizon;
+        background-color: rgba(255, 255, 255, 0.8);
+        border-radius: 8px;
     }
 }
 

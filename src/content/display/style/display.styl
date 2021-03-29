@@ -2,15 +2,18 @@
 @import 'loading.styl';
 @import 'error.styl';
 
+ImageRange = 4px;
+MaxZIndex = 2147483647;
+
 /*
  * style of translation result panel
  */
-#edge-translate-panel {
+#{CommonPrefix}panel {
     position: fixed;
     top: 0;
     left: 0;
     box-sizing: border-box;
-    z-index: 2147483647;
+    z-index: MaxZIndex;
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
@@ -19,64 +22,79 @@
     border-radius: 6px;
     overflow: visible;
     line-height: 1;
+    background-image: url('../../../image/background.png');
+
+    &:before {
+        content: '';
+        position: absolute;
+        left: 0;
+        right: 0;
+        z-index: -1;
+        display: block;
+        backdrop-filter: blur(6px);
+        height: 100%;
+        border-radius: 6px;
+    }
 }
 
-#edge-translate-panel-head {
+#{CommonPrefix}head {
     padding: 0.5vh;
     display: flex;
-    justify-content: space-between;
-    justify-items: center;
-    background: light-primary;
+    justify-content: flex-end;
+    align-items: center;
     flex: 0 0 auto;
     overflow: hidden;
+    cursor: grab;
 
-    .edge-translate-icon {
-        fill: white;
-
-        :hover {
-            fill: #ddd;
-        }
-    }
-
-    .icon-fix {
-        display: none;
-    }
-
-    #heading-icon {
+    #{CommonPrefix}head-icons {
         display: flex;
-        justify-content: space-around;
-        justify-items: center;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
     }
 
-    #translators {
-        box-sizing: border-box;
-        font-size: medium;
-        max-width: 45%;
-        height: 90%;
-        flex-shrink: 5;
-        flex-grow: 0;
-        background: rgba(74, 140, 247, 0.5);
-        color: white;
-        border: none;
-        border-radius: 3px;
-        outline: none !important;
-        -webkit-appearance: none;
-        -moz-appearance: none;
-        appearance: none;
-        margin: 2px;
+    .{CommonPrefix}head-icon {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-style: normal;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        cursor: pointer;
+        font-size: 18px;
+        width: 30px;
+        height: 30px;
+        background-color: rgba(255, 255, 255, 0.8);
+        border-radius: 15px;
 
-        option {
-            background: white;
-            color: color-primary;
+        svg {
+            fill: Gray;
+            width: 18px;
+            height: 18px;
+            display: block;
         }
-    }
-
-    &:hover {
-        cursor: grabbing;
     }
 }
 
-#edge-translate-panel-body {
+#{CommonPrefix}source-option {
+    box-sizing: border-box;
+    font-weight: normal;
+    font-size: medium;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 0.5rem PaddingHorizon;
+    margin: 0.2rem MarginHorizon;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 8px;
+
+    span {
+        padding: 0.5rem;
+        margin-right: 0.5rem;
+    }
+}
+
+#{CommonPrefix}body {
     display: flex;
     overflow-x: hidden;
     overflow-y: auto;
@@ -87,11 +105,11 @@
     color: black;
 }
 
-#edge-translate-panel-highlight {
+#{CommonPrefix}panel-highlight {
     height: 100%;
     background: color-primary;
     opacity: 0.3;
     position: fixed;
     top: 0;
-    z-index: 10000000;
+    z-index: MaxZIndex;
 }
