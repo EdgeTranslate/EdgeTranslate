@@ -6,29 +6,90 @@
 #{CommonPrefix}result {
     width: 100%;
     box-sizing: border-box;
-    padding: 5% 10%;
     font-weight: normal;
     font-size: medium;
     position: relative;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    justify-content: flex-start;
+    align-items: center;
 
     .block {
+        width: 'calc(100% - 2*%s)' % BlockMarginHorizon;
         box-sizing: border-box;
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
         align-items: center;
-        padding: 0.5rem PaddingHorizon;
-        margin: 0.2rem MarginHorizon;
+        padding: BlockPadding;
+        margin: BlockMarginVertical BlockMarginHorizon;
         background-color: rgba(255, 255, 255, 0.8);
         border-radius: 8px;
     }
-}
 
-hr {
-    width: 100%;
+    .{CommonPrefix}text-block {
+        width: 100%;
+        display: flex;
+        margin: 5px 0;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .{CommonPrefix}pronounce-block {
+        width: 100%;
+        margin: 5px 0;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+
+        .{CommonPrefix}icon-pronounce {
+            width: 20px;
+            height: 20px;
+            fill: light-primary;
+            flex-shrink: 0;
+
+            &:hover {
+                fill: orange !important;
+            }
+        }
+
+        .{CommonPrefix}icon-pronounce-loading {
+            width: 24px;
+            height: 24px;
+            fill: light-primary;
+            padding: 0;
+            flex-shrink: 0;
+
+            circle {
+                fill: none;
+                stroke: light-primary !important;
+            }
+        }
+
+        .{CommonPrefix}pronounce-text {
+            margin-left: 10px;
+        }
+    }
+
+    #{CommonPrefix}source {
+        .{CommonPrefix}icon-edit {
+            width: 16px;
+            height: 16px;
+            fill: Gray;
+            flex-shrink: 0;
+        }
+    }
+
+    #{CommonPrefix}target {
+        #{CommonPrefix}icon-copy {
+            width: 20px;
+            height: 20px;
+            fill: Gray;
+            flex-shrink: 0;
+        }
+    }
 }
 
 /**

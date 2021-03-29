@@ -1,27 +1,24 @@
 /** @jsx h */
 import { h } from "preact";
 import render from "preact-render-to-string";
-import format from "./library/render.js";
 import moveable from "./library/moveable/moveable.js";
 import Notifier from "./library/notifier/notifier.js";
 import { isChromePDFViewer, detectSelect } from "../common.js";
 import Messager from "common/scripts/messager.js";
 import { delayPromise } from "common/scripts/promise.js";
 
+import Panel, { CommonPrefix } from "./templates/Panel.jsx";
 /**
  * load templates
  */
-import result from "./templates/result.xhtml"; // template of translate result
-import loading from "./templates/loading.xhtml"; // template of loading icon
-import error from "./templates/error.xhtml"; // template of error message
+import Result from "./templates/Result.jsx"; // template of translate result
+import Loading from "./templates/Loading.jsx"; // template of loading icon
+import Error from "./templates/Error.jsx"; // template of error message
 
-import Panel from "./templates/Panel.jsx";
-import Result from "./templates/Result.jsx";
-
-const Template = {
-    result,
-    loading,
-    error,
+const TemplateMap = {
+    result: Result,
+    loading: Loading,
+    error: Error,
 };
 
 /**
@@ -78,8 +75,6 @@ let documentBodyCSS;
 
 // Send notifications to users.
 const notifier = new Notifier("center");
-
-const CommonPrefix = "edge-translate-";
 
 /**
  * initiate panel elements to display translation result
@@ -255,8 +250,9 @@ async function showPanel(content, template) {
     window.isDisplayingResult = true;
 
     // Write contents into iframe.
-    bodyPanel.innerHTML = render(<Result result={content} />);
-    // addBodyEventListener(template);
+    const Template = TemplateMap[template];
+    bodyPanel.innerHTML = render(<Template {...content} />);
+    addBodyEventListener(template);
     // if panel hasn't been displayed, locate the panel and show it
     if (!document.documentElement.contains(panelContainer)) {
         await getDisplaySetting();
@@ -641,38 +637,42 @@ function addBodyEventListener(template) {
     switch (template) {
         case "result": {
             // copy the translation result to the copy board
-            shadowDom.getElementById("icon-copy").addEventListener("click", copyContent);
+            shadowDom
+                .getElementById(`${CommonPrefix}icon-copy`)
+                .addEventListener("click", copyContent);
 
             // Pronounce texts.
-            let sourcePronounceIcon = shadowDom.getElementById("source-pronounce");
+            let sourcePronounceIcon = shadowDom.getElementById(
+                `${CommonPrefix}icon-pronounce-source`
+            );
             if (sourcePronounceIcon) {
                 sourcePronounceIcon.addEventListener("click", sourcePronounce);
             }
 
-            let targetPronounceIcon = shadowDom.getElementById("target-pronounce");
+            let targetPronounceIcon = shadowDom.getElementById(
+                `${CommonPrefix}icon-pronounce-target`
+            );
             if (targetPronounceIcon) {
                 targetPronounceIcon.addEventListener("click", targetPronounce);
             }
 
             // Edit and re-translate the text.
-            let editIcon = shadowDom.getElementById("icon-edit");
+            let editIcon = shadowDom.getElementById(`${CommonPrefix}icon-edit`);
             editIcon.addEventListener("click", editOriginalText);
             editIcon.style.display = "block";
 
-            let editDoneIcon = shadowDom.getElementById("icon-edit-done");
+            let editDoneIcon = shadowDom.getElementById(`${CommonPrefix}icon-edit-done`);
             editDoneIcon.addEventListener("click", submitEditedText);
             editDoneIcon.style.display = "none";
 
             // Unfold original text on click.
-            let originalTextEle = resultPanel
-                .getElementsByClassName("original-text")[0]
-                .getElementsByTagName("p")[0];
+            let originalTextEle = shadowDom.getElementById(`${CommonPrefix}source-text`);
             originalTextEle.addEventListener("mousedown", expandOriginalText);
 
-            // 根据用户设定决定是否采用从右到左布局（用于阿拉伯语等从右到左书写的语言）
+            // // 根据用户设定决定是否采用从右到左布局（用于阿拉伯语等从右到左书写的语言）
             chrome.storage.sync.get("LayoutSettings", (result) => {
                 if (result.LayoutSettings.RTL) {
-                    let contents = resultPanel.getElementsByClassName("may-need-rtl");
+                    let contents = shadowDom.getElementsByClassName(`${CommonPrefix}may-need-rtl`);
                     for (let i = 0; i < contents.length; i++) {
                         contents[i].dir = "rtl";
                     }
@@ -765,8 +765,9 @@ function openOptionsPage() {
 function sourcePronounce() {
     if (document.documentElement.contains(panelContainer)) {
         // Show loading animation when loading pronouncing.
-        shadowDom.getElementById("source-pronounce").style.display = "none";
-        shadowDom.getElementById("source-pronounce-loading").style.display = "block";
+        shadowDom.getElementById(`${CommonPrefix}icon-pronounce-source`).style.display = "none";
+        shadowDom.getElementById(`${CommonPrefix}icon-pronounce-source-loading`).style.display =
+            "block";
 
         Messager.send("background", "pronounce", {
             pronouncing: "source",
@@ -786,8 +787,9 @@ function sourcePronounce() {
 function targetPronounce() {
     if (document.documentElement.contains(panelContainer)) {
         // Show loading animation when loading pronouncing.
-        shadowDom.getElementById("target-pronounce").style.display = "none";
-        shadowDom.getElementById("target-pronounce-loading").style.display = "block";
+        shadowDom.getElementById(`${CommonPrefix}icon-pronounce-target`).style.display = "none";
+        shadowDom.getElementById(`${CommonPrefix}icon-pronounce-target-loading`).style.display =
+            "block";
 
         Messager.send("background", "pronounce", {
             pronouncing: "target",
@@ -811,19 +813,19 @@ function targetPronounce() {
  */
 function onPronouncingFinished(pronouncing) {
     if (pronouncing == "source") {
-        shadowDom.getElementById("source-pronounce-loading").style.display = "none";
-        shadowDom.getElementById("source-pronounce").style.display = "block";
+        shadowDom.getElementById(`${CommonPrefix}icon-pronounce-source-loading`).style.display =
+            "none";
+        shadowDom.getElementById(`${CommonPrefix}icon-pronounce-source`).style.display = "block";
     } else if (pronouncing == "target") {
-        shadowDom.getElementById("target-pronounce-loading").style.display = "none";
-        shadowDom.getElementById("target-pronounce").style.display = "block";
+        shadowDom.getElementById(`${CommonPrefix}icon-pronounce-target-loading`).style.display =
+            "none";
+        shadowDom.getElementById(`${CommonPrefix}icon-pronounce-target`).style.display = "block";
     }
 }
 
 function copyContent() {
     // the node of translation result
-    let translateResultEle = resultPanel
-        .getElementsByClassName("main-meaning")[0]
-        .getElementsByTagName("p")[0];
+    let translateResultEle = shadowDom.getElementById(`${CommonPrefix}target-text`);
 
     // make contents editable
     translateResultEle.setAttribute("contenteditable", "true");
@@ -1006,29 +1008,29 @@ function submitEditedText() {
  * @returns {void} nothing
  */
 function setUpTranslateConfig(selectedTranslator, availableTranslators) {
-    // let translatorsEle = shadowDom.getElementById("translators");
-    // // Remove existed options.
-    // for (let i = translatorsEle.options.length; i > 0; i--) {
-    //     translatorsEle.options.remove(i - 1);
-    // }
-    // // Add translator options.
-    // for (let translator of availableTranslators) {
-    //     if (translator === selectedTranslator) {
-    //         translatorsEle.options.add(
-    //             new Option(chrome.i18n.getMessage(translator), translator, true, true)
-    //         );
-    //     } else {
-    //         translatorsEle.options.add(new Option(chrome.i18n.getMessage(translator), translator));
-    //     }
-    // }
-    // // Update and re-translate.
-    // translatorsEle.onchange = () => {
-    //     Messager.send("background", "update_default_translator", {
-    //         translator: translatorsEle.options[translatorsEle.selectedIndex].value,
-    //     }).then(() => {
-    //         Messager.send("background", "translate", { text: window.translateResult.originalText });
-    //     });
-    // };
+    let translatorsEle = shadowDom.getElementById(`${CommonPrefix}translators`);
+    // Remove existed options.
+    for (let i = translatorsEle.options.length; i > 0; i--) {
+        translatorsEle.options.remove(i - 1);
+    }
+    // Add translator options.
+    for (let translator of availableTranslators) {
+        if (translator === selectedTranslator) {
+            translatorsEle.options.add(
+                new Option(chrome.i18n.getMessage(translator), translator, true, true)
+            );
+        } else {
+            translatorsEle.options.add(new Option(chrome.i18n.getMessage(translator), translator));
+        }
+    }
+    // Update and re-translate.
+    translatorsEle.onchange = () => {
+        Messager.send("background", "update_default_translator", {
+            translator: translatorsEle.options[translatorsEle.selectedIndex].value,
+        }).then(() => {
+            Messager.send("background", "translate", { text: window.translateResult.originalText });
+        });
+    };
 }
 
 /**

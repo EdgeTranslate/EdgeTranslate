@@ -33,7 +33,7 @@ export default function Panel() {
             </div>
             <div id={`${CommonPrefix}source-option`}>
                 <span>正在使用</span>
-                <span>谷歌翻译</span>
+                <select name="translators" id={`${CommonPrefix}translators`} />
             </div>
             <div id={`${CommonPrefix}body`} />
         </div>
