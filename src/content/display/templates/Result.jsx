@@ -10,7 +10,7 @@ import CopyIcon from "../icons/copy.svg";
 export default function Result(props) {
     return (
         <div id={`${CommonPrefix}result`}>
-            <div class="block" id={`${CommonPrefix}source`}>
+            <div class={`${CommonPrefix}block`} id={`${CommonPrefix}source`}>
                 <div class={`${CommonPrefix}text-block`}>
                     <div id={`${CommonPrefix}source-text`} class={`${CommonPrefix}may-need-rtl`}>
                         {props.originalText}
@@ -36,7 +36,7 @@ export default function Result(props) {
                     </span>
                 </div>
             </div>
-            <div class="block" id={`${CommonPrefix}target`}>
+            <div class={`${CommonPrefix}block`} id={`${CommonPrefix}target`}>
                 <div class={`${CommonPrefix}text-block`}>
                     <div id={`${CommonPrefix}target-text`} class={`${CommonPrefix}may-need-rtl`}>
                         {props.mainMeaning}
@@ -57,6 +57,17 @@ export default function Result(props) {
                         {props.tPronunciation}
                     </span>
                 </div>
+            </div>
+            <div class={`${CommonPrefix}block`} id={`${CommonPrefix}detail`}>
+                <div class={`${CommonPrefix}block-head`}>
+                    <span
+                        class={`${CommonPrefix}block-head-spot`}
+                        style="background-color: #00BFA5;"
+                    />
+                    <span class={`${CommonPrefix}block-head-title`}>具体含义</span>
+                    <div class={`${CommonPrefix}block-head-dividing-line`} />
+                </div>
+                <div class={`${CommonPrefix}block-content`} />
             </div>
         </div>
     );

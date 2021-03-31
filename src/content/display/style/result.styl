@@ -14,7 +14,7 @@
     justify-content: flex-start;
     align-items: center;
 
-    .block {
+    .{CommonPrefix}block {
         width: 'calc(100% - 2*%s)' % BlockMarginHorizon;
         box-sizing: border-box;
         display: flex;
@@ -34,6 +34,38 @@
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
+    }
+
+    .{CommonPrefix}block-head {
+        width: 100%;
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: flex-start;
+        align-items: center;
+
+        .{CommonPrefix}block-head-spot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .{CommonPrefix}block-head-title {
+            margin-left: 5px;
+        }
+
+        .{CommonPrefix}block-head-dividing-line {
+            width: 98%;
+            flex-shrink: 0;
+            border: 1px solid rgba(0, 0, 0, 0.25);
+            margin: 5px 0; 
+        }
+    }
+
+    .{CommonPrefix}block-content {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
     }
 
     .{CommonPrefix}pronounce-block {
@@ -89,6 +121,9 @@
             fill: Gray;
             flex-shrink: 0;
         }
+    }
+
+    #{CommonPrefix}detail {
     }
 }
 

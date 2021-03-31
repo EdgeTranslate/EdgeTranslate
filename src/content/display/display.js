@@ -239,6 +239,23 @@ const notifier = new Notifier("center");
         });
 })();
 
+showPanel(
+    {
+        originalText: "test",
+        mainMeaning: "测试",
+        sPronunciation: "[test]",
+        tPronunciation: "ceshi",
+        detailedMeanings: [
+            {
+                pos: "词性",
+                meaning: "意思",
+                synonyms: ["近义词"],
+            },
+        ],
+    },
+    "result"
+);
+
 /**
  * render panel content using translation result and templates and show the panel in the current web page
  *
