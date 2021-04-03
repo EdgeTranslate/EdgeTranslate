@@ -1,11 +1,11 @@
 /** @jsx h */
 import { h } from "preact";
 import { CommonPrefix } from "./Panel.jsx";
-import EditIcon from "../icons/edit.svg";
-import EditDoneIcon from "../icons/edit-done.svg";
-import PronounceIcon from "../icons/pronounce.svg";
-import PronounceLoadingIcon from "../icons/loading.jsx";
-import CopyIcon from "../icons/copy.svg";
+import EditIcon from "./icons/edit.svg";
+import EditDoneIcon from "./icons/edit-done.svg";
+import PronounceIcon from "./icons/pronounce.svg";
+import PronounceLoadingIcon from "./icons/loading.jsx";
+import CopyIcon from "./icons/copy.svg";
 
 export default function Result(props) {
     return (
