@@ -1,6 +1,6 @@
 /** @jsx h */
 import { h } from "preact";
-import { useEffect, useState, useRef, useCallback } from "preact/hooks";
+import { useEffect, useState, useRef, useCallback, useReducer } from "preact/hooks";
 import { useLatest, useEvent, useClickAway } from "react-use";
 import root from "react-shadow/styled-components";
 import Messager from "common/scripts/messager.js";
@@ -28,6 +28,9 @@ const scrollbarWidth = getScrollbarWidth();
 let documentBodyCSS = "";
 // the duration time of result panel's transition. unit: ms
 const transitionDuration = 500;
+// TTS speeds
+let sourceTTSSpeed = "fast",
+    targetTTSSpeed = "fast";
 
 export default function Panel() {
     // whether the result is open
@@ -49,6 +52,12 @@ export default function Panel() {
         show: false, // whether to show the highlight part
         position: "right", // the position of the highlight part. value: "left"|"right"
     });
+    /**
+     * the pronounce status
+     * These states should belong to Result.jsx but because Panel is in charge of receiving pronounce messages, it's more convenient to share pronounce states in this way.
+     */
+    const [sourcePronouncing, setSourcePronounce] = useReducer(sourcePronounce, false),
+        [targetPronouncing, setTargetPronounce] = useReducer(targetPronounce, false);
     const containerElRef = useRef(), // the container of translation panel.
         panelElRef = useRef(), // panel element
         headElRef = useRef(), // panel head element
@@ -176,8 +185,8 @@ export default function Panel() {
                     break;
                 case "translating_finished":
                     window.translateResult = message.detail;
-                    // sourceTTSSpeed = "fast";
-                    // targetTTSSpeed = "fast";
+                    sourceTTSSpeed = "fast";
+                    targetTTSSpeed = "fast";
                     setOpen(true);
                     setContentType("RESULT");
                     setContent(message.detail);
@@ -187,10 +196,12 @@ export default function Panel() {
                     setContent(message.detail);
                     break;
                 case "pronouncing_finished":
-                    onPronouncingFinished(message.detail.pronouncing);
+                    if (message.detail.pronouncing === "source") setSourcePronounce(false);
+                    else if (message.detail.pronouncing === "target") setTargetPronounce(false);
                     break;
                 case "pronouncing_error":
-                    onPronouncingFinished(message.detail.pronouncing);
+                    if (message.detail.pronouncing === "source") setSourcePronounce(false);
+                    else if (message.detail.pronouncing === "target") setTargetPronounce(false);
                     notifier.notify({
                         type: "error",
                         title: chrome.i18n.getMessage("AppName"),
@@ -199,7 +210,7 @@ export default function Panel() {
                     break;
                 case "update_translator_options":
                     setAvailableTranslators(message.detail.availableTranslators);
-                    setCurrentTranslator(message.detail.availableTranslators);
+                    setCurrentTranslator(message.detail.selectedTranslator);
                     break;
                 // shortcut command
                 case "command":
@@ -213,13 +224,13 @@ export default function Panel() {
                             setOpen(false);
                             break;
                         case "pronounce_original":
-                            sourcePronounce();
+                            setSourcePronounce(true);
                             break;
                         case "pronounce_translated":
-                            targetPronounce();
+                            setTargetPronounce(true);
                             break;
                         case "copy_result":
-                            if (translateResult.current.mainMeaning) {
+                            if (window.translateResult.mainMeaning) {
                                 copyContent();
                             }
                             break;
@@ -254,6 +265,9 @@ export default function Panel() {
             if (isChromePDFViewer()) {
                 document.body.children[0].focus();
             }
+
+            setSourcePronounce(false);
+            setTargetPronounce(false);
 
             // Tell background.js that the result panel has been closed
             Messager.send("background", "frame_closed");
@@ -650,6 +664,7 @@ export default function Panel() {
                             value={currentTranslator}
                             onChange={(event) => {
                                 const newTranslator = event.target.value;
+                                setCurrentTranslator(newTranslator);
                                 Messager.send("background", "update_default_translator", {
                                     translator: newTranslator,
                                 }).then(() => {
@@ -669,7 +684,15 @@ export default function Panel() {
                     </div>
                     <div id={`${CommonPrefix}body`} ref={bodyElRef}>
                         {contentType === "LOADING" && <Loading />}
-                        {contentType === "RESULT" && <Result {...content} />}
+                        {contentType === "RESULT" && (
+                            <Result
+                                {...content}
+                                sourcePronouncing={sourcePronouncing}
+                                targetPronouncing={targetPronouncing}
+                                setSourcePronounce={setSourcePronounce}
+                                setTargetPronounce={setTargetPronounce}
+                            />
+                        )}
                         {contentType === "ERROR" && <Error {...content} />}
                     </div>
                 </div>
@@ -709,4 +732,45 @@ function hasScrollbar() {
     return (
         document.body.scrollHeight > (window.innerHeight || document.documentElement.clientHeight)
     );
+}
+
+/**
+ * A reducer for source pronouncing state
+ * Send message to background to pronounce the translating text.
+ */
+function sourcePronounce(_, startPronounce) {
+    if (startPronounce)
+        Messager.send("background", "pronounce", {
+            pronouncing: "source",
+            text: window.translateResult.originalText,
+            language: window.translateResult.sourceLanguage,
+            speed: sourceTTSSpeed,
+        }).then(() => {
+            if (sourceTTSSpeed === "fast") {
+                sourceTTSSpeed = "slow";
+            } else {
+                sourceTTSSpeed = "fast";
+            }
+        });
+    return startPronounce;
+}
+
+/**
+ * A reducer for target pronouncing state
+ */
+function targetPronounce(_, startPronounce) {
+    if (startPronounce)
+        Messager.send("background", "pronounce", {
+            pronouncing: "target",
+            text: window.translateResult.mainMeaning,
+            language: window.translateResult.targetLanguage,
+            speed: targetTTSSpeed,
+        }).then(() => {
+            if (targetTTSSpeed === "fast") {
+                targetTTSSpeed = "slow";
+            } else {
+                targetTTSSpeed = "fast";
+            }
+        });
+    return startPronounce;
 }

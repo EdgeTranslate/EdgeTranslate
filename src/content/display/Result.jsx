@@ -7,6 +7,15 @@ import PronounceIcon from "./icons/pronounce.svg";
 import PronounceLoadingIcon from "./icons/loading.jsx";
 import CopyIcon from "./icons/copy.svg";
 
+/**
+ * props:{
+ *     content: object; // translation result
+ *     sourcePronouncing: boolean;
+ *     targetPronouncing: boolean;
+ *     setSourcePronounce: (boolean)=>void;
+ *     setTargetPronounce: (boolean)=>void;
+ * }
+ */
 export default function Result(props) {
     return (
         <div id={`${CommonPrefix}result`}>
@@ -22,15 +31,18 @@ export default function Result(props) {
                     />
                 </div>
                 <div class={`${CommonPrefix}pronounce-block`}>
-                    <PronounceIcon
-                        id={`${CommonPrefix}icon-pronounce-source`}
-                        class={`${CommonPrefix}icon-pronounce`}
-                    />
-                    <PronounceLoadingIcon
-                        id={`${CommonPrefix}icon-pronounce-source-loading`}
-                        class={`${CommonPrefix}icon-pronounce-loading`}
-                        style="display:none"
-                    />
+                    {props.sourcePronouncing ? (
+                        <PronounceLoadingIcon
+                            id={`${CommonPrefix}icon-pronounce-source-loading`}
+                            class={`${CommonPrefix}icon-pronounce-loading`}
+                        />
+                    ) : (
+                        <PronounceIcon
+                            id={`${CommonPrefix}icon-pronounce-source`}
+                            class={`${CommonPrefix}icon-pronounce`}
+                            onClick={() => props.setSourcePronounce(true)}
+                        />
+                    )}
                     <span class={`${CommonPrefix}pronounce-text ${CommonPrefix}may-need-rtl`}>
                         {props.sPronunciation}
                     </span>
@@ -44,15 +56,18 @@ export default function Result(props) {
                     <CopyIcon id={`${CommonPrefix}icon-copy`} />
                 </div>
                 <div class={`${CommonPrefix}pronounce-block`}>
-                    <PronounceIcon
-                        id={`${CommonPrefix}icon-pronounce-target`}
-                        class={`${CommonPrefix}icon-pronounce`}
-                    />
-                    <PronounceLoadingIcon
-                        id={`${CommonPrefix}icon-pronounce-target-loading`}
-                        class={`${CommonPrefix}icon-pronounce-loading`}
-                        style="display: none"
-                    />
+                    {props.targetPronouncing ? (
+                        <PronounceLoadingIcon
+                            id={`${CommonPrefix}icon-pronounce-target-loading`}
+                            class={`${CommonPrefix}icon-pronounce-loading`}
+                        />
+                    ) : (
+                        <PronounceIcon
+                            id={`${CommonPrefix}icon-pronounce-target`}
+                            class={`${CommonPrefix}icon-pronounce`}
+                            onClick={() => props.setTargetPronounce(true)}
+                        />
+                    )}
                     <span class={`${CommonPrefix}pronounce-text ${CommonPrefix}may-need-rtl`}>
                         {props.tPronunciation}
                     </span>

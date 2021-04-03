@@ -4,9 +4,6 @@ import { h, render } from "preact";
 
 import Panel from "./Panel.jsx";
 
-// // TTS speeds
-// let sourceTTSSpeed, targetTTSSpeed;
-
 window.onload = () => {
     render(<Panel />, document.documentElement);
 };
@@ -113,70 +110,6 @@ window.onload = () => {
 //  * block start
 //  * 事件监听的回调函数定义请在此区域中进行
 //  */
-
-// /**
-//  * Send message to background to pronounce the translating text.
-//  */
-// function sourcePronounce() {
-//     if (document.documentElement.contains(panelContainer)) {
-//         // Show loading animation when loading pronouncing.
-//         shadowDom.getElementById(`${CommonPrefix}icon-pronounce-source`).style.display = "none";
-//         shadowDom.getElementById(`${CommonPrefix}icon-pronounce-source-loading`).style.display =
-//             "block";
-
-//         Messager.send("background", "pronounce", {
-//             pronouncing: "source",
-//             text: window.translateResult.originalText,
-//             language: window.translateResult.sourceLanguage,
-//             speed: sourceTTSSpeed,
-//         }).then(() => {
-//             if (sourceTTSSpeed === "fast") {
-//                 sourceTTSSpeed = "slow";
-//             } else {
-//                 sourceTTSSpeed = "fast";
-//             }
-//         });
-//     }
-// }
-
-// function targetPronounce() {
-//     if (document.documentElement.contains(panelContainer)) {
-//         // Show loading animation when loading pronouncing.
-//         shadowDom.getElementById(`${CommonPrefix}icon-pronounce-target`).style.display = "none";
-//         shadowDom.getElementById(`${CommonPrefix}icon-pronounce-target-loading`).style.display =
-//             "block";
-
-//         Messager.send("background", "pronounce", {
-//             pronouncing: "target",
-//             text: window.translateResult.mainMeaning,
-//             language: window.translateResult.targetLanguage,
-//             speed: targetTTSSpeed,
-//         }).then(() => {
-//             if (targetTTSSpeed === "fast") {
-//                 targetTTSSpeed = "slow";
-//             } else {
-//                 targetTTSSpeed = "fast";
-//             }
-//         });
-//     }
-// }
-
-// /**
-//  * Restore pronounce icon when pronouncing finished.
-//  *
-//  * @param {String} pronouncing which pronounce icon should we restore, source or target?
-//  */
-// function onPronouncingFinished(pronouncing) {
-//     if (pronouncing == "source") {
-//         shadowDom.getElementById(`${CommonPrefix}icon-pronounce-source-loading`).style.display =
-//             "none";
-//         shadowDom.getElementById(`${CommonPrefix}icon-pronounce-source`).style.display = "block";
-//     } else if (pronouncing == "target") {
-//         shadowDom.getElementById(`${CommonPrefix}icon-pronounce-target-loading`).style.display =
-//             "none";
-//         shadowDom.getElementById(`${CommonPrefix}icon-pronounce-target`).style.display = "block";
-//     }
-// }
 
 // function copyContent() {
 //     // the node of translation result
