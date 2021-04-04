@@ -2,13 +2,14 @@
 import { h } from "preact";
 import { useEffect, useState, useRef, useCallback, useReducer } from "preact/hooks";
 import { useLatest, useEvent, useClickAway } from "react-use";
+import styled from "styled-components";
 import root from "react-shadow/styled-components";
 import Messager from "common/scripts/messager.js";
 import Notifier from "./library/notifier/notifier.js";
 import moveable from "./library/moveable/moveable.js";
 import { delayPromise } from "common/scripts/promise.js";
 import { isChromePDFViewer } from "../common.js";
-import Result from "./Result.jsx"; // display translate result
+import Result, { Block } from "./Result.jsx"; // display translate result
 import Loading from "./Loading.jsx"; // display loading animation
 import Error from "./Error.jsx"; // display error messages
 import SettingIcon from "./icons/setting.svg";
@@ -32,7 +33,7 @@ const transitionDuration = 500;
 let sourceTTSSpeed = "fast",
     targetTTSSpeed = "fast";
 
-export default function Panel() {
+export default function ResultPanel() {
     // whether the result is open
     const [open, setOpen] = useState(false);
     // whether the panel is fixed(the panel won't be close when users click outside of the it)
@@ -47,7 +48,7 @@ export default function Panel() {
     const [availableTranslators, setAvailableTranslators] = useState();
     // selected translator
     const [currentTranslator, setCurrentTranslator] = useState();
-    // control the behavior of highlight part
+    // control the behavior of highlight part(a placeholder to preview the "fixed" style panel)
     const [highlight, setHighlight] = useState({
         show: false, // whether to show the highlight part
         position: "right", // the position of the highlight part. value: "left"|"right"
@@ -600,30 +601,17 @@ export default function Panel() {
 
     return (
         open && (
-            <root.div id={`${CommonPrefix}container`} ref={containerElRef}>
-                <div
-                    id={`${CommonPrefix}panel`}
-                    style="position: fixed;"
-                    ref={onDisplayStatusChange}
-                >
-                    <link
-                        type="text/css"
-                        rel="stylesheet"
-                        href={chrome.runtime.getURL("content/display/style/display.css")}
-                    />
-                    <div id={`${CommonPrefix}head`} ref={headElRef}>
-                        <div id={`${CommonPrefix}head-icons`}>
-                            <div
-                                class={`${CommonPrefix}head-icon`}
-                                id={`${CommonPrefix}icon-options`}
+            <root.div ref={containerElRef}>
+                <Panel style={{ position: "fixed" }} ref={onDisplayStatusChange}>
+                    <Head ref={headElRef}>
+                        <HeadIcons>
+                            <HeadIcon
                                 onClick={() => Messager.send("background", "open_options_page", {})}
                             >
                                 <SettingIcon />
-                            </div>
+                            </HeadIcon>
                             {panelFix ? (
-                                <div
-                                    class={`${CommonPrefix}head-icon`}
-                                    id={`${CommonPrefix}icon-pin`}
+                                <HeadIcon
                                     onClick={() => {
                                         setPanelFix(false);
                                         chrome.storage.sync.set({
@@ -632,11 +620,9 @@ export default function Panel() {
                                     }}
                                 >
                                     <PinIcon />
-                                </div>
+                                </HeadIcon>
                             ) : (
-                                <div
-                                    class={`${CommonPrefix}head-icon`}
-                                    id={`${CommonPrefix}icon-unpin`}
+                                <HeadIcon
                                     onClick={() => {
                                         setPanelFix(true);
                                         chrome.storage.sync.set({
@@ -645,44 +631,39 @@ export default function Panel() {
                                     }}
                                 >
                                     <UnpinIcon />
-                                </div>
+                                </HeadIcon>
                             )}
-                            <div
-                                class={`${CommonPrefix}head-icon`}
-                                id={`${CommonPrefix}icon-close`}
-                                onClick={() => setOpen(false)}
-                            >
+                            <HeadIcon onClick={() => setOpen(false)}>
                                 <CloseIcon />
-                            </div>
-                        </div>
-                    </div>
-                    <div id={`${CommonPrefix}source-option`}>
-                        <span>正在使用</span>
-                        <select
-                            name="translators"
-                            id={`${CommonPrefix}translators`}
-                            value={currentTranslator}
-                            onChange={(event) => {
-                                const newTranslator = event.target.value;
-                                setCurrentTranslator(newTranslator);
-                                Messager.send("background", "update_default_translator", {
-                                    translator: newTranslator,
-                                }).then(() => {
-                                    if (window.translateResult.originalText)
-                                        Messager.send("background", "translate", {
-                                            text: window.translateResult.originalText,
-                                        });
-                                });
-                            }}
-                        >
-                            {availableTranslators.map((translator) => (
-                                <option key={translator} value={translator}>
-                                    {chrome.i18n.getMessage(translator)}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-                    <div id={`${CommonPrefix}body`} ref={bodyElRef}>
+                            </HeadIcon>
+                        </HeadIcons>
+                    </Head>
+                    <Body ref={bodyElRef}>
+                        <SourceOption>
+                            <span>正在使用</span>
+                            <select
+                                name="translators"
+                                value={currentTranslator}
+                                onChange={(event) => {
+                                    const newTranslator = event.target.value;
+                                    setCurrentTranslator(newTranslator);
+                                    Messager.send("background", "update_default_translator", {
+                                        translator: newTranslator,
+                                    }).then(() => {
+                                        if (window.translateResult.originalText)
+                                            Messager.send("background", "translate", {
+                                                text: window.translateResult.originalText,
+                                            });
+                                    });
+                                }}
+                            >
+                                {availableTranslators?.map((translator) => (
+                                    <option key={translator} value={translator}>
+                                        {chrome.i18n.getMessage(translator)}
+                                    </option>
+                                ))}
+                            </select>
+                        </SourceOption>
                         {contentType === "LOADING" && <Loading />}
                         {contentType === "RESULT" && (
                             <Result
@@ -694,11 +675,10 @@ export default function Panel() {
                             />
                         )}
                         {contentType === "ERROR" && <Error {...content} />}
-                    </div>
-                </div>
+                    </Body>
+                </Panel>
                 {highlight.show && (
-                    <div
-                        id={`${CommonPrefix}panel-highlight`}
+                    <Highlight
                         style={{
                             width: displaySettingRef.current.fixedData.width * window.innerWidth,
                             [highlight.position]: 0,
@@ -709,6 +689,125 @@ export default function Panel() {
         )
     );
 }
+
+/**
+ * STYLE FOR THE COMPONENT START
+ */
+
+export const MaxZIndex = 2147483647;
+
+const Panel = styled.div`
+    position: fixed;
+    top: 0;
+    left: 0;
+    box-sizing: border-box;
+    z-index: ${MaxZIndex};
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: stretch;
+    border-radius: 6px;
+    overflow: visible;
+    line-height: 1;
+    font-size: 16px;
+    background-image: url(${chrome.runtime.getURL("../../image/background.png")});
+
+    &:before {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        z-index: -1;
+        display: block;
+        backdrop-filter: blur(6px);
+        height: 100%;
+        border-radius: 6px;
+    }
+`;
+
+const Head = styled.div`
+    padding: 0.5vh;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    flex: 0 0 auto;
+    overflow: hidden;
+    cursor: grab;
+`;
+
+const HeadIcons = styled.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+`;
+
+const HeadIcon = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    cursor: pointer;
+    font-size: 18px;
+    width: 24px;
+    height: 24px;
+    margin: 2px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 15px;
+
+    svg {
+        fill: Gray;
+        width: 16px;
+        height: 16px;
+        display: block;
+    }
+`;
+
+const Body = styled.div`
+    width: 100%;
+    box-sizing: border-box;
+    font-weight: normal;
+    font-size: medium;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    flex-grow: 1;
+    flex-shrink: 1;
+    word-break: break-word;
+    color: black;
+`;
+
+const SourceOption = styled(Block)`
+    font-weight: normal;
+    font-size: medium;
+    margin-top: 0;
+    flex-direction: row;
+
+    span {
+        margin-right: 5%;
+    }
+`;
+
+const Highlight = styled.div`
+    height: 100%;
+    background: color-primary;
+    opacity: 0.3;
+    position: fixed;
+    top: 0;
+    z-index: ${MaxZIndex};
+`;
+
+/**
+ * STYLE FOR THE COMPONENT END
+ */
 
 /**
  * calculate the width of scroll bar
