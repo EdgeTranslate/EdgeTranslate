@@ -29,11 +29,11 @@ class Channel {
 
                 switch (parsed.type) {
                     case "event":
-                        this._eventManager.handleEvent(parsed.event, parsed.detail, sender);
+                        this._eventManager.emit(parsed.event, parsed.detail, sender);
                         callback && callback();
                         break;
                     case "service": {
-                        const result = this._handleService(parsed.service, parsed.params, sender);
+                        const result = this._serve(parsed.service, parsed.params, sender);
                         callback && callback(result);
                         break;
                     }
@@ -56,12 +56,12 @@ class Channel {
     }
 
     /**
-     * Dispatch an event to popup and options.
+     * Emit an event to popup and options.
      *
      * @param {String} event event
      * @param {Any} detail event detail
      */
-    dispatch(event, detail) {
+    emit(event, detail) {
         let message = JSON.stringify({ type: "event", event, detail });
         chrome.runtime.sendMessage(message, () => {
             if (chrome.runtime.lastError) {
@@ -71,13 +71,13 @@ class Channel {
     }
 
     /**
-     * Dispatch an event to content scripts.
+     * Emit an event to content scripts.
      *
      * @param {Number | Array<Number>} tabIds tabs that will receive the event
      * @param {String} event event
      * @param {Any} detail event detail
      */
-    dispatchToTabs(tabIds, event, detail) {
+    emitToTabs(tabIds, event, detail) {
         let message = JSON.stringify({ type: "event", event, detail });
 
         if (typeof tabIds === "number") {
@@ -103,7 +103,7 @@ class Channel {
      * @returns {Function} a canceler that will remove the handler when called
      */
     on(event, handler) {
-        return this._eventManager.addHandler(event, handler);
+        return this._eventManager.on(event, handler);
     }
 
     /**
@@ -114,7 +114,7 @@ class Channel {
      * @param {chrome.runtime.MessageSender} client client that requested the service
      * @returns {Any} handle result
      */
-    _handleService(service, params, client) {
+    _serve(service, params, client) {
         const handler = this._serviceHandlers.get(service);
         return handler ? handler(params, client) : Promise.resolve();
     }

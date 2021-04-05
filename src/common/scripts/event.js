@@ -28,7 +28,7 @@ class EventManager {
      *                           source: source of the event, chrome.runtime.MessageSender object
      * @returns {Function} a canceler that will remove the handler when called
      */
-    addHandler(event, handler) {
+    on(event, handler) {
         const handlerID = this._allocHandlerID();
         this._handlerIDToHandler.set(handlerID, handler);
 
@@ -43,7 +43,7 @@ class EventManager {
         return (() => {
             if (!canceled) {
                 canceled = true;
-                this._removeHandler(event, handlerID);
+                this._off(event, handlerID);
             } else {
                 console.warn("You shouldn't call the canceler more than once!");
             }
@@ -57,7 +57,7 @@ class EventManager {
      * @param {Any} detail event detail
      * @param {Any} source event source
      */
-    handleEvent(event, detail, source) {
+    emit(event, detail, source) {
         const handlerIDs = this._eventToHandlerIDs.get(event);
 
         if (!handlerIDs) return;
@@ -90,7 +90,7 @@ class EventManager {
      * @param {String} event event
      * @param {Number} handlerID handler ID
      */
-    _removeHandler(event, handlerID) {
+    _off(event, handlerID) {
         const handlerIDs = this._eventToHandlerIDs.get(event);
         handlerIDs && handlerIDs.delete(handlerID);
         this._handlerIDToHandler.delete(handlerID);

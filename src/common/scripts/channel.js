@@ -17,7 +17,7 @@ class Channel {
             ((message, sender, callback) => {
                 let parsed = JSON.parse(message);
                 if (parsed.type && parsed.type === "event") {
-                    this._eventManager.handleEvent(parsed.event, parsed.detail, sender);
+                    this._eventManager.emit(parsed.event, parsed.detail, sender);
                     callback && callback();
                 }
             }).bind(this)
@@ -45,12 +45,12 @@ class Channel {
     }
 
     /**
-     * Dispatch an event to background.
+     * Emit an event to background.
      *
      * @param {String} event event
      * @param {Any} detail event detail
      */
-    dispatch(event, detail) {
+    emit(event, detail) {
         let message = JSON.stringify({ type: "event", event, detail });
         chrome.runtime.sendMessage(message, () => {
             if (chrome.runtime.lastError) {
@@ -69,7 +69,7 @@ class Channel {
      * @returns {Function} a canceler that will remove the handler when called
      */
     on(event, handler) {
-        return this._eventManager.addHandler(event, handler);
+        return this._eventManager.on(event, handler);
     }
 }
 
