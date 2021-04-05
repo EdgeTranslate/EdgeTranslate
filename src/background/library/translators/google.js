@@ -482,8 +482,4 @@ class GoogleTranslator {
     }
 }
 
-/**
- * Create the default Translator object.
- */
-const TRANSLATOR = new GoogleTranslator();
-export default TRANSLATOR;
+export default GoogleTranslator;

@@ -10,6 +10,7 @@ import EventManager from "./event.js";
  * This module provides two communication model:
  *   * request/response
  *   * event trigger/listen
+ *
  * based on chrome.runtime.sendMessage and chrome.tabs.sendMessage.
  */
 class Channel {
@@ -158,6 +159,8 @@ class Channel {
     }
 
     /**
+     * Internal method
+     *
      * Get the message sending function for sending message to tabs.
      *
      * @returns {Function | null} message sender

@@ -611,8 +611,4 @@ class BaiduTranslator {
     /* eslint-enable */
 }
 
-/**
- * Create and export default Translator object.
- */
-const TRANSLATOR = new BaiduTranslator();
-export default TRANSLATOR;
+export default BaiduTranslator;

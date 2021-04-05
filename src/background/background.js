@@ -1,7 +1,6 @@
 import {
-    TRANSLATOR_MANAGER,
+    TranslatorManager,
     translatePage,
-    youdaoPageTranslate,
     executeYouDaoScript,
     executeGoogleScript,
 } from "./library/translate.js";
@@ -13,16 +12,11 @@ import {
     updateBLackListMenu,
 } from "./library/blacklist.js";
 import { sendHitRequest } from "./library/analytics.js";
-import { sendMessageToCurrentTab } from "./library/common.js";
-import Messager from "common/scripts/messager.js";
-import { getDomain, log } from "common/scripts/common.js";
+import { promiseTabs } from "../common/scripts/promise.js";
+import Channel from "../common/scripts/channel.js";
+import { getDomain } from "../common/scripts/common.js";
 // map language abbreviation from browser languages to translation languages
-import { BROWSER_LANGUAGES_MAP } from "common/scripts/languages.js";
-
-/**
- * 选中文本TTS语速
- */
-let selectedTTSSpeed = "fast";
+import { BROWSER_LANGUAGES_MAP } from "../common/scripts/languages.js";
 
 /**
  * default settings for this extension
@@ -207,6 +201,16 @@ chrome.runtime.onInstalled.addListener((details) => {
 });
 
 /**
+ * Create communication channel.
+ */
+const channel = new Channel();
+
+/**
+ * Create translator manager and register event listeners and service providers.
+ */
+const TRANSLATOR_MANAGER = new TranslatorManager(channel);
+
+/**
  * 监听用户点击通知事件
  */
 chrome.notifications.onClicked.addListener((notificationId) => {
@@ -231,10 +235,11 @@ chrome.notifications.onClicked.addListener((notificationId) => {
 /**
  * 添加点击菜单后的处理事件
  */
-chrome.contextMenus.onClicked.addListener((info) => {
+chrome.contextMenus.onClicked.addListener((info, tab) => {
     switch (info.menuItemId) {
         case "translate":
-            sendMessageToCurrentTab("get_selection", {})
+            channel
+                .requestToTab(tab.id, "get_selection")
                 .then(({ selectedText, position }) => {
                     if (selectedText) {
                         return TRANSLATOR_MANAGER.translate(selectedText, position);
@@ -301,71 +306,23 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 });
 
 /**
- * Background message handler.
- *
- * @param {Object} message message
- * @param {object} sender sender
- *
- * @returns {Promise} handle Promise
+ * Redirect tab when redirect event happens.
  */
-async function messageHandler(message, sender) {
-    switch (message.title) {
-        case "redirect":
-            chrome.tabs.update(sender.tab.id, { url: message.detail.url });
-            return Promise.resolve();
-        case "translate":
-            return TRANSLATOR_MANAGER.translate(message.detail.text, message.detail.position);
-        case "pronounce": {
-            let speed = message.detail.speed;
-            if (!speed) {
-                speed = selectedTTSSpeed;
-                if (selectedTTSSpeed === "fast") {
-                    selectedTTSSpeed = "slow";
-                } else {
-                    selectedTTSSpeed = "fast";
-                }
-            }
-
-            let result = await TRANSLATOR_MANAGER.pronounce(
-                message.detail.pronouncing,
-                message.detail.text,
-                message.detail.language,
-                speed
-            );
-            return result;
-        }
-        case "youdao_page_translate":
-            return youdaoPageTranslate(message.detail.request);
-        case "translate_page_youdao":
-            executeYouDaoScript();
-            return Promise.resolve();
-        case "translate_page_google":
-            executeGoogleScript();
-            return Promise.resolve();
-        case "get_lang":
-            return Promise.resolve({ lang: BROWSER_LANGUAGES_MAP[chrome.i18n.getUILanguage()] });
-        case "frame_closed":
-            TRANSLATOR_MANAGER.stopPronounce();
-            return Promise.resolve();
-        case "language_setting_update":
-            return TRANSLATOR_MANAGER.onLanguageSettingUpdated(message.detail);
-        case "get_available_translators":
-            return TRANSLATOR_MANAGER.getAvailableTranslators(message.detail);
-        case "update_default_translator":
-            return TRANSLATOR_MANAGER.updateDefaultTranslator(message.detail.translator);
-        case "open_options_page":
-            chrome.runtime.openOptionsPage();
-            return Promise.resolve();
-        default:
-            log(`Unknown message title: ${message.title}`);
-            return Promise.reject();
-    }
-}
+channel.on("redirect", (detail, sender) => chrome.tabs.update(sender.tab.id, { url: detail.url }));
 
 /**
- * Start to receive messages.
+ * Open options page when open_options_page button clicked.
  */
-Messager.receive("background", messageHandler);
+channel.on("open_options_page", () => chrome.runtime.openOptionsPage());
+
+/**
+ * Provide UI language detecting service.
+ */
+channel.provide("get_lang", () => {
+    return {
+        lang: BROWSER_LANGUAGES_MAP[chrome.i18n.getUILanguage()],
+    };
+});
 
 /**
  *  将快捷键消息转发给content_scripts
@@ -376,9 +333,10 @@ chrome.commands.onCommand.addListener((command) => {
             translatePage();
             break;
         default:
-            sendMessageToCurrentTab("command", {
-                command,
-            }).catch((error) => log(error));
+            promiseTabs
+                .query({ active: true, currentWindow: true })
+                .then((tabs) => channel.emitToTabs(tabs[0].id, "command", { command }))
+                .catch(() => {});
             break;
     }
 });
