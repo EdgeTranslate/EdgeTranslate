@@ -83,7 +83,9 @@ class TranslatorManager {
         this.channel.provide("youdao_page_translate", youdaoPageTranslate);
 
         // Get available translators service.
-        this.channel.provide("get_available_translators", this.getAvailableTranslators.bind(this));
+        this.channel.provide("get_available_translators", (params) =>
+            Promise.resolve(this.getAvailableTranslators(params))
+        );
 
         // Update default translator service.
         this.channel.provide("update_default_translator", this.updateDefaultTranslator.bind(this));
@@ -105,7 +107,7 @@ class TranslatorManager {
         this.channel.on("language_setting_update", this.onLanguageSettingUpdated.bind(this));
 
         // Result frame closed event.
-        this.on("frame_closed", this.stopPronounce.bind(this));
+        this.channel.on("frame_closed", this.stopPronounce.bind(this));
 
         /**
          * Update config cache on config changed.

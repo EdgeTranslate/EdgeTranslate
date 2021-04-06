@@ -319,9 +319,9 @@ channel.on("open_options_page", () => chrome.runtime.openOptionsPage());
  * Provide UI language detecting service.
  */
 channel.provide("get_lang", () => {
-    return {
+    return Promise.resolve({
         lang: BROWSER_LANGUAGES_MAP[chrome.i18n.getUILanguage()],
-    };
+    });
 });
 
 /**
