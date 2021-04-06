@@ -41,10 +41,15 @@ class Channel {
                     case "event":
                         this._eventManager.emit(parsed.event, parsed.detail, sender);
                         callback && callback();
-                        return true;
+                        break;
                     case "service": {
-                        const result = this._serve(parsed.service, parsed.params, sender);
-                        callback && callback(result);
+                        const server = this._services.get(parsed.service);
+                        if (!server) break;
+
+                        // We can call the callback only when we really provide the requested service.
+                        server(parsed.params, sender).then(
+                            (result) => callback && callback(result)
+                        );
                         return true;
                     }
                     default:
@@ -60,7 +65,7 @@ class Channel {
      * Provide a service.
      *
      * @param {String} service service
-     * @param {Function} server server
+     * @param {Function} server server, server function must return a Promise of the response
      */
     provide(service, server) {
         this._services.set(service, server);
@@ -191,21 +196,6 @@ class Channel {
                 });
             });
         };
-    }
-
-    /**
-     * Internal method
-     *
-     * Handle a service request.
-     *
-     * @param {String} service service
-     * @param {Any} params service parameters
-     * @param {chrome.runtime.MessageSender} client client that requested the service
-     * @returns {Any} result
-     */
-    _serve(service, params, client) {
-        const server = this._services.get(service);
-        return server ? server(params, client) : Promise.resolve();
     }
 }
 
