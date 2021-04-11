@@ -5,7 +5,7 @@ import styled from "styled-components";
 export default function Loading() {
     return (
         <LoadingEffect>
-            <div style="width:100%;height:100%;" class="lds-ellipsis">
+            <div class="lds-ellipsis">
                 <div>
                     <div />
                 </div>
@@ -169,18 +169,12 @@ const LoadingEffect = styled.div`
         }
     }
 
-    .lds-css {
-        .lds-ellipsis {
-            height: 50%;
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            margin: auto;
-        }
-    }
-
     .lds-ellipsis {
+        height: 50%;
         position: relative;
+        top: 0;
+        bottom: 0;
+        margin: auto;
     }
 
     .lds-ellipsis > div {
