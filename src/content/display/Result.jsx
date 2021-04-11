@@ -250,8 +250,7 @@ const StyledPronounceLoadingIcon = styled(PronounceLoadingIcon)`
     circle {
         fill: none;
         stroke: ${LightPrimary} !important;
-    }import { useState } from 'preact/hooks';
-
+    }
 `;
 
 const BlockHead = styled.div`

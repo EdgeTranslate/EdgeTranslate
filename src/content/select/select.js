@@ -82,7 +82,7 @@ window.addEventListener("DOMContentLoaded", () => {
                 chrome.storage.sync.get("OtherSettings", (result) => {
                     let OtherSettings = result.OtherSettings;
                     if (OtherSettings) {
-                        // store the position which would be transferred to display.js through messager.
+                        // store the position which would be transferred to display.js through the Channel.
                         currentPosition = [event.clientX, event.clientY];
 
                         // Show translating result instantly.
