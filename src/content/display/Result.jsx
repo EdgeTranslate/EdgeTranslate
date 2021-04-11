@@ -1,23 +1,95 @@
 /** @jsx h */
 import { h, Fragment } from "preact";
+import { useEffect, useRef, useReducer } from "preact/hooks";
 import styled from "styled-components";
-import { CommonPrefix } from "./Panel.jsx";
+import Channel from "common/scripts/channel.js";
+import Notifier from "./library/notifier/notifier.js";
+import { CommonPrefix, checkTimestamp } from "./Panel.jsx";
 import EditIcon from "./icons/edit.svg";
 import EditDoneIcon from "./icons/edit-done.svg";
 import PronounceIcon from "./icons/pronounce.svg";
 import PronounceLoadingIcon from "./icons/loading.jsx";
 import CopyIcon from "./icons/copy.svg";
 
+// TTS speeds
+let sourceTTSSpeed = "fast",
+    targetTTSSpeed = "fast";
+// Communication channel.
+const channel = new Channel();
+const notifier = new Notifier("center");
+
 /**
  * props:{
  *     content: object; // translation result
- *     sourcePronouncing: boolean;
- *     targetPronouncing: boolean;
- *     setSourcePronounce: (boolean)=>void;
- *     setTargetPronounce: (boolean)=>void;
  * }
  */
 export default function Result(props) {
+    /**
+     * the pronounce status
+     */
+    const [sourcePronouncing, setSourcePronounce] = useReducer(sourcePronounce, false),
+        [targetPronouncing, setTargetPronounce] = useReducer(targetPronounce, false);
+    // indicate whether user can edit and copy the translation result
+    const [copyResult, setCopyResult] = useReducer(copyContent, false);
+    const translateResultElRef = useRef();
+
+    useEffect(() => {
+        sourceTTSSpeed = "fast";
+        targetTTSSpeed = "fast";
+
+        /*
+         * COMMUNICATE WITH BACKGROUND MODULE
+         */
+        const cancelers = [];
+        cancelers.push(
+            channel.on("pronouncing_finished", (detail) => {
+                if (checkTimestamp(detail.timestamp)) {
+                    if (detail.pronouncing === "source") setSourcePronounce(false);
+                    else if (detail.pronouncing === "target") setTargetPronounce(false);
+                }
+            })
+        );
+
+        cancelers.push(
+            channel.on("pronouncing_error", (detail) => {
+                if (checkTimestamp(detail.timestamp)) {
+                    if (detail.pronouncing === "source") setSourcePronounce(false);
+                    else if (detail.pronouncing === "target") setTargetPronounce(false);
+                    notifier.notify({
+                        type: "error",
+                        title: chrome.i18n.getMessage("AppName"),
+                        detail: chrome.i18n.getMessage("PRONOUN_ERR"),
+                    });
+                }
+            })
+        );
+
+        cancelers.push(
+            channel.on("command", (detail) => {
+                switch (detail.command) {
+                    case "pronounce_original":
+                        setSourcePronounce(true);
+                        break;
+                    case "pronounce_translated":
+                        setTargetPronounce(true);
+                        break;
+                    case "copy_result":
+                        if (window.translateResult.mainMeaning && translateResultElRef.current) {
+                            setCopyResult({ copy: true, element: translateResultElRef.current });
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            })
+        );
+
+        return () => {
+            // remove all of event listeners before destroying the component
+            cancelers.forEach((canceler) => canceler());
+        };
+    }, []);
+
     return (
         <Fragment>
             <Source>
@@ -27,10 +99,10 @@ export default function Result(props) {
                     <StyledEditDoneIcon />
                 </TextLine>
                 <PronounceLine>
-                    {props.sourcePronouncing ? (
+                    {sourcePronouncing ? (
                         <StyledPronounceLoadingIcon />
                     ) : (
-                        <StyledPronounceIcon onClick={() => props.setSourcePronounce(true)} />
+                        <StyledPronounceIcon onClick={() => setSourcePronounce(true)} />
                     )}
                     <PronounceText class={`${CommonPrefix}may-need-rtl`}>
                         {props.sPronunciation}
@@ -39,14 +111,28 @@ export default function Result(props) {
             </Source>
             <Target>
                 <TextLine>
-                    <div class={`${CommonPrefix}may-need-rtl`}>{props.mainMeaning}</div>
-                    <StyledCopyIcon />
+                    <div
+                        class={`${CommonPrefix}may-need-rtl`}
+                        contenteditable={copyResult}
+                        onBlur={() => setCopyResult({ copy: false })}
+                        ref={translateResultElRef}
+                    >
+                        {props.mainMeaning}
+                    </div>
+                    <StyledCopyIcon
+                        onClick={() =>
+                            setCopyResult({
+                                copy: true,
+                                element: translateResultElRef.current,
+                            })
+                        }
+                    />
                 </TextLine>
                 <PronounceLine>
-                    {props.targetPronouncing ? (
+                    {targetPronouncing ? (
                         <StyledPronounceLoadingIcon />
                     ) : (
-                        <StyledPronounceIcon onClick={() => props.setTargetPronounce(true)} />
+                        <StyledPronounceIcon onClick={() => setTargetPronounce(true)} />
                     )}
                     <PronounceText class={`${CommonPrefix}may-need-rtl`}>
                         {props.tPronunciation}
@@ -164,7 +250,8 @@ const StyledPronounceLoadingIcon = styled(PronounceLoadingIcon)`
     circle {
         fill: none;
         stroke: ${LightPrimary} !important;
-    }
+    }import { useState } from 'preact/hooks';
+
 `;
 
 const BlockHead = styled.div`
@@ -209,3 +296,77 @@ const DetailHeadSpot = styled(BlockHeadSpot)`
 /**
  * STYLE FOR THE COMPONENT END
  */
+
+/**
+ * A reducer for source pronouncing state
+ * Send message to background to pronounce the translating text.
+ */
+function sourcePronounce(_, startPronounce) {
+    if (startPronounce)
+        channel
+            .request("pronounce", {
+                pronouncing: "source",
+                text: window.translateResult.originalText,
+                language: window.translateResult.sourceLanguage,
+                speed: sourceTTSSpeed,
+            })
+            .then(() => {
+                if (sourceTTSSpeed === "fast") {
+                    sourceTTSSpeed = "slow";
+                } else {
+                    sourceTTSSpeed = "fast";
+                }
+            });
+    return startPronounce;
+}
+
+/**
+ * A reducer for target pronouncing state
+ */
+function targetPronounce(_, startPronounce) {
+    if (startPronounce)
+        channel
+            .request("pronounce", {
+                pronouncing: "target",
+                text: window.translateResult.mainMeaning,
+                language: window.translateResult.targetLanguage,
+                speed: targetTTSSpeed,
+            })
+            .then(() => {
+                if (targetTTSSpeed === "fast") {
+                    targetTTSSpeed = "slow";
+                } else {
+                    targetTTSSpeed = "fast";
+                }
+            });
+    return startPronounce;
+}
+
+/**
+ * A reducer for copying state of translation result
+ * @param {*} _
+ * @param {
+ *     copy: boolean;  // new state
+ *     element: HTMLElement; // the element for displaying translation results
+ * } action
+ */
+function copyContent(_, action) {
+    if (action.copy && action.element) {
+        /**
+         * This line is to make sure the div element is editable before the focus action.
+         * Because of the react mechanism, contenteditable={copyResult} will work after this function is executed.
+         */
+        action.element.setAttribute("contenteditable", "true");
+
+        action.element.focus();
+
+        // select all content automatically
+        let range = document.createRange();
+        range.selectNodeContents(action.element);
+        window.getSelection().removeAllRanges();
+        window.getSelection().addRange(range);
+
+        document.execCommand("copy");
+    } else if (!action.copy) window.getSelection().removeAllRanges();
+    return action.copy;
+}

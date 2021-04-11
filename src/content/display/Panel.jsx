@@ -1,11 +1,10 @@
 /** @jsx h */
 import { h } from "preact";
-import { useEffect, useState, useRef, useCallback, useReducer } from "preact/hooks";
+import { useEffect, useState, useRef, useCallback } from "preact/hooks";
 import { useLatest, useEvent, useClickAway } from "react-use";
 import styled from "styled-components";
 import root from "react-shadow/styled-components";
-import Messager from "common/scripts/messager.js";
-import Notifier from "./library/notifier/notifier.js";
+import Channel from "common/scripts/channel.js";
 import moveable from "./library/moveable/moveable.js";
 import { delayPromise } from "common/scripts/promise.js";
 import { isChromePDFViewer } from "../common.js";
@@ -18,7 +17,8 @@ import UnpinIcon from "./icons/unpin.svg";
 import CloseIcon from "./icons/close.svg";
 
 export const CommonPrefix = "edge-translate-";
-const notifier = new Notifier("center");
+// Communication channel.
+const channel = new Channel();
 // Store the translation result and attach it to window
 window.translateResult = {};
 // Flag of showing result.
@@ -29,9 +29,6 @@ const scrollbarWidth = getScrollbarWidth();
 let documentBodyCSS = "";
 // the duration time of result panel's transition. unit: ms
 const transitionDuration = 500;
-// TTS speeds
-let sourceTTSSpeed = "fast",
-    targetTTSSpeed = "fast";
 
 export default function ResultPanel() {
     // whether the result is open
@@ -53,12 +50,7 @@ export default function ResultPanel() {
         show: false, // whether to show the highlight part
         position: "right", // the position of the highlight part. value: "left"|"right"
     });
-    /**
-     * the pronounce status
-     * These states should belong to Result.jsx but because Panel is in charge of receiving pronounce messages, it's more convenient to share pronounce states in this way.
-     */
-    const [sourcePronouncing, setSourcePronounce] = useReducer(sourcePronounce, false),
-        [targetPronouncing, setTargetPronounce] = useReducer(targetPronounce, false);
+
     const containerElRef = useRef(), // the container of translation panel.
         panelElRef = useRef(), // panel element
         headElRef = useRef(), // panel head element
@@ -126,14 +118,10 @@ export default function ResultPanel() {
 
         chrome.storage.sync.get(["languageSetting", "DefaultTranslator"], async (result) => {
             let languageSetting = result.languageSetting;
-            let availableTranslators = await Messager.send(
-                "background",
-                "get_available_translators",
-                {
-                    from: languageSetting.sl,
-                    to: languageSetting.tl,
-                }
-            );
+            let availableTranslators = await channel.request("get_available_translators", {
+                from: languageSetting.sl,
+                to: languageSetting.tl,
+            });
             setAvailableTranslators(availableTranslators);
             setCurrentTranslator(result.DefaultTranslator);
         });
@@ -142,107 +130,56 @@ export default function ResultPanel() {
             setPanelFix(result.fixSetting);
         });
 
-        /**
-         * process messages sent from background.js
-         *
-         * @param {Object} message the message sent from background.js
-         * @param {Object} sender the detailed message of message sender. If the sender is content module, it'll includes the tab property. If the sender is background, the tab property isn't contained.
+        /*
+         * COMMUNICATE WITH BACKGROUND MODULE
          */
-        Messager.receive("content", (message) => {
-            /**
-             * Check message timestamp.
-             *
-             * translateResult keeps the latest(biggest) timestamp ever received.
-             */
-            if (window.translateResult.timestamp && message.detail.timestamp) {
-                /**
-                 * When a new message with timestamp arrived, we check if the timestamp stored in translateResult
-                 * is bigger than the timestamp of the arriving message.
-                 */
-                if (window.translateResult.timestamp > message.detail.timestamp) {
-                    /**
-                     * If it does, which means the corresponding translating request is out of date, we drop the
-                     * message.
-                     */
-                    return Promise.resolve();
-                }
-                /**
-                 * If it doesn't, which means the corresponding translating request is up to date, we update
-                 * the timestamp stored in translateResult and accept the message.
-                 */
-                window.translateResult.timestamp = message.detail.timestamp;
-            }
+        // the translator send this request to make sure current tab can display result panel
+        channel.provide("check_availability", () => Promise.resolve());
 
-            switch (message.title) {
-                case "before_translating":
-                    // the translator send this message to make sure current tab can display result panel
-                    break;
-                case "start_translating":
-                    // Remember translating text.
-                    window.translateResult.originalText = message.detail.text;
-                    setOpen(true);
-                    setContentType("LOADING");
-                    setContent(message.detail);
-                    break;
-                case "translating_finished":
-                    window.translateResult = message.detail;
-                    sourceTTSSpeed = "fast";
-                    targetTTSSpeed = "fast";
-                    setOpen(true);
-                    setContentType("RESULT");
-                    setContent(message.detail);
-                    break;
-                case "translating_error":
-                    setContentType("ERROR");
-                    setContent(message.detail);
-                    break;
-                case "pronouncing_finished":
-                    if (message.detail.pronouncing === "source") setSourcePronounce(false);
-                    else if (message.detail.pronouncing === "target") setTargetPronounce(false);
-                    break;
-                case "pronouncing_error":
-                    if (message.detail.pronouncing === "source") setSourcePronounce(false);
-                    else if (message.detail.pronouncing === "target") setTargetPronounce(false);
-                    notifier.notify({
-                        type: "error",
-                        title: chrome.i18n.getMessage("AppName"),
-                        detail: chrome.i18n.getMessage("PRONOUN_ERR"),
+        channel.on("start_translating", (detail) => {
+            if (checkTimestamp(detail.timestamp)) {
+                // cache translation text.
+                window.translateResult.originalText = detail.text;
+                setOpen(true);
+                setContentType("LOADING");
+                setContent(detail);
+            }
+        });
+
+        channel.on("translating_finished", (detail) => {
+            if (checkTimestamp(detail.timestamp)) {
+                window.translateResult = detail;
+                setOpen(true);
+                setContentType("RESULT");
+                setContent(detail);
+            }
+        });
+
+        channel.on("translating_error", (detail) => {
+            if (checkTimestamp(detail.timestamp)) {
+                setContentType("ERROR");
+                setContent(detail);
+            }
+        });
+
+        channel.on("update_translator_options", (detail) => {
+            setAvailableTranslators(detail.availableTranslators);
+            setCurrentTranslator(detail.selectedTranslator);
+        });
+
+        channel.on("command", (detail) => {
+            switch (detail.command) {
+                case "fix_result_frame":
+                    chrome.storage.sync.get("fixSetting", (result) => {
+                        setPanelFix(result.fixSetting);
                     });
                     break;
-                case "update_translator_options":
-                    setAvailableTranslators(message.detail.availableTranslators);
-                    setCurrentTranslator(message.detail.selectedTranslator);
-                    break;
-                // shortcut command
-                case "command":
-                    switch (message.detail.command) {
-                        case "fix_result_frame":
-                            chrome.storage.sync.get("fixSetting", (result) => {
-                                setPanelFix(result.fixSetting);
-                            });
-                            break;
-                        case "close_result_frame":
-                            setOpen(false);
-                            break;
-                        case "pronounce_original":
-                            setSourcePronounce(true);
-                            break;
-                        case "pronounce_translated":
-                            setTargetPronounce(true);
-                            break;
-                        case "copy_result":
-                            if (window.translateResult.mainMeaning) {
-                                copyContent();
-                            }
-                            break;
-                        default:
-                            break;
-                    }
+                case "close_result_frame":
+                    setOpen(false);
                     break;
                 default:
                     break;
             }
-            return Promise.resolve();
         });
     }, []);
 
@@ -267,11 +204,8 @@ export default function ResultPanel() {
                 document.body.children[0].focus();
             }
 
-            setSourcePronounce(false);
-            setTargetPronounce(false);
-
-            // Tell background.js that the result panel has been closed
-            Messager.send("background", "frame_closed");
+            // Tell background module that the result panel has been closed
+            channel.emit("frame_closed");
             return;
         }
 
@@ -605,9 +539,7 @@ export default function ResultPanel() {
                 <Panel style={{ position: "fixed" }} ref={onDisplayStatusChange}>
                     <Head ref={headElRef}>
                         <HeadIcons>
-                            <HeadIcon
-                                onClick={() => Messager.send("background", "open_options_page", {})}
-                            >
+                            <HeadIcon onClick={() => channel.emit("open_options_page")}>
                                 <SettingIcon />
                             </HeadIcon>
                             {panelFix ? (
@@ -647,14 +579,16 @@ export default function ResultPanel() {
                                 onChange={(event) => {
                                     const newTranslator = event.target.value;
                                     setCurrentTranslator(newTranslator);
-                                    Messager.send("background", "update_default_translator", {
-                                        translator: newTranslator,
-                                    }).then(() => {
-                                        if (window.translateResult.originalText)
-                                            Messager.send("background", "translate", {
-                                                text: window.translateResult.originalText,
-                                            });
-                                    });
+                                    channel
+                                        .request("update_default_translator", {
+                                            translator: newTranslator,
+                                        })
+                                        .then(() => {
+                                            if (window.translateResult.originalText)
+                                                channel.request("translate", {
+                                                    text: window.translateResult.originalText,
+                                                });
+                                        });
                                 }}
                             >
                                 {availableTranslators?.map((translator) => (
@@ -665,15 +599,7 @@ export default function ResultPanel() {
                             </select>
                         </SourceOption>
                         {contentType === "LOADING" && <Loading />}
-                        {contentType === "RESULT" && (
-                            <Result
-                                {...content}
-                                sourcePronouncing={sourcePronouncing}
-                                targetPronouncing={targetPronouncing}
-                                setSourcePronounce={setSourcePronounce}
-                                setTargetPronounce={setTargetPronounce}
-                            />
-                        )}
+                        {contentType === "RESULT" && <Result {...content} />}
                         {contentType === "ERROR" && <Error {...content} />}
                     </Body>
                 </Panel>
@@ -810,6 +736,38 @@ const Highlight = styled.div`
  */
 
 /**
+ * Check whether the translation result is the latest
+ * @param {number} timestamp the timestamp of the new translation result
+ * @returns true if the result is the latest
+ */
+export function checkTimestamp(timestamp) {
+    /**
+     * Check message timestamp.
+     *
+     * translateResult keeps the latest(biggest) timestamp ever received.
+     */
+    if (window.translateResult.timestamp) {
+        /**
+         * When a new message with timestamp arrived, we check if the timestamp stored in translateResult
+         * is bigger than the timestamp of the arriving message.
+         */
+        if (window.translateResult.timestamp > timestamp) {
+            /**
+             * If it does, which means the corresponding translating request is out of date, we drop the
+             * message.
+             */
+            return false;
+        }
+        /**
+         * If it doesn't, which means the corresponding translating request is up to date, we update
+         * the timestamp stored in translateResult and accept the message.
+         */
+        window.translateResult.timestamp = timestamp;
+    }
+    return true;
+}
+
+/**
  * calculate the width of scroll bar
  * method: create a div element with a scroll bar and calculate the difference between offsetWidth and clientWidth
  * @returns {number} the width of scroll bar
@@ -831,45 +789,4 @@ function hasScrollbar() {
     return (
         document.body.scrollHeight > (window.innerHeight || document.documentElement.clientHeight)
     );
-}
-
-/**
- * A reducer for source pronouncing state
- * Send message to background to pronounce the translating text.
- */
-function sourcePronounce(_, startPronounce) {
-    if (startPronounce)
-        Messager.send("background", "pronounce", {
-            pronouncing: "source",
-            text: window.translateResult.originalText,
-            language: window.translateResult.sourceLanguage,
-            speed: sourceTTSSpeed,
-        }).then(() => {
-            if (sourceTTSSpeed === "fast") {
-                sourceTTSSpeed = "slow";
-            } else {
-                sourceTTSSpeed = "fast";
-            }
-        });
-    return startPronounce;
-}
-
-/**
- * A reducer for target pronouncing state
- */
-function targetPronounce(_, startPronounce) {
-    if (startPronounce)
-        Messager.send("background", "pronounce", {
-            pronouncing: "target",
-            text: window.translateResult.mainMeaning,
-            language: window.translateResult.targetLanguage,
-            speed: targetTTSSpeed,
-        }).then(() => {
-            if (targetTTSSpeed === "fast") {
-                targetTTSSpeed = "slow";
-            } else {
-                targetTTSSpeed = "fast";
-            }
-        });
-    return startPronounce;
 }

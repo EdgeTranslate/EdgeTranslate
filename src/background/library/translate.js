@@ -88,7 +88,9 @@ class TranslatorManager {
         );
 
         // Update default translator service.
-        this.channel.provide("update_default_translator", this.updateDefaultTranslator.bind(this));
+        this.channel.provide("update_default_translator", (detail) =>
+            this.updateDefaultTranslator(detail.translator)
+        );
     }
 
     /**

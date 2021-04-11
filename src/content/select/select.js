@@ -1,6 +1,9 @@
-import { getDomain } from "../../common/scripts/common.js";
+import { getDomain } from "common/scripts/common.js";
 import { isPDFjsPDFViewer, detectSelect } from "../common.js";
-import Messager from "../../common/scripts/messager.js";
+import Channel from "common/scripts/channel.js";
+
+// Communication channel.
+const channel = new Channel();
 
 // to indicate whether the translation button has been shown
 let HasButtonShown = false;
@@ -154,20 +157,22 @@ function showButton(event) {
 function translateSubmit() {
     // 发送消息给后台进行翻译。
     if (window.getSelection().toString().trim()) {
-        Messager.send("background", "translate", {
-            text: window.getSelection().toString(),
-            // send the position of selection icon to background
-            // to help locate the result panel
-            position: currentPosition, // an array
-        }).then(() => {
-            chrome.storage.sync.get("OtherSettings", (result) => {
-                // to check whether user need to cancel text selection after translation finished
-                if (result.OtherSettings && result.OtherSettings["CancelTextSelection"]) {
-                    cancelTextSelection();
-                }
+        channel
+            .request("translate", {
+                text: window.getSelection().toString(),
+                // send the position of selection icon to background
+                // to help locate the result panel
+                position: currentPosition, // an array
+            })
+            .then(() => {
+                chrome.storage.sync.get("OtherSettings", (result) => {
+                    // to check whether user need to cancel text selection after translation finished
+                    if (result.OtherSettings && result.OtherSettings["CancelTextSelection"]) {
+                        cancelTextSelection();
+                    }
+                });
+                disappearButton();
             });
-            disappearButton();
-        });
     }
 }
 
@@ -202,7 +207,7 @@ function shouldTranslate() {
  */
 function pronounceSubmit() {
     if (window.getSelection().toString().trim()) {
-        Messager.send("background", "pronounce", {
+        channel.request("pronounce", {
             text: window.getSelection().toString(),
             language: "auto",
         });
@@ -310,32 +315,23 @@ function getSelection() {
     return { selectedText, position };
 }
 
-/**
- *  实现快捷键翻译
- */
-Messager.receive("content", (message) => {
-    switch (message.title) {
-        case "get_selection": {
-            return Promise.resolve(getSelection());
-        }
-        case "command":
-            switch (message.detail.command) {
-                case "translate_selected":
-                    currentPosition = getSelection().position;
-                    translateSubmit();
-                    break;
-                case "pronounce_selected":
-                    pronounceSubmit();
-                    break;
-                case "cancel_page_translate":
-                    cancelPageTranslate();
-                    break;
-                default:
-                    break;
-            }
+// provide user's selection result for the background module
+channel.provide("get_selection", () => Promise.resolve(getSelection()));
+
+// handler for shortcut command
+channel.on("command", (detail) => {
+    switch (detail.command) {
+        case "translate_selected":
+            currentPosition = getSelection().position;
+            translateSubmit();
+            break;
+        case "pronounce_selected":
+            pronounceSubmit();
+            break;
+        case "cancel_page_translate":
+            cancelPageTranslate();
             break;
         default:
             break;
     }
-    return Promise.resolve();
 });
