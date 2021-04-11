@@ -22,9 +22,7 @@ export default function Result(props) {
         <Fragment>
             <Source>
                 <TextLine>
-                    <div id={`${CommonPrefix}source-text`} class={`${CommonPrefix}may-need-rtl`}>
-                        {props.originalText}
-                    </div>
+                    <div class={`${CommonPrefix}may-need-rtl`}>{props.originalText}</div>
                     <StyledEditIcon />
                     <StyledEditDoneIcon />
                 </TextLine>
@@ -34,16 +32,14 @@ export default function Result(props) {
                     ) : (
                         <StyledPronounceIcon onClick={() => props.setSourcePronounce(true)} />
                     )}
-                    <span class={`${CommonPrefix}pronounce-text ${CommonPrefix}may-need-rtl`}>
+                    <PronounceText class={`${CommonPrefix}may-need-rtl`}>
                         {props.sPronunciation}
-                    </span>
+                    </PronounceText>
                 </PronounceLine>
             </Source>
             <Target>
                 <TextLine>
-                    <div id={`${CommonPrefix}target-text`} class={`${CommonPrefix}may-need-rtl`}>
-                        {props.mainMeaning}
-                    </div>
+                    <div class={`${CommonPrefix}may-need-rtl`}>{props.mainMeaning}</div>
                     <StyledCopyIcon />
                 </TextLine>
                 <PronounceLine>
@@ -52,21 +48,18 @@ export default function Result(props) {
                     ) : (
                         <StyledPronounceIcon onClick={() => props.setTargetPronounce(true)} />
                     )}
-                    <span class={`${CommonPrefix}pronounce-text ${CommonPrefix}may-need-rtl`}>
+                    <PronounceText class={`${CommonPrefix}may-need-rtl`}>
                         {props.tPronunciation}
-                    </span>
+                    </PronounceText>
                 </PronounceLine>
             </Target>
             <Detail>
-                <div class={`${CommonPrefix}block-head`}>
-                    <span
-                        class={`${CommonPrefix}block-head-spot`}
-                        style="background-color: #00BFA5;"
-                    />
-                    <span class={`${CommonPrefix}block-head-title`}>具体含义</span>
-                    <div class={`${CommonPrefix}block-head-dividing-line`} />
-                </div>
-                <div class={`${CommonPrefix}block-content`} />
+                <BlockHead>
+                    <DetailHeadSpot />
+                    <BlockHeadTitle>具体含义</BlockHeadTitle>
+                    <BlockSplitLine />
+                </BlockHead>
+                <BlockContent />
             </Detail>
         </Fragment>
     );
@@ -139,6 +132,10 @@ const PronounceLine = styled.div`
     align-items: center;
 `;
 
+const PronounceText = styled.span`
+    margin-left: 10px;
+`;
+
 const StyledCopyIcon = styled(CopyIcon)`
     width: 20px;
     height: 20px;
@@ -168,6 +165,45 @@ const StyledPronounceLoadingIcon = styled(PronounceLoadingIcon)`
         fill: none;
         stroke: ${LightPrimary} !important;
     }
+`;
+
+const BlockHead = styled.div`
+    width: 100%;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: flex-start;
+    align-items: center;
+`;
+
+const BlockHeadTitle = styled.span`
+    margin-left: 5px;
+`;
+
+/**
+ * common style for the spot of block head
+ */
+const BlockHeadSpot = styled.span`
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+`;
+
+const BlockSplitLine = styled.div`
+    width: 98%;
+    flex-shrink: 0;
+    border: 1px solid rgba(0, 0, 0, 0.25);
+    margin: 5px 0;
+`;
+
+const BlockContent = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+`;
+
+const DetailHeadSpot = styled(BlockHeadSpot)`
+    background-color: #00bfa5;
 `;
 
 /**
