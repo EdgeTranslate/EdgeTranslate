@@ -621,6 +621,7 @@ export default function ResultPanel() {
  */
 
 export const MaxZIndex = 2147483647;
+const ColorPrimary = "#4a8cf7";
 
 const Panel = styled.div`
     position: fixed;
@@ -724,7 +725,7 @@ const SourceOption = styled(Block)`
 
 const Highlight = styled.div`
     height: 100%;
-    background: color-primary;
+    background: ${ColorPrimary};
     opacity: 0.3;
     position: fixed;
     top: 0;
