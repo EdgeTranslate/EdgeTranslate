@@ -434,3 +434,12 @@ function setDefaultSettings(result, settings) {
         }
     }
 }
+
+/**
+ * dynamic importing hot reload function only in development env
+ */
+if (BUILD_ENV === "development") {
+    import("./library/hot_reload.js").then((module) => {
+        module.hotReload();
+    });
+}

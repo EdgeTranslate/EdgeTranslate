@@ -49,4 +49,7 @@ module.exports = {
     node: {
         fs: "empty",
     },
+    performance: {
+        hints: false,
+    },
 };

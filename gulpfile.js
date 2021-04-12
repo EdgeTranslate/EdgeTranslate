@@ -143,7 +143,12 @@ function buildJS() {
     // Insert plugins.
     let webpack_config = require(webpack_path);
     webpack_config.plugins = webpack_config.plugins || [];
-    webpack_config.plugins.push(new webpack.DefinePlugin({ BROWSER_ENV: JSON.stringify(browser) }));
+    webpack_config.plugins.push(
+        new webpack.DefinePlugin({
+            BROWSER_ENV: JSON.stringify(browser),
+            BUILD_ENV: JSON.stringify(environment),
+        })
+    );
 
     return gulp
         .src("./src/**/*.js", { base: "src" })
