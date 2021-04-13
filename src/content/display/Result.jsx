@@ -145,7 +145,24 @@ export default function Result(props) {
                     <BlockHeadTitle>具体含义</BlockHeadTitle>
                     <BlockSplitLine />
                 </BlockHead>
-                <BlockContent />
+                <BlockContent>
+                    {props.detailedMeanings?.map((detail) => (
+                        <Fragment>
+                            <Position>{detail.pos}</Position>
+                            <DetailMeaning>{detail.meaning}</DetailMeaning>
+                            {detail.synonyms && detail.synonyms.length > 0 && (
+                                <Fragment>
+                                    <SynonymTitle>同义词</SynonymTitle>
+                                    <SynonymLine>
+                                        {detail.synonyms.map((word) => (
+                                            <SynonymWord>{word}</SynonymWord>
+                                        ))}
+                                    </SynonymLine>
+                                </Fragment>
+                            )}
+                        </Fragment>
+                    ))}
+                </BlockContent>
             </Detail>
         </Fragment>
     );
@@ -159,6 +176,7 @@ const BlockPadding = "10px";
 const BlockMarginVertical = "4px";
 const BlockMarginHorizon = "8px";
 const LightPrimary = "rgba(74, 140, 247, 0.7)";
+const Gray = "#919191";
 
 /**
  * basic style for a block used to display content
@@ -198,14 +216,14 @@ const TextLine = styled.div`
 const StyledEditIcon = styled(EditIcon)`
     width: 16px;
     height: 16px;
-    fill: Gray;
+    fill: ${Gray};
     flex-shrink: 0;
 `;
 
 const StyledEditDoneIcon = styled(EditDoneIcon)`
     width: 16px;
     height: 16px;
-    fill: Gray;
+    fill: ${Gray};
     flex-shrink: 0;
 `;
 
@@ -225,7 +243,7 @@ const PronounceText = styled.span`
 const StyledCopyIcon = styled(CopyIcon)`
     width: 20px;
     height: 20px;
-    fill: Gray;
+    fill: ${Gray};
     flex-shrink: 0;
 `;
 
@@ -282,6 +300,7 @@ const BlockSplitLine = styled.div`
 `;
 
 const BlockContent = styled.div`
+    width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -290,6 +309,36 @@ const BlockContent = styled.div`
 
 const DetailHeadSpot = styled(BlockHeadSpot)`
     background-color: #00bfa5;
+`;
+
+const Position = styled.div`
+    color: ${Gray};
+`;
+
+const DetailMeaning = styled.div`
+    padding: 5px 0;
+    margin-left: 10px;
+`;
+
+const SynonymTitle = styled.div`
+    color: ${Gray};
+    font-size: small;
+    margin-left: 10px;
+`;
+
+const SynonymLine = styled.div`
+    display: flex;
+    flex-wrap: wrap;
+    padding: 5px 0;
+    margin-left: 10px;
+`;
+
+const SynonymWord = styled.span`
+    padding: 2px 10px;
+    margin: 0 2px 3px;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    border-radius: 32px;
+    cursor: pointer;
 `;
 
 /**
