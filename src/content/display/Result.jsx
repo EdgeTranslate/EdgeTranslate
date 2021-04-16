@@ -164,6 +164,32 @@ export default function Result(props) {
                     ))}
                 </BlockContent>
             </Detail>
+            <Definition>
+                <BlockHead>
+                    <DefinitionHeadSpot />
+                    <BlockHeadTitle>定义</BlockHeadTitle>
+                    <BlockSplitLine />
+                </BlockHead>
+                <BlockContent>
+                    {props.definitions?.map((definition) => (
+                        <Fragment>
+                            <Position>{definition.pos}</Position>
+                            <DetailMeaning>{definition.meaning}</DetailMeaning>
+                            <DefinitionExample>{`"${definition.example}"`}</DefinitionExample>
+                            {definition.synonyms && definition.synonyms.length > 0 && (
+                                <Fragment>
+                                    <SynonymTitle>同义词</SynonymTitle>
+                                    <SynonymLine>
+                                        {definition.synonyms.map((word) => (
+                                            <SynonymWord>{word}</SynonymWord>
+                                        ))}
+                                    </SynonymLine>
+                                </Fragment>
+                            )}
+                        </Fragment>
+                    ))}
+                </BlockContent>
+            </Definition>
         </Fragment>
     );
 }
@@ -339,6 +365,16 @@ const SynonymWord = styled.span`
     border: 1px solid rgba(0, 0, 0, 0.12);
     border-radius: 32px;
     cursor: pointer;
+`;
+
+const Definition = styled(Block)``;
+
+const DefinitionHeadSpot = styled(BlockHeadSpot)`
+    background-color: #ff4081;
+`;
+
+const DefinitionExample = styled(DetailMeaning)`
+    color: #5f6368;
 `;
 
 /**
