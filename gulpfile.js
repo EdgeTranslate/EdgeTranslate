@@ -121,7 +121,7 @@ function watcher(done) {
  */
 function eslintJS() {
     return gulp
-        .src("./src/**/*.js", { base: "src" })
+        .src("./src/**/*.{js,jsx}", { base: "src" })
         .pipe(
             eslint({
                 configFile: "./.eslintrc.js",
