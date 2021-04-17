@@ -190,6 +190,23 @@ export default function Result(props) {
                     ))}
                 </BlockContent>
             </Definition>
+            <Example>
+                <BlockHead>
+                    <ExampleHeadSpot />
+                    <BlockHeadTitle>例句</BlockHeadTitle>
+                    <BlockSplitLine />
+                </BlockHead>
+                <BlockContent>
+                    <ExampleList>
+                        {props.examples.map((example) => (
+                            <ExampleItem>
+                                {example.source && <ExampleSource>{example.source}</ExampleSource>}
+                                {example.target && <div>{example.target}</div>}
+                            </ExampleItem>
+                        ))}
+                    </ExampleList>
+                </BlockContent>
+            </Example>
         </Fragment>
     );
 }
@@ -375,6 +392,26 @@ const DefinitionHeadSpot = styled(BlockHeadSpot)`
 
 const DefinitionExample = styled(DetailMeaning)`
     color: #5f6368;
+`;
+
+const Example = styled(Block)``;
+
+const ExampleHeadSpot = styled(BlockHeadSpot)`
+    background-color: #3d5afe;
+`;
+
+const ExampleList = styled.ol`
+    list-style-type: decimal;
+    padding-left: 1rem;
+    margin: 0;
+`;
+
+const ExampleItem = styled.li`
+    padding: 5px 0;
+`;
+
+const ExampleSource = styled.div`
+    padding-bottom: 5px;
 `;
 
 /**
