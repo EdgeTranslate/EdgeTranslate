@@ -104,7 +104,7 @@ function packToZip() {
  * @param {Function} done execute done to inform gulp that the task is finished
  */
 function watcher(done) {
-    gulp.watch("./src/**/*.js").on("change", gulp.series(eslintJS));
+    gulp.watch("./src/**/*.{js,jsx}").on("change", gulp.series(eslintJS));
     gulp.watch("./src/display/**/*.xhtml").on("change", gulp.series(eslintJS));
     gulp.watch("./src/(manifest|manifest_chrome|manifest_firefox).json").on(
         "change",
