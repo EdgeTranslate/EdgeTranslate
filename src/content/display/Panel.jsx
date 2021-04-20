@@ -2,7 +2,7 @@
 import { h } from "preact";
 import { useEffect, useState, useRef, useCallback } from "preact/hooks";
 import { useLatest, useEvent, useClickAway } from "react-use";
-import styled from "styled-components";
+import styled, { createGlobalStyle } from "styled-components";
 import root from "react-shadow/styled-components";
 import Channel from "common/scripts/channel.js";
 import moveable from "./library/moveable/moveable.js";
@@ -536,6 +536,7 @@ export default function ResultPanel() {
     return (
         open && (
             <root.div ref={containerElRef}>
+                <GlobalStyle />
                 <Panel style={{ position: "fixed" }} ref={onDisplayStatusChange}>
                     <Head ref={headElRef}>
                         <HeadIcons>
@@ -623,6 +624,27 @@ export default function ResultPanel() {
 export const MaxZIndex = 2147483647;
 const ColorPrimary = "#4a8cf7";
 
+const GlobalStyle = createGlobalStyle`
+    ::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: rgb(255,255,255,0.3);
+        border-radius: 5px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: rgb(255,255,255,0.7);
+    }
+
+    ::-webkit-scrollbar-track {
+        background-color: rgba(255, 255, 255, 0);
+        opacity: 0;
+    }
+`;
+
 const Panel = styled.div`
     position: fixed;
     top: 0;
@@ -704,7 +726,7 @@ const Body = styled.div`
     justify-content: flex-start;
     align-items: center;
     overflow-x: hidden;
-    overflow-y: auto;
+    overflow-y: overlay;
     overscroll-behavior: contain;
     flex-grow: 1;
     flex-shrink: 1;
