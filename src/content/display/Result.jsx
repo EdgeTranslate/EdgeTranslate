@@ -234,7 +234,8 @@ export const Block = styled.div`
     padding: ${BlockPadding};
     margin: ${BlockMarginVertical} ${BlockMarginHorizon};
     background-color: rgba(255, 255, 255, 0.8);
-    border-radius: 8px;
+    border-radius: 10px;
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.25);
 `;
 
 const Source = styled(Block)`
