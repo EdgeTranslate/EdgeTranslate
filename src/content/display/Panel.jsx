@@ -660,7 +660,9 @@ const Panel = styled.div`
     overflow: visible;
     line-height: 1;
     font-size: 16px;
-    background-image: url(${chrome.runtime.getURL("../../image/background.png")});
+    box-shadow: 0px 8px 12px 5px rgba(0, 0, 0, 0.25);
+    background: rgba(239, 239, 239, 0.6);
+    /* background-image: url(${chrome.runtime.getURL("../../image/background.png")}); */
 
     &:before {
         content: "";
