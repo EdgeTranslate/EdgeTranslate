@@ -139,74 +139,84 @@ export default function Result(props) {
                     </PronounceText>
                 </PronounceLine>
             </Target>
-            <Detail>
-                <BlockHead>
-                    <DetailHeadSpot />
-                    <BlockHeadTitle>具体含义</BlockHeadTitle>
-                    <BlockSplitLine />
-                </BlockHead>
-                <BlockContent>
-                    {props.detailedMeanings?.map((detail) => (
-                        <Fragment>
-                            <Position>{detail.pos}</Position>
-                            <DetailMeaning>{detail.meaning}</DetailMeaning>
-                            {detail.synonyms && detail.synonyms.length > 0 && (
-                                <Fragment>
-                                    <SynonymTitle>同义词</SynonymTitle>
-                                    <SynonymLine>
-                                        {detail.synonyms.map((word) => (
-                                            <SynonymWord>{word}</SynonymWord>
-                                        ))}
-                                    </SynonymLine>
-                                </Fragment>
-                            )}
-                        </Fragment>
-                    ))}
-                </BlockContent>
-            </Detail>
-            <Definition>
-                <BlockHead>
-                    <DefinitionHeadSpot />
-                    <BlockHeadTitle>定义</BlockHeadTitle>
-                    <BlockSplitLine />
-                </BlockHead>
-                <BlockContent>
-                    {props.definitions?.map((definition) => (
-                        <Fragment>
-                            <Position>{definition.pos}</Position>
-                            <DetailMeaning>{definition.meaning}</DetailMeaning>
-                            <DefinitionExample>{`"${definition.example}"`}</DefinitionExample>
-                            {definition.synonyms && definition.synonyms.length > 0 && (
-                                <Fragment>
-                                    <SynonymTitle>同义词</SynonymTitle>
-                                    <SynonymLine>
-                                        {definition.synonyms.map((word) => (
-                                            <SynonymWord>{word}</SynonymWord>
-                                        ))}
-                                    </SynonymLine>
-                                </Fragment>
-                            )}
-                        </Fragment>
-                    ))}
-                </BlockContent>
-            </Definition>
-            <Example>
-                <BlockHead>
-                    <ExampleHeadSpot />
-                    <BlockHeadTitle>例句</BlockHeadTitle>
-                    <BlockSplitLine />
-                </BlockHead>
-                <BlockContent>
-                    <ExampleList>
-                        {props.examples?.map((example) => (
-                            <ExampleItem>
-                                {example.source && <ExampleSource>{example.source}</ExampleSource>}
-                                {example.target && <div>{example.target}</div>}
-                            </ExampleItem>
+            {props.detailedMeanings?.length > 0 && (
+                <Detail>
+                    <BlockHead>
+                        <DetailHeadSpot />
+                        <BlockHeadTitle>具体含义</BlockHeadTitle>
+                        <BlockSplitLine />
+                    </BlockHead>
+                    <BlockContent>
+                        {props.detailedMeanings.map((detail) => (
+                            <Fragment>
+                                <Position>{detail.pos}</Position>
+                                <DetailMeaning>{detail.meaning}</DetailMeaning>
+                                {detail.synonyms?.length > 0 && (
+                                    <Fragment>
+                                        <SynonymTitle>同义词</SynonymTitle>
+                                        <SynonymLine>
+                                            {detail.synonyms.map((word) => (
+                                                <SynonymWord>{word}</SynonymWord>
+                                            ))}
+                                        </SynonymLine>
+                                    </Fragment>
+                                )}
+                            </Fragment>
                         ))}
-                    </ExampleList>
-                </BlockContent>
-            </Example>
+                    </BlockContent>
+                </Detail>
+            )}
+            {props.definitions?.length > 0 && (
+                <Definition>
+                    <BlockHead>
+                        <DefinitionHeadSpot />
+                        <BlockHeadTitle>定义</BlockHeadTitle>
+                        <BlockSplitLine />
+                    </BlockHead>
+                    <BlockContent>
+                        {props.definitions.map((definition) => (
+                            <Fragment>
+                                <Position>{definition.pos}</Position>
+                                <DetailMeaning>{definition.meaning}</DetailMeaning>
+                                {definition.example && (
+                                    <DefinitionExample>{`"${definition.example}"`}</DefinitionExample>
+                                )}
+                                {definition.synonyms?.length > 0 && (
+                                    <Fragment>
+                                        <SynonymTitle>同义词</SynonymTitle>
+                                        <SynonymLine>
+                                            {definition.synonyms.map((word) => (
+                                                <SynonymWord>{word}</SynonymWord>
+                                            ))}
+                                        </SynonymLine>
+                                    </Fragment>
+                                )}
+                            </Fragment>
+                        ))}
+                    </BlockContent>
+                </Definition>
+            )}
+            {props.examples?.length > 0 && (
+                <Example>
+                    <BlockHead>
+                        <ExampleHeadSpot />
+                        <BlockHeadTitle>例句</BlockHeadTitle>
+                        <BlockSplitLine />
+                    </BlockHead>
+                    <BlockContent>
+                        <ExampleList>
+                            {props.examples.map((example) => (
+                                <ExampleItem>
+                                    {example.source && (
+                                        <ExampleSource>{example.source}</ExampleSource>
+                                    )}
+                                    {example.target && <div>{example.target}</div>}
+                                </ExampleItem>
+                            ))}
+                        </ExampleList>
+                    </BlockContent>
+                </Example>
+            )}
         </Fragment>
     );
 }
