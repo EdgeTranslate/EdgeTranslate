@@ -198,7 +198,7 @@ export default function Result(props) {
                 </BlockHead>
                 <BlockContent>
                     <ExampleList>
-                        {props.examples.map((example) => (
+                        {props.examples?.map((example) => (
                             <ExampleItem>
                                 {example.source && <ExampleSource>{example.source}</ExampleSource>}
                                 {example.target && <div>{example.target}</div>}
