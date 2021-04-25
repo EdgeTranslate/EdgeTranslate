@@ -180,6 +180,7 @@ export default function ResultPanel() {
                     break;
             }
         });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     /**
@@ -346,6 +347,7 @@ export default function ResultPanel() {
                 }
             });
         showPanel();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     /* called when user translate another time */
