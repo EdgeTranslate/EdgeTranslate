@@ -743,6 +743,13 @@ const SourceOption = styled(Block)`
     margin-top: 0;
     flex-direction: row;
 
+    select {
+        background-color: transparent;
+        border-color: transparent;
+        outline: none;
+        -moz-appearance: none;
+    }
+
     span {
         margin-right: 5%;
     }
