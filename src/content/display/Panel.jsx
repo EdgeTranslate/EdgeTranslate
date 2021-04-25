@@ -142,7 +142,6 @@ export default function ResultPanel() {
                 window.translateResult.originalText = detail.text;
                 setOpen(true);
                 setContentType("LOADING");
-                setContent(detail);
             }
         });
 

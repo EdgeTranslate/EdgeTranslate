@@ -4,6 +4,7 @@ import { useEffect, useRef, useReducer } from "preact/hooks";
 import styled from "styled-components";
 import Channel from "common/scripts/channel.js";
 import Notifier from "./library/notifier/notifier.js";
+import DOMPurify from "dompurify";
 import { CommonPrefix, checkTimestamp } from "./Panel.jsx";
 import EditIcon from "./icons/edit.svg";
 import EditDoneIcon from "./icons/edit-done.svg";
@@ -94,7 +95,7 @@ export default function Result(props) {
         <Fragment>
             <Source>
                 <TextLine>
-                    <div class={`${CommonPrefix}may-need-rtl`}>{props.originalText}</div>
+                    <div class={`${CommonPrefix}may-need-rtl`}>{format(props.originalText)}</div>
                     <StyledEditIcon />
                     <StyledEditDoneIcon />
                 </TextLine>
@@ -105,7 +106,7 @@ export default function Result(props) {
                         <StyledPronounceIcon onClick={() => setSourcePronounce(true)} />
                     )}
                     <PronounceText class={`${CommonPrefix}may-need-rtl`}>
-                        {props.sPronunciation}
+                        {format(props.sPronunciation)}
                     </PronounceText>
                 </PronounceLine>
             </Source>
@@ -117,7 +118,7 @@ export default function Result(props) {
                         onBlur={() => setCopyResult({ copy: false })}
                         ref={translateResultElRef}
                     >
-                        {props.mainMeaning}
+                        {format(props.mainMeaning)}
                     </div>
                     <StyledCopyIcon
                         onClick={() =>
@@ -135,7 +136,7 @@ export default function Result(props) {
                         <StyledPronounceIcon onClick={() => setTargetPronounce(true)} />
                     )}
                     <PronounceText class={`${CommonPrefix}may-need-rtl`}>
-                        {props.tPronunciation}
+                        {format(props.tPronunciation)}
                     </PronounceText>
                 </PronounceLine>
             </Target>
@@ -208,9 +209,24 @@ export default function Result(props) {
                             {props.examples.map((example) => (
                                 <ExampleItem>
                                     {example.source && (
-                                        <ExampleSource>{example.source}</ExampleSource>
+                                        <ExampleSource
+                                            dangerouslySetInnerHTML={{
+                                                __html: DOMPurify.sanitize(example.source, {
+                                                    ALLOWED_TAGS: ["b"],
+                                                }),
+                                            }}
+                                        />
                                     )}
-                                    {example.target && <div>{example.target}</div>}
+                                    {example.target && (
+                                        <div
+                                            // eslint-disable-next-line react/no-danger
+                                            dangerouslySetInnerHTML={{
+                                                __html: DOMPurify.sanitize(example.target, {
+                                                    ALLOWED_TAGS: ["b"],
+                                                }),
+                                            }}
+                                        />
+                                    )}
                                 </ExampleItem>
                             ))}
                         </ExampleList>
@@ -250,9 +266,11 @@ export const Block = styled.div`
 
 const Source = styled(Block)`
     font-weight: normal;
+    white-space: pre-wrap;
 `;
 const Target = styled(Block)`
     font-weight: normal;
+    white-space: pre-wrap;
 `;
 const Detail = styled(Block)`
     font-weight: normal;
@@ -501,4 +519,13 @@ function copyContent(_, action) {
         document.execCommand("copy");
     } else if (!action.copy) window.getSelection().removeAllRanges();
     return action.copy;
+}
+
+/**
+ * Format the result text.
+ * 1. Delete duplicate break line characters
+ */
+function format(text) {
+    if (typeof text !== "string") return text;
+    return text.replace(/\n+/g, "\n");
 }
