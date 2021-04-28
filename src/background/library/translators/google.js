@@ -1,5 +1,4 @@
 import axios from "../axios.js";
-import { log } from "../../../common/scripts/common.js";
 
 /**
  * Language maps.
@@ -129,8 +128,12 @@ class GoogleTranslator {
          * Translate API.
          */
         this.HOST = "https://translate.google.cn/";
-        this.TRANSLATE_URL = `${this.HOST}translate_a/single?ie=UTF-8&client=webapp&otf=1&ssel=0&tsel=0&kc=5&dt=t&dt=at&dt=bd&dt=ex&dt=md&dt=rw&dt=ss&dt=rm`;
-        this.TTS_URL = `${this.HOST}translate_tts?ie=UTF-8&client=webapp`;
+
+        // Spare host.
+        // this.HOST = "https://translate.googleapis.com/";
+
+        this.TRANSLATE_URL = `${this.HOST}translate_a/single?client=gtx&dj=1&dt=t&dt=at&dt=bd&dt=ex&dt=md&dt=rw&dt=ss&dt=rm`;
+        this.TTS_URL = `${this.HOST}translate_tts?client=gtx`;
 
         /**
          * Language to translator language code.
@@ -242,83 +245,67 @@ class GoogleTranslator {
      */
     parseResult(response) {
         let result = new Object();
-        for (let i = 0; i < response.length; i++) {
-            if (response[i]) {
-                let items = response[i];
-                switch (i) {
-                    // 单词的基本意思和音标
-                    case 0: {
-                        let mainMeanings = [];
-                        let originalTexts = [];
-                        let lastIndex = items.length - 1;
 
-                        for (let j = 0; j <= lastIndex; j++) {
-                            mainMeanings.push(items[j][0]);
-                            originalTexts.push(items[j][1]);
-                        }
+        if (response.sentences) {
+            result.mainMeaning = "";
+            result.originalText = "";
 
-                        result.mainMeaning = mainMeanings.join("");
-                        result.originalText = originalTexts.join("");
-                        try {
-                            if (lastIndex > 0) {
-                                if (items[lastIndex][2] && items[lastIndex][2].length > 0) {
-                                    result.tPronunciation = items[lastIndex][2];
-                                }
+            /**
+             * The last item of response.sentences is pronunciation of texts,
+             * so we need to deal with it specially.
+             */
+            let last = response.sentences.length - 1;
+            for (let i = 0; i < last; i++) {
+                result.mainMeaning += response.sentences[i].trans;
+                result.originalText += response.sentences[i].orig;
+            }
 
-                                if (items[lastIndex][3] && items[lastIndex][3].length > 0) {
-                                    result.sPronunciation = items[lastIndex][3];
-                                }
-                            }
-                        } catch (error) {
-                            log(error);
-                        }
-                        // log("text: " + result.originalText + "\nmeaning: " + result.mainMeaning);
-                        break;
-                    }
-                    // 单词的所有词性及对应的意思
-                    case 1:
-                        result.detailedMeanings = new Array();
-                        items.forEach((item) =>
-                            result.detailedMeanings.push({
-                                pos: item[0],
-                                meaning: item[1].join(", "),
-                            })
-                        );
-                        // log("detailedMeanings: " + JSON.stringify(result.detailedMeanings));
-                        break;
-                    case 2:
-                        result.from = items;
-                        // log(result.from);
-                        break;
-                    // 单词的定义及对应例子
-                    case 12:
-                        result.definitions = new Array();
-                        items.forEach((item) => {
-                            item[1].forEach((element) => {
-                                result.definitions.push({
-                                    pos: item[0],
-                                    meaning: element[0],
-                                    example: element[2],
-                                });
-                            });
-                        });
-                        // log("definitions: " + JSON.stringify(result.definitions));
-                        break;
-                    // 单词的例句
-                    case 13:
-                        result.examples = new Array();
-                        items.forEach((item) =>
-                            item.forEach((element) =>
-                                result.examples.push({ source: null, target: element[0] })
-                            )
-                        );
-                        // log("examples: " + JSON.stringify(result.examples));
-                        break;
-                    default:
-                        break;
+            if (response.sentences[last].translit) {
+                result.tPronunciation = response.sentences[last].translit;
+            }
+
+            if (response.sentences[last].src_translit) {
+                result.sPronunciation = response.sentences[last].src_translit;
+            }
+        }
+
+        if (response.dict) {
+            result.detailedMeanings = [];
+            for (let item of response.dict) {
+                for (let entry of item.entry) {
+                    result.detailedMeanings.push({
+                        pos: item.pos,
+                        meaning: entry.word,
+                        synonyms: entry.reverse_translation,
+                    });
                 }
             }
         }
+
+        if (response.definitions) {
+            result.definitions = [];
+            for (let item of response.definitions) {
+                for (let entry of item.entry) {
+                    result.definitions.push({
+                        pos: item.pos,
+                        meaning: entry.gloss,
+                        synonyms: [],
+                        example: entry.example,
+                    });
+                }
+            }
+        }
+
+        if (response.examples) {
+            result.examples = [];
+            for (let example of response.examples.example) {
+                result.examples.push({
+                    source: example.text,
+                    target: null,
+                });
+            }
+        }
+
         return result;
     }
 
@@ -355,7 +342,7 @@ class GoogleTranslator {
             });
 
             if (response.status === 200) {
-                return this.CODE_TO_LAN.get(response.data[2]);
+                return this.CODE_TO_LAN.get(response.data.ld_result.srclangs[0]);
             }
 
             /**
