@@ -391,6 +391,10 @@
         "message": "錯誤操作",
         "description": "錯誤操作。"
     },
+    "Using": {
+        "message": "正在使用",
+        "description": "正在使用什麼翻譯源"
+    },
     "English": {
         "message": "英語",
         "description": "英語"

@@ -391,6 +391,10 @@
         "message": "Error action",
         "description": "Error action."
     },
+    "Using": {
+        "message": "Using",
+        "description": "What kind of translator you are using"
+    },
     "English": {
         "message": "English",
         "description": "English"

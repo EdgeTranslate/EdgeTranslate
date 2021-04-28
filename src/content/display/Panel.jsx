@@ -150,6 +150,7 @@ export default function ResultPanel() {
                 window.translateResult = detail;
                 setOpen(true);
                 setContentType("RESULT");
+
                 setContent(detail);
             }
         });
@@ -574,7 +575,7 @@ export default function ResultPanel() {
                     </Head>
                     <Body ref={bodyElRef}>
                         <SourceOption>
-                            <span>正在使用</span>
+                            <span>{chrome.i18n.getMessage("Using")}</span>
                             <select
                                 name="translators"
                                 value={currentTranslator}

@@ -144,7 +144,9 @@ export default function Result(props) {
                 <Detail>
                     <BlockHead>
                         <DetailHeadSpot />
-                        <BlockHeadTitle>具体含义</BlockHeadTitle>
+                        <BlockHeadTitle>
+                            {chrome.i18n.getMessage("DetailedMeanings")}
+                        </BlockHeadTitle>
                         <BlockSplitLine />
                     </BlockHead>
                     <BlockContent>
@@ -154,7 +156,9 @@ export default function Result(props) {
                                 <DetailMeaning>{detail.meaning}</DetailMeaning>
                                 {detail.synonyms?.length > 0 && (
                                     <Fragment>
-                                        <SynonymTitle>同义词</SynonymTitle>
+                                        <SynonymTitle>
+                                            {chrome.i18n.getMessage("Synonyms")}
+                                        </SynonymTitle>
                                         <SynonymLine>
                                             {detail.synonyms.map((word) => (
                                                 <SynonymWord>{word}</SynonymWord>
@@ -171,7 +175,7 @@ export default function Result(props) {
                 <Definition>
                     <BlockHead>
                         <DefinitionHeadSpot />
-                        <BlockHeadTitle>定义</BlockHeadTitle>
+                        <BlockHeadTitle>{chrome.i18n.getMessage("Definitions")}</BlockHeadTitle>
                         <BlockSplitLine />
                     </BlockHead>
                     <BlockContent>
@@ -184,7 +188,9 @@ export default function Result(props) {
                                 )}
                                 {definition.synonyms?.length > 0 && (
                                     <Fragment>
-                                        <SynonymTitle>同义词</SynonymTitle>
+                                        <SynonymTitle>
+                                            {chrome.i18n.getMessage("Synonyms")}
+                                        </SynonymTitle>
                                         <SynonymLine>
                                             {definition.synonyms.map((word) => (
                                                 <SynonymWord>{word}</SynonymWord>
@@ -201,7 +207,7 @@ export default function Result(props) {
                 <Example>
                     <BlockHead>
                         <ExampleHeadSpot />
-                        <BlockHeadTitle>例句</BlockHeadTitle>
+                        <BlockHeadTitle>{chrome.i18n.getMessage("Examples")}</BlockHeadTitle>
                         <BlockSplitLine />
                     </BlockHead>
                     <BlockContent>

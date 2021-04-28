@@ -296,23 +296,23 @@
         "description": "Choose the example provider."
     },
     "BaiduTranslate": {
-        "message": "Baidu Translate",
-        "description": "Baidu Translate."
+        "message": "перевод Baidu",
+        "description": "перевод Baidu"
     },
     "BingTranslate": {
-        "message": "Bing Translate",
-        "description": "Bing Translate"
+        "message": "перевод Bing",
+        "description": "перевод Bing"
     },
     "GoogleTranslate": {
-        "message": "Google Translate",
-        "description": "Google Translate"
+        "message": "Гугл переводчик",
+        "description": "Гугл переводчик"
     },
     "TencentTranslate": {
-        "message": "Tencent Translate",
-        "description": "Tencent Translate"
+        "message": "перевод Tencent",
+        "description": "перевод Tencent"
     },
     "HybridTranslate": {
-        "message": "Hybrid Translate",
+        "message": "cмешанный перевод",
         "description": "Translate with multiple translators."
     },
     "NOTICE": {
@@ -390,6 +390,10 @@
     "ERR_ACT": {
         "message": "Error action",
         "description": "Error action."
+    },
+    "Using": {
+        "message": "использование",
+        "description": "What kind of translator you are using"
     },
     "English": {
         "message": "English",
