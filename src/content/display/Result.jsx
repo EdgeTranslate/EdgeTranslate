@@ -30,9 +30,14 @@ export default function Result(props) {
      */
     const [sourcePronouncing, setSourcePronounce] = useReducer(sourcePronounce, false),
         [targetPronouncing, setTargetPronounce] = useReducer(targetPronounce, false);
+
     // indicate whether user can edit and copy the translation result
     const [copyResult, setCopyResult] = useReducer(copyContent, false);
     const translateResultElRef = useRef();
+
+    // indicate whether user is editing the original text
+    const [editing, setEditing] = useReducer(_setEditing, false);
+    const originalTextElRef = useRef();
 
     useEffect(() => {
         sourceTTSSpeed = "fast";
@@ -95,9 +100,32 @@ export default function Result(props) {
         <Fragment>
             <Source>
                 <TextLine>
-                    <div class={`${CommonPrefix}may-need-rtl`}>{format(props.originalText)}</div>
-                    <StyledEditIcon />
-                    <StyledEditDoneIcon />
+                    <div
+                        class={`${CommonPrefix}may-need-rtl`}
+                        contenteditable={editing}
+                        ref={originalTextElRef}
+                    >
+                        {props.originalText}
+                    </div>
+                    {editing ? (
+                        <StyledEditDoneIcon
+                            onClick={() =>
+                                setEditing({
+                                    edit: false,
+                                    element: originalTextElRef.current,
+                                })
+                            }
+                        />
+                    ) : (
+                        <StyledEditIcon
+                            onClick={() =>
+                                setEditing({
+                                    edit: true,
+                                    element: originalTextElRef.current,
+                                })
+                            }
+                        />
+                    )}
                 </TextLine>
                 <PronounceLine>
                     {sourcePronouncing ? (
@@ -106,7 +134,7 @@ export default function Result(props) {
                         <StyledPronounceIcon onClick={() => setSourcePronounce(true)} />
                     )}
                     <PronounceText class={`${CommonPrefix}may-need-rtl`}>
-                        {format(props.sPronunciation)}
+                        {props.sPronunciation}
                     </PronounceText>
                 </PronounceLine>
             </Source>
@@ -118,7 +146,7 @@ export default function Result(props) {
                         onBlur={() => setCopyResult({ copy: false })}
                         ref={translateResultElRef}
                     >
-                        {format(props.mainMeaning)}
+                        {props.mainMeaning}
                     </div>
                     <StyledCopyIcon
                         onClick={() =>
@@ -136,7 +164,7 @@ export default function Result(props) {
                         <StyledPronounceIcon onClick={() => setTargetPronounce(true)} />
                     )}
                     <PronounceText class={`${CommonPrefix}may-need-rtl`}>
-                        {format(props.tPronunciation)}
+                        {props.tPronunciation}
                     </PronounceText>
                 </PronounceLine>
             </Target>
@@ -528,10 +556,103 @@ function copyContent(_, action) {
 }
 
 /**
- * Format the result text.
- * 1. Delete duplicate break line characters
+ * The following 4 functions are intended to prevent input events from being caught by other elements.
  */
-function format(text) {
-    if (typeof text !== "string") return text;
-    return text.replace(/\n+/g, "\n");
+
+/**
+ * Prevent keydown event from propagation.
+ *
+ * @param {Event} event keydown event.
+ */
+function onKeyDownInTextEditor(event) {
+    event.stopPropagation();
+}
+
+/**
+ * Prevent keyup event from propagation.
+ *
+ * @param {Event} event keyup event.
+ */
+function onKeyUpInTextEditor(event) {
+    event.stopPropagation();
+}
+
+/**
+ * When the input box gets focused, prevent input events from propagation.
+ *
+ * @param {Event} event focus event.
+ */
+function onTextEditorFocused(event) {
+    event.target.addEventListener("keydown", onKeyDownInTextEditor);
+    event.target.addEventListener("keyup", onKeyUpInTextEditor);
+}
+
+/**
+ * When the input box gets blurred, allow input events propagation.
+ *
+ * @param {Event} event blur event.
+ */
+function onTextEditorBlurred(event) {
+    event.target.removeEventListener("keydown", onKeyDownInTextEditor);
+    event.target.removeEventListener("keyup", onKeyUpInTextEditor);
+}
+
+/**
+ * Edit original text.
+ *
+ * @param {HTMLElement} originalTextEle original text element
+ */
+function editOriginalText(originalTextEle) {
+    // Prevent input events from propagation.
+    originalTextEle.addEventListener("focus", onTextEditorFocused);
+    originalTextEle.addEventListener("blur", onTextEditorBlurred);
+
+    // Expand original text for reading and editing.
+    originalTextEle.style.overflow = "inherit";
+    originalTextEle.style["white-space"] = "inherit";
+    originalTextEle.title = "";
+
+    // Auto focus.
+    originalTextEle.focus();
+}
+
+/**
+ * Submit and translate edited text.
+ *
+ * @param {HTMLElement} originalTextEle original text element
+ */
+function submitEditedText(originalTextEle) {
+    // Allow input events propagation.
+    originalTextEle.removeEventListener("focus", onTextEditorFocused);
+    originalTextEle.removeEventListener("blur", onTextEditorBlurred);
+
+    let text = originalTextEle.textContent.trim();
+    if (text.length > 0) {
+        // to make sure the new text is different from the original text
+        if (text.valueOf() !== window.translateResult.originalText.valueOf()) {
+            // Do translating.
+            channel.request("translate", { text });
+        }
+    } else {
+        // Restore original text.
+        originalTextEle.textContent = window.translateResult.originalText;
+    }
+}
+
+/**
+ * A reducer for updating editing state of original text.
+ *
+ * @param {any} _ nothing
+ * @param {{edit: boolean, element: HTMLElement}} state new state information
+ * @returns new state
+ */
+function _setEditing(_, state) {
+    if (state.element) {
+        if (state.edit) {
+            editOriginalText(state.element);
+        } else {
+            submitEditedText(state.element);
+        }
+    }
+    return state.edit;
 }
