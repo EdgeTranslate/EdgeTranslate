@@ -1,11 +1,11 @@
 /** @jsx h */
 import { h, Fragment } from "preact";
-import { useEffect, useRef, useReducer } from "preact/hooks";
+import { useEffect, useRef, useReducer, useState } from "preact/hooks";
 import styled from "styled-components";
 import Channel from "common/scripts/channel.js";
 import Notifier from "./library/notifier/notifier.js";
 import DOMPurify from "dompurify";
-import { CommonPrefix, checkTimestamp } from "./Panel.jsx";
+import { checkTimestamp } from "./Panel.jsx";
 import EditIcon from "./icons/edit.svg";
 import EditDoneIcon from "./icons/edit-done.svg";
 import PronounceIcon from "./icons/pronounce.svg";
@@ -25,6 +25,11 @@ const notifier = new Notifier("center");
  * }
  */
 export default function Result(props) {
+    /**
+     * Text direction state.
+     */
+    const [textDirection, setTextDirection] = useState("ltr");
+
     /**
      * the pronounce status
      */
@@ -90,6 +95,18 @@ export default function Result(props) {
             })
         );
 
+        /**
+         * Update text direction based on user's setting.
+         */
+        chrome.storage.sync.get("LayoutSettings", (result) =>
+            setTextDirection(result.LayoutSettings.RTL ? "rtl" : "ltr")
+        );
+        chrome.storage.onChanged.addListener((changes, area) => {
+            if (area === "sync" && changes.LayoutSettings) {
+                setTextDirection(changes.LayoutSettings.newValue.RTL ? "rtl" : "ltr");
+            }
+        });
+
         return () => {
             // remove all of event listeners before destroying the component
             cancelers.forEach((canceler) => canceler());
@@ -101,7 +118,7 @@ export default function Result(props) {
             <Target>
                 <TextLine>
                     <div
-                        class={`${CommonPrefix}may-need-rtl`}
+                        dir={textDirection}
                         contenteditable={copyResult}
                         onBlur={() => setCopyResult({ copy: false })}
                         ref={translateResultElRef}
@@ -123,18 +140,12 @@ export default function Result(props) {
                     ) : (
                         <StyledPronounceIcon onClick={() => setTargetPronounce(true)} />
                     )}
-                    <PronounceText class={`${CommonPrefix}may-need-rtl`}>
-                        {props.tPronunciation}
-                    </PronounceText>
+                    <PronounceText dir={textDirection}>{props.tPronunciation}</PronounceText>
                 </PronounceLine>
             </Target>
             <Source>
                 <TextLine>
-                    <div
-                        class={`${CommonPrefix}may-need-rtl`}
-                        contenteditable={editing}
-                        ref={originalTextElRef}
-                    >
+                    <div dir={textDirection} contenteditable={editing} ref={originalTextElRef}>
                         {props.originalText}
                     </div>
                     {editing ? (
@@ -163,9 +174,7 @@ export default function Result(props) {
                     ) : (
                         <StyledPronounceIcon onClick={() => setSourcePronounce(true)} />
                     )}
-                    <PronounceText class={`${CommonPrefix}may-need-rtl`}>
-                        {props.sPronunciation}
-                    </PronounceText>
+                    <PronounceText dir={textDirection}>{props.sPronunciation}</PronounceText>
                 </PronounceLine>
             </Source>
             {props.detailedMeanings?.length > 0 && (
