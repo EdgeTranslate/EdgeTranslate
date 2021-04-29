@@ -8,7 +8,7 @@ import Channel from "common/scripts/channel.js";
 import moveable from "./library/moveable/moveable.js";
 import { delayPromise } from "common/scripts/promise.js";
 import { isChromePDFViewer } from "../common.js";
-import Result, { Block } from "./Result.jsx"; // display translate result
+import Result from "./Result.jsx"; // display translate result
 import Loading from "./Loading.jsx"; // display loading animation
 import Error from "./Error.jsx"; // display error messages
 import SettingIcon from "./icons/setting.svg";
@@ -541,6 +541,33 @@ export default function ResultPanel() {
                 <GlobalStyle />
                 <Panel style={{ position: "fixed" }} ref={onDisplayStatusChange}>
                     <Head ref={headElRef}>
+                        <SourceOption>
+                            <span>{chrome.i18n.getMessage("Using")}</span>
+                            <select
+                                name="translators"
+                                value={currentTranslator}
+                                onChange={(event) => {
+                                    const newTranslator = event.target.value;
+                                    setCurrentTranslator(newTranslator);
+                                    channel
+                                        .request("update_default_translator", {
+                                            translator: newTranslator,
+                                        })
+                                        .then(() => {
+                                            if (window.translateResult.originalText)
+                                                channel.request("translate", {
+                                                    text: window.translateResult.originalText,
+                                                });
+                                        });
+                                }}
+                            >
+                                {availableTranslators?.map((translator) => (
+                                    <option key={translator} value={translator}>
+                                        {chrome.i18n.getMessage(translator)}
+                                    </option>
+                                ))}
+                            </select>
+                        </SourceOption>
                         <HeadIcons>
                             <HeadIcon onClick={() => channel.emit("open_options_page")}>
                                 <SettingIcon />
@@ -574,33 +601,6 @@ export default function ResultPanel() {
                         </HeadIcons>
                     </Head>
                     <Body ref={bodyElRef}>
-                        <SourceOption>
-                            <span>{chrome.i18n.getMessage("Using")}</span>
-                            <select
-                                name="translators"
-                                value={currentTranslator}
-                                onChange={(event) => {
-                                    const newTranslator = event.target.value;
-                                    setCurrentTranslator(newTranslator);
-                                    channel
-                                        .request("update_default_translator", {
-                                            translator: newTranslator,
-                                        })
-                                        .then(() => {
-                                            if (window.translateResult.originalText)
-                                                channel.request("translate", {
-                                                    text: window.translateResult.originalText,
-                                                });
-                                        });
-                                }}
-                            >
-                                {availableTranslators?.map((translator) => (
-                                    <option key={translator} value={translator}>
-                                        {chrome.i18n.getMessage(translator)}
-                                    </option>
-                                ))}
-                            </select>
-                        </SourceOption>
                         {contentType === "LOADING" && <Loading />}
                         {contentType === "RESULT" && <Result {...content} />}
                         {contentType === "ERROR" && <Error {...content} />}
@@ -682,7 +682,7 @@ const Panel = styled.div`
 const Head = styled.div`
     padding: 0.5vh;
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     align-items: center;
     flex: 0 0 auto;
     overflow: hidden;
@@ -738,21 +738,23 @@ const Body = styled.div`
     color: black;
 `;
 
-const SourceOption = styled(Block)`
+const SourceOption = styled.div`
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 6px;
+    margin: 4px 8px;
     font-weight: normal;
     font-size: medium;
-    margin-top: 0;
     flex-direction: row;
 
     select {
+        margin-top: 2px;
+        margin-left: 8px;
         background-color: transparent;
         border-color: transparent;
         outline: none;
         -moz-appearance: none;
-    }
-
-    span {
-        margin-right: 5%;
     }
 `;
 

@@ -98,6 +98,36 @@ export default function Result(props) {
 
     return (
         <Fragment>
+            <Target>
+                <TextLine>
+                    <div
+                        class={`${CommonPrefix}may-need-rtl`}
+                        contenteditable={copyResult}
+                        onBlur={() => setCopyResult({ copy: false })}
+                        ref={translateResultElRef}
+                    >
+                        {props.mainMeaning}
+                    </div>
+                    <StyledCopyIcon
+                        onClick={() =>
+                            setCopyResult({
+                                copy: true,
+                                element: translateResultElRef.current,
+                            })
+                        }
+                    />
+                </TextLine>
+                <PronounceLine>
+                    {targetPronouncing ? (
+                        <StyledPronounceLoadingIcon />
+                    ) : (
+                        <StyledPronounceIcon onClick={() => setTargetPronounce(true)} />
+                    )}
+                    <PronounceText class={`${CommonPrefix}may-need-rtl`}>
+                        {props.tPronunciation}
+                    </PronounceText>
+                </PronounceLine>
+            </Target>
             <Source>
                 <TextLine>
                     <div
@@ -138,36 +168,6 @@ export default function Result(props) {
                     </PronounceText>
                 </PronounceLine>
             </Source>
-            <Target>
-                <TextLine>
-                    <div
-                        class={`${CommonPrefix}may-need-rtl`}
-                        contenteditable={copyResult}
-                        onBlur={() => setCopyResult({ copy: false })}
-                        ref={translateResultElRef}
-                    >
-                        {props.mainMeaning}
-                    </div>
-                    <StyledCopyIcon
-                        onClick={() =>
-                            setCopyResult({
-                                copy: true,
-                                element: translateResultElRef.current,
-                            })
-                        }
-                    />
-                </TextLine>
-                <PronounceLine>
-                    {targetPronouncing ? (
-                        <StyledPronounceLoadingIcon />
-                    ) : (
-                        <StyledPronounceIcon onClick={() => setTargetPronounce(true)} />
-                    )}
-                    <PronounceText class={`${CommonPrefix}may-need-rtl`}>
-                        {props.tPronunciation}
-                    </PronounceText>
-                </PronounceLine>
-            </Target>
             {props.detailedMeanings?.length > 0 && (
                 <Detail>
                     <BlockHead>
