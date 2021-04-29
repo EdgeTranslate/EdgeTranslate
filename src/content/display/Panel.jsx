@@ -8,7 +8,7 @@ import Channel from "common/scripts/channel.js";
 import moveable from "./library/moveable/moveable.js";
 import { delayPromise } from "common/scripts/promise.js";
 import { isChromePDFViewer } from "../common.js";
-import Result from "./Result.jsx"; // display translate result
+import Result, { BlockMarginHorizon } from "./Result.jsx"; // display translate result
 import Loading from "./Loading.jsx"; // display loading animation
 import Error from "./Error.jsx"; // display error messages
 import SettingIcon from "./icons/setting.svg";
@@ -648,6 +648,8 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 const Panel = styled.div`
+    // set a soft black color
+    color: #2d2e2d;
     position: fixed;
     top: 0;
     left: 0;
@@ -742,15 +744,17 @@ const SourceOption = styled.div`
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    padding: 6px;
-    margin: 4px 8px;
+    padding: 6px 0;
+    margin: 4px 0;
+    margin-left: ${BlockMarginHorizon};
     font-weight: normal;
     font-size: medium;
     flex-direction: row;
 
     select {
-        margin-top: 2px;
-        margin-left: 8px;
+        cursor: pointer;
+        // To center the text in select box
+        text-align-last: center;
         background-color: transparent;
         border-color: transparent;
         outline: none;

@@ -288,7 +288,7 @@ export default function Result(props) {
 
 const BlockPadding = "10px";
 const BlockMarginVertical = "4px";
-const BlockMarginHorizon = "8px";
+export const BlockMarginHorizon = "8px";
 const LightPrimary = "rgba(74, 140, 247, 0.7)";
 const Gray = "#919191";
 
@@ -397,7 +397,8 @@ const BlockHead = styled.div`
 `;
 
 const BlockHeadTitle = styled.span`
-    margin-left: 5px;
+    font-size: small;
+    margin-left: ${BlockPadding};
 `;
 
 /**
@@ -456,6 +457,7 @@ const SynonymWord = styled.span`
     border: 1px solid rgba(0, 0, 0, 0.12);
     border-radius: 32px;
     cursor: pointer;
+    font-size: small;
 `;
 
 const Definition = styled(Block)``;
