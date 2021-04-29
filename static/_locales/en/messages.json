@@ -71,6 +71,14 @@
         "message": "Phonetic Symbol",
         "description": "Phonetic Symbol"
     },
+    "SourcePronunciation": {
+        "message": "Source Pronunciation",
+        "description": "Source Pronunciation"
+    },
+    "TargetPronunciation": {
+        "message": "Target Pronunciation",
+        "description": "Target Pronunciation"
+    },
     "Pronounce": {
         "message": "Pronounce",
         "description": "Pronounce"

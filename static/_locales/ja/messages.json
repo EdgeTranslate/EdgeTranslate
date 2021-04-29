@@ -83,6 +83,14 @@
         "message": "原文を読み上げる",
         "description": "原文を読み上げる"
     },
+    "SourcePronunciation": {
+        "message": "Source Pronunciation",
+        "description": "Source Pronunciation"
+    },
+    "TargetPronunciation": {
+        "message": "Target Pronunciation",
+        "description": "Target Pronunciation"
+    },
     "PronounceTranslated": {
         "message": "翻訳されたテキストを読み上げる",
         "description": "翻訳されたテキストを読み上げる"

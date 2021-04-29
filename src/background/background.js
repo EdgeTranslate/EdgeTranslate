@@ -64,6 +64,16 @@ const DEFAULT_SETTINGS = {
             examples: "BaiduTranslate",
         },
     },
+    // Defines which contents in the translating result should be displayed.
+    TranslateResultFilter: {
+        originalText: true,
+        mainMeaning: true,
+        tPronunciation: true,
+        sPronunciation: true,
+        detailedMeanings: true,
+        definitions: true,
+        examples: true,
+    },
 };
 
 /**

@@ -71,6 +71,14 @@
         "message": "Фонетический символ",
         "description": "Фонетический символ"
     },
+    "SourcePronunciation": {
+        "message": "Source Pronunciation",
+        "description": "Source Pronunciation"
+    },
+    "TargetPronunciation": {
+        "message": "Target Pronunciation",
+        "description": "Target Pronunciation"
+    },
     "Pronounce": {
         "message": "произнести",
         "description": "произнести"

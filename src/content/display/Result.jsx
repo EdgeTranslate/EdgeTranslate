@@ -143,40 +143,42 @@ export default function Result(props) {
                     <PronounceText dir={textDirection}>{props.tPronunciation}</PronounceText>
                 </PronounceLine>
             </Target>
-            <Source>
-                <TextLine>
-                    <div dir={textDirection} contenteditable={editing} ref={originalTextElRef}>
-                        {props.originalText}
-                    </div>
-                    {editing ? (
-                        <StyledEditDoneIcon
-                            onClick={() =>
-                                setEditing({
-                                    edit: false,
-                                    element: originalTextElRef.current,
-                                })
-                            }
-                        />
-                    ) : (
-                        <StyledEditIcon
-                            onClick={() =>
-                                setEditing({
-                                    edit: true,
-                                    element: originalTextElRef.current,
-                                })
-                            }
-                        />
-                    )}
-                </TextLine>
-                <PronounceLine>
-                    {sourcePronouncing ? (
-                        <StyledPronounceLoadingIcon />
-                    ) : (
-                        <StyledPronounceIcon onClick={() => setSourcePronounce(true)} />
-                    )}
-                    <PronounceText dir={textDirection}>{props.sPronunciation}</PronounceText>
-                </PronounceLine>
-            </Source>
+            {props.originalText?.length > 0 && (
+                <Source>
+                    <TextLine>
+                        <div dir={textDirection} contenteditable={editing} ref={originalTextElRef}>
+                            {props.originalText}
+                        </div>
+                        {editing ? (
+                            <StyledEditDoneIcon
+                                onClick={() =>
+                                    setEditing({
+                                        edit: false,
+                                        element: originalTextElRef.current,
+                                    })
+                                }
+                            />
+                        ) : (
+                            <StyledEditIcon
+                                onClick={() =>
+                                    setEditing({
+                                        edit: true,
+                                        element: originalTextElRef.current,
+                                    })
+                                }
+                            />
+                        )}
+                    </TextLine>
+                    <PronounceLine>
+                        {sourcePronouncing ? (
+                            <StyledPronounceLoadingIcon />
+                        ) : (
+                            <StyledPronounceIcon onClick={() => setSourcePronounce(true)} />
+                        )}
+                        <PronounceText dir={textDirection}>{props.sPronunciation}</PronounceText>
+                    </PronounceLine>
+                </Source>
+            )}
             {props.detailedMeanings?.length > 0 && (
                 <Detail>
                     <BlockHead>

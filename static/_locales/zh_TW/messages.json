@@ -71,6 +71,14 @@
         "message": "音標",
         "description": "音標"
     },
+    "SourcePronunciation": {
+        "message": "原文讀音",
+        "description": "原文讀音"
+    },
+    "TargetPronunciation": {
+        "message": "翻譯讀音",
+        "description": "翻譯讀音"
+    },
     "Pronounce": {
         "message": "朗讀",
         "description": "朗讀"
