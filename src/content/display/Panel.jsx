@@ -8,7 +8,7 @@ import Channel from "common/scripts/channel.js";
 import moveable from "./library/moveable/moveable.js";
 import { delayPromise } from "common/scripts/promise.js";
 import { isChromePDFViewer } from "../common.js";
-import Result, { BlockMarginHorizon } from "./Result.jsx"; // display translate result
+import Result from "./Result.jsx"; // display translate result
 import Loading from "./Loading.jsx"; // display loading animation
 import Error from "./Error.jsx"; // display error messages
 import SettingIcon from "./icons/setting.svg";
@@ -233,7 +233,7 @@ export default function ResultPanel() {
             // thresholdPosition: "center",
             // thresholdPosition: "out",
             thresholdPosition: 0.7,
-            minWidth: 100,
+            minWidth: 180,
             minHeight: 150,
         });
 
@@ -541,32 +541,29 @@ export default function ResultPanel() {
                 <GlobalStyle />
                 <Panel style={{ position: "fixed" }} ref={onDisplayStatusChange}>
                     <Head ref={headElRef}>
-                        <SourceOption>
-                            <span>{chrome.i18n.getMessage("Using")}</span>
-                            <select
-                                name="translators"
-                                value={currentTranslator}
-                                onChange={(event) => {
-                                    const newTranslator = event.target.value;
-                                    setCurrentTranslator(newTranslator);
-                                    channel
-                                        .request("update_default_translator", {
-                                            translator: newTranslator,
-                                        })
-                                        .then(() => {
-                                            if (window.translateResult.originalText)
-                                                channel.request("translate", {
-                                                    text: window.translateResult.originalText,
-                                                });
-                                        });
-                                }}
-                            >
-                                {availableTranslators?.map((translator) => (
-                                    <option key={translator} value={translator}>
-                                        {chrome.i18n.getMessage(translator)}
-                                    </option>
-                                ))}
-                            </select>
+                        <SourceOption
+                            name="translators"
+                            value={currentTranslator}
+                            onChange={(event) => {
+                                const newTranslator = event.target.value;
+                                setCurrentTranslator(newTranslator);
+                                channel
+                                    .request("update_default_translator", {
+                                        translator: newTranslator,
+                                    })
+                                    .then(() => {
+                                        if (window.translateResult.originalText)
+                                            channel.request("translate", {
+                                                text: window.translateResult.originalText,
+                                            });
+                                    });
+                            }}
+                        >
+                            {availableTranslators?.map((translator) => (
+                                <option key={translator} value={translator}>
+                                    {chrome.i18n.getMessage(translator)}
+                                </option>
+                            ))}
                         </SourceOption>
                         <HeadIcons>
                             <HeadIcon onClick={() => channel.emit("open_options_page")}>
@@ -740,26 +737,17 @@ const Body = styled.div`
     color: black;
 `;
 
-const SourceOption = styled.div`
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    padding: 6px 0;
-    margin: 4px 0;
-    margin-left: ${BlockMarginHorizon};
+const SourceOption = styled.select`
+    max-width: 45%;
     font-weight: normal;
-    font-size: medium;
-    flex-direction: row;
-
-    select {
-        cursor: pointer;
-        // To center the text in select box
-        text-align-last: center;
-        background-color: transparent;
-        border-color: transparent;
-        outline: none;
-        -moz-appearance: none;
-    }
+    font-size: small;
+    cursor: pointer;
+    // To center the text in select box
+    text-align-last: center;
+    background-color: transparent;
+    border-color: transparent;
+    outline: none;
+    -moz-appearance: none;
 `;
 
 const Highlight = styled.div`

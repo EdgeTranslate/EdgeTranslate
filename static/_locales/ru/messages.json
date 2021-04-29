@@ -398,11 +398,7 @@
     "ERR_ACT": {
         "message": "Error action",
         "description": "Error action."
-    },
-    "Using": {
-        "message": "использование",
-        "description": "What kind of translator you are using"
-    },
+    },    
     "English": {
         "message": "English",
         "description": "English"

@@ -398,11 +398,7 @@
     "ERR_ACT": {
         "message": "错误操作",
         "description": "错误操作。"
-    },
-    "Using": {
-        "message": "正在使用",
-        "description": "正在使用什么翻译源"
-    },
+    },    
     "English": {
         "message": "英语",
         "description": "英语"
