@@ -25,11 +25,6 @@ const notifier = new Notifier("center");
  * }
  */
 export default function Result(props) {
-    /**
-     * Contents.
-     */
-    const [contents, setContents] = useState([]);
-
     // const [displayTarget, setDisplayTarget] = useState(false);
     // const [displaySource, setDisplaySource] = useState(false);
     const [displayTPronunciation, setDisplayTPronunciation] = useState(false);
@@ -37,6 +32,7 @@ export default function Result(props) {
     // const [displayDetailedMeanings, setDisplayDetailedMeanings] = useState(false);
     // const [displayDefinitions, setDisplayDefinitions] = useState(false);
     // const [displayExamples, setDisplayExamples] = useState(false);
+    const [contentDisplayOrder, setContentDisplayOrder] = useState([]);
 
     /**
      * Text direction state.
@@ -323,7 +319,8 @@ export default function Result(props) {
         chrome.storage.sync.get(
             ["LayoutSettings", "TranslateResultFilter", "ContentDisplayOrder"],
             (result) => {
-                setContents(result.ContentDisplayOrder.map((content) => CONTENTS[content]));
+                setContentDisplayOrder(result.ContentDisplayOrder);
+                // setContents(result.ContentDisplayOrder.map((content) => CONTENTS[content]));
                 for (let content in result.TranslateResultFilter) {
                     switch (content) {
                         case "sPronunciation":
@@ -345,10 +342,7 @@ export default function Result(props) {
             if (changes.LayoutSettings)
                 setTextDirection(changes.LayoutSettings.newValue.RTL ? "rtl" : "ltr");
 
-            if (changes.ContentDisplayOrder)
-                setContents(
-                    changes.ContentDisplayOrder.newValue.map((content) => CONTENTS[content])
-                );
+            if (changes.ContentDisplayOrder) setContentDisplayOrder(changes.contentDisplayOrder);
 
             if (changes.TranslateResultFilter)
                 for (let content in changes.TranslateResultFilter.newValue) {
@@ -380,7 +374,7 @@ export default function Result(props) {
 
     useEffect(() => (console.log("t", displayTPronunciation), () => {}), [displayTPronunciation]);
 
-    return <Fragment>{contents}</Fragment>;
+    return <Fragment>{contentDisplayOrder.map((content) => CONTENTS[content])}</Fragment>;
 }
 
 /**
