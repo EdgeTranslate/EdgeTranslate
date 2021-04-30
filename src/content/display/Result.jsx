@@ -26,6 +26,19 @@ const notifier = new Notifier("center");
  */
 export default function Result(props) {
     /**
+     * Contents.
+     */
+    const [contents, setContents] = useState([]);
+
+    // const [displayTarget, setDisplayTarget] = useState(false);
+    // const [displaySource, setDisplaySource] = useState(false);
+    const [displayTPronunciation, setDisplayTPronunciation] = useState(false);
+    const [displaySPronunciation, setDisplaySPronunciation] = useState(false);
+    // const [displayDetailedMeanings, setDisplayDetailedMeanings] = useState(false);
+    // const [displayDefinitions, setDisplayDefinitions] = useState(false);
+    // const [displayExamples, setDisplayExamples] = useState(false);
+
+    /**
      * Text direction state.
      */
     const [textDirection, setTextDirection] = useState("ltr");
@@ -43,6 +56,215 @@ export default function Result(props) {
     // indicate whether user is editing the original text
     const [editing, setEditing] = useReducer(_setEditing, false);
     const originalTextElRef = useRef();
+
+    const TargetContent = (
+        <Fragment key={"mainMeaning"}>
+            {props.mainMeaning?.length > 0 && (
+                <Target>
+                    <TextLine>
+                        <div
+                            dir={textDirection}
+                            contenteditable={copyResult}
+                            onBlur={() => setCopyResult({ copy: false })}
+                            ref={translateResultElRef}
+                        >
+                            {props.mainMeaning}
+                        </div>
+                        <StyledCopyIcon
+                            onClick={() =>
+                                setCopyResult({
+                                    copy: true,
+                                    element: translateResultElRef.current,
+                                })
+                            }
+                        />
+                    </TextLine>
+                    <PronounceLine>
+                        {targetPronouncing ? (
+                            <StyledPronounceLoadingIcon />
+                        ) : (
+                            <StyledPronounceIcon onClick={() => setTargetPronounce(true)} />
+                        )}
+                        {displayTPronunciation && (
+                            <PronounceText dir={textDirection}>
+                                {props.tPronunciation}
+                            </PronounceText>
+                        )}
+                    </PronounceLine>
+                </Target>
+            )}
+        </Fragment>
+    );
+
+    const SourceContent = (
+        <Fragment key={"originalText"}>
+            {props.originalText?.length > 0 && (
+                <Source>
+                    <TextLine>
+                        <div dir={textDirection} contenteditable={editing} ref={originalTextElRef}>
+                            {props.originalText}
+                        </div>
+                        {editing ? (
+                            <StyledEditDoneIcon
+                                onClick={() =>
+                                    setEditing({
+                                        edit: false,
+                                        element: originalTextElRef.current,
+                                    })
+                                }
+                            />
+                        ) : (
+                            <StyledEditIcon
+                                onClick={() =>
+                                    setEditing({
+                                        edit: true,
+                                        element: originalTextElRef.current,
+                                    })
+                                }
+                            />
+                        )}
+                    </TextLine>
+                    <PronounceLine>
+                        {sourcePronouncing ? (
+                            <StyledPronounceLoadingIcon />
+                        ) : (
+                            <StyledPronounceIcon onClick={() => setSourcePronounce(true)} />
+                        )}
+                        {displaySPronunciation && (
+                            <PronounceText dir={textDirection}>
+                                {props.sPronunciation}
+                            </PronounceText>
+                        )}
+                    </PronounceLine>
+                </Source>
+            )}
+        </Fragment>
+    );
+
+    const DetailContent = (
+        <Fragment key={"detailedMeanings"}>
+            {props.detailedMeanings?.length > 0 && (
+                <Detail>
+                    <BlockHead>
+                        <DetailHeadSpot />
+                        <BlockHeadTitle>
+                            {chrome.i18n.getMessage("DetailedMeanings")}
+                        </BlockHeadTitle>
+                        <BlockSplitLine />
+                    </BlockHead>
+                    <BlockContent>
+                        {props.detailedMeanings.map((detail) => (
+                            <Fragment>
+                                <Position>{detail.pos}</Position>
+                                <DetailMeaning>{detail.meaning}</DetailMeaning>
+                                {detail.synonyms?.length > 0 && (
+                                    <Fragment>
+                                        <SynonymTitle>
+                                            {chrome.i18n.getMessage("Synonyms")}
+                                        </SynonymTitle>
+                                        <SynonymLine>
+                                            {detail.synonyms.map((word) => (
+                                                <SynonymWord>{word}</SynonymWord>
+                                            ))}
+                                        </SynonymLine>
+                                    </Fragment>
+                                )}
+                            </Fragment>
+                        ))}
+                    </BlockContent>
+                </Detail>
+            )}
+        </Fragment>
+    );
+
+    const DefinitionContent = (
+        <Fragment key={"definitions"}>
+            {props.definitions?.length > 0 && (
+                <Definition>
+                    <BlockHead>
+                        <DefinitionHeadSpot />
+                        <BlockHeadTitle>{chrome.i18n.getMessage("Definitions")}</BlockHeadTitle>
+                        <BlockSplitLine />
+                    </BlockHead>
+                    <BlockContent>
+                        {props.definitions.map((definition) => (
+                            <Fragment>
+                                <Position>{definition.pos}</Position>
+                                <DetailMeaning>{definition.meaning}</DetailMeaning>
+                                {definition.example && (
+                                    <DefinitionExample>{`"${definition.example}"`}</DefinitionExample>
+                                )}
+                                {definition.synonyms?.length > 0 && (
+                                    <Fragment>
+                                        <SynonymTitle>
+                                            {chrome.i18n.getMessage("Synonyms")}
+                                        </SynonymTitle>
+                                        <SynonymLine>
+                                            {definition.synonyms.map((word) => (
+                                                <SynonymWord>{word}</SynonymWord>
+                                            ))}
+                                        </SynonymLine>
+                                    </Fragment>
+                                )}
+                            </Fragment>
+                        ))}
+                    </BlockContent>
+                </Definition>
+            )}
+        </Fragment>
+    );
+
+    const ExampleContent = (
+        <Fragment key={"examples"}>
+            {props.examples?.length > 0 && (
+                <Example>
+                    <BlockHead>
+                        <ExampleHeadSpot />
+                        <BlockHeadTitle>{chrome.i18n.getMessage("Examples")}</BlockHeadTitle>
+                        <BlockSplitLine />
+                    </BlockHead>
+                    <BlockContent>
+                        <ExampleList>
+                            {props.examples.map((example) => (
+                                <ExampleItem>
+                                    {example.source && (
+                                        <ExampleSource
+                                            dangerouslySetInnerHTML={{
+                                                __html: DOMPurify.sanitize(example.source, {
+                                                    ALLOWED_TAGS: ["b"],
+                                                }),
+                                            }}
+                                        />
+                                    )}
+                                    {example.target && (
+                                        <div
+                                            // eslint-disable-next-line react/no-danger
+                                            dangerouslySetInnerHTML={{
+                                                __html: DOMPurify.sanitize(example.target, {
+                                                    ALLOWED_TAGS: ["b"],
+                                                }),
+                                            }}
+                                        />
+                                    )}
+                                </ExampleItem>
+                            ))}
+                        </ExampleList>
+                    </BlockContent>
+                </Example>
+            )}
+        </Fragment>
+    );
+
+    /**
+     * Content maps.
+     */
+    const CONTENTS = {
+        mainMeaning: TargetContent,
+        originalText: SourceContent,
+        detailedMeanings: DetailContent,
+        definitions: DefinitionContent,
+        examples: ExampleContent,
+    };
 
     useEffect(() => {
         sourceTTSSpeed = "fast";
@@ -96,190 +318,69 @@ export default function Result(props) {
         );
 
         /**
-         * Update text direction based on user's setting.
+         * Update displaying contents based on user's setting.
          */
-        chrome.storage.sync.get("LayoutSettings", (result) =>
-            setTextDirection(result.LayoutSettings.RTL ? "rtl" : "ltr")
+        chrome.storage.sync.get(
+            ["LayoutSettings", "TranslateResultFilter", "ContentDisplayOrder"],
+            (result) => {
+                setContents(result.ContentDisplayOrder.map((content) => CONTENTS[content]));
+                for (let content in result.TranslateResultFilter) {
+                    switch (content) {
+                        case "sPronunciation":
+                            setDisplaySPronunciation(result.TranslateResultFilter[content]);
+                            break;
+                        case "tPronunciation":
+                            setDisplayTPronunciation(result.TranslateResultFilter[content]);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                setTextDirection(result.LayoutSettings.RTL ? "rtl" : "ltr");
+            }
         );
         chrome.storage.onChanged.addListener((changes, area) => {
-            if (area === "sync" && changes.LayoutSettings) {
+            if (area !== "sync") return;
+
+            if (changes.LayoutSettings)
                 setTextDirection(changes.LayoutSettings.newValue.RTL ? "rtl" : "ltr");
-            }
+
+            if (changes.ContentDisplayOrder)
+                setContents(
+                    changes.ContentDisplayOrder.newValue.map((content) => CONTENTS[content])
+                );
+
+            if (changes.TranslateResultFilter)
+                for (let content in changes.TranslateResultFilter.newValue) {
+                    switch (content) {
+                        case "sPronunciation":
+                            setDisplaySPronunciation(
+                                changes.TranslateResultFilter.newValue[content]
+                            );
+                            break;
+                        case "tPronunciation":
+                            setDisplayTPronunciation(
+                                changes.TranslateResultFilter.newValue[content]
+                            );
+                            break;
+                        default:
+                            break;
+                    }
+                }
         });
 
         return () => {
             // remove all of event listeners before destroying the component
             cancelers.forEach((canceler) => canceler());
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    return (
-        <Fragment>
-            <Target>
-                <TextLine>
-                    <div
-                        dir={textDirection}
-                        contenteditable={copyResult}
-                        onBlur={() => setCopyResult({ copy: false })}
-                        ref={translateResultElRef}
-                    >
-                        {props.mainMeaning}
-                    </div>
-                    <StyledCopyIcon
-                        onClick={() =>
-                            setCopyResult({
-                                copy: true,
-                                element: translateResultElRef.current,
-                            })
-                        }
-                    />
-                </TextLine>
-                <PronounceLine>
-                    {targetPronouncing ? (
-                        <StyledPronounceLoadingIcon />
-                    ) : (
-                        <StyledPronounceIcon onClick={() => setTargetPronounce(true)} />
-                    )}
-                    <PronounceText dir={textDirection}>{props.tPronunciation}</PronounceText>
-                </PronounceLine>
-            </Target>
-            {props.originalText?.length > 0 && (
-                <Source>
-                    <TextLine>
-                        <div dir={textDirection} contenteditable={editing} ref={originalTextElRef}>
-                            {props.originalText}
-                        </div>
-                        {editing ? (
-                            <StyledEditDoneIcon
-                                onClick={() =>
-                                    setEditing({
-                                        edit: false,
-                                        element: originalTextElRef.current,
-                                    })
-                                }
-                            />
-                        ) : (
-                            <StyledEditIcon
-                                onClick={() =>
-                                    setEditing({
-                                        edit: true,
-                                        element: originalTextElRef.current,
-                                    })
-                                }
-                            />
-                        )}
-                    </TextLine>
-                    <PronounceLine>
-                        {sourcePronouncing ? (
-                            <StyledPronounceLoadingIcon />
-                        ) : (
-                            <StyledPronounceIcon onClick={() => setSourcePronounce(true)} />
-                        )}
-                        <PronounceText dir={textDirection}>{props.sPronunciation}</PronounceText>
-                    </PronounceLine>
-                </Source>
-            )}
-            {props.detailedMeanings?.length > 0 && (
-                <Detail>
-                    <BlockHead>
-                        <DetailHeadSpot />
-                        <BlockHeadTitle>
-                            {chrome.i18n.getMessage("DetailedMeanings")}
-                        </BlockHeadTitle>
-                        <BlockSplitLine />
-                    </BlockHead>
-                    <BlockContent>
-                        {props.detailedMeanings.map((detail) => (
-                            <Fragment>
-                                <Position>{detail.pos}</Position>
-                                <DetailMeaning>{detail.meaning}</DetailMeaning>
-                                {detail.synonyms?.length > 0 && (
-                                    <Fragment>
-                                        <SynonymTitle>
-                                            {chrome.i18n.getMessage("Synonyms")}
-                                        </SynonymTitle>
-                                        <SynonymLine>
-                                            {detail.synonyms.map((word) => (
-                                                <SynonymWord>{word}</SynonymWord>
-                                            ))}
-                                        </SynonymLine>
-                                    </Fragment>
-                                )}
-                            </Fragment>
-                        ))}
-                    </BlockContent>
-                </Detail>
-            )}
-            {props.definitions?.length > 0 && (
-                <Definition>
-                    <BlockHead>
-                        <DefinitionHeadSpot />
-                        <BlockHeadTitle>{chrome.i18n.getMessage("Definitions")}</BlockHeadTitle>
-                        <BlockSplitLine />
-                    </BlockHead>
-                    <BlockContent>
-                        {props.definitions.map((definition) => (
-                            <Fragment>
-                                <Position>{definition.pos}</Position>
-                                <DetailMeaning>{definition.meaning}</DetailMeaning>
-                                {definition.example && (
-                                    <DefinitionExample>{`"${definition.example}"`}</DefinitionExample>
-                                )}
-                                {definition.synonyms?.length > 0 && (
-                                    <Fragment>
-                                        <SynonymTitle>
-                                            {chrome.i18n.getMessage("Synonyms")}
-                                        </SynonymTitle>
-                                        <SynonymLine>
-                                            {definition.synonyms.map((word) => (
-                                                <SynonymWord>{word}</SynonymWord>
-                                            ))}
-                                        </SynonymLine>
-                                    </Fragment>
-                                )}
-                            </Fragment>
-                        ))}
-                    </BlockContent>
-                </Definition>
-            )}
-            {props.examples?.length > 0 && (
-                <Example>
-                    <BlockHead>
-                        <ExampleHeadSpot />
-                        <BlockHeadTitle>{chrome.i18n.getMessage("Examples")}</BlockHeadTitle>
-                        <BlockSplitLine />
-                    </BlockHead>
-                    <BlockContent>
-                        <ExampleList>
-                            {props.examples.map((example) => (
-                                <ExampleItem>
-                                    {example.source && (
-                                        <ExampleSource
-                                            dangerouslySetInnerHTML={{
-                                                __html: DOMPurify.sanitize(example.source, {
-                                                    ALLOWED_TAGS: ["b"],
-                                                }),
-                                            }}
-                                        />
-                                    )}
-                                    {example.target && (
-                                        <div
-                                            // eslint-disable-next-line react/no-danger
-                                            dangerouslySetInnerHTML={{
-                                                __html: DOMPurify.sanitize(example.target, {
-                                                    ALLOWED_TAGS: ["b"],
-                                                }),
-                                            }}
-                                        />
-                                    )}
-                                </ExampleItem>
-                            ))}
-                        </ExampleList>
-                    </BlockContent>
-                </Example>
-            )}
-        </Fragment>
-    );
+    useEffect(() => (console.log("s", displaySPronunciation), () => {}), [displaySPronunciation]);
+
+    useEffect(() => (console.log("t", displayTPronunciation), () => {}), [displayTPronunciation]);
+
+    return <Fragment>{contents}</Fragment>;
 }
 
 /**

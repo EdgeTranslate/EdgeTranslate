@@ -66,14 +66,22 @@ const DEFAULT_SETTINGS = {
     },
     // Defines which contents in the translating result should be displayed.
     TranslateResultFilter: {
-        originalText: true,
         mainMeaning: true,
+        originalText: true,
         tPronunciation: true,
         sPronunciation: true,
         detailedMeanings: true,
         definitions: true,
         examples: true,
     },
+    // Defines the order of displaying contents.
+    ContentDisplayOrder: [
+        "mainMeaning",
+        "originalText",
+        "detailedMeanings",
+        "definitions",
+        "examples",
+    ],
 };
 
 /**

@@ -53,11 +53,6 @@ class TranslatorManager {
         this.TTS_SPEED = "fast";
 
         /**
-         * Translate result filter.
-         */
-        this.TRANSLATE_RESULT_FILTER = {};
-
-        /**
          * Start to provide services and listen to event.
          */
         this.provideServices();
@@ -133,10 +128,6 @@ class TranslatorManager {
                     if (changes["DefaultTranslator"]) {
                         this.DEFAULT_TRANSLATOR = changes["DefaultTranslator"].newValue;
                     }
-
-                    if (changes["TranslateResultFilter"]) {
-                        this.TRANSLATE_RESULT_FILTER = changes["TranslateResultFilter"].newValue;
-                    }
                 }
             }).bind(this)
         );
@@ -155,7 +146,7 @@ class TranslatorManager {
             }
 
             chrome.storage.sync.get(
-                ["DefaultTranslator", "languageSetting", "OtherSettings", "TranslateResultFilter"],
+                ["DefaultTranslator", "languageSetting", "OtherSettings"],
                 (res) => {
                     if (chrome.runtime.lastError) {
                         reject(chrome.runtime.lastError);
@@ -165,7 +156,6 @@ class TranslatorManager {
                     this.IN_MUTUAL_MODE = res.OtherSettings.MutualTranslate;
                     this.LANGUAGE_SETTING = res.languageSetting;
                     this.DEFAULT_TRANSLATOR = res.DefaultTranslator;
-                    this.TRANSLATE_RESULT_FILTER = res.TranslateResultFilter;
                     this.CONFIG_LOADED = true;
                     resolve();
                 }
@@ -211,21 +201,6 @@ class TranslatorManager {
             }
         });
         return tabId;
-    }
-
-    /**
-     * Filter the translating result based on user's setting.
-     *
-     * @param {any} result translating result
-     * @returns filtered result
-     */
-    filterResult(result) {
-        for (let key in result) {
-            if (!this.TRANSLATE_RESULT_FILTER[key]) {
-                delete result[key];
-            }
-        }
-        return result;
     }
 
     /**
@@ -303,7 +278,6 @@ class TranslatorManager {
 
             // Do translate.
             let result = await this.TRANSLATORS[this.DEFAULT_TRANSLATOR].translate(text, sl, tl);
-            result = this.filterResult(result);
             result.sourceLanguage = sl;
             result.targetLanguage = tl;
 
