@@ -215,8 +215,8 @@ class TencentTranslator {
         // Parse original text and main meaning.
         let result = { originalText: "", mainMeaning: "" };
         for (let record of response.translate.records) {
+            result.mainMeaning += record.targetText;
             result.originalText += record.sourceText;
-            result.mainMeaning += record.targetText.split(/\s*\/\s*/g)[0];
         }
 
         // Unescape html characters.
@@ -243,7 +243,12 @@ class TencentTranslator {
             if (response.suggest.data[0].examples_json) {
                 result.examples = JSON.parse(response.suggest.data[0].examples_json).basic.map(
                     (item) => {
-                        return { source: item.sourceText, target: item.targetText };
+                        return {
+                            source: parser.parseFromString(item.sourceText, "text/html")
+                                .documentElement.textContent,
+                            target: parser.parseFromString(item.targetText, "text/html")
+                                .documentElement.textContent,
+                        };
                     }
                 );
             }
@@ -251,7 +256,11 @@ class TencentTranslator {
 
         if (response.dict && response.dict.abstract && response.dict.abstract.length > 0) {
             result.detailedMeanings = response.dict.abstract.map((item) => {
-                return { pos: item.ps, meaning: item.explanation.join(", ") };
+                return {
+                    pos: item.ps,
+                    meaning: parser.parseFromString(item.explanation.join(", "), "text/html")
+                        .documentElement.textContent,
+                };
             });
         }
 
