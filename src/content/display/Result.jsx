@@ -20,19 +20,40 @@ const channel = new Channel();
 const notifier = new Notifier("center");
 
 /**
- * props:{
- *     content: object; // translation result
- * }
+ * @param {{
+ *   mainMeaning: string,
+ *   originalText: string,
+ *   tPronunciation: string?,
+ *   sPronunciation: string?,
+ *   detailedMeanings: Array<{
+ *     pos: string,
+ *     meaning: string,
+ *     synonyms: Array<string>?,
+ *   }>?,
+ *   definitions: Array<{
+ *     pos: string,
+ *     meaning: string,
+ *     synonyms: Array<string>?,
+ *     example: string?,
+ *   }>?,
+ *   examples: Array<{
+ *     source: string?,
+ *     target: string?,
+ *   }>?,
+ * }} props translate result
  */
 export default function Result(props) {
-    // const [displayTarget, setDisplayTarget] = useState(false);
-    // const [displaySource, setDisplaySource] = useState(false);
+    /**
+     * The order state of displaying contents.
+     */
+    const [contentDisplayOrder, setContentDisplayOrder] = useState([]);
+
+    /**
+     * The visible state of contents.
+     */
     const [displayTPronunciation, setDisplayTPronunciation] = useState(false);
     const [displaySPronunciation, setDisplaySPronunciation] = useState(false);
-    // const [displayDetailedMeanings, setDisplayDetailedMeanings] = useState(false);
-    // const [displayDefinitions, setDisplayDefinitions] = useState(false);
-    // const [displayExamples, setDisplayExamples] = useState(false);
-    const [contentDisplayOrder, setContentDisplayOrder] = useState([]);
+    const [contentFilter, setContentFilter] = useState({});
 
     /**
      * Text direction state.
@@ -81,11 +102,12 @@ export default function Result(props) {
                         ) : (
                             <StyledPronounceIcon onClick={() => setTargetPronounce(true)} />
                         )}
-                        {displayTPronunciation && (
-                            <PronounceText dir={textDirection}>
-                                {props.tPronunciation}
-                            </PronounceText>
-                        )}
+                        <PronounceText
+                            style={{ display: displayTPronunciation ? "flex" : "none" }}
+                            dir={textDirection}
+                        >
+                            {props.tPronunciation}
+                        </PronounceText>
                     </PronounceLine>
                 </Target>
             )}
@@ -126,11 +148,12 @@ export default function Result(props) {
                         ) : (
                             <StyledPronounceIcon onClick={() => setSourcePronounce(true)} />
                         )}
-                        {displaySPronunciation && (
-                            <PronounceText dir={textDirection}>
-                                {props.sPronunciation}
-                            </PronounceText>
-                        )}
+                        <PronounceText
+                            style={{ display: displaySPronunciation ? "flex" : "none" }}
+                            dir={textDirection}
+                        >
+                            {props.sPronunciation}
+                        </PronounceText>
                     </PronounceLine>
                 </Source>
             )}
@@ -320,61 +343,43 @@ export default function Result(props) {
             ["LayoutSettings", "TranslateResultFilter", "ContentDisplayOrder"],
             (result) => {
                 setContentDisplayOrder(result.ContentDisplayOrder);
-                // setContents(result.ContentDisplayOrder.map((content) => CONTENTS[content]));
-                for (let content in result.TranslateResultFilter) {
-                    switch (content) {
-                        case "sPronunciation":
-                            setDisplaySPronunciation(result.TranslateResultFilter[content]);
-                            break;
-                        case "tPronunciation":
-                            setDisplayTPronunciation(result.TranslateResultFilter[content]);
-                            break;
-                        default:
-                            break;
-                    }
-                }
+                setDisplaySPronunciation(result.TranslateResultFilter["sPronunciation"]);
+                setDisplayTPronunciation(result.TranslateResultFilter["tPronunciation"]);
+                setContentFilter(result.TranslateResultFilter);
                 setTextDirection(result.LayoutSettings.RTL ? "rtl" : "ltr");
             }
         );
         chrome.storage.onChanged.addListener((changes, area) => {
             if (area !== "sync") return;
 
-            if (changes.LayoutSettings)
+            if (changes.ContentDisplayOrder) {
+                setContentDisplayOrder(changes.ContentDisplayOrder.newValue);
+            }
+
+            if (changes.TranslateResultFilter) {
+                setDisplaySPronunciation(changes.TranslateResultFilter.newValue["sPronunciation"]);
+                setDisplayTPronunciation(changes.TranslateResultFilter.newValue["tPronunciation"]);
+                setContentFilter(changes.TranslateResultFilter.newValue);
+            }
+
+            if (changes.LayoutSettings) {
                 setTextDirection(changes.LayoutSettings.newValue.RTL ? "rtl" : "ltr");
-
-            if (changes.ContentDisplayOrder) setContentDisplayOrder(changes.contentDisplayOrder);
-
-            if (changes.TranslateResultFilter)
-                for (let content in changes.TranslateResultFilter.newValue) {
-                    switch (content) {
-                        case "sPronunciation":
-                            setDisplaySPronunciation(
-                                changes.TranslateResultFilter.newValue[content]
-                            );
-                            break;
-                        case "tPronunciation":
-                            setDisplayTPronunciation(
-                                changes.TranslateResultFilter.newValue[content]
-                            );
-                            break;
-                        default:
-                            break;
-                    }
-                }
+            }
         });
 
         return () => {
             // remove all of event listeners before destroying the component
             cancelers.forEach((canceler) => canceler());
         };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    useEffect(() => (console.log("s", displaySPronunciation), () => {}), [displaySPronunciation]);
-
-    useEffect(() => (console.log("t", displayTPronunciation), () => {}), [displayTPronunciation]);
-
-    return <Fragment>{contentDisplayOrder.map((content) => CONTENTS[content])}</Fragment>;
+    return (
+        <Fragment>
+            {contentDisplayOrder
+                .filter((content) => contentFilter[content])
+                .map((content) => CONTENTS[content])}
+        </Fragment>
+    );
 }
 
 /**
