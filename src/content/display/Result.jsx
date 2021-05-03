@@ -394,7 +394,7 @@ export default function Result(props) {
 
 const BlockPadding = "10px";
 const BlockMarginVertical = "4px";
-export const BlockMarginHorizon = "8px";
+export const BlockMarginHorizon = "12px";
 const LightPrimary = "rgba(74, 140, 247, 0.7)";
 const Gray = "#919191";
 
@@ -413,16 +413,20 @@ export const Block = styled.div`
     background-color: rgba(255, 255, 255, 0.8);
     border-radius: 10px;
     box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.25);
+    line-height: 120%;
+    letter-spacing: 0.02em;
 `;
 
 const Source = styled(Block)`
     font-weight: normal;
     white-space: pre-wrap;
 `;
+
 const Target = styled(Block)`
     font-weight: normal;
     white-space: pre-wrap;
 `;
+
 const Detail = styled(Block)`
     font-weight: normal;
 `;
@@ -437,17 +441,19 @@ const TextLine = styled.div`
 `;
 
 const StyledEditIcon = styled(EditIcon)`
-    width: 16px;
-    height: 16px;
+    width: 18px;
+    height: 18px;
     fill: ${Gray};
     flex-shrink: 0;
+    margin-left: 2px;
 `;
 
 const StyledEditDoneIcon = styled(EditDoneIcon)`
-    width: 16px;
-    height: 16px;
+    width: 18px;
+    height: 18px;
     fill: ${Gray};
     flex-shrink: 0;
+    margin-left: 2px;
 `;
 
 const PronounceLine = styled.div`
@@ -468,6 +474,7 @@ const StyledCopyIcon = styled(CopyIcon)`
     height: 20px;
     fill: ${Gray};
     flex-shrink: 0;
+    margin-left: 2px;
 `;
 
 const StyledPronounceIcon = styled(PronounceIcon)`
