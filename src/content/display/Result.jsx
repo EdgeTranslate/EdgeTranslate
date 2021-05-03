@@ -172,8 +172,8 @@ export default function Result(props) {
                         <BlockSplitLine />
                     </BlockHead>
                     <BlockContent>
-                        {props.detailedMeanings.map((detail) => (
-                            <Fragment>
+                        {props.detailedMeanings.map((detail, detailIndex) => (
+                            <Fragment key={`detail-${detailIndex}`}>
                                 <Position>{detail.pos}</Position>
                                 <DetailMeaning>{detail.meaning}</DetailMeaning>
                                 {detail.synonyms?.length > 0 && (
@@ -182,8 +182,10 @@ export default function Result(props) {
                                             {chrome.i18n.getMessage("Synonyms")}
                                         </SynonymTitle>
                                         <SynonymLine>
-                                            {detail.synonyms.map((word) => (
-                                                <SynonymWord>{word}</SynonymWord>
+                                            {detail.synonyms.map((word, synonymIndex) => (
+                                                <SynonymWord key={`detail-synonym-${synonymIndex}`}>
+                                                    {word}
+                                                </SynonymWord>
                                             ))}
                                         </SynonymLine>
                                     </Fragment>
@@ -206,8 +208,8 @@ export default function Result(props) {
                         <BlockSplitLine />
                     </BlockHead>
                     <BlockContent>
-                        {props.definitions.map((definition) => (
-                            <Fragment>
+                        {props.definitions.map((definition, definitionIndex) => (
+                            <Fragment key={`definition-${definitionIndex}`}>
                                 <Position>{definition.pos}</Position>
                                 <DetailMeaning>{definition.meaning}</DetailMeaning>
                                 {definition.example && (
@@ -219,8 +221,12 @@ export default function Result(props) {
                                             {chrome.i18n.getMessage("Synonyms")}
                                         </SynonymTitle>
                                         <SynonymLine>
-                                            {definition.synonyms.map((word) => (
-                                                <SynonymWord>{word}</SynonymWord>
+                                            {definition.synonyms.map((word, synonymIndex) => (
+                                                <SynonymWord
+                                                    key={`definition-synonym-${synonymIndex}`}
+                                                >
+                                                    {word}
+                                                </SynonymWord>
                                             ))}
                                         </SynonymLine>
                                     </Fragment>
@@ -244,8 +250,8 @@ export default function Result(props) {
                     </BlockHead>
                     <BlockContent>
                         <ExampleList>
-                            {props.examples.map((example) => (
-                                <ExampleItem>
+                            {props.examples.map((example, index) => (
+                                <ExampleItem key={`example-${index}`}>
                                     {example.source && (
                                         <ExampleSource
                                             dangerouslySetInnerHTML={{
