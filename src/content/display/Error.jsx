@@ -3,16 +3,28 @@ import { h } from "preact";
 import styled from "styled-components";
 import ErrorIcon from "./icons/error.svg";
 
+/**
+ * @param {{
+ *   error: {
+ *     errorType: "API_ERR" | "NET_ERR",
+ *     errorCode: Number,
+ *     errorMsg: string,
+ *     errorAct: Object?,
+ *   }
+ * }} props error info
+ *
+ * @returns {h.JSX.Element} element
+ */
 export default function Error(props) {
     return (
         <ErrorContainer>
             <ErrorInfo>
                 <StyledErrorIcon />
-                {props.error.errorType === "API_ERR" ? (
-                    <ErrorType>{chrome.i18n.getMessage("APIERR")}</ErrorType>
-                ) : (
-                    <ErrorType>{chrome.i18n.getMessage("NETERR")}</ErrorType>
-                )}
+                <ErrorType>
+                    {props.error.errorType === "API_ERR"
+                        ? chrome.i18n.getMessage("APIERR")
+                        : chrome.i18n.getMessage("NETERR")}
+                </ErrorType>
                 <ErrorMessage>
                     {`${chrome.i18n.getMessage("ERR_CODE")}: ${JSON.stringify(
                         props.error.errorCode

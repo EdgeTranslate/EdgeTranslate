@@ -41,6 +41,8 @@ const notifier = new Notifier("center");
  *     target: string?,
  *   }>?,
  * }} props translate result
+ *
+ * @returns {h.JSX.Element} element
  */
 export default function Result(props) {
     /**
@@ -102,12 +104,11 @@ export default function Result(props) {
                         ) : (
                             <StyledPronounceIcon onClick={() => setTargetPronounce(true)} />
                         )}
-                        <PronounceText
-                            style={{ display: displayTPronunciation ? "flex" : "none" }}
-                            dir={textDirection}
-                        >
-                            {props.tPronunciation}
-                        </PronounceText>
+                        {displayTPronunciation && (
+                            <PronounceText dir={textDirection}>
+                                {props.tPronunciation}
+                            </PronounceText>
+                        )}
                     </PronounceLine>
                 </Target>
             )}
@@ -148,12 +149,11 @@ export default function Result(props) {
                         ) : (
                             <StyledPronounceIcon onClick={() => setSourcePronounce(true)} />
                         )}
-                        <PronounceText
-                            style={{ display: displaySPronunciation ? "flex" : "none" }}
-                            dir={textDirection}
-                        >
-                            {props.sPronunciation}
-                        </PronounceText>
+                        {displaySPronunciation && (
+                            <PronounceText dir={textDirection}>
+                                {props.sPronunciation}
+                            </PronounceText>
+                        )}
                     </PronounceLine>
                 </Source>
             )}
