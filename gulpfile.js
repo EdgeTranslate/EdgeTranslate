@@ -105,7 +105,6 @@ function packToZip() {
  */
 function watcher(done) {
     gulp.watch("./src/**/*.{js,jsx}").on("change", gulp.series(eslintJS));
-    gulp.watch("./src/display/**/*.xhtml").on("change", gulp.series(eslintJS));
     gulp.watch("./src/(manifest|manifest_chrome|manifest_firefox).json").on(
         "change",
         gulp.series(manifest)

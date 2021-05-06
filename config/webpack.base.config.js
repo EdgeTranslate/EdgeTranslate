@@ -31,10 +31,6 @@ module.exports = {
                 test: [/\.svg$/],
                 use: "@svgr/webpack",
             },
-            {
-                test: [/\.xhtml$/],
-                use: path.resolve(__dirname, "../tools/xhtml-loader.js"),
-            },
         ],
     },
     resolve: {
