@@ -3,8 +3,10 @@
  * part: display.notifier
  * function:  a notifier to notify users of messages including(info, success, warning, error)
  */
-
-import notifierTemplate from "./notifier.xhtml";
+/** @jsx h */
+import { h } from "preact";
+import render from "preact-render-to-string";
+import NotifierTemplate from "./notifier.jsx";
 import { delayPromise } from "common/scripts/promise.js";
 
 // prefix for CSS selector name
@@ -89,7 +91,7 @@ export default class Notifier {
         if (option.duration < ANIMATION_DURATION) option.duration = 0;
 
         let notificationElement = document.createElement("div");
-        notificationElement.innerHTML = notifierTemplate.apply(option);
+        notificationElement.innerHTML = render(<NotifierTemplate {...option} />);
         notificationElement = notificationElement.firstChild;
         option.element = notificationElement;
         this.shadowDom.insertBefore(notificationElement, this.shadowDom.firstChild);
