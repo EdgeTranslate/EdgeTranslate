@@ -2,6 +2,6 @@
 import { h, render } from "preact";
 import Panel from "./Panel.jsx";
 
-window.onload = () => {
+(function initialize() {
     render(<Panel />, document.documentElement);
-};
+})();
