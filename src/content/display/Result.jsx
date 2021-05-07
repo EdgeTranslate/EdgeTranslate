@@ -55,6 +55,8 @@ export default function Result(props) {
      */
     const [displayTPronunciation, setDisplayTPronunciation] = useState(false);
     const [displaySPronunciation, setDisplaySPronunciation] = useState(false);
+    const [displayTPronunciationIcon, setDisplayTPronunciationIcon] = useState(false);
+    const [displaySPronunciationIcon, setDisplaySPronunciationIcon] = useState(false);
     const [contentFilter, setContentFilter] = useState({});
 
     /**
@@ -98,18 +100,21 @@ export default function Result(props) {
                             }
                         />
                     </TextLine>
-                    <PronounceLine>
-                        {targetPronouncing ? (
-                            <StyledPronounceLoadingIcon />
-                        ) : (
-                            <StyledPronounceIcon onClick={() => setTargetPronounce(true)} />
-                        )}
-                        {displayTPronunciation && (
-                            <PronounceText dir={textDirection}>
-                                {props.tPronunciation}
-                            </PronounceText>
-                        )}
-                    </PronounceLine>
+                    {(displayTPronunciationIcon || displayTPronunciation) && (
+                        <PronounceLine>
+                            {displayTPronunciationIcon &&
+                                (targetPronouncing ? (
+                                    <StyledPronounceLoadingIcon />
+                                ) : (
+                                    <StyledPronounceIcon onClick={() => setTargetPronounce(true)} />
+                                ))}
+                            {displayTPronunciation && (
+                                <PronounceText dir={textDirection}>
+                                    {props.tPronunciation}
+                                </PronounceText>
+                            )}
+                        </PronounceLine>
+                    )}
                 </Target>
             )}
         </Fragment>
@@ -143,18 +148,21 @@ export default function Result(props) {
                             />
                         )}
                     </TextLine>
-                    <PronounceLine>
-                        {sourcePronouncing ? (
-                            <StyledPronounceLoadingIcon />
-                        ) : (
-                            <StyledPronounceIcon onClick={() => setSourcePronounce(true)} />
-                        )}
-                        {displaySPronunciation && (
-                            <PronounceText dir={textDirection}>
-                                {props.sPronunciation}
-                            </PronounceText>
-                        )}
-                    </PronounceLine>
+                    {(displaySPronunciationIcon || displaySPronunciation) && (
+                        <PronounceLine>
+                            {displaySPronunciationIcon &&
+                                (sourcePronouncing ? (
+                                    <StyledPronounceLoadingIcon />
+                                ) : (
+                                    <StyledPronounceIcon onClick={() => setSourcePronounce(true)} />
+                                ))}
+                            {displaySPronunciation && (
+                                <PronounceText dir={textDirection}>
+                                    {props.sPronunciation}
+                                </PronounceText>
+                            )}
+                        </PronounceLine>
+                    )}
                 </Source>
             )}
         </Fragment>
@@ -351,6 +359,8 @@ export default function Result(props) {
                 setContentDisplayOrder(result.ContentDisplayOrder);
                 setDisplaySPronunciation(result.TranslateResultFilter["sPronunciation"]);
                 setDisplayTPronunciation(result.TranslateResultFilter["tPronunciation"]);
+                setDisplaySPronunciationIcon(result.TranslateResultFilter["sPronunciationIcon"]);
+                setDisplayTPronunciationIcon(result.TranslateResultFilter["tPronunciationIcon"]);
                 setContentFilter(result.TranslateResultFilter);
                 setTextDirection(result.LayoutSettings.RTL ? "rtl" : "ltr");
             }
@@ -365,6 +375,12 @@ export default function Result(props) {
             if (changes.TranslateResultFilter) {
                 setDisplaySPronunciation(changes.TranslateResultFilter.newValue["sPronunciation"]);
                 setDisplayTPronunciation(changes.TranslateResultFilter.newValue["tPronunciation"]);
+                setDisplaySPronunciationIcon(
+                    changes.TranslateResultFilter.newValue["sPronunciationIcon"]
+                );
+                setDisplayTPronunciationIcon(
+                    changes.TranslateResultFilter.newValue["tPronunciationIcon"]
+                );
                 setContentFilter(changes.TranslateResultFilter.newValue);
             }
 
@@ -466,7 +482,7 @@ const PronounceLine = styled.div`
 `;
 
 const PronounceText = styled.span`
-    margin-left: 10px;
+    color: ${Gray};
 `;
 
 const StyledCopyIcon = styled(CopyIcon)`
@@ -480,6 +496,7 @@ const StyledCopyIcon = styled(CopyIcon)`
 const StyledPronounceIcon = styled(PronounceIcon)`
     width: 20px;
     height: 20px;
+    margin-right: 10px;
     fill: ${LightPrimary};
     flex-shrink: 0;
 

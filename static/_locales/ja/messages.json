@@ -91,6 +91,14 @@
         "message": "Target Pronunciation",
         "description": "Target Pronunciation"
     },
+    "SourcePronunciationIcon": {
+        "message": "Source Pronunciation Icon",
+        "description": "Source Pronunciation Icon"
+    },
+    "TargetPronunciationIcon": {
+        "message": "Target Pronunciation Icon",
+        "description": "Target Pronunciation Icon"
+    },
     "PronounceTranslated": {
         "message": "翻訳されたテキストを読み上げる",
         "description": "翻訳されたテキストを読み上げる"

@@ -79,6 +79,14 @@
         "message": "Target Pronunciation",
         "description": "Target Pronunciation"
     },
+    "SourcePronunciationIcon": {
+        "message": "Source Pronunciation Icon",
+        "description": "Source Pronunciation Icon"
+    },
+    "TargetPronunciationIcon": {
+        "message": "Target Pronunciation Icon",
+        "description": "Target Pronunciation Icon"
+    },
     "Pronounce": {
         "message": "Pronounce",
         "description": "Pronounce"

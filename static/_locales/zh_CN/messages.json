@@ -79,6 +79,14 @@
         "message": "翻译读音",
         "description": "翻译读音"
     },
+    "SourcePronunciationIcon": {
+        "message": "原文发音按钮",
+        "description": "原文发音按钮"
+    },
+    "TargetPronunciationIcon": {
+        "message": "翻译发音按钮",
+        "description": "翻译发音按钮"
+    },
     "Pronounce": {
         "message": "朗读",
         "description": "朗读"

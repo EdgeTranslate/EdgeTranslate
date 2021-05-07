@@ -70,6 +70,8 @@ const DEFAULT_SETTINGS = {
         originalText: true,
         tPronunciation: true,
         sPronunciation: true,
+        tPronunciationIcon: true,
+        sPronunciationIcon: true,
         detailedMeanings: true,
         definitions: true,
         examples: true,
