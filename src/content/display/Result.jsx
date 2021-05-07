@@ -412,7 +412,7 @@ export const Block = styled.div`
     margin: ${BlockMarginVertical} ${BlockMarginHorizon};
     background-color: rgba(250, 250, 250, 1);
     border-radius: 10px;
-    box-shadow: 0px 3px 6px rgba(127, 127, 127, 0.25);
+    /* box-shadow: 0px 3px 6px rgba(127, 127, 127, 0.25); */
     line-height: 120%;
     letter-spacing: 0.02em;
 `;
