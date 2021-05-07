@@ -738,6 +738,7 @@ const Body = styled.div`
 `;
 
 const SourceOption = styled.select`
+    color: #606060;
     max-width: 45%;
     font-weight: normal;
     font-size: small;

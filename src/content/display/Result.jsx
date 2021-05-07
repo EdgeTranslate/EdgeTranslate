@@ -610,7 +610,7 @@ const ExampleHeadSpot = styled(BlockHeadSpot)`
 
 const ExampleList = styled.ol`
     list-style-type: decimal;
-    padding-left: 1rem;
+    padding-left: 1.5rem;
     margin: 0;
 `;
 
