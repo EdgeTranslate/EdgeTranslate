@@ -142,6 +142,7 @@ export default function ResultPanel() {
                 window.translateResult.originalText = detail.text;
                 setOpen(true);
                 setContentType("LOADING");
+                setContent(detail);
             }
         });
 
@@ -408,6 +409,7 @@ export default function ResultPanel() {
                     0,
                 ];
             showFloatingPanel();
+            console.log(contentRef.current.position, { x: position[0], y: position[1] });
             moveablePanelRef.current.request("draggable", { x: position[0], y: position[1] });
         } else {
             showFixedPanel();
