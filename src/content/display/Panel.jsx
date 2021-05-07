@@ -627,21 +627,20 @@ const ColorPrimary = "#4a8cf7";
 
 const GlobalStyle = createGlobalStyle`
     ::-webkit-scrollbar {
-        width: 10px;
-        height: 10px;
+        width: 8px;
     }
 
     ::-webkit-scrollbar-thumb {
-        background: rgb(255,255,255,0.3);
+        background: rgb(245, 245, 245, 0.6);
         border-radius: 5px;
     }
 
     ::-webkit-scrollbar-thumb:hover {
-        background: rgb(255,255,255,0.7);
+        background: rgb(255, 255, 255, 0.8);
     }
 
     ::-webkit-scrollbar-track {
-        background-color: rgba(255, 255, 255, 0);
+        background-color: rgba(235, 235, 235, 0);
         opacity: 0;
     }
 `;
@@ -664,7 +663,7 @@ const Panel = styled.div`
     line-height: 1;
     font-size: 16px;
     box-shadow: 0px 8px 12px 5px rgba(0, 0, 0, 0.25);
-    background: rgba(239, 239, 239, 0.6);
+    background: rgba(235, 235, 235, 1);
     /* background-image: url(${chrome.runtime.getURL("../../image/background.png")}); */
 
     &:before {
@@ -674,7 +673,7 @@ const Panel = styled.div`
         right: 0;
         z-index: -1;
         display: block;
-        backdrop-filter: blur(6px);
+        /* backdrop-filter: blur(6px); */
         height: 100%;
         border-radius: 6px;
     }

@@ -394,7 +394,7 @@ export default function Result(props) {
 
 const BlockPadding = "10px";
 const BlockMarginVertical = "4px";
-export const BlockMarginHorizon = "12px";
+export const BlockMarginHorizon = "8px";
 const LightPrimary = "rgba(74, 140, 247, 0.7)";
 const Gray = "#919191";
 
@@ -410,9 +410,9 @@ export const Block = styled.div`
     align-items: center;
     padding: ${BlockPadding};
     margin: ${BlockMarginVertical} ${BlockMarginHorizon};
-    background-color: rgba(255, 255, 255, 0.8);
+    background-color: rgba(250, 250, 250, 1);
     border-radius: 10px;
-    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.25);
+    box-shadow: 0px 3px 6px rgba(127, 127, 127, 0.25);
     line-height: 120%;
     letter-spacing: 0.02em;
 `;
