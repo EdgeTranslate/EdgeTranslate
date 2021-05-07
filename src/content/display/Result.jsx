@@ -524,10 +524,12 @@ const BlockHeadSpot = styled.span`
 `;
 
 const BlockSplitLine = styled.div`
-    width: 98%;
-    flex-shrink: 0;
-    border: 1px solid rgba(0, 0, 0, 0.25);
+    width: 100%;
+    height: 1px;
     margin: 5px 0;
+    flex-shrink: 0;
+    border: none;
+    background: rgba(0, 0, 0, 0.25);
 `;
 
 const BlockContent = styled.div`
