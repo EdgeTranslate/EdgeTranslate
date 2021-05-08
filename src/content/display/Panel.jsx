@@ -6,6 +6,7 @@ import styled, { createGlobalStyle } from "styled-components";
 import root from "react-shadow/styled-components";
 import SimpleBar from "simplebar-react";
 import SimpleBarStyle from "simplebar-react/dist/simplebar.min.css";
+import ModernNormalize from "modern-normalize/modern-normalize.css";
 import Channel from "common/scripts/channel.js";
 import moveable from "./library/moveable/moveable.js";
 import { delayPromise } from "common/scripts/promise.js";
@@ -628,6 +629,8 @@ export const MaxZIndex = 2147483647;
 const ColorPrimary = "#4a8cf7";
 
 const GlobalStyle = createGlobalStyle`
+    ${ModernNormalize}
+
     ${SimpleBarStyle}
 
     /* Fix content disappearing problem. */
@@ -671,8 +674,7 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 const Panel = styled.div`
-    // set a soft black color
-    color: #2d2e2d;
+    color: black;
     position: fixed;
     top: 0;
     left: 0;
