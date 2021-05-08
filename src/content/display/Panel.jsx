@@ -6,7 +6,6 @@ import styled, { createGlobalStyle } from "styled-components";
 import root from "react-shadow/styled-components";
 import SimpleBar from "simplebar-react";
 import SimpleBarStyle from "simplebar-react/dist/simplebar.min.css";
-import ModernNormalize from "modern-normalize/modern-normalize.css";
 import Channel from "common/scripts/channel.js";
 import moveable from "./library/moveable/moveable.js";
 import { delayPromise } from "common/scripts/promise.js";
@@ -421,9 +420,6 @@ export default function ResultPanel() {
      * show the result panel in the floating type
      */
     function showFloatingPanel() {
-        /* set border radius for the floating type result panel */
-        headElRef.current.style["border-radius"] = "6px 6px 0 0";
-        bodyElRef.current.style["border-radius"] = "0 0 6px 6px";
         moveablePanelRef.current.request("resizable", {
             width: displaySettingRef.current.floatingData.width * window.innerWidth,
             height: displaySettingRef.current.floatingData.height * window.innerHeight,
@@ -627,10 +623,9 @@ export default function ResultPanel() {
 
 export const MaxZIndex = 2147483647;
 const ColorPrimary = "#4a8cf7";
+const PanelBorderRadius = "8px";
 
 const GlobalStyle = createGlobalStyle`
-    ${ModernNormalize}
-
     ${SimpleBarStyle}
 
     /* Fix content disappearing problem. */
@@ -664,8 +659,7 @@ const GlobalStyle = createGlobalStyle`
     }
 
     /* Adjust the content container, which is the parent element of Panel Body. */
-    .simplebar-content{
-        height: 100%;
+    .simplebar-content{        
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
@@ -674,24 +668,36 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 const Panel = styled.div`
-    color: black;
-    position: fixed;
-    top: 0;
-    left: 0;
-    box-sizing: border-box;
-    z-index: ${MaxZIndex};
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
     justify-content: flex-start;
     align-items: stretch;
-    border-radius: 6px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: ${MaxZIndex};
+    border-radius: ${PanelBorderRadius};
     overflow: visible;
-    line-height: 1;
-    font-size: 16px;
     box-shadow: 0px 8px 12px 5px rgba(0, 0, 0, 0.25);
     background: rgba(235, 235, 235, 1);
     /* background-image: url(${chrome.runtime.getURL("../../image/background.png")}); */
+
+    /* Normalize the style of panel */
+    padding: 0;
+    margin: 0;
+    border: none;
+    font-size: 16px;
+    font-weight: normal;
+    color: black;
+    line-height: 1;
+    -webkit-text-size-adjust: 100%;
+    box-sizing: border-box;
+    -moz-tab-size: 4;
+    tab-size: 4;
+    font-family: system-ui, -apple-system,
+        /* Firefox supports this but not yet 'system-ui' */ "Segoe UI", Roboto, Helvetica, Arial,
+        sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
 
     &:before {
         content: "";
@@ -702,12 +708,12 @@ const Panel = styled.div`
         display: block;
         /* backdrop-filter: blur(6px); */
         height: 100%;
-        border-radius: 6px;
+        border-radius: ${PanelBorderRadius};
     }
 `;
 
 const Head = styled.div`
-    padding: 0.5vh;
+    padding: 4px;
     display: flex;
     justify-content: space-between;
     align-items: center;

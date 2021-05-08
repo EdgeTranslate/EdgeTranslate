@@ -409,8 +409,7 @@ export default function Result(props) {
  */
 
 const BlockPadding = "10px";
-const BlockMarginVertical = "4px";
-export const BlockMarginHorizon = "8px";
+const BlockMargin = "8px";
 const LightPrimary = "rgba(74, 140, 247, 0.7)";
 const Gray = "#919191";
 
@@ -418,14 +417,15 @@ const Gray = "#919191";
  * basic style for a block used to display content
  */
 export const Block = styled.div`
-    width: calc(100% - 2 * ${BlockMarginHorizon});
+    width: calc(100% - 2 * ${BlockMargin});
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
     padding: ${BlockPadding};
-    margin: ${BlockMarginVertical} ${BlockMarginHorizon};
+    margin: ${BlockMargin};
+    margin-top: 0;
     background-color: rgba(250, 250, 250, 1);
     border-radius: 10px;
     /* box-shadow: 0px 3px 6px rgba(127, 127, 127, 0.25); */
