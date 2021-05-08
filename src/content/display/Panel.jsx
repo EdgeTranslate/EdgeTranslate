@@ -51,6 +51,8 @@ export default function ResultPanel() {
         show: false, // whether to show the highlight part
         position: "right", // the position of the highlight part. value: "left"|"right"
     });
+    // state of display type("floating" | "fixed")
+    const [displayType, setDisplayType] = useState("floating");
 
     const containerElRef = useRef(), // the container of translation panel.
         panelElRef = useRef(), // panel element
@@ -58,7 +60,7 @@ export default function ResultPanel() {
         bodyElRef = useRef(); // panel body element
     // store the moveable object return by moveable.js
     const moveablePanelRef = useRef(null);
-    // store the display type(floating or fixed)
+    // store the display type("floating"|"fixed")
     const displaySettingRef = useRef({
         type: "fixed",
         fixedData: {
@@ -420,6 +422,7 @@ export default function ResultPanel() {
      * show the result panel in the floating type
      */
     function showFloatingPanel() {
+        setDisplayType("floating");
         moveablePanelRef.current.request("resizable", {
             width: displaySettingRef.current.floatingData.width * window.innerWidth,
             height: displaySettingRef.current.floatingData.height * window.innerHeight,
@@ -430,6 +433,7 @@ export default function ResultPanel() {
      * show the result panel in the fixed type
      */
     function showFixedPanel() {
+        setDisplayType("fixed");
         let width = displaySettingRef.current.fixedData.width * window.innerWidth;
         // the offset left value for fixed result panel
         let offsetLeft = 0;
@@ -538,7 +542,7 @@ export default function ResultPanel() {
         open && (
             <root.div ref={containerElRef}>
                 <GlobalStyle />
-                <Panel style={{ position: "fixed" }} ref={onDisplayStatusChange}>
+                <Panel ref={onDisplayStatusChange} displayType={displayType}>
                     <Head ref={headElRef}>
                         <SourceOption
                             name="translators"
@@ -667,6 +671,11 @@ const GlobalStyle = createGlobalStyle`
     }
 `;
 
+/**
+ * @param {{
+ *  displayType: "floating" | "fixed"
+ * }} props
+ */
 const Panel = styled.div`
     display: flex;
     flex-direction: column;
@@ -677,7 +686,7 @@ const Panel = styled.div`
     top: 0;
     left: 0;
     z-index: ${MaxZIndex};
-    border-radius: ${PanelBorderRadius};
+    border-radius: ${(props) => (props.displayType === "floating" ? PanelBorderRadius : 0)};
     overflow: visible;
     box-shadow: 0px 8px 12px 5px rgba(0, 0, 0, 0.25);
     background: rgba(235, 235, 235, 1);
@@ -708,7 +717,7 @@ const Panel = styled.div`
         display: block;
         /* backdrop-filter: blur(6px); */
         height: 100%;
-        border-radius: ${PanelBorderRadius};
+        border-radius: ${(props) => (props.displayType === "floating" ? PanelBorderRadius : 0)};
     }
 `;
 
