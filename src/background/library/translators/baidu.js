@@ -330,7 +330,7 @@ class BaiduTranslator {
                     let meaning = {};
                     meaning.pos = part.part; // part of speech
                     meaning.meaning = part.means.reduce(
-                        (meaning1, meaning2) => `${meaning1}\n${meaning2}`
+                        (meaning1, meaning2) => `${meaning1}, ${meaning2}`
                     );
                     parsed.detailedMeanings.push(meaning);
                 };
