@@ -633,6 +633,7 @@ const GlobalStyle = createGlobalStyle`
     /* Fix content disappearing problem. */
     [data-simplebar] {
         width: 100%;
+        height: 100%;
         max-height: 100%;
     }
 
@@ -657,6 +658,15 @@ const GlobalStyle = createGlobalStyle`
         right: 1px;
         border-radius: 8px;
         background-color: rgba(150, 150, 150, 0.8);
+    }
+
+    /* Adjust the content container, which is the parent element of Panel Body. */
+    .simplebar-content{
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
     }
 `;
 
@@ -750,7 +760,6 @@ const Body = styled.div`
     flex-grow: 1;
     flex-shrink: 1;
     word-break: break-word;
-    color: black;
 `;
 
 const SourceOption = styled.select`
