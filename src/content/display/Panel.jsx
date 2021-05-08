@@ -4,6 +4,8 @@ import { useEffect, useState, useRef, useCallback } from "preact/hooks";
 import { useLatest, useEvent, useClickAway } from "react-use";
 import styled, { createGlobalStyle } from "styled-components";
 import root from "react-shadow/styled-components";
+import SimpleBar from "simplebar-react";
+import SimpleBarStyle from "simplebar-react/dist/simplebar.min.css";
 import Channel from "common/scripts/channel.js";
 import moveable from "./library/moveable/moveable.js";
 import { delayPromise } from "common/scripts/promise.js";
@@ -598,9 +600,11 @@ export default function ResultPanel() {
                         </HeadIcons>
                     </Head>
                     <Body ref={bodyElRef}>
-                        {contentType === "LOADING" && <Loading />}
-                        {contentType === "RESULT" && <Result {...content} />}
-                        {contentType === "ERROR" && <Error {...content} />}
+                        <SimpleBar>
+                            {contentType === "LOADING" && <Loading />}
+                            {contentType === "RESULT" && <Result {...content} />}
+                            {contentType === "ERROR" && <Error {...content} />}
+                        </SimpleBar>
                     </Body>
                 </Panel>
                 {highlight.show && (
@@ -624,22 +628,35 @@ export const MaxZIndex = 2147483647;
 const ColorPrimary = "#4a8cf7";
 
 const GlobalStyle = createGlobalStyle`
-    ::-webkit-scrollbar {
+    ${SimpleBarStyle}
+
+    /* Fix content disappearing problem. */
+    [data-simplebar] {
+        width: 100%;
+        max-height: 100%;
+    }
+
+    /* Fix content horizontally overflowing problem. */
+    .simplebar-offset {
+        width: 100%;
+    }
+
+    /* Adjust width of the vertical scrollbar. */
+    .simplebar-track.simplebar-vertical {
         width: 8px;
     }
 
-    ::-webkit-scrollbar-thumb {
-        background: rgb(245, 245, 245, 0.6);
-        border-radius: 5px;
+    /* Adjust height of the horizontal scrollbar. */
+    .simplebar-track.simplebar-horizontal {
+        height: 8px;
     }
 
-    ::-webkit-scrollbar-thumb:hover {
-        background: rgb(255, 255, 255, 0.8);
-    }
-
-    ::-webkit-scrollbar-track {
-        background-color: rgba(235, 235, 235, 0);
-        opacity: 0;
+    /* Adjust position, shape and color of the scrollbar thumb. */
+    .simplebar-scrollbar:before {
+        left: 1px;
+        right: 1px;
+        border-radius: 8px;
+        background-color: rgba(150, 150, 150, 0.8);
     }
 `;
 
