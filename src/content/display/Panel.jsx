@@ -16,7 +16,6 @@ import PinIcon from "./icons/pin.svg";
 import UnpinIcon from "./icons/unpin.svg";
 import CloseIcon from "./icons/close.svg";
 
-export const CommonPrefix = "edge-translate-";
 // Communication channel.
 const channel = new Channel();
 // Store the translation result and attach it to window
