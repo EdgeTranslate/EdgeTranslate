@@ -673,7 +673,7 @@ const GlobalStyle = createGlobalStyle`
 
 /**
  * @param {{
- *  displayType: "floating" | "fixed"
+ *   displayType: "floating" | "fixed";
  * }} props
  */
 const Panel = styled.div`

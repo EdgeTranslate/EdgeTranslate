@@ -6,6 +6,7 @@ import Channel from "common/scripts/channel.js";
 import Notifier from "./library/notifier/notifier.js";
 import DOMPurify from "dompurify";
 import { checkTimestamp } from "./Panel.jsx";
+import DrawerBlock from "./DrawerBlock.jsx";
 import EditIcon from "./icons/edit.svg";
 import EditDoneIcon from "./icons/edit-done.svg";
 import PronounceIcon from "./icons/pronounce.svg";
@@ -21,25 +22,25 @@ const notifier = new Notifier("center");
 
 /**
  * @param {{
- *   mainMeaning: string,
- *   originalText: string,
- *   tPronunciation: string?,
- *   sPronunciation: string?,
- *   detailedMeanings: Array<{
- *     pos: string,
- *     meaning: string,
- *     synonyms: Array<string>?,
- *   }>?,
- *   definitions: Array<{
- *     pos: string,
- *     meaning: string,
- *     synonyms: Array<string>?,
- *     example: string?,
- *   }>?,
- *   examples: Array<{
- *     source: string?,
- *     target: string?,
- *   }>?,
+ *   mainMeaning: string;
+ *   originalText: string;
+ *   tPronunciation?: string;
+ *   sPronunciation?: string;
+ *   detailedMeanings?: Array<{
+ *     pos: string;
+ *     meaning: string;
+ *     synonyms?: Array<string>;
+ *   }>;
+ *   definitions?: Array<{
+ *     pos: string;
+ *     meaning: string;
+ *     synonyms?: Array<string>;
+ *     example?: string;
+ *   }>;
+ *   examples?: Array<{
+ *     source?: string;
+ *     target?: string;
+ *   }>;
  * }} props translate result
  *
  * @returns {h.JSX.Element} element
@@ -88,6 +89,7 @@ export default function Result(props) {
                             contenteditable={copyResult}
                             onBlur={() => setCopyResult({ copy: false })}
                             ref={translateResultElRef}
+                            style={{ paddingLeft: 3 }}
                         >
                             {props.mainMeaning}
                         </div>
@@ -109,7 +111,10 @@ export default function Result(props) {
                                     <StyledPronounceIcon onClick={() => setTargetPronounce(true)} />
                                 ))}
                             {displayTPronunciation && (
-                                <PronounceText dir={textDirection}>
+                                <PronounceText
+                                    dir={textDirection}
+                                    DrawerHeight={TextContentDrawerHeight}
+                                >
                                     {props.tPronunciation}
                                 </PronounceText>
                             )}
@@ -125,7 +130,12 @@ export default function Result(props) {
             {props.originalText?.length > 0 && (
                 <Source>
                     <TextLine>
-                        <div dir={textDirection} contenteditable={editing} ref={originalTextElRef}>
+                        <div
+                            dir={textDirection}
+                            contenteditable={editing}
+                            ref={originalTextElRef}
+                            style={{ paddingLeft: 3 }}
+                        >
                             {props.originalText}
                         </div>
                         {editing ? (
@@ -157,7 +167,10 @@ export default function Result(props) {
                                     <StyledPronounceIcon onClick={() => setSourcePronounce(true)} />
                                 ))}
                             {displaySPronunciation && (
-                                <PronounceText dir={textDirection}>
+                                <PronounceText
+                                    dir={textDirection}
+                                    DrawerHeight={TextContentDrawerHeight}
+                                >
                                     {props.sPronunciation}
                                 </PronounceText>
                             )}
@@ -179,7 +192,7 @@ export default function Result(props) {
                         </BlockHeadTitle>
                         <BlockSplitLine />
                     </BlockHead>
-                    <BlockContent>
+                    <BlockContent DrawerHeight={BlockContentDrawerHeight}>
                         {props.detailedMeanings.map((detail, detailIndex) => (
                             <Fragment key={`detail-${detailIndex}`}>
                                 <Position>{detail.pos}</Position>
@@ -215,7 +228,7 @@ export default function Result(props) {
                         <BlockHeadTitle>{chrome.i18n.getMessage("Definitions")}</BlockHeadTitle>
                         <BlockSplitLine />
                     </BlockHead>
-                    <BlockContent>
+                    <BlockContent DrawerHeight={BlockContentDrawerHeight}>
                         {props.definitions.map((definition, definitionIndex) => (
                             <Fragment key={`definition-${definitionIndex}`}>
                                 <Position>{definition.pos}</Position>
@@ -256,7 +269,7 @@ export default function Result(props) {
                         <BlockHeadTitle>{chrome.i18n.getMessage("Examples")}</BlockHeadTitle>
                         <BlockSplitLine />
                     </BlockHead>
-                    <BlockContent>
+                    <BlockContent DrawerHeight={BlockContentDrawerHeight}>
                         <ExampleList>
                             {props.examples.map((example, index) => (
                                 <ExampleItem key={`example-${index}`}>
@@ -412,6 +425,8 @@ const BlockPadding = "10px";
 const BlockMargin = "8px";
 const LightPrimary = "rgba(74, 140, 247, 0.7)";
 const Gray = "#919191";
+const BlockContentDrawerHeight = 150; // drawer height for blocks
+const TextContentDrawerHeight = 50; // drawer height for texts
 
 /**
  * basic style for a block used to display content
@@ -426,7 +441,7 @@ export const Block = styled.div`
     padding: ${BlockPadding};
     margin: ${BlockMargin};
     margin-top: 0;
-    background-color: rgba(250, 250, 250, 1);
+    background-color: rgb(250, 250, 250);
     border-radius: 10px;
     /* box-shadow: 0px 3px 6px rgba(127, 127, 127, 0.25); */
     line-height: 120%;
@@ -481,7 +496,7 @@ const PronounceLine = styled.div`
     align-items: center;
 `;
 
-const PronounceText = styled.span`
+const PronounceText = styled(DrawerBlock)`
     color: ${Gray};
 `;
 
@@ -549,12 +564,13 @@ const BlockSplitLine = styled.div`
     background: rgba(0, 0, 0, 0.25);
 `;
 
-const BlockContent = styled.div`
+const BlockContent = styled(DrawerBlock)`
     width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
+    flex-shrink: 0;
 `;
 
 const DetailHeadSpot = styled(BlockHeadSpot)`
@@ -752,13 +768,11 @@ function editOriginalText(originalTextEle) {
     originalTextEle.addEventListener("focus", onTextEditorFocused);
     originalTextEle.addEventListener("blur", onTextEditorBlurred);
 
-    // Expand original text for reading and editing.
-    originalTextEle.style.overflow = "inherit";
-    originalTextEle.style["white-space"] = "inherit";
-    originalTextEle.title = "";
-
-    // Auto focus.
-    originalTextEle.focus();
+    /**
+     * Make the editable element automatically focus.
+     * Use setTimeout because of https://stackoverflow.com/a/37162116.
+     */
+    setTimeout(() => originalTextEle.focus());
 }
 
 /**
@@ -788,7 +802,7 @@ function submitEditedText(originalTextEle) {
  * A reducer for updating editing state of original text.
  *
  * @param {any} _ nothing
- * @param {{edit: boolean, element: HTMLElement}} state new state information
+ * @param {{edit: boolean; element: HTMLElement;}} state new state information
  * @returns new state
  */
 function _setEditing(_, state) {
