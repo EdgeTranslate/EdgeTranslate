@@ -1,0 +1,10 @@
+# .github/dependabot.yml
+version: 2
+updates:
+  - package-ecosystem: 'npm'
+    directory: '/'
+    schedule:
+      interval: 'daily'
+    # Raise pull requests for version updates
+    # to pip against the `develop` branch
+    target-branch: "develop"
