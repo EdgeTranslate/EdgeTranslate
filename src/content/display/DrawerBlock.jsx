@@ -1,6 +1,7 @@
 /** @jsx h */
 import { h } from "preact";
-import { useRef, useEffect, useState, useReducer } from "preact/hooks";
+import { useEffect, useState } from "preact/hooks";
+import { useMeasure } from "react-use";
 import styled, { css } from "styled-components";
 import ArrowDownIcon from "./icons/arrow-down.svg";
 import ArrowUpIcon from "./icons/arrow-up.svg";
@@ -17,38 +18,33 @@ export default function DrawerBlock(props) {
     // Indicate whether the drawer should work or not.
     const [useDrawer, setUseDrawer] = useState(false);
     // Indicate whether the drawer is folded or not.
-    const [fold, setFold] = useReducer((_, foldAction) => {
-        if (foldAction) setHeight(props.DrawerHeight);
-        // unfold action
-        else setHeight(originalHeightRef.current);
-        return foldAction;
-    }, false);
-    // height of the content in this drawer
-    const [height, setHeight] = useState();
+    const [fold, setFold] = useState(true);
 
-    const contentElRef = useRef();
-    // Store the original height of the content element.
-    const originalHeightRef = useRef(0);
+    // Measure the size mutation of the content element.
+    const [contentElRef, { height: originalHeight }] = useMeasure();
 
     useEffect(() => {
         if (props.DisableDrawer || props.DrawerHeight === undefined) {
             setUseDrawer(false);
-            setHeight(undefined);
             return;
         }
-        originalHeightRef.current = contentElRef.current.getBoundingClientRect().height;
-        if (originalHeightRef.current < props.DrawerHeight) {
+        if (originalHeight < props.DrawerHeight) {
             setUseDrawer(false);
-            setFold(false);
         } else {
-            originalHeightRef.current += HandleExpandHeight;
             setUseDrawer(true);
-            setFold(true);
         }
-    }, [props]);
+    }, [props, originalHeight]);
 
     return (
-        <Drawer className={props.className} height={height}>
+        <Drawer
+            className={props.className}
+            height={(() => {
+                if (useDrawer) {
+                    if (fold) return props.DrawerHeight;
+                    return originalHeight + HandleExpandHeight;
+                }
+            })()}
+        >
             <Content ref={contentElRef}>{props.children}</Content>
             {useDrawer && (
                 <Handle fold={fold} onClick={() => setFold(!fold)}>
