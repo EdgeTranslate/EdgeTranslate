@@ -264,6 +264,8 @@ export default function ResultPanel() {
                     }
                 }
                 set(startTranslate);
+                // Open the pdf mask layer.
+                if (isChromePDFViewer()) setUsePDFMaskLayer(true);
             })
             .on("drag", ({ target, translate }) => {
                 startTranslate = translate;
@@ -286,6 +288,8 @@ export default function ResultPanel() {
                         updateDisplaySetting();
                     }
                 }
+                // Close the pdf mask layer.
+                setUsePDFMaskLayer(false);
             })
             // // the result panel start to drag out of the drag area
             // .on("boundStart", ({ direction }) => {
