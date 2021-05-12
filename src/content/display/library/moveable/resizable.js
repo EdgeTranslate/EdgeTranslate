@@ -297,8 +297,8 @@ export default class resizable {
         this.store.startMouse = [e.pageX, e.pageY];
         // store the start element absolute position. [x,y]
         this.store.startElement = [
-            this.targetElement.getBoundingClientRect().left + document.documentElement.scrollLeft,
-            this.targetElement.getBoundingClientRect().top + document.documentElement.scrollTop,
+            this.targetElement.getBoundingClientRect().left + this.options.container.scrollLeft,
+            this.targetElement.getBoundingClientRect().top + this.options.container.scrollTop,
         ];
         // store the start size(width and height) of the element
         this.store.startSize = [this.targetElement.offsetWidth, this.targetElement.offsetHeight];
@@ -330,7 +330,7 @@ export default class resizable {
 
         if (this.resizing) {
             e.preventDefault();
-            document.documentElement.addEventListener("mousemove", this.resizeHandler);
+            this.options.container.addEventListener("mousemove", this.resizeHandler);
         }
     }
 
@@ -424,10 +424,10 @@ export default class resizable {
      * remove the resizing event listener
      */
     resizeEnd() {
-        document.documentElement.addEventListener("mouseup", (e) => {
+        this.options.container.addEventListener("mouseup", (e) => {
             if (this.resizing) {
                 this.resizing = false;
-                document.documentElement.removeEventListener("mousemove", this.resizeHandler);
+                this.options.container.removeEventListener("mousemove", this.resizeHandler);
                 if (this.handlers.resizeEnd)
                     this.handlers.resizeEnd({
                         target: this.targetElement,

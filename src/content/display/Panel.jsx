@@ -53,6 +53,11 @@ export default function ResultPanel() {
     });
     // state of display type("floating" | "fixed")
     const [displayType, setDisplayType] = useState("floating");
+    /**
+     * Wether we use a mask layer in chrome native pdf viewer.
+     * In the chrome native pdf viewer, mouse events can't be detected. In order to make the panel resizable, we build a mask layer that fills the whole page to detect mouse events.
+     */
+    const [usePDFMaskLayer, setUsePDFMaskLayer] = useState(false);
 
     const containerElRef = useRef(), // the container of translation panel.
         panelElRef = useRef(), // panel element
@@ -191,11 +196,11 @@ export default function ResultPanel() {
     /**
      * when status of result panel is changed(open or close), this function will be triggered
      */
-    const onDisplayStatusChange = useCallback((containerEl) => {
-        panelElRef.current = containerEl;
+    const onDisplayStatusChange = useCallback((panelEl) => {
+        panelElRef.current = panelEl;
 
         /* if panel is closed */
-        if (!containerEl) {
+        if (!panelEl) {
             // clear the outdated moveable object
             moveablePanelRef.current = null;
 
@@ -219,7 +224,7 @@ export default function ResultPanel() {
         window.isDisplayingResult = true;
 
         /* make the resultPanel resizable and draggable */
-        moveablePanelRef.current = new moveable(containerEl, {
+        moveablePanelRef.current = new moveable(panelEl, {
             draggable: true,
             resizable: true,
             /* set threshold value to increase the resize area */
@@ -325,6 +330,8 @@ export default function ResultPanel() {
         moveablePanelRef.current
             .on("resizeStart", ({ set }) => {
                 set(startTranslate);
+                // Open the pdf mask layer.
+                if (isChromePDFViewer()) setUsePDFMaskLayer(true);
             })
             .on("resize", ({ target, width, height, translate, inputEvent }) => {
                 target.style.width = `${width}px`;
@@ -350,6 +357,8 @@ export default function ResultPanel() {
                     }
                     updateDisplaySetting();
                 }
+                // Close the pdf mask layer.
+                setUsePDFMaskLayer(false);
             });
         showPanel();
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -540,7 +549,21 @@ export default function ResultPanel() {
 
     return (
         open && (
-            <root.div ref={containerElRef}>
+            <root.div
+                ref={containerElRef}
+                style={
+                    usePDFMaskLayer
+                        ? // Make the container element be the mask layer in chrome native pdf viewer.
+                          {
+                              // client width of the pdf embed element
+                              width: document.body.children[0].clientWidth,
+                              height: document.body.children[0].clientHeight,
+                              position: "fixed",
+                              zIndex: MaxZIndex,
+                          }
+                        : {}
+                }
+            >
                 <GlobalStyle />
                 <Panel ref={onDisplayStatusChange} displayType={displayType}>
                     <Head ref={headElRef}>
