@@ -123,8 +123,6 @@ class YoudaoTranslator {
             // "accept-language":
             //     "en,zh;q=0.9,en-GB;q=0.8,en-CA;q=0.7,en-AU;q=0.6,en-ZA;q=0.5,en-NZ;q=0.4,en-IN;q=0.3,zh-CN;q=0.2",
             "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
-            Cookie:
-                "OUTFOX_SEARCH_USER_ID=350012125@101.224.253.176;  UM_distinctid=1746d0c442e97f-042f749d1c0fb3-1711424a-1fa400-1746d0c442f8a3; OUTFOX_SEARCH_USER_ID_NCOO=608404064.645282; _ntes_nnid=15061f9646bde23f26634549a2af10f6,1599559922661; DICT_UGC=be3af0da19b5c5e6aa4e17bd8d90b28a|; JSESSIONID=abcEdBWwXs8mW8MJ2vXrx; ___rl__test__cookies=1599639537705",
             Referer: "http://fanyi.youdao.com/?keyfrom=dict2.index",
         };
 
