@@ -25,7 +25,6 @@ buttonImage.style.filter = "none";
 translateButton.appendChild(buttonImage);
 translateButton.id = "translate-button";
 translateButton.style.backgroundColor = "white"; // 动态设置样式以兼容Dark Reader
-document.documentElement.appendChild(translateButton);
 translateButton.addEventListener("mousedown", buttonClickHandler);
 
 let originScrollX = 0; // record the original scroll X position(before scroll event)
@@ -119,7 +118,7 @@ function buttonClickHandler(event) {
  */
 function showButton(event) {
     // 使翻译按钮显示出来
-    translateButton.style.display = "inline-block";
+    document.documentElement.appendChild(translateButton);
     const XBias = 10,
         YBias = 15;
 
@@ -219,7 +218,7 @@ function pronounceSubmit() {
  */
 function disappearButton() {
     if (HasButtonShown) {
-        translateButton.style.display = "none";
+        document.documentElement.removeChild(translateButton);
         HasButtonShown = false;
     }
 }
