@@ -215,6 +215,10 @@
         "message": "Справа налево макет",
         "description": "Отображать контент справа налево на некоторых языках."
     },
+    "FoldLongContentSetting": {
+        "message": "Сверните длинный контент",
+        "description": "Сверните слишком длинный перевод."
+    },
     "OtherSettings": {
         "message": "Другие настройки",
         "description": "Другие настройки расширения."
@@ -406,7 +410,7 @@
     "ERR_ACT": {
         "message": "Error action",
         "description": "Error action."
-    },    
+    },
     "English": {
         "message": "English",
         "description": "English"

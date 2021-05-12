@@ -66,16 +66,21 @@ export default function Result(props) {
     const [textDirection, setTextDirection] = useState("ltr");
 
     /**
-     * the pronounce status
+     * Whether to fold too long translation content.
+     */
+    const [foldLongContent, setFoldLongContent] = useState(true);
+
+    /**
+     * The pronounce status
      */
     const [sourcePronouncing, setSourcePronounce] = useReducer(sourcePronounce, false),
         [targetPronouncing, setTargetPronounce] = useReducer(targetPronounce, false);
 
-    // indicate whether user can edit and copy the translation result
+    // Indicate whether user can edit and copy the translation result
     const [copyResult, setCopyResult] = useReducer(copyContent, false);
     const translateResultElRef = useRef();
 
-    // indicate whether user is editing the original text
+    // Indicate whether user is editing the original text
     const [editing, setEditing] = useReducer(_setEditing, false);
     const originalTextElRef = useRef();
 
@@ -114,6 +119,7 @@ export default function Result(props) {
                                 <PronounceText
                                     dir={textDirection}
                                     DrawerHeight={TextContentDrawerHeight}
+                                    DisableDrawer={!foldLongContent}
                                 >
                                     {props.tPronunciation}
                                 </PronounceText>
@@ -170,6 +176,7 @@ export default function Result(props) {
                                 <PronounceText
                                     dir={textDirection}
                                     DrawerHeight={TextContentDrawerHeight}
+                                    DisableDrawer={!foldLongContent}
                                 >
                                     {props.sPronunciation}
                                 </PronounceText>
@@ -192,7 +199,10 @@ export default function Result(props) {
                         </BlockHeadTitle>
                         <BlockSplitLine />
                     </BlockHead>
-                    <BlockContent DrawerHeight={BlockContentDrawerHeight}>
+                    <BlockContent
+                        DrawerHeight={BlockContentDrawerHeight}
+                        DisableDrawer={!foldLongContent}
+                    >
                         {props.detailedMeanings.map((detail, detailIndex) => (
                             <Fragment key={`detail-${detailIndex}`}>
                                 <Position>{detail.pos}</Position>
@@ -228,7 +238,10 @@ export default function Result(props) {
                         <BlockHeadTitle>{chrome.i18n.getMessage("Definitions")}</BlockHeadTitle>
                         <BlockSplitLine />
                     </BlockHead>
-                    <BlockContent DrawerHeight={BlockContentDrawerHeight}>
+                    <BlockContent
+                        DrawerHeight={BlockContentDrawerHeight}
+                        DisableDrawer={!foldLongContent}
+                    >
                         {props.definitions.map((definition, definitionIndex) => (
                             <Fragment key={`definition-${definitionIndex}`}>
                                 <Position>{definition.pos}</Position>
@@ -269,7 +282,10 @@ export default function Result(props) {
                         <BlockHeadTitle>{chrome.i18n.getMessage("Examples")}</BlockHeadTitle>
                         <BlockSplitLine />
                     </BlockHead>
-                    <BlockContent DrawerHeight={BlockContentDrawerHeight}>
+                    <BlockContent
+                        DrawerHeight={BlockContentDrawerHeight}
+                        DisableDrawer={!foldLongContent}
+                    >
                         <ExampleList>
                             {props.examples.map((example, index) => (
                                 <ExampleItem key={`example-${index}`}>
@@ -376,6 +392,7 @@ export default function Result(props) {
                 setDisplayTPronunciationIcon(result.TranslateResultFilter["tPronunciationIcon"]);
                 setContentFilter(result.TranslateResultFilter);
                 setTextDirection(result.LayoutSettings.RTL ? "rtl" : "ltr");
+                setFoldLongContent(result.LayoutSettings.FoldLongContent);
             }
         );
         chrome.storage.onChanged.addListener((changes, area) => {
@@ -399,6 +416,7 @@ export default function Result(props) {
 
             if (changes.LayoutSettings) {
                 setTextDirection(changes.LayoutSettings.newValue.RTL ? "rtl" : "ltr");
+                setFoldLongContent(changes.LayoutSettings.newValue.FoldLongContent);
             }
         });
 

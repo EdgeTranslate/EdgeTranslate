@@ -215,6 +215,10 @@
         "message": "從右到左的佈局",
         "description": "在某些語言下從右到左顯示內容。"
     },
+    "FoldLongContentSetting": {
+        "message": "折疊過長的內容",
+        "description": "折疊過長的翻譯內容。"
+    },
     "OtherSettings": {
         "message": "其他設定",
         "description": "插件的其他設定。"

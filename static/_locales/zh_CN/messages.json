@@ -215,6 +215,10 @@
         "message": "从右到左的布局",
         "description": "在某些语言下从右到左显示内容。"
     },
+    "FoldLongContentSetting": {
+        "message": "折叠过长的内容",
+        "description": "折叠过长的翻译内容。"
+    },
     "OtherSettings": {
         "message": "其他设置",
         "description": "插件的其他设置。"
@@ -406,7 +410,7 @@
     "ERR_ACT": {
         "message": "错误操作",
         "description": "错误操作。"
-    },    
+    },
     "English": {
         "message": "英语",
         "description": "英语"

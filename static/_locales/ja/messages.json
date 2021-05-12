@@ -215,6 +215,10 @@
         "message": "右から左へのレイアウト",
         "description": "一部の言語では、コンテンツを右から左に表示します。"
     },
+    "FoldLongContentSetting": {
+        "message": "長いコンテンツを折りたたむ",
+        "description": "長すぎる翻訳コンテンツを折ります。"
+    },
     "OtherSettings": {
         "message": "その他の設定",
         "description": "拡張機能のその他の設定"

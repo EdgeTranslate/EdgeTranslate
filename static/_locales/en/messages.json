@@ -215,6 +215,10 @@
         "message": "Right to left layout",
         "description": "Display contents from right to left in some languages."
     },
+    "FoldLongContentSetting": {
+        "message": "Fold long content",
+        "description": "Fold too long translation content."
+    },
     "OtherSettings": {
         "message": "Other Settings",
         "description": "Other settings of the extension."

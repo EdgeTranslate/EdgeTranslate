@@ -26,12 +26,13 @@ const DEFAULT_SETTINGS = {
         urls: {},
         domains: { "chrome.google.com": true, extensions: true },
     },
-    // PopupPosition: determine the location of translation block
     // Resize: determine whether the web page will resize when showing translation result
     // RTL: determine whether the text in translation block should display from right to left
+    // FoldLongContent: determine whether to fold long translation content
     LayoutSettings: {
         Resize: false,
         RTL: false,
+        FoldLongContent: true,
     },
     // Default settings of source language and target language
     languageSetting: { sl: "auto", tl: BROWSER_LANGUAGES_MAP[chrome.i18n.getUILanguage()] },
