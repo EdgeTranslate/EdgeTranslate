@@ -1,6 +1,8 @@
 /** @jsx h */
 import { h } from "preact";
 import styled from "styled-components";
+import { useEffect, useRef } from "preact/hooks";
+import { ContentWrapperCenterClassName } from "./Panel.jsx";
 import ErrorIcon from "./icons/error.svg";
 
 /**
@@ -16,8 +18,19 @@ import ErrorIcon from "./icons/error.svg";
  * @returns {h.JSX.Element} element
  */
 export default function Error(props) {
+    const errorElRef = useRef();
+    /**
+     * To align the error content align in the vertical center.
+     */
+    useEffect(() => {
+        const wrapperElement = errorElRef.current.parentElement.parentElement;
+        wrapperElement.classList.add(ContentWrapperCenterClassName);
+        return () => {
+            wrapperElement.classList.remove(ContentWrapperCenterClassName);
+        };
+    }, []);
     return (
-        <ErrorContainer>
+        <ErrorContainer ref={errorElRef}>
             <ErrorInfo>
                 <StyledErrorIcon />
                 <ErrorType>

@@ -655,6 +655,7 @@ export default function ResultPanel() {
 export const MaxZIndex = 2147483647;
 const ColorPrimary = "#4a8cf7";
 const PanelBorderRadius = "8px";
+export const ContentWrapperCenterClassName = "simplebar-content-wrapper-center";
 
 const GlobalStyle = createGlobalStyle`
     ${SimpleBarStyle}
@@ -689,8 +690,8 @@ const GlobalStyle = createGlobalStyle`
         background-color: rgba(150, 150, 150, 0.8);
     }
 
-    /* Adjust the content wrapper, which is the parent element of simplebar-content. */
-    .simplebar-content-wrapper{
+    /* Apply to the content wrapper, which is the parent element of simplebar-content, to align content in the vertical center. */
+    .${ContentWrapperCenterClassName} {
         display: flex;
         flex-direction: column;
 

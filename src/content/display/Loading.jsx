@@ -1,10 +1,23 @@
 /** @jsx h */
 import { h } from "preact";
+import { useEffect, useRef } from "preact/hooks";
 import styled from "styled-components";
+import { ContentWrapperCenterClassName } from "./Panel.jsx";
 
 export default function Loading() {
+    const loadingElRef = useRef();
+    /**
+     * To align the loading animation align in the vertical center.
+     */
+    useEffect(() => {
+        const wrapperElement = loadingElRef.current.parentElement.parentElement;
+        wrapperElement.classList.add(ContentWrapperCenterClassName);
+        return () => {
+            wrapperElement.classList.remove(ContentWrapperCenterClassName);
+        };
+    }, []);
     return (
-        <LoadingEffect>
+        <LoadingEffect ref={loadingElRef}>
             <div class="lds-ellipsis">
                 <div>
                     <div />
