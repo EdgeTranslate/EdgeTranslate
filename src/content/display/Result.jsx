@@ -600,6 +600,7 @@ const DetailHeadSpot = styled(BlockHeadSpot)`
 
 const Position = styled.div`
     color: ${Gray};
+    font-size: smaller;
 `;
 
 const DetailMeaning = styled.div`
