@@ -597,7 +597,7 @@ export default function ResultPanel() {
                         </SourceOption>
                         <HeadIcons>
                             <HeadIcon onClick={() => channel.emit("open_options_page")}>
-                                <SettingIcon />
+                                <SettingIcon title={chrome.i18n.getMessage("Settings")} />
                             </HeadIcon>
                             {panelFix ? (
                                 <HeadIcon
@@ -608,7 +608,7 @@ export default function ResultPanel() {
                                         });
                                     }}
                                 >
-                                    <PinIcon />
+                                    <PinIcon title={chrome.i18n.getMessage("UnfixResultFrame")} />
                                 </HeadIcon>
                             ) : (
                                 <HeadIcon
@@ -619,11 +619,11 @@ export default function ResultPanel() {
                                         });
                                     }}
                                 >
-                                    <UnpinIcon />
+                                    <UnpinIcon title={chrome.i18n.getMessage("FixResultFrame")} />
                                 </HeadIcon>
                             )}
                             <HeadIcon onClick={() => setOpen(false)}>
-                                <CloseIcon />
+                                <CloseIcon title={chrome.i18n.getMessage("CloseResultFrame")} />
                             </HeadIcon>
                         </HeadIcons>
                     </Head>

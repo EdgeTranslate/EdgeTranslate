@@ -105,6 +105,7 @@ export default function Result(props) {
                                     element: translateResultElRef.current,
                                 })
                             }
+                            title={chrome.i18n.getMessage("CopyResult")}
                         />
                     </TextLine>
                     {(displayTPronunciationIcon || displayTPronunciation) && (
@@ -146,6 +147,7 @@ export default function Result(props) {
                         </div>
                         {editing ? (
                             <StyledEditDoneIcon
+                                title={chrome.i18n.getMessage("Retranslate")}
                                 onClick={() =>
                                     setEditing({
                                         edit: false,
@@ -155,6 +157,7 @@ export default function Result(props) {
                             />
                         ) : (
                             <StyledEditIcon
+                                title={chrome.i18n.getMessage("EditText")}
                                 onClick={() =>
                                     setEditing({
                                         edit: true,

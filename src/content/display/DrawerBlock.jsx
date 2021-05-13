@@ -48,7 +48,11 @@ export default function DrawerBlock(props) {
             <Content ref={contentElRef}>{props.children}</Content>
             {useDrawer && (
                 <Handle fold={fold} onClick={() => setFold(!fold)}>
-                    {fold ? <StyledArrowDownIcon /> : <StyledArrowUpIcon />}
+                    {fold ? (
+                        <StyledArrowDownIcon title={chrome.i18n.getMessage("ClickToExpand")} />
+                    ) : (
+                        <StyledArrowUpIcon title={chrome.i18n.getMessage("ClickToFold")} />
+                    )}
                 </Handle>
             )}
         </Drawer>

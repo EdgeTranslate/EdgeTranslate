@@ -20,8 +20,8 @@
         "description": "Фиксация рамки результата перевода."
     },
     "UnfixResultFrame": {
-        "message": "Unfix the result frame",
-        "description": "Unfix the translating result frame."
+        "message": "Отключить окно отображения результатов перевода",
+        "description": "Отключить окно отображения результатов перевода."
     },
     "CloseResultFrame": {
         "message": "Закрыть рамку результата",
@@ -72,20 +72,20 @@
         "description": "Фонетический символ"
     },
     "SourcePronunciation": {
-        "message": "Source Pronunciation",
-        "description": "Source Pronunciation"
+        "message": "Источник Произношение",
+        "description": "Источник Произношение"
     },
     "TargetPronunciation": {
-        "message": "Target Pronunciation",
-        "description": "Target Pronunciation"
+        "message": "Целевое произношение",
+        "description": "Целевое произношение"
     },
     "SourcePronunciationIcon": {
-        "message": "Source Pronunciation Icon",
-        "description": "Source Pronunciation Icon"
+        "message": "Источник Произношение Иконка",
+        "description": "Источник Произношение Иконка."
     },
     "TargetPronunciationIcon": {
-        "message": "Target Pronunciation Icon",
-        "description": "Target Pronunciation Icon"
+        "message": "Значок целевого произношения",
+        "description": "Значок целевого произношения."
     },
     "Pronounce": {
         "message": "произнести",
@@ -104,20 +104,20 @@
         "description": "Читать переведённый текст."
     },
     "ClickToExpand": {
-        "message": "Click to expand",
-        "description": "Click to expand."
+        "message": "Нажмите, чтобы развернуть",
+        "description": "Нажмите, чтобы развернуть."
     },
     "ClickToFold": {
-        "message": "Click to fold",
-        "description": "Click to fold."
+        "message": "Нажмите, чтобы сложить",
+        "description": "Нажмите, чтобы сложить."
     },
     "EditText": {
-        "message": "Edit text",
-        "description": "Edit selected text."
+        "message": "Редактировать текст",
+        "description": "Редактировать выделенный текст."
     },
     "Retranslate": {
-        "message": "Re-translate",
-        "description": "Re-translate the edited text."
+        "message": "Перевести",
+        "description": "Перевести отредактированный текст заново."
     },
     "CopyResult": {
         "message": "Скопировать результат",

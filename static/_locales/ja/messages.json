@@ -16,12 +16,12 @@
         "description": "選択したテキストを翻訳するためのショートカット"
     },
     "FixResultFrame": {
-        "message": "結果フレームを修正",
-        "description": "翻訳結果のフレームを修正する。"
+        "message": "結果ボックスを修正しました",
+        "description": "結果ボックスを修正しました。"
     },
     "UnfixResultFrame": {
-        "message": "Unfix the result frame",
-        "description": "Unfix the translating result frame."
+        "message": "翻訳結果表示ボックスの修正を解除します",
+        "description": "翻訳結果表示ボックスの修正を解除します。"
     },
     "CloseResultFrame": {
         "message": "結果フレームを閉じる",
@@ -84,40 +84,40 @@
         "description": "原文を読み上げる"
     },
     "SourcePronunciation": {
-        "message": "Source Pronunciation",
-        "description": "Source Pronunciation"
+        "message": "ソース発音",
+        "description": "ソース発音"
     },
     "TargetPronunciation": {
-        "message": "Target Pronunciation",
-        "description": "Target Pronunciation"
+        "message": "ターゲットの発音",
+        "description": "ターゲットの発音"
     },
     "SourcePronunciationIcon": {
-        "message": "Source Pronunciation Icon",
-        "description": "Source Pronunciation Icon"
+        "message": "ソース発音アイコン",
+        "description": "ソース発音アイコン。"
     },
     "TargetPronunciationIcon": {
-        "message": "Target Pronunciation Icon",
-        "description": "Target Pronunciation Icon"
+        "message": "ターゲット発音アイコン",
+        "description": "ターゲット発音アイコン。"
     },
     "PronounceTranslated": {
         "message": "翻訳されたテキストを読み上げる",
         "description": "翻訳されたテキストを読み上げる"
     },
     "ClickToExpand": {
-        "message": "Click to expand",
-        "description": "Click to expand."
+        "message": "クリックして展開",
+        "description": "クリックして展開。"
     },
     "ClickToFold": {
-        "message": "Click to fold",
-        "description": "Click to fold."
+        "message": "クリックして折りたたむ",
+        "description": "クリックして折りたたむ。"
     },
     "EditText": {
-        "message": "Edit text",
-        "description": "Edit selected text."
+        "message": "テキストを編集するt",
+        "description": "テキストを編集する。"
     },
     "Retranslate": {
-        "message": "Re-translate",
-        "description": "Re-translate the edited text."
+        "message": "再翻訳",
+        "description": "編集したテキストを再翻訳します。"
     },
     "CopyResult": {
         "message": "結果をコピー",
