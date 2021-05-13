@@ -689,13 +689,25 @@ const GlobalStyle = createGlobalStyle`
         background-color: rgba(150, 150, 150, 0.8);
     }
 
+    /* Adjust the content wrapper, which is the parent element of simplebar-content. */
+    .simplebar-content-wrapper{
+        display: flex;
+        flex-direction: column;
+
+        // "justify-content: center;" may cause part of content hidden when overflowing, so we use pseudo elements to simulate its effect.
+        &::before,
+        &::after {
+            content: "";
+            flex: 1;
+        }
+    }
+
     /* Adjust the content container, which is the parent element of Panel Body. */
-    .simplebar-content{        
-        height: 100%;
+    .simplebar-content{
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
-        align-items: center;        
+        align-items: center;
     }
 `;
 

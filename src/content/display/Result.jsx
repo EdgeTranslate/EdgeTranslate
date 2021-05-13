@@ -650,6 +650,7 @@ const ExampleList = styled.ol`
 
 const ExampleItem = styled.li`
     padding: 5px 0;
+    font-size: small;
 `;
 
 const ExampleSource = styled.div`

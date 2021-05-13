@@ -52,8 +52,7 @@ const ErrorContainer = styled.div`
     display: flex;
     flex-direction: column;
 
-    // "justify-content: center;" may cause part of content hidden when overflowing,
-    // use pseudo elements to simulate its effect.
+    // "justify-content: center;" may cause part of content hidden when overflowing, so we use pseudo elements to simulate its effect.
     &::before,
     &::after {
         content: "";
