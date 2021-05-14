@@ -216,8 +216,8 @@
         "description": "Отображать контент справа налево на некоторых языках."
     },
     "FoldLongContentSetting": {
-        "message": "Сверните длинный контент",
-        "description": "Сверните слишком длинный перевод."
+        "message": "Сократите чрезмерно длинный контент",
+        "description": "Fold too long translation content."
     },
     "OtherSettings": {
         "message": "Другие настройки",
@@ -296,24 +296,24 @@
         "description": "Развернуть параметры настройки языка"
     },
     "HybridTranslatorConfig": {
-        "message": "Hybrid Translator Config",
-        "description": "Config providers for each part of the translation."
+        "message": "Настройка источника смешанного перевода",
+        "description": "Настройка источника перевода для различных частей результатов перевода."
     },
     "MainTranslator": {
-        "message": "Main Provider",
-        "description": "Choose the main translation provider."
+        "message": "основной источник перевода:",
+        "description": "установить основной источник перевода."
     },
     "DetailedTranslator": {
-        "message": "Detailed Provider",
-        "description": "Choose the detailed meaning provider."
+        "message": "объяснение слов:",
+        "description": "укажите источник подробного перевода слов."
     },
     "DefinitionTranslator": {
-        "message": "Definition Provider",
-        "description": "Choose the definition provider."
+        "message": "определение слова:",
+        "description": "Настройка источника перевода слов."
     },
     "ExampleTranslator": {
-        "message": "Example Provider",
-        "description": "Choose the example provider."
+        "message": "Пример:",
+        "description": "установить типичный источник перевода."
     },
     "BaiduTranslate": {
         "message": "перевод Baidu",
@@ -333,7 +333,7 @@
     },
     "HybridTranslate": {
         "message": "cмешанный перевод",
-        "description": "Translate with multiple translators."
+        "description": "смешанный с несколькими источниками перевода."
     },
     "NOTICE": {
         "message": "Notice from Edge Translate",

@@ -296,24 +296,24 @@
         "description": "言語設定展開オプション"
     },
     "HybridTranslatorConfig": {
-        "message": "Hybrid Translator Config",
-        "description": "Config providers for each part of the translation."
+        "message": "ハイブリッド翻訳ソース設定",
+        "description": "翻訳結果の各部分で使用される翻訳ソースを設定します。"
     },
     "MainTranslator": {
-        "message": "Main Provider",
-        "description": "Choose the main translation provider."
+        "message": "翻訳の主な情報源：",
+        "description": "メインの翻訳ソースを設定します。"
     },
     "DetailedTranslator": {
-        "message": "Detailed Provider",
-        "description": "Choose the detailed meaning provider."
+        "message": "言葉の詳細な説明：",
+        "description": "単語の詳細な説明のために翻訳ソースを設定します。"
     },
     "DefinitionTranslator": {
-        "message": "Definition Provider",
-        "description": "Choose the definition provider."
+        "message": "単語の定義：",
+        "description": "単語を設定して、翻訳ソースを定義します。"
     },
     "ExampleTranslator": {
-        "message": "Example Provider",
-        "description": "Choose the example provider."
+        "message": "典型的な例文：",
+        "description": "典型的な例文の翻訳ソースを設定します。"
     },
     "BaiduTranslate": {
         "message": "Baidu翻訳",
@@ -333,7 +333,7 @@
     },
     "HybridTranslate": {
         "message": "ハイブリッド翻訳",
-        "description": "Translate with multiple translators."
+        "description": "複数の翻訳ソースを混在させます。"
     },
     "NOTICE": {
         "message": "Notice from Edge Translate",
