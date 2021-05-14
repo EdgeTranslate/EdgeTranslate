@@ -180,7 +180,10 @@ export default function ResultPanel() {
             switch (detail.command) {
                 case "fix_result_frame":
                     chrome.storage.sync.get("fixSetting", (result) => {
-                        setPanelFix(result.fixSetting);
+                        setPanelFix(!result.fixSetting);
+                        chrome.storage.sync.set({
+                            fixSetting: !result.fixSetting,
+                        });
                     });
                     break;
                 case "close_result_frame":
