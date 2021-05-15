@@ -184,7 +184,7 @@
         "description": "Target Language"
     },
     "PermissionRemind": {
-        "message": "Open the 'Allow access to file URLs' switch in the extension management page",
+        "message": "To use EdgeTranslate on this page, you need to turn on the 'Allow access to file URLs' switch in the extension management page.",
         "description": "a hint to the user about the access to file url permission"
     },
     "ContentSettings": {
@@ -360,20 +360,24 @@
         "description": "a blank page"
     },
     "NoticeReason3": {
-        "message": "You are using Edge Translate on a file page where extension doesn't have the permission to access file links.",
+        "message": "You are using Edge Translate on a file page where extension doesn't have the permission to access the file URL.",
         "description": "the third reason of the notice message"
     },
     "NoticeReason4": {
-        "message": "Our extension are not allowed to run on the file page on Firefox.",
+        "message": "Our extension is not allowed to run on the file page on Firefox.",
         "description": "the fourth reason of the notice message"
     },
     "EnablePermission": {
         "message": "How to enable it?",
         "description": "How to enable it"
-    },
+    },    
     "OpenThisPage": {
         "message": "Open this page",
         "description": "Open this page"
+    },
+    "ReloadPage": {
+        "message": "Reload the file page",
+        "description": "Reload the file page."
     },
     "NoticeLinks": {
         "message": "Links",

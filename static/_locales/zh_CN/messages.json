@@ -184,7 +184,7 @@
         "description": "目标语言"
     },
     "PermissionRemind": {
-        "message": "在扩展程序管理页面中开启：'允许访问文件网址' 的开关",
+        "message": "如果想在此页面使用侧边翻译，请在扩展程序管理页面中开启：'允许访问文件网址' 的开关。",
         "description": "在用户的 '允许访问文件网址'的权限未打开时，给用户合理的提醒"
     },
     "ContentSettings": {
@@ -374,6 +374,10 @@
     "OpenThisPage": {
         "message": "打开这个页面",
         "description": "打开这个页面"
+    },
+    "ReloadPage": {
+        "message": "重新加载文件页面",
+        "description": "重新加载文件页面。"
     },
     "NoticeLinks": {
         "message": "链接",
