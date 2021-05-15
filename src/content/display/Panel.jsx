@@ -599,11 +599,15 @@ export default function ResultPanel() {
                             ))}
                         </SourceOption>
                         <HeadIcons>
-                            <HeadIcon onClick={() => channel.emit("open_options_page")}>
-                                <SettingIcon title={chrome.i18n.getMessage("Settings")} />
+                            <HeadIcon
+                                title={chrome.i18n.getMessage("Settings")}
+                                onClick={() => channel.emit("open_options_page")}
+                            >
+                                <SettingIcon />
                             </HeadIcon>
                             {panelFix ? (
                                 <HeadIcon
+                                    title={chrome.i18n.getMessage("UnfixResultFrame")}
                                     onClick={() => {
                                         setPanelFix(false);
                                         chrome.storage.sync.set({
@@ -611,10 +615,11 @@ export default function ResultPanel() {
                                         });
                                     }}
                                 >
-                                    <PinIcon title={chrome.i18n.getMessage("UnfixResultFrame")} />
+                                    <PinIcon />
                                 </HeadIcon>
                             ) : (
                                 <HeadIcon
+                                    title={chrome.i18n.getMessage("FixResultFrame")}
                                     onClick={() => {
                                         setPanelFix(true);
                                         chrome.storage.sync.set({
@@ -622,11 +627,14 @@ export default function ResultPanel() {
                                         });
                                     }}
                                 >
-                                    <UnpinIcon title={chrome.i18n.getMessage("FixResultFrame")} />
+                                    <UnpinIcon />
                                 </HeadIcon>
                             )}
-                            <HeadIcon onClick={() => setOpen(false)}>
-                                <CloseIcon title={chrome.i18n.getMessage("CloseResultFrame")} />
+                            <HeadIcon
+                                title={chrome.i18n.getMessage("CloseResultFrame")}
+                                onClick={() => setOpen(false)}
+                            >
+                                <CloseIcon />
                             </HeadIcon>
                         </HeadIcons>
                     </Head>
