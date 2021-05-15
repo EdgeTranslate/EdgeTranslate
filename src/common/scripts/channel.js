@@ -159,7 +159,7 @@ class Channel {
 
         const message = JSON.stringify({ type: "event", event, detail });
         for (let tabId of tabIds) {
-            send(tabId, message).catch((error) => console.error(`${error}`));
+            send(tabId, message).catch((error) => console.error(error));
         }
     }
 

@@ -1,6 +1,6 @@
 import axios from "./axios.js";
 import HybridTranslator from "./translators/hybrid.js";
-import { log } from "../../common/scripts/common.js";
+import { log } from "common/scripts/common.js";
 import { promiseTabs, delayPromise } from "../../common/scripts/promise.js";
 
 // Imported for auto code completion.
@@ -167,7 +167,7 @@ class TranslatorManager {
      * get the id of the current tab
      * if the current tab can't display the result panel
      * open a notice page to display the result and explain why the page shows
-     * @returns the tab id
+     * @returns the tab id. If tabId===-1, the user is setting the file URLs access permission and nothing should be done.
      */
     async getCurrentTabId() {
         let tabId = -1;
@@ -176,6 +176,23 @@ class TranslatorManager {
 
         // to test whether the current tab can receive message(display results)
         await this.channel.requestToTab(tabId, "check_availability").catch(async () => {
+            const shouldOpenNoticePage = await new Promise((resolve) => {
+                // The page is a local file page
+                if (/^file:\/\.*/.test(tabs[0].url)) {
+                    chrome.extension.isAllowedFileSchemeAccess((allowed) => {
+                        if (!allowed && confirm(chrome.i18n.getMessage("PermissionRemind"))) {
+                            chrome.tabs.create({
+                                url: `chrome://extensions/?id=${chrome.runtime.id}`,
+                            });
+                            resolve(false);
+                        } else resolve(true);
+                    });
+                } else resolve(true);
+            });
+            if (!shouldOpenNoticePage) {
+                tabId = -1;
+                return;
+            }
             /**
              * the current tab can't display the result panel
              * so we open a notice page to display the result and explain why this page shows
@@ -237,6 +254,7 @@ class TranslatorManager {
 
         // get current tab id
         const currentTabId = await this.getCurrentTabId();
+        if (currentTabId === -1) return;
 
         /**
          * Get current time as timestamp.
@@ -311,6 +329,7 @@ class TranslatorManager {
 
         // get current tab id
         const currentTabId = await this.getCurrentTabId();
+        if (currentTabId === -1) return;
 
         let lang = language;
         let timestamp = new Date().getTime();
