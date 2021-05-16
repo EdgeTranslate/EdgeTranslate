@@ -13,6 +13,7 @@ import { isChromePDFViewer } from "../common.js";
 import Result from "./Result.jsx"; // display translate result
 import Loading from "./Loading.jsx"; // display loading animation
 import Error from "./Error.jsx"; // display error messages
+import Dropdown from "./Dropdown.jsx";
 import SettingIcon from "./icons/setting.svg";
 import PinIcon from "./icons/pin.svg";
 import UnpinIcon from "./icons/unpin.svg";
@@ -587,14 +588,13 @@ export default function ResultPanel() {
                 <Panel ref={onDisplayStatusChange} displayType={displayType}>
                     <Head ref={headElRef}>
                         <SourceOption
-                            name="translators"
-                            value={currentTranslator}
-                            onChange={(event) => {
-                                const newTranslator = event.target.value;
-                                setCurrentTranslator(newTranslator);
+                            title={chrome.i18n.getMessage(`${currentTranslator}Short`)}
+                            activeKey={currentTranslator}
+                            onSelect={(eventKey) => {
+                                setCurrentTranslator(eventKey);
                                 channel
                                     .request("update_default_translator", {
-                                        translator: newTranslator,
+                                        translator: eventKey,
                                     })
                                     .then(() => {
                                         if (window.translateResult.originalText)
@@ -605,9 +605,9 @@ export default function ResultPanel() {
                             }}
                         >
                             {availableTranslators?.map((translator) => (
-                                <option key={translator} value={translator}>
+                                <Dropdown.Item key={translator} eventKey={translator}>
                                     {chrome.i18n.getMessage(translator)}
-                                </option>
+                                </Dropdown.Item>
                             ))}
                         </SourceOption>
                         <HeadIcons>
@@ -790,7 +790,7 @@ const Head = styled.div`
     justify-content: space-between;
     align-items: center;
     flex: 0 0 auto;
-    overflow: hidden;
+    overflow: visible;
     cursor: grab;
 `;
 
@@ -842,9 +842,7 @@ const Body = styled.div`
     word-break: break-word;
 `;
 
-const ArrowDownIcon =
-    "<svg class='icon' viewBox='0 0 1024 1024' version='1.1' xmlns='http://www.w3.org/2000/svg' width='10' height='10'><path d='M472.064 751.552 72.832 352.32c-22.08-22.08-22.08-57.792 0-79.872 22.016-22.016 57.792-22.08 79.872 0L512 631.744l359.296-359.296c22.016-22.016 57.792-22.08 79.872 0 22.08 22.08 22.016 57.792 0 79.872l-399.232 399.232C529.856 773.568 494.144 773.568 472.064 751.552z' fill='#606060'></path></svg>";
-const SourceOption = styled.select`
+const SourceOption = styled(Dropdown)`
     color: #606060;
     max-width: 45%;
     font-weight: normal;
@@ -854,13 +852,7 @@ const SourceOption = styled.select`
     text-align-last: center;
     background-color: transparent;
     border-color: transparent;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
     outline: none;
-    background: transparent url("data:image/svg+xml;base64,${window.btoa(ArrowDownIcon)}") right
-        center no-repeat !important;
-    padding-right: 0.75rem;
 `;
 
 const Highlight = styled.div`

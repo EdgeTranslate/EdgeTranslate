@@ -11,6 +11,7 @@ import ArrowUpIcon from "./icons/arrow-up.svg";
  * @param {{
  *   DrawerHeight: number;
  *   DisableDrawer?: boolean; // disable the function of drawer
+ *   children?: h.JSX.Element;
  * }} props
  * @returns {h.JSX.Element} element
  */
