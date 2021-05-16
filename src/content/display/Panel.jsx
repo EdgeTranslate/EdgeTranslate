@@ -754,7 +754,6 @@ const Panel = styled.div`
     overflow: visible;
     box-shadow: 0px 8px 12px 5px rgba(0, 0, 0, 0.25);
     background: rgba(235, 235, 235, 1);
-    /* background-image: url(${chrome.runtime.getURL("../../image/background.png")}); */
 
     /* Normalize the style of panel */
     padding: 0;
@@ -843,6 +842,8 @@ const Body = styled.div`
     word-break: break-word;
 `;
 
+const ArrowDownIcon =
+    "<svg class='icon' viewBox='0 0 1024 1024' version='1.1' xmlns='http://www.w3.org/2000/svg' width='10' height='10'><path d='M472.064 751.552 72.832 352.32c-22.08-22.08-22.08-57.792 0-79.872 22.016-22.016 57.792-22.08 79.872 0L512 631.744l359.296-359.296c22.016-22.016 57.792-22.08 79.872 0 22.08 22.08 22.016 57.792 0 79.872l-399.232 399.232C529.856 773.568 494.144 773.568 472.064 751.552z' fill='#606060'></path></svg>";
 const SourceOption = styled.select`
     color: #606060;
     max-width: 45%;
@@ -853,8 +854,13 @@ const SourceOption = styled.select`
     text-align-last: center;
     background-color: transparent;
     border-color: transparent;
-    outline: none;
+    -webkit-appearance: none;
     -moz-appearance: none;
+    appearance: none;
+    outline: none;
+    background: transparent url("data:image/svg+xml;base64,${window.btoa(ArrowDownIcon)}") right
+        center no-repeat !important;
+    padding-right: 0.75rem;
 `;
 
 const Highlight = styled.div`
