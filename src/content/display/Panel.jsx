@@ -38,6 +38,7 @@ export default function ResultPanel() {
     const [panelFix, setPanelFix] = useState();
     // "LOADING" | "RESULT" | "ERROR"
     const [contentType, setContentType] = useState("LOADING");
+    const contentTypeRef = useLatest(contentType);
     // translate results or error messages
     const [content, setContent] = useState({});
     // refer to the latest content equivalent to useRef()
@@ -65,6 +66,7 @@ export default function ResultPanel() {
         bodyElRef = useRef(); // panel body element
     // store the moveable object return by moveable.js
     const moveablePanelRef = useRef(null);
+    const simplebarRef = useRef();
     // store the display type("floating"|"fixed")
     const displaySettingRef = useRef({
         type: "fixed",
@@ -111,11 +113,7 @@ export default function ResultPanel() {
         // if result panel is open
         if (panelElRef.current) {
             if (displaySettingRef.current.type === "fixed") showFixedPanel();
-            else
-                moveablePanelRef.current.request("resizable", {
-                    width: displaySettingRef.current.floatingData.width * window.innerWidth,
-                    height: displaySettingRef.current.floatingData.height * window.innerHeight,
-                });
+            else showFloatingPanel();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -159,8 +157,10 @@ export default function ResultPanel() {
                 window.translateResult = detail;
                 setOpen(true);
                 setContentType("RESULT");
-
                 setContent(detail);
+                /* Fit the floating panel to the content size after displaying the translation results. */
+                if (displaySettingRef.current.type === "floating")
+                    setTimeout(showFloatingPanel, 100);
             }
         });
 
@@ -331,6 +331,8 @@ export default function ResultPanel() {
                     removeFixedPanel();
                     showFloatingPanel();
                     updateDisplaySetting();
+                    // The height of content in fixed panel may be different from the height in floating panel so we need to update the height of floating panel after a little delay.
+                    setTimeout(showFloatingPanel, 50);
                 }
             });
         /* listen to resizable  events */
@@ -439,9 +441,19 @@ export default function ResultPanel() {
      */
     function showFloatingPanel() {
         setDisplayType("floating");
+        let panelHeight = displaySettingRef.current.floatingData.height * window.innerHeight;
+        /* Fit the panel to the content size */
+        if (contentTypeRef.current === "RESULT") {
+            const actualHeight =
+                headElRef.current.clientHeight +
+                simplebarRef.current.getContentElement().clientHeight;
+            // If the height of simplebar content element isn't 0.
+            if (actualHeight !== headElRef.current.clientHeight && panelHeight > actualHeight)
+                panelHeight = actualHeight;
+        }
         moveablePanelRef.current.request("resizable", {
             width: displaySettingRef.current.floatingData.width * window.innerWidth,
-            height: displaySettingRef.current.floatingData.height * window.innerHeight,
+            height: panelHeight,
         });
     }
 
@@ -639,7 +651,7 @@ export default function ResultPanel() {
                         </HeadIcons>
                     </Head>
                     <Body ref={bodyElRef}>
-                        <SimpleBar>
+                        <SimpleBar ref={simplebarRef}>
                             {contentType === "LOADING" && <Loading />}
                             {contentType === "RESULT" && <Result {...content} />}
                             {contentType === "ERROR" && <Error {...content} />}
