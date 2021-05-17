@@ -319,20 +319,40 @@
         "message": "Baidu翻訳",
         "description": "Baidu Translate"
     },
+    "BaiduTranslateShort": {
+        "message": "Baidu",
+        "description": "Baidu Translate"
+    },
     "BingTranslate": {
         "message": "ビング翻訳",
+        "description": "ビング翻訳"
+    },
+    "BingTranslateShort": {
+        "message": "ビング",
         "description": "ビング翻訳"
     },
     "GoogleTranslate": {
         "message": "グーグル翻訳",
         "description": "グーグル翻訳"
     },
+    "GoogleTranslateShort": {
+        "message": "グーグル",
+        "description": "グーグル翻訳"
+    },
     "TencentTranslate": {
         "message": "テンセント翻訳",
         "description": "テンセント翻訳"
     },
+    "TencentTranslateShort": {
+        "message": "テンセント",
+        "description": "テンセント翻訳"
+    },
     "HybridTranslate": {
-        "message": "ハイブリッド翻訳",
+        "message": "ブレンド翻訳",
+        "description": "複数の翻訳ソースを混在させます。"
+    },
+    "HybridTranslateShort": {
+        "message": "ブレンド",
         "description": "複数の翻訳ソースを混在させます。"
     },
     "NOTICE": {
@@ -370,7 +390,7 @@
     "EnablePermission": {
         "message": "How to enable it?",
         "description": "How to enable it"
-    },    
+    },
     "OpenThisPage": {
         "message": "Open this page",
         "description": "Open this page"

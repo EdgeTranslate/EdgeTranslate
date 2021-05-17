@@ -319,21 +319,41 @@
         "message": "百度翻译",
         "description": "百度翻译翻译源。"
     },
+    "BaiduTranslateShort": {
+        "message": "百度翻译",
+        "description": "百度翻译翻译源缩写。"
+    },
     "BingTranslate": {
         "message": "必应翻译",
         "description": "必应翻译翻译源。"
+    },
+    "BingTranslateShort": {
+        "message": "必应翻译",
+        "description": "必应翻译翻译源缩写。"
     },
     "GoogleTranslate": {
         "message": "谷歌翻译",
         "description": "谷歌翻译翻译源。"
     },
+    "GoogleTranslateShort": {
+        "message": "谷歌翻译",
+        "description": "谷歌翻译翻译源缩写。"
+    },
     "TencentTranslate": {
         "message": "腾讯翻译",
-        "description": "腾讯翻译翻译源。"
+        "description": "腾讯翻译翻译源缩写。"
+    },
+    "TencentTranslateShort": {
+        "message": "腾讯翻译",
+        "description": "腾讯翻译翻译源缩写。"
     },
     "HybridTranslate": {
         "message": "混合翻译",
         "description": "混合使用多个翻译源。"
+    },
+    "HybridTranslateShort": {
+        "message": "混合翻译",
+        "description": "混合使用多个翻译源缩写。"
     },
     "NOTICE": {
         "message": "提示",

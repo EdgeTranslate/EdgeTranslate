@@ -319,20 +319,40 @@
         "message": "перевод Baidu",
         "description": "перевод Baidu"
     },
+    "BaiduTranslateShort": {
+        "message": "Baidu",
+        "description": "перевод Baidu"
+    },
     "BingTranslate": {
         "message": "перевод Bing",
+        "description": "перевод Bing"
+    },
+    "BingTranslateShort": {
+        "message": "Bing",
         "description": "перевод Bing"
     },
     "GoogleTranslate": {
         "message": "Гугл переводчик",
         "description": "Гугл переводчик"
     },
+    "GoogleTranslateShort": {
+        "message": "Гугл",
+        "description": "Гугл переводчик"
+    },
     "TencentTranslate": {
         "message": "перевод Tencent",
         "description": "перевод Tencent"
     },
+    "TencentTranslateShort": {
+        "message": "Tencent",
+        "description": "перевод Tencent"
+    },
     "HybridTranslate": {
         "message": "cмешанный перевод",
+        "description": "смешанный с несколькими источниками перевода."
+    },
+    "HybridTranslateShort": {
+        "message": "смесь",
         "description": "смешанный с несколькими источниками перевода."
     },
     "NOTICE": {

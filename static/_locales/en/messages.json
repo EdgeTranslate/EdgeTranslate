@@ -319,21 +319,41 @@
         "message": "Baidu Translate",
         "description": "Baidu Translate."
     },
+    "BaiduTranslateShort": {
+        "message": "Baidu",
+        "description": "Abbreviation of Baidu Translate."
+    },
     "BingTranslate": {
         "message": "Bing Translate",
-        "description": "Bing Translate"
+        "description": "Bing Translate."
+    },
+    "BingTranslateShort": {
+        "message": "Bing",
+        "description": "Abbreviation of Bing Translate."
     },
     "GoogleTranslate": {
         "message": "Google Translate",
-        "description": "Google Translate"
+        "description": "Google Translate."
+    },
+    "GoogleTranslateShort": {
+        "message": "Google",
+        "description": "Abbreviation of Google Translate."
     },
     "TencentTranslate": {
         "message": "Tencent Translate",
-        "description": "Tencent Translate"
+        "description": "Tencent Translate."
+    },
+    "TencentTranslateShort": {
+        "message": "Tencent",
+        "description": "Abbreviation of Tencent Translate."
     },
     "HybridTranslate": {
         "message": "Hybrid Translate",
         "description": "Translate with multiple translators."
+    },
+    "HybridTranslateShort": {
+        "message": "Hybrid",
+        "description": "Abbreviation of Hybrid Translate."
     },
     "NOTICE": {
         "message": "Notice from Edge Translate",
@@ -370,7 +390,7 @@
     "EnablePermission": {
         "message": "How to enable it?",
         "description": "How to enable it"
-    },    
+    },
     "OpenThisPage": {
         "message": "Open this page",
         "description": "Open this page"
