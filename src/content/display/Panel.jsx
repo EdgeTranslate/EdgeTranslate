@@ -21,21 +21,21 @@ import CloseIcon from "./icons/close.svg";
 
 // Communication channel.
 const channel = new Channel();
-// Store the translation result and attach it to window
+// Store the translation result and attach it to window.
 window.translateResult = {};
 // Flag of showing result.
 window.isDisplayingResult = false;
-// store the width of scroll bar
+// Store the width of scroll bar.
 const scrollbarWidth = getScrollbarWidth();
-// store original css text on document.body
+// Store original css text on document.body.
 let documentBodyCSS = "";
-// the duration time of result panel's transition. unit: ms
+// The duration time of result panel's transition. unit: ms.
 const transitionDuration = 500;
 
 export default function ResultPanel() {
-    // whether the result is open
+    // Whether the result is open.
     const [open, setOpen] = useState(false);
-    // whether the panel is fixed(the panel won't be close when users click outside of the it)
+    // Whether the panel is fixed(the panel won't be close when users click outside of the it).
     const [panelFix, setPanelFix] = useState();
     // "LOADING" | "RESULT" | "ERROR"
     const [contentType, setContentType] = useState("LOADING");
@@ -48,7 +48,7 @@ export default function ResultPanel() {
     const [availableTranslators, setAvailableTranslators] = useState();
     // selected translator
     const [currentTranslator, setCurrentTranslator] = useState();
-    // control the behavior of highlight part(a placeholder to preview the "fixed" style panel)
+    // Control the behavior of highlight part(a placeholder to preview the "fixed" style panel).
     const [highlight, setHighlight] = useState({
         show: false, // whether to show the highlight part
         position: "right", // the position of the highlight part. value: "left"|"right"
@@ -84,10 +84,10 @@ export default function ResultPanel() {
     const resizePageFlag = useRef(false);
 
     /**
-     * update the bounds value for draggable area
+     * Update the bounds value for draggable area.
      */
     const updateBounds = useCallback(async () => {
-        // if the panel is open
+        // If the panel is open
         if (containerElRef.current) {
             await getDisplaySetting();
             let scrollLeft = document.documentElement.scrollLeft || document.body.scrollLeft;
@@ -106,12 +106,12 @@ export default function ResultPanel() {
     }, []);
 
     /**
-     * the handler for window resize event
-     * update drag bounds and the size or position of the result panel
+     * The handler for window resize event.
+     * Update drag bounds and the size or position of the result panel.
      */
     const windowResizeHandler = useCallback(() => {
         updateBounds();
-        // if result panel is open
+        // If result panel is open.
         if (panelElRef.current) {
             if (displaySettingRef.current.type === "fixed") showFixedPanel();
             else showFloatingPanel();
@@ -119,7 +119,7 @@ export default function ResultPanel() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    /* do some initialization stuff */
+    /* Do some initialization stuff */
     useEffect(() => {
         getDisplaySetting();
 
@@ -140,7 +140,7 @@ export default function ResultPanel() {
         /*
          * COMMUNICATE WITH BACKGROUND MODULE
          */
-        // the translator send this request to make sure current tab can display result panel
+        // The translator send this request to make sure current tab can display result panel.
         channel.provide("check_availability", () => Promise.resolve());
 
         channel.on("start_translating", (detail) => {
@@ -159,9 +159,6 @@ export default function ResultPanel() {
                 setOpen(true);
                 setContentType("RESULT");
                 setContent(detail);
-                /* Fit the floating panel to the content size after displaying the translation results. */
-                if (displaySettingRef.current.type === "floating")
-                    setTimeout(showFloatingPanel, 100);
             }
         });
 
@@ -198,14 +195,14 @@ export default function ResultPanel() {
     }, []);
 
     /**
-     * when status of result panel is changed(open or close), this function will be triggered
+     * When status of result panel is changed(open or close), this function will be triggered.
      */
     const onDisplayStatusChange = useCallback((panelEl) => {
         panelElRef.current = panelEl;
 
-        /* if panel is closed */
+        /* If panel is closed */
         if (!panelEl) {
-            // clear the outdated moveable object
+            // Clear the outdated moveable object.
             moveablePanelRef.current = null;
 
             // Tell select.js that the result panel has been removed.
@@ -227,16 +224,16 @@ export default function ResultPanel() {
         // Tell select.js that we are displaying results.
         window.isDisplayingResult = true;
 
-        /* make the resultPanel resizable and draggable */
+        /* Make the resultPanel resizable and draggable */
         moveablePanelRef.current = new moveable(panelEl, {
             draggable: true,
             resizable: true,
-            /* set threshold value to increase the resize area */
+            /* Set threshold value to increase the resize area */
             // threshold: { s: 5, se: 5, e: 5, ne: 5, n: 5, nw: 5, w: 5, sw: 5 },
             // threshold: { edge:5, corner:5 },
             threshold: 5,
             /**
-             * set thresholdPosition to decide where the resizable area is
+             * Set thresholdPosition to decide where the resizable area is
              * "in": the activated resizable area is within the target element
              * "center": the activated resizable area is half within the target element and half out of the it
              * "out": the activated resizable area is out of the target element
@@ -251,9 +248,9 @@ export default function ResultPanel() {
         });
 
         let startTranslate = [0, 0];
-        // to flag whether the floating panel should be changed to fixed panel
+        // To flag whether the floating panel should be changed to fixed panel.
         let floatingToFixed = false;
-        // store the fixed direction on bound event
+        // Store the fixed direction on bound event.
         let fixedDirection = "";
         /* draggable events*/
         moveablePanelRef.current
@@ -261,7 +258,7 @@ export default function ResultPanel() {
                 if (inputEvent) {
                     const path =
                         inputEvent.path || (inputEvent.composedPath && inputEvent.composedPath());
-                    // if drag element isn't the head element, stop the drag event
+                    // If drag element isn't the head element, stop the drag event.
                     if (!path || !headElRef.current?.isSameNode(path[0])) {
                         stop();
                         return;
@@ -278,7 +275,7 @@ export default function ResultPanel() {
             .on("dragEnd", ({ translate, inputEvent }) => {
                 startTranslate = translate;
 
-                /* change the display type of result panel */
+                /* Change the display type of result panel */
                 if (inputEvent && displaySettingRef.current.type === "floating") {
                     if (floatingToFixed) {
                         displaySettingRef.current.fixedData.position = fixedDirection;
@@ -295,13 +292,13 @@ export default function ResultPanel() {
                 // Close the pdf mask layer.
                 setUsePDFMaskLayer(false);
             })
-            // // the result panel start to drag out of the drag area
+            // // The result panel start to drag out of the drag area
             // .on("boundStart", ({ direction }) => {
             //     console.log(direction);
             // })
-            // the result panel drag out of the drag area
+            // The result panel drag out of the drag area
             .on("bound", ({ direction, distance }) => {
-                /* whether to show hight part on the one side of the page*/
+                /* Whether to show hight part on the one side of the page*/
                 if (displaySettingRef.current.type === "floating") {
                     let threshold = 10;
                     if (distance > threshold) {
@@ -317,7 +314,7 @@ export default function ResultPanel() {
                     }
                 }
             })
-            // the result panel drag into drag area first time
+            // The result panel drag into drag area first time
             .on("boundEnd", () => {
                 if (floatingToFixed)
                     // remove the highlight part
@@ -326,7 +323,7 @@ export default function ResultPanel() {
                         position: "right",
                     });
                 floatingToFixed = false;
-                // change the display type from fixed to floating
+                // Change the display type from fixed to floating
                 if (displaySettingRef.current.type === "fixed") {
                     displaySettingRef.current.type = "floating";
                     removeFixedPanel();
@@ -336,7 +333,7 @@ export default function ResultPanel() {
                     setTimeout(showFloatingPanel, 50);
                 }
             });
-        /* listen to resizable  events */
+        /* Listen to resizable  events */
         moveablePanelRef.current
             .on("resizeStart", ({ set }) => {
                 set(startTranslate);
@@ -357,7 +354,7 @@ export default function ResultPanel() {
                 startTranslate = translate;
                 target.style.transform = `translate(${translate[0]}px, ${translate[1]}px)`;
 
-                // update new size of the result panel
+                // Update new size of the result panel
                 if (inputEvent) {
                     if (displaySettingRef.current.type === "floating") {
                         displaySettingRef.current.floatingData.width = width / window.innerWidth;
@@ -374,30 +371,38 @@ export default function ResultPanel() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    /* called when user translate another time */
+    /* Called when user translate another time */
     useEffect(() => {
-        // if panel is open and the panel position is updated
+        // If panel is open and the panel position is updated
         if (panelElRef.current && content.position) {
             showPanel();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [content.position]);
 
-    // update drag bounds when users scroll the page
+    /* Fit the floating panel to the content size after the content is updated. */
+    useEffect(() => {
+        if (displaySettingRef.current.type === "floating")
+            // The panel doesn't have to fit the loading animation so the delay won't be necessary.
+            setTimeout(showFloatingPanel, contentType === "LOADING" ? 0 : 100);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [contentType]);
+
+    // Update drag bounds when users scroll the page
     useEvent("scroll", updateBounds, window);
 
-    // update the drag bounds and size when the size of window has changed
+    // Update the drag bounds and size when the size of window has changed
     useEvent("resize", windowResizeHandler, window);
 
     useClickAway(containerElRef, () => {
-        // the panel will be closed if users click outside of the it with the panelFix option closed
+        // The panel will be closed if users click outside of the it with the panelFix option closed.
         if (!panelFix) {
             setOpen(false);
         }
     });
 
     /**
-     * display the panel
+     * Display the panel.
      */
     async function showPanel() {
         await getDisplaySetting();
@@ -408,18 +413,18 @@ export default function ResultPanel() {
             let width = displaySettingRef.current.floatingData.width * window.innerWidth;
             let height = displaySettingRef.current.floatingData.height * window.innerHeight;
             if (contentRef.current.position) {
-                /* adjust the position of result panel. Avoid to beyond the range of page */
+                /* Adjust the position of result panel. Avoid to beyond the range of page */
                 const XBias = 20,
                     YBias = 20,
                     threshold = height / 4;
                 position = [contentRef.current.position[0], contentRef.current.position[1]];
-                // the result panel would exceeds the right boundary of the page
+                // The result panel would exceeds the right boundary of the page.
                 if (position[0] + width > window.innerWidth) {
                     position[0] = position[0] - width - XBias;
                 }
-                // the result panel would exceeds the bottom boundary of the page
+                // The result panel would exceeds the bottom boundary of the page.
                 if (position[1] + height > window.innerHeight + threshold) {
-                    // make true the panel wouldn't exceed the top boundary
+                    // Make true the panel wouldn't exceed the top boundary.
                     let newPosition1 = position[1] - height - YBias + threshold;
                     position[1] = newPosition1 < 0 ? 0 : newPosition1;
                 }
@@ -438,16 +443,17 @@ export default function ResultPanel() {
     }
 
     /**
-     * show the result panel in the floating type
+     * Show the result panel in the floating type.
      */
     function showFloatingPanel() {
+        if (!moveablePanelRef.current) return;
         setDisplayType("floating");
         let panelHeight = displaySettingRef.current.floatingData.height * window.innerHeight;
         /* Fit the panel to the content size */
-        if (contentTypeRef.current === "RESULT") {
+        if (contentTypeRef.current === "RESULT" || contentTypeRef.current === "ERROR") {
             const actualHeight =
                 headElRef.current.clientHeight +
-                simplebarRef.current.getContentElement().clientHeight;
+                (simplebarRef.current?.getContentElement().clientHeight || 0);
             // If the height of simplebar content element isn't 0.
             if (actualHeight !== headElRef.current.clientHeight && panelHeight > actualHeight)
                 panelHeight = actualHeight;
@@ -459,7 +465,7 @@ export default function ResultPanel() {
     }
 
     /**
-     * show the result panel in the fixed type
+     * Show the result panel in the fixed type.
      */
     function showFixedPanel() {
         setDisplayType("fixed");
@@ -507,13 +513,13 @@ export default function ResultPanel() {
             } else move(width, window.innerHeight, offsetLeft, 0);
         });
 
-        /* cancel the border radius of the fixed type result panel */
+        /* Cancel the border radius of the fixed type result panel */
         headElRef.current.style["border-radius"] = "";
         bodyElRef.current.style["border-radius"] = "";
     }
 
     /**
-     * if user choose to resize the document body, make the page return to normal size
+     * If user choose to resize the document body, make the page return to normal size.
      */
     async function removeFixedPanel() {
         if (resizePageFlag.current) {
@@ -526,7 +532,7 @@ export default function ResultPanel() {
     }
 
     /**
-     * drag the target element to a specified position and resize it to a specific size
+     * Drag the target element to a specified position and resize it to a specific size.
      * @param {number} width width
      * @param {number} height height value
      * @param {number} left x-axis coordinate of the target position
@@ -544,7 +550,7 @@ export default function ResultPanel() {
     }
 
     /**
-     * get the display setting in chrome.storage api
+     * Get the display setting in chrome.storage api.
      * @returns {Promise{undefined}} null promise
      */
     function getDisplaySetting() {
@@ -561,7 +567,7 @@ export default function ResultPanel() {
     }
 
     /**
-     * update the display setting in chrome.storage
+     * Update the display setting in chrome.storage.
      */
     function updateDisplaySetting() {
         chrome.storage.sync.set({ DisplaySetting: displaySettingRef.current });
@@ -869,7 +875,7 @@ const Highlight = styled.div`
  */
 
 /**
- * Check whether the translation result is the latest
+ * Check whether the translation result is the latest.
  * @param {number} timestamp the timestamp of the new translation result
  * @returns true if the result is the latest
  */
@@ -901,7 +907,7 @@ export function checkTimestamp(timestamp) {
 }
 
 /**
- * calculate the width of scroll bar
+ * Calculate the width of scroll bar.
  * method: create a div element with a scroll bar and calculate the difference between offsetWidth and clientWidth
  * @returns {number} the width of scroll bar
  */
@@ -916,7 +922,7 @@ function getScrollbarWidth() {
 }
 
 /**
- * judge whether the current page has a scroll bar
+ * Judge whether the current page has a scroll bar.
  */
 function hasScrollbar() {
     return (
