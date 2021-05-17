@@ -131,7 +131,7 @@ const Title = styled.a`
     line-height: 1.5;
     border-radius: 6px;
     transition: color 0.2s linear, background-color 0.3s linear;
-    color: #8e8e93;
+    color: gray;
     background-color: transparent;
     overflow: hidden;
     &:hover {

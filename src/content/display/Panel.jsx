@@ -16,7 +16,6 @@ import Error from "./Error.jsx"; // display error messages
 import Dropdown from "./Dropdown.jsx";
 import SettingIcon from "./icons/setting.svg";
 import PinIcon from "./icons/pin.svg";
-import UnpinIcon from "./icons/unpin.svg";
 import CloseIcon from "./icons/close.svg";
 
 // Communication channel.
@@ -623,31 +622,19 @@ export default function ResultPanel() {
                             >
                                 <SettingIcon />
                             </HeadIcon>
-                            {panelFix ? (
-                                <HeadIcon
-                                    title={chrome.i18n.getMessage("UnfixResultFrame")}
-                                    onClick={() => {
-                                        setPanelFix(false);
-                                        chrome.storage.sync.set({
-                                            fixSetting: false,
-                                        });
-                                    }}
-                                >
-                                    <PinIcon />
-                                </HeadIcon>
-                            ) : (
-                                <HeadIcon
-                                    title={chrome.i18n.getMessage("FixResultFrame")}
-                                    onClick={() => {
-                                        setPanelFix(true);
-                                        chrome.storage.sync.set({
-                                            fixSetting: true,
-                                        });
-                                    }}
-                                >
-                                    <UnpinIcon />
-                                </HeadIcon>
-                            )}
+                            <HeadIcon
+                                title={chrome.i18n.getMessage(
+                                    panelFix ? "UnfixResultFrame" : "FixResultFrame"
+                                )}
+                                onClick={() => {
+                                    setPanelFix(!panelFix);
+                                    chrome.storage.sync.set({
+                                        fixSetting: !panelFix,
+                                    });
+                                }}
+                            >
+                                <StyledPinIcon fix={panelFix} />
+                            </HeadIcon>
                             <HeadIcon
                                 title={chrome.i18n.getMessage("CloseResultFrame")}
                                 onClick={() => setOpen(false)}
@@ -823,11 +810,21 @@ const HeadIcon = styled.div`
     border-radius: 15px;
 
     svg {
-        fill: Gray;
+        fill: #8e8e93;
         width: 16px;
         height: 16px;
         display: block;
+        transition: fill 0.2s linear;
     }
+
+    &:hover svg {
+        fill: dimgray;
+    }
+`;
+
+const StyledPinIcon = styled(PinIcon)`
+    transition: transform 0.4s, fill 0.2s linear !important;
+    ${(props) => (props.fix ? "" : "transform: rotate(45deg)")}
 `;
 
 const Body = styled.div`
@@ -849,7 +846,6 @@ const Body = styled.div`
 `;
 
 const SourceOption = styled(Dropdown)`
-    color: #606060;
     max-width: 45%;
     font-weight: normal;
     font-size: small;

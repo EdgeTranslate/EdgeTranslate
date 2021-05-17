@@ -498,6 +498,10 @@ const StyledEditIcon = styled(EditIcon)`
     fill: ${Gray};
     flex-shrink: 0;
     margin-left: 2px;
+    transition: fill 0.2s linear;
+    &:hover {
+        fill: dimgray;
+    }
 `;
 
 const StyledEditDoneIcon = styled(EditDoneIcon)`
@@ -506,6 +510,10 @@ const StyledEditDoneIcon = styled(EditDoneIcon)`
     fill: ${Gray};
     flex-shrink: 0;
     margin-left: 2px;
+    transition: fill 0.2s linear;
+    &:hover {
+        fill: dimgray;
+    }
 `;
 
 const PronounceLine = styled.div`
@@ -527,6 +535,10 @@ const StyledCopyIcon = styled(CopyIcon)`
     fill: ${Gray};
     flex-shrink: 0;
     margin-left: 2px;
+    transition: fill 0.2s linear;
+    &:hover {
+        fill: dimgray;
+    }
 `;
 
 const StyledPronounceIcon = styled(PronounceIcon)`
@@ -535,6 +547,7 @@ const StyledPronounceIcon = styled(PronounceIcon)`
     margin-right: 10px;
     fill: ${LightPrimary};
     flex-shrink: 0;
+    transition: fill 0.2s linear;
 
     &:hover {
         fill: orange !important;
