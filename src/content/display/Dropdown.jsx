@@ -22,7 +22,9 @@ const Dropdown = forwardRef((props, ref) => {
     const [open, setOpen] = useState(false);
     const titleElRef = useRef();
     const clickAwayHandler = useCallback((event) => {
-        if (!titleElRef.current.contains(event.path[0])) {
+        // Chrome has the "path" property and Firefox has the "composedPath" function.
+        const path = event.path || (event.composedPath && event.composedPath());
+        if (!titleElRef.current.contains(path[0])) {
             setOpen(false);
             window.removeEventListener("click", clickAwayHandler);
         }
