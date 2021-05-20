@@ -2,12 +2,16 @@ import axios from "./axios.js";
 import HybridTranslator from "./translators/hybrid.js";
 import { log } from "common/scripts/common.js";
 import { promiseTabs, delayPromise } from "../../common/scripts/promise.js";
+import LocalTTS from "./local_tts.js";
 
 // Imported for auto code completion.
 // eslint-disable-next-line no-unused-vars
 import Channel from "../../common/scripts/channel.js";
 
 class TranslatorManager {
+    /**
+     * @param {Channel} channel Communication channel.
+     */
     constructor(channel) {
         /**
          * @type {Channel} Communication channel.
@@ -51,6 +55,11 @@ class TranslatorManager {
          * Default TTS speed.
          */
         this.TTS_SPEED = "fast";
+
+        /**
+         * Local TTS service.
+         */
+        this.localTTS = new LocalTTS();
 
         /**
          * Start to provide services and listen to event.
@@ -343,11 +352,18 @@ class TranslatorManager {
         });
 
         try {
-            if (language == "auto") {
+            if (language === "auto") {
                 lang = await this.TRANSLATORS[this.DEFAULT_TRANSLATOR].detect(text);
             }
 
-            await this.TRANSLATORS[this.DEFAULT_TRANSLATOR].pronounce(text, lang, speed);
+            await this.TRANSLATORS[this.DEFAULT_TRANSLATOR].pronounce(text, lang, speed).catch(
+                ((error) => {
+                    // API pronouncing failed, try local TTS service.
+                    if (!this.localTTS.speak(text, lang, speed)) {
+                        throw error;
+                    }
+                }).bind(this)
+            );
 
             // Inform current tab pronouncing finished.
             this.channel.emitToTabs(currentTabId, "pronouncing_finished", {
@@ -374,6 +390,7 @@ class TranslatorManager {
         await this.loadConfigIfNotLoaded();
 
         this.TRANSLATORS[this.DEFAULT_TRANSLATOR].stopPronounce();
+        this.localTTS.pause();
     }
 
     /**
