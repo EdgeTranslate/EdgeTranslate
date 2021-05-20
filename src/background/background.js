@@ -393,6 +393,28 @@ chrome.webRequest.onHeadersReceived.addListener(
 );
 
 /**
+ * Modify the cross-origin-resource-policy header of Google TTS response.
+ */
+chrome.webRequest.onHeadersReceived.addListener(
+    (details) => {
+        for (let header of details.responseHeaders) {
+            if (header.name.toLowerCase() === "cross-origin-resource-policy") {
+                // console.log(JSON.stringify(header));
+                header.value = "cross-origin";
+                break;
+            }
+        }
+
+        return { responseHeaders: details.responseHeaders };
+    },
+    { urls: ["*://translate.google.cn/*"] },
+    // Browser compatibility.
+    BROWSER_ENV === "chrome"
+        ? ["blocking", "responseHeaders", "extraHeaders"]
+        : ["blocking", "responseHeaders"]
+);
+
+/**
  * Modify the origin header of translate requests.
  */
 chrome.webRequest.onBeforeSendHeaders.addListener(
