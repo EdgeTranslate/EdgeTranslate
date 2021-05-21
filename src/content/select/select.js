@@ -75,28 +75,29 @@ window.addEventListener("DOMContentLoaded", () => {
      * @param {boolean} isDoubleClick whether the event type is double click or triple click, set false by default
      */
     async function selectTranslate(event, isDoubleClick = false) {
-        if (shouldTranslate()) {
-            const inBlacklist = await isInBlacklist();
-            if (inBlacklist) {
-                chrome.storage.sync.get("OtherSettings", (result) => {
-                    let OtherSettings = result.OtherSettings;
-                    if (OtherSettings) {
-                        // store the position which would be transferred to display.js through the Channel.
-                        currentPosition = [event.clientX, event.clientY];
+        if (!shouldTranslate()) return;
 
-                        // Show translating result instantly.
-                        if (
-                            OtherSettings["TranslateAfterSelect"] ||
-                            (isDoubleClick && OtherSettings["TranslateAfterDblClick"])
-                        ) {
-                            translateSubmit();
-                        } else if (OtherSettings["SelectTranslate"]) {
-                            showButton(event);
-                        }
-                    }
-                });
+        const inBlacklist = await isInBlacklist();
+        if (inBlacklist) return;
+
+        chrome.storage.sync.get("OtherSettings", (result) => {
+            if (!result.OtherSettings) return;
+
+            let OtherSettings = result.OtherSettings;
+
+            // store the position which would be transferred to display.js through the Channel.
+            currentPosition = [event.clientX, event.clientY];
+
+            // Show translating result instantly.
+            if (
+                OtherSettings["TranslateAfterSelect"] ||
+                (isDoubleClick && OtherSettings["TranslateAfterDblClick"])
+            ) {
+                translateSubmit();
+            } else if (OtherSettings["SelectTranslate"]) {
+                showButton(event);
             }
-        }
+        });
     }
 });
 
@@ -248,9 +249,7 @@ function isInBlacklist() {
         chrome.storage.sync.get("blacklist", (result) => {
             let url = window.location.href;
             let blacklist = result.blacklist;
-            return resolve(
-                !blacklist || (!blacklist.domains[getDomain(url)] && !blacklist.urls[url])
-            );
+            return resolve(blacklist && (blacklist.domains[getDomain(url)] || blacklist.urls[url]));
         });
     });
 }
