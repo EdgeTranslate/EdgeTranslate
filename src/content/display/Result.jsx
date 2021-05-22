@@ -1,7 +1,7 @@
 /** @jsx h */
 import { h, Fragment } from "preact";
 import { useEffect, useRef, useReducer, useState } from "preact/hooks";
-import styled from "styled-components";
+import styled, { ThemeProvider } from "styled-components";
 import Channel from "common/scripts/channel.js";
 import Notifier from "./library/notifier/notifier.js";
 import DOMPurify from "dompurify";
@@ -208,16 +208,19 @@ export default function Result(props) {
                     >
                         {props.detailedMeanings.map((detail, detailIndex) => (
                             <Fragment key={`detail-${detailIndex}`}>
-                                <Position>{detail.pos}</Position>
-                                <DetailMeaning>{detail.meaning}</DetailMeaning>
+                                <Position dir={textDirection}>{detail.pos}</Position>
+                                <DetailMeaning dir={textDirection}>{detail.meaning}</DetailMeaning>
                                 {detail.synonyms?.length > 0 && (
                                     <Fragment>
-                                        <SynonymTitle>
+                                        <SynonymTitle dir={textDirection}>
                                             {chrome.i18n.getMessage("Synonyms")}
                                         </SynonymTitle>
                                         <SynonymLine>
                                             {detail.synonyms.map((word, synonymIndex) => (
-                                                <SynonymWord key={`detail-synonym-${synonymIndex}`}>
+                                                <SynonymWord
+                                                    key={`detail-synonym-${synonymIndex}`}
+                                                    dir={textDirection}
+                                                >
                                                     {word}
                                                 </SynonymWord>
                                             ))}
@@ -247,20 +250,25 @@ export default function Result(props) {
                     >
                         {props.definitions.map((definition, definitionIndex) => (
                             <Fragment key={`definition-${definitionIndex}`}>
-                                <Position>{definition.pos}</Position>
-                                <DetailMeaning>{definition.meaning}</DetailMeaning>
+                                <Position dir={textDirection}>{definition.pos}</Position>
+                                <DetailMeaning dir={textDirection}>
+                                    {definition.meaning}
+                                </DetailMeaning>
                                 {definition.example && (
-                                    <DefinitionExample>{`"${definition.example}"`}</DefinitionExample>
+                                    <DefinitionExample
+                                        dir={textDirection}
+                                    >{`"${definition.example}"`}</DefinitionExample>
                                 )}
                                 {definition.synonyms?.length > 0 && (
                                     <Fragment>
-                                        <SynonymTitle>
+                                        <SynonymTitle dir={textDirection}>
                                             {chrome.i18n.getMessage("Synonyms")}
                                         </SynonymTitle>
                                         <SynonymLine>
                                             {definition.synonyms.map((word, synonymIndex) => (
                                                 <SynonymWord
                                                     key={`definition-synonym-${synonymIndex}`}
+                                                    dir={textDirection}
                                                 >
                                                     {word}
                                                 </SynonymWord>
@@ -289,7 +297,7 @@ export default function Result(props) {
                         DrawerHeight={BlockContentDrawerHeight}
                         DisableDrawer={!foldLongContent}
                     >
-                        <ExampleList>
+                        <ExampleList dir={textDirection}>
                             {props.examples.map((example, index) => (
                                 <ExampleItem key={`example-${index}`}>
                                     {example.source && (
@@ -431,9 +439,11 @@ export default function Result(props) {
 
     return (
         <Fragment>
-            {contentDisplayOrder
-                .filter((content) => contentFilter[content])
-                .map((content) => CONTENTS[content])}
+            <ThemeProvider theme={(props) => ({ ...props, textDirection })}>
+                {contentDisplayOrder
+                    .filter((content) => contentFilter[content])
+                    .map((content) => CONTENTS[content])}
+            </ThemeProvider>
         </Fragment>
     );
 }
@@ -487,7 +497,7 @@ const TextLine = styled.div`
     width: 100%;
     display: flex;
     margin: 5px 0;
-    flex-direction: row;
+    flex-direction: ${(props) => (props.theme.textDirection === "ltr" ? "row" : "row-reverse")};
     justify-content: space-between;
     align-items: center;
 `;
@@ -520,7 +530,7 @@ const PronounceLine = styled.div`
     width: 100%;
     margin: 5px 0;
     display: flex;
-    flex-direction: row;
+    flex-direction: ${(props) => (props.theme.textDirection === "ltr" ? "row" : "row-reverse")};
     justify-content: flex-start;
     align-items: center;
 `;
@@ -548,6 +558,15 @@ const StyledPronounceIcon = styled(PronounceIcon)`
     fill: ${LightPrimary};
     flex-shrink: 0;
     transition: fill 0.2s linear;
+    ${(props) =>
+        props.theme.textDirection === "ltr"
+            ? `
+                margin-right: 10px;
+            `
+            : `
+                margin-left: 10px;
+                transform: rotate(180deg);
+            `}
 
     &:hover {
         fill: orange !important;
@@ -570,14 +589,16 @@ const StyledPronounceLoadingIcon = styled(PronounceLoadingIcon)`
 const BlockHead = styled.div`
     width: 100%;
     display: flex;
-    flex-flow: row wrap;
+    flex-direction: ${(props) => (props.theme.textDirection === "ltr" ? "row" : "row-reverse")};
+    flex-wrap: wrap;
     justify-content: flex-start;
     align-items: center;
 `;
 
 const BlockHeadTitle = styled.span`
     font-size: small;
-    margin-left: ${BlockPadding};
+    ${(props) =>
+        `${props.theme.textDirection === "ltr" ? "margin-left" : "margin-right"}:${BlockPadding}`}
 `;
 
 /**
@@ -603,7 +624,7 @@ const BlockContent = styled(DrawerBlock)`
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    align-items: flex-start;
+    align-items: ${(props) => (props.theme.textDirection === "ltr" ? "flex-start" : "flex-end")};
     flex-shrink: 0;
 `;
 
@@ -618,20 +639,29 @@ const Position = styled.div`
 
 const DetailMeaning = styled.div`
     padding: 5px 0;
-    margin-left: 10px;
+    ${(props) => (props.theme.textDirection === "ltr" ? "margin-left" : "margin-right")}: 10px;
 `;
 
 const SynonymTitle = styled.div`
     color: ${Gray};
     font-size: small;
-    margin-left: 10px;
+    ${(props) => (props.theme.textDirection === "ltr" ? "margin-left" : "margin-right")}: 10px;
 `;
 
 const SynonymLine = styled.div`
     display: flex;
     flex-wrap: wrap;
     padding: 5px 0;
-    margin-left: 10px;
+    ${(props) =>
+        props.theme.textDirection === "ltr"
+            ? `
+                margin-left: 10px;
+                flex-direction: row;
+            `
+            : `
+                margin-right: 10px;       
+                flex-direction: row-reverse;
+            `};
 `;
 
 const SynonymWord = styled.span`
@@ -661,7 +691,7 @@ const ExampleHeadSpot = styled(BlockHeadSpot)`
 
 const ExampleList = styled.ol`
     list-style-type: decimal;
-    padding-left: 1.5rem;
+    ${(props) => (props.theme.textDirection === "ltr" ? "padding-left" : "padding-right")}: 1.5rem;
     margin: 0;
 `;
 
