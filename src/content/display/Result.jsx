@@ -310,7 +310,7 @@ export default function Result(props) {
                                         />
                                     )}
                                     {example.target && (
-                                        <div
+                                        <ExampleTarget
                                             // eslint-disable-next-line react/no-danger
                                             dangerouslySetInnerHTML={{
                                                 __html: DOMPurify.sanitize(example.target, {
@@ -701,7 +701,12 @@ const ExampleItem = styled.li`
 `;
 
 const ExampleSource = styled.div`
-    padding-bottom: 5px;
+    font-size: medium;
+`;
+
+const ExampleTarget = styled.div`
+    padding-top: 5px;
+    font-size: medium;
 `;
 
 /**
