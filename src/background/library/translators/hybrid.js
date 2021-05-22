@@ -1,19 +1,24 @@
-import BAIDU from "./baidu.js";
-import BING from "./bing.js";
-import GOOGLE from "./google.js";
-import TENCENT from "./tencent.js";
+import BaiduTranslator from "./baidu.js";
+import BingTranslator from "./bing.js";
+import GoogleTranslator from "./google.js";
+import TencentTranslator from "./tencent.js";
 import { log } from "../../../common/scripts/common.js";
 
 class HybridTranslator {
-    constructor() {
+    constructor(channel) {
+        /**
+         * Communication channel.
+         */
+        this.channel = channel;
+
         /**
          * Real supported translators.
          */
         this.REAL_TRANSLATORS = {
-            BaiduTranslate: BAIDU,
-            BingTranslate: BING,
-            GoogleTranslate: GOOGLE,
-            TencentTranslate: TENCENT,
+            BaiduTranslate: new BaiduTranslator(),
+            BingTranslate: new BingTranslator(),
+            GoogleTranslate: new GoogleTranslator(),
+            TencentTranslate: new TencentTranslator(channel),
         };
 
         /**
@@ -213,8 +218,4 @@ class HybridTranslator {
     }
 }
 
-/**
- * Create and export default translator instance.
- */
-const TRANSLATOR = new HybridTranslator();
-export default TRANSLATOR;
+export default HybridTranslator;

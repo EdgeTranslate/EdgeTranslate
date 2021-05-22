@@ -79,8 +79,8 @@ export default class draggable {
         // store the start mouse absolute position. [x,y]
         this.store.startMouse = [e.pageX, e.pageY];
         let offset = [
-            this.targetElement.getBoundingClientRect().left + document.documentElement.scrollLeft,
-            this.targetElement.getBoundingClientRect().top + document.documentElement.scrollTop,
+            this.targetElement.getBoundingClientRect().left + this.options.container.scrollLeft,
+            this.targetElement.getBoundingClientRect().top + this.options.container.scrollTop,
         ];
         // store the start element absolute position. {left:leftOffset,top: topOffset,right:rightOffset,bottom:bottomOffset}
         this.store.startElement = {
@@ -111,7 +111,7 @@ export default class draggable {
 
         if (this.dragging) {
             e.preventDefault();
-            document.documentElement.addEventListener("mousemove", this.dragHandler);
+            this.options.container.addEventListener("mousemove", this.dragHandler);
         }
     }
 
@@ -201,10 +201,10 @@ export default class draggable {
      * remove the dragging event listener
      */
     dragEnd() {
-        document.documentElement.addEventListener("mouseup", (e) => {
+        this.options.container.addEventListener("mouseup", (e) => {
             if (this.dragging) {
                 this.dragging = false;
-                document.documentElement.removeEventListener("mousemove", this.dragHandler);
+                this.options.container.removeEventListener("mousemove", this.dragHandler);
                 if (this.handlers.dragEnd)
                     this.handlers.dragEnd({
                         inputEvent: e,

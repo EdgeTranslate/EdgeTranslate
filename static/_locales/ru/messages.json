@@ -20,8 +20,8 @@
         "description": "Фиксация рамки результата перевода."
     },
     "UnfixResultFrame": {
-        "message": "Unfix the result frame",
-        "description": "Unfix the translating result frame."
+        "message": "Отключить окно отображения результатов перевода",
+        "description": "Отключить окно отображения результатов перевода."
     },
     "CloseResultFrame": {
         "message": "Закрыть рамку результата",
@@ -71,6 +71,22 @@
         "message": "Фонетический символ",
         "description": "Фонетический символ"
     },
+    "SourcePronunciation": {
+        "message": "Источник Произношение",
+        "description": "Источник Произношение"
+    },
+    "TargetPronunciation": {
+        "message": "Целевое произношение",
+        "description": "Целевое произношение"
+    },
+    "SourcePronunciationIcon": {
+        "message": "Источник Произношение Иконка",
+        "description": "Источник Произношение Иконка."
+    },
+    "TargetPronunciationIcon": {
+        "message": "Значок целевого произношения",
+        "description": "Значок целевого произношения."
+    },
     "Pronounce": {
         "message": "произнести",
         "description": "произнести"
@@ -88,20 +104,20 @@
         "description": "Читать переведённый текст."
     },
     "ClickToExpand": {
-        "message": "Click to expand",
-        "description": "Click to expand."
+        "message": "Нажмите, чтобы развернуть",
+        "description": "Нажмите, чтобы развернуть."
     },
     "ClickToFold": {
-        "message": "Click to fold",
-        "description": "Click to fold."
+        "message": "Нажмите, чтобы сложить",
+        "description": "Нажмите, чтобы сложить."
     },
     "EditText": {
-        "message": "Edit text",
-        "description": "Edit selected text."
+        "message": "Редактировать текст",
+        "description": "Редактировать выделенный текст."
     },
     "Retranslate": {
-        "message": "Re-translate",
-        "description": "Re-translate the edited text."
+        "message": "Перевести",
+        "description": "Перевести отредактированный текст заново."
     },
     "CopyResult": {
         "message": "Скопировать результат",
@@ -168,7 +184,7 @@
         "description": "Язык перевода"
     },
     "PermissionRemind": {
-        "message": "Откройте и переключите \"Разрешить доступ к URL-адресам файлов\" на странице управления расширениями",
+        "message": "Чтобы использовать EdgeTranslate на этой странице, вам необходимо включить переключатель \"Разрешить доступ к URL-адресам файлов\" на странице управления расширениями.",
         "description": "Подсказка пользователю о правах доступа к URL-адресам файлов"
     },
     "ContentSettings": {
@@ -198,6 +214,10 @@
     "RTLSetting": {
         "message": "Справа налево макет",
         "description": "Отображать контент справа налево на некоторых языках."
+    },
+    "FoldLongContentSetting": {
+        "message": "Сократите чрезмерно длинный контент",
+        "description": "Fold too long translation content."
     },
     "OtherSettings": {
         "message": "Другие настройки",
@@ -256,6 +276,10 @@
         "description": "Политика конфиденциальности."
     },
     "Settings": {
+        "message": "Настройки",
+        "description": "Настройки"
+    },
+    "SettingsTitle": {
         "message": "Настройки Edge Translate",
         "description": "Страница настроек Edge Translate"
     },
@@ -276,44 +300,64 @@
         "description": "Развернуть параметры настройки языка"
     },
     "HybridTranslatorConfig": {
-        "message": "Hybrid Translator Config",
-        "description": "Config providers for each part of the translation."
+        "message": "Настройка источника смешанного перевода",
+        "description": "Настройка источника перевода для различных частей результатов перевода."
     },
     "MainTranslator": {
-        "message": "Main Provider",
-        "description": "Choose the main translation provider."
+        "message": "основной источник перевода:",
+        "description": "установить основной источник перевода."
     },
     "DetailedTranslator": {
-        "message": "Detailed Provider",
-        "description": "Choose the detailed meaning provider."
+        "message": "объяснение слов:",
+        "description": "укажите источник подробного перевода слов."
     },
     "DefinitionTranslator": {
-        "message": "Definition Provider",
-        "description": "Choose the definition provider."
+        "message": "определение слова:",
+        "description": "Настройка источника перевода слов."
     },
     "ExampleTranslator": {
-        "message": "Example Provider",
-        "description": "Choose the example provider."
+        "message": "Пример:",
+        "description": "установить типичный источник перевода."
     },
     "BaiduTranslate": {
-        "message": "Baidu Translate",
-        "description": "Baidu Translate."
+        "message": "перевод Baidu",
+        "description": "перевод Baidu"
+    },
+    "BaiduTranslateShort": {
+        "message": "Baidu",
+        "description": "перевод Baidu"
     },
     "BingTranslate": {
-        "message": "Bing Translate",
-        "description": "Bing Translate"
+        "message": "перевод Bing",
+        "description": "перевод Bing"
+    },
+    "BingTranslateShort": {
+        "message": "Bing",
+        "description": "перевод Bing"
     },
     "GoogleTranslate": {
-        "message": "Google Translate",
-        "description": "Google Translate"
+        "message": "Гугл переводчик",
+        "description": "Гугл переводчик"
+    },
+    "GoogleTranslateShort": {
+        "message": "Гугл",
+        "description": "Гугл переводчик"
     },
     "TencentTranslate": {
-        "message": "Tencent Translate",
-        "description": "Tencent Translate"
+        "message": "перевод Tencent",
+        "description": "перевод Tencent"
+    },
+    "TencentTranslateShort": {
+        "message": "Tencent",
+        "description": "перевод Tencent"
     },
     "HybridTranslate": {
-        "message": "Hybrid Translate",
-        "description": "Translate with multiple translators."
+        "message": "cмешанный перевод",
+        "description": "смешанный с несколькими источниками перевода."
+    },
+    "HybridTranslateShort": {
+        "message": "смесь",
+        "description": "смешанный с несколькими источниками перевода."
     },
     "NOTICE": {
         "message": "Notice from Edge Translate",
@@ -340,11 +384,11 @@
         "description": "a blank page"
     },
     "NoticeReason3": {
-        "message": "You are using Edge Translate on a file page where extension doesn't have the permission to access file links.",
+        "message": "You are using Edge Translate on a file page where extension doesn't have the permission to access the file URL.",
         "description": "the third reason of the notice message"
     },
     "NoticeReason4": {
-        "message": "Our extension are not allowed to run on the file page on Firefox.",
+        "message": "Our extension is not allowed to run on the file page on Firefox.",
         "description": "the fourth reason of the notice message"
     },
     "EnablePermission": {
@@ -354,6 +398,10 @@
     "OpenThisPage": {
         "message": "Open this page",
         "description": "Open this page"
+    },
+    "ReloadPage": {
+        "message": "Reload the file page",
+        "description": "Reload the file page"
     },
     "NoticeLinks": {
         "message": "Links",

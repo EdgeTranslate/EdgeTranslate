@@ -330,7 +330,7 @@ class BaiduTranslator {
                     let meaning = {};
                     meaning.pos = part.part; // part of speech
                     meaning.meaning = part.means.reduce(
-                        (meaning1, meaning2) => `${meaning1}\n${meaning2}`
+                        (meaning1, meaning2) => `${meaning1}, ${meaning2}`
                     );
                     parsed.detailedMeanings.push(meaning);
                 };
@@ -611,8 +611,4 @@ class BaiduTranslator {
     /* eslint-enable */
 }
 
-/**
- * Create and export default Translator object.
- */
-const TRANSLATOR = new BaiduTranslator();
-export default TRANSLATOR;
+export default BaiduTranslator;

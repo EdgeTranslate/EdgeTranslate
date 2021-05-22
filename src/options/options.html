@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta charset="utf-8" />
-        <title class="i18n" data-i18n-name="Settings"></title>
+        <title class="i18n" data-i18n-name="SettingsTitle"></title>
         <meta name="viewport" content="width=device-width,initial-scale=1" />
         <link type="text/css" rel="stylesheet" href="./options.css" />
     </head>
@@ -16,52 +16,141 @@
                 Edge Translate
             </header>
             <div class="content">
-                <!-- <label for="content-settings" class="setting-title i18n" data-i18n-name="ContentSettings"></label>
-            <div id="content-settings">
-                <div class="row">
-                    <div class="column">
-                        <label for="rm" class="checked-label i18n" data-i18n-name="PhoneticSymbol">
-                            <input type="checkbox" value="rm" setting-type="checkbox" setting-path="DTSetting" class="checkbox" id="rm"/>
-                        </label>
+                <label
+                    for="content-settings"
+                    class="setting-title i18n"
+                    data-i18n-name="ContentSettings"
+                ></label>
+                <div id="content-settings">
+                    <div class="row">
+                        <div class="column">
+                            <label
+                                for="source-pronunciation"
+                                class="checked-label i18n"
+                                data-i18n-name="SourcePronunciation"
+                            >
+                                <input
+                                    type="checkbox"
+                                    setting-type="switch"
+                                    setting-path="TranslateResultFilter sPronunciation"
+                                    class="checkbox"
+                                    id="source-pronunciation"
+                                />
+                            </label>
+                        </div>
+                        <div class="column">
+                            <label
+                                for="source-pronunciation-icon"
+                                class="checked-label i18n"
+                                data-i18n-name="SourcePronunciationIcon"
+                            >
+                                <input
+                                    type="checkbox"
+                                    setting-type="switch"
+                                    setting-path="TranslateResultFilter sPronunciationIcon"
+                                    class="checkbox"
+                                    id="source-pronunciation-icon"
+                                />
+                            </label>
+                        </div>
                     </div>
-                    <div class="column">
-                        <label for="at" class="checked-label i18n" data-i18n-name="CommonMeanings">
-                            <input type="checkbox" value="at" setting-type="checkbox" setting-path="DTSetting" class="checkbox" id="at" />
-                        </label>
+                    <div class="row">
+                        <div class="column">
+                            <label
+                                for="target-pronunciation"
+                                class="checked-label i18n"
+                                data-i18n-name="TargetPronunciation"
+                            >
+                                <input
+                                    type="checkbox"
+                                    setting-type="switch"
+                                    setting-path="TranslateResultFilter tPronunciation"
+                                    class="checkbox"
+                                    id="target-pronunciation"
+                                />
+                            </label>
+                        </div>
+                        <div class="column">
+                            <label
+                                for="target-pronunciation-icon"
+                                class="checked-label i18n"
+                                data-i18n-name="TargetPronunciationIcon"
+                            >
+                                <input
+                                    type="checkbox"
+                                    setting-type="switch"
+                                    setting-path="TranslateResultFilter tPronunciationIcon"
+                                    class="checkbox"
+                                    id="target-pronunciation-icon"
+                                />
+                            </label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="column">
+                            <label
+                                for="original-text"
+                                class="checked-label i18n"
+                                data-i18n-name="OriginalText"
+                            >
+                                <input
+                                    type="checkbox"
+                                    setting-type="switch"
+                                    setting-path="TranslateResultFilter originalText"
+                                    class="checkbox"
+                                    id="original-text"
+                                />
+                            </label>
+                        </div>
+                        <div class="column">
+                            <label
+                                for="detailed-meanings"
+                                class="checked-label i18n"
+                                data-i18n-name="DetailedMeanings"
+                            >
+                                <input
+                                    type="checkbox"
+                                    setting-type="switch"
+                                    setting-path="TranslateResultFilter detailedMeanings"
+                                    class="checkbox"
+                                    id="detailed-meanings"
+                                />
+                            </label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="column">
+                            <label
+                                for="definitions"
+                                class="checked-label i18n"
+                                data-i18n-name="Definitions"
+                            >
+                                <input
+                                    type="checkbox"
+                                    setting-type="switch"
+                                    setting-path="TranslateResultFilter definitions"
+                                    class="checkbox"
+                                    id="definitions"
+                                />
+                            </label>
+                        </div>
+                        <div class="column">
+                            <label
+                                for="examples"
+                                class="checked-label i18n"
+                                data-i18n-name="Examples"
+                            >
+                                <input
+                                    type="checkbox"
+                                    setting-type="switch"
+                                    setting-path="TranslateResultFilter examples"
+                                    class="checkbox"
+                                    id="examples"
+                                />
+                            </label>
+                        </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="column">
-                        <label for="bd" class="checked-label i18n" data-i18n-name="DetailedMeanings">
-                            <input type="checkbox" value="bd" setting-type="checkbox" setting-path="DTSetting" class="checkbox" id="bd" />
-                        </label>
-                    </div>
-                    <div class="column">
-                        <label for="md" class="checked-label i18n" data-i18n-name="Definitions">
-                            <input type="checkbox" value="md" setting-type="checkbox" setting-path="DTSetting" class="checkbox" id="md" />
-                        </label>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="column">
-                        <label for="ss" class="checked-label i18n" data-i18n-name="Synonyms">
-                            <input type="checkbox" value="ss" setting-type="checkbox" setting-path="DTSetting" class="checkbox" id="ss" />
-                        </label>
-                    </div>
-                    <div class="column">
-                        <label for="rw" class="checked-label i18n" data-i18n-name="Phrases">
-                            <input type="checkbox" value="rw" setting-type="checkbox" setting-path="DTSetting" class="checkbox" id="rw" />
-                        </label>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="column">
-                        <label for="ex" class="checked-label i18n" data-i18n-name="Examples">
-                            <input type="checkbox" value="ex" setting-type="checkbox" setting-path="DTSetting" class="checkbox" id="ex" />
-                        </label>
-                    </div>
-                </div>
-            </div> -->
 
                 <label class="setting-title i18n" data-i18n-name="HybridTranslatorConfig"></label>
                 <div class="row">
@@ -176,6 +265,24 @@
                                 for="RTL"
                                 class="checked-label i18n"
                                 data-i18n-name="RTLSetting"
+                            ></label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="column">
+                            <input
+                                type="checkbox"
+                                value="FoldLongContent"
+                                setting-type="switch"
+                                setting-path="LayoutSettings FoldLongContent"
+                                class="switch"
+                                id="FoldLongContent"
+                            />
+                            <span class="space"></span>
+                            <label
+                                for="FoldLongContent"
+                                class="checked-label i18n"
+                                data-i18n-name="FoldLongContentSetting"
                             ></label>
                         </div>
                     </div>

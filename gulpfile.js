@@ -104,8 +104,7 @@ function packToZip() {
  * @param {Function} done execute done to inform gulp that the task is finished
  */
 function watcher(done) {
-    gulp.watch("./src/**/*.js").on("change", gulp.series(eslintJS));
-    gulp.watch("./src/display/**/*.xhtml").on("change", gulp.series(eslintJS));
+    gulp.watch("./src/**/*.{js,jsx}").on("change", gulp.series(eslintJS));
     gulp.watch("./src/(manifest|manifest_chrome|manifest_firefox).json").on(
         "change",
         gulp.series(manifest)
@@ -121,7 +120,7 @@ function watcher(done) {
  */
 function eslintJS() {
     return gulp
-        .src("./src/**/*.js", { base: "src" })
+        .src("./src/**/*.{js,jsx}", { base: "src" })
         .pipe(
             eslint({
                 configFile: "./.eslintrc.js",
@@ -143,7 +142,12 @@ function buildJS() {
     // Insert plugins.
     let webpack_config = require(webpack_path);
     webpack_config.plugins = webpack_config.plugins || [];
-    webpack_config.plugins.push(new webpack.DefinePlugin({ BROWSER_ENV: JSON.stringify(browser) }));
+    webpack_config.plugins.push(
+        new webpack.DefinePlugin({
+            BROWSER_ENV: JSON.stringify(browser),
+            BUILD_ENV: JSON.stringify(environment),
+        })
+    );
 
     return gulp
         .src("./src/**/*.js", { base: "src" })

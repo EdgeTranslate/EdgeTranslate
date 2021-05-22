@@ -66,7 +66,7 @@
             "description": "__MSG_CancelPageTranslate__"
         }
     },
-    "web_accessible_resources": ["**/*.css", "youdao/*", "google/*"],
+    "web_accessible_resources": ["**/*.css", "**/*.png", "youdao/*", "google/*"],
     "icons": {
         "16": "icon/icon16.png",
         "48": "icon/icon48.png",

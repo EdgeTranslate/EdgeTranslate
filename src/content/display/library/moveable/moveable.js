@@ -15,6 +15,7 @@ export default class moveable {
         this.targetElement = targetElement;
         // store the options the user set
         this.options = options;
+        this.options.container = options.container || document.documentElement;
 
         if (this.options.resizable)
             this.resizable = new resizable(this.targetElement, this.options, this.handlers);

@@ -16,12 +16,12 @@
         "description": "選択したテキストを翻訳するためのショートカット"
     },
     "FixResultFrame": {
-        "message": "結果フレームを修正",
-        "description": "翻訳結果のフレームを修正する。"
+        "message": "結果ボックスを修正しました",
+        "description": "結果ボックスを修正しました。"
     },
     "UnfixResultFrame": {
-        "message": "Unfix the result frame",
-        "description": "Unfix the translating result frame."
+        "message": "翻訳結果表示ボックスの修正を解除します",
+        "description": "翻訳結果表示ボックスの修正を解除します。"
     },
     "CloseResultFrame": {
         "message": "結果フレームを閉じる",
@@ -83,25 +83,41 @@
         "message": "原文を読み上げる",
         "description": "原文を読み上げる"
     },
+    "SourcePronunciation": {
+        "message": "ソース発音",
+        "description": "ソース発音"
+    },
+    "TargetPronunciation": {
+        "message": "ターゲットの発音",
+        "description": "ターゲットの発音"
+    },
+    "SourcePronunciationIcon": {
+        "message": "ソース発音アイコン",
+        "description": "ソース発音アイコン。"
+    },
+    "TargetPronunciationIcon": {
+        "message": "ターゲット発音アイコン",
+        "description": "ターゲット発音アイコン。"
+    },
     "PronounceTranslated": {
         "message": "翻訳されたテキストを読み上げる",
         "description": "翻訳されたテキストを読み上げる"
     },
     "ClickToExpand": {
-        "message": "Click to expand",
-        "description": "Click to expand."
+        "message": "クリックして展開",
+        "description": "クリックして展開。"
     },
     "ClickToFold": {
-        "message": "Click to fold",
-        "description": "Click to fold."
+        "message": "クリックして折りたたむ",
+        "description": "クリックして折りたたむ。"
     },
     "EditText": {
-        "message": "Edit text",
-        "description": "Edit selected text."
+        "message": "テキストを編集するt",
+        "description": "テキストを編集する。"
     },
     "Retranslate": {
-        "message": "Re-translate",
-        "description": "Re-translate the edited text."
+        "message": "再翻訳",
+        "description": "編集したテキストを再翻訳します。"
     },
     "CopyResult": {
         "message": "結果をコピー",
@@ -168,7 +184,7 @@
         "description": "訳文の言語"
     },
     "PermissionRemind": {
-        "message": "拡張機能の管理を開き、「ファイルの URL へのアクセスを許可する」をオンにしてください",
+        "message": "このページでEdgeTranslateを使うには、拡張機能の管理を開き、「ファイルの URL へのアクセスを許可する」をオンにしてください",
         "description": "ファイルの URL へのアクセスの権限に関するユーザへのヒント"
     },
     "ContentSettings": {
@@ -198,6 +214,10 @@
     "RTLSetting": {
         "message": "右から左へのレイアウト",
         "description": "一部の言語では、コンテンツを右から左に表示します。"
+    },
+    "FoldLongContentSetting": {
+        "message": "長いコンテンツを折りたたむ",
+        "description": "長すぎる翻訳コンテンツを折ります。"
     },
     "OtherSettings": {
         "message": "その他の設定",
@@ -256,6 +276,10 @@
         "description": "プライバシーポリシー"
     },
     "Settings": {
+        "message": "設定",
+        "description": "設定"
+    },
+    "SettingsTitle": {
         "message": "EdgeTranslateの設定",
         "description": "EdgeTranslateの設定ページ"
     },
@@ -276,44 +300,64 @@
         "description": "言語設定展開オプション"
     },
     "HybridTranslatorConfig": {
-        "message": "Hybrid Translator Config",
-        "description": "Config providers for each part of the translation."
+        "message": "ハイブリッド翻訳ソース設定",
+        "description": "翻訳結果の各部分で使用される翻訳ソースを設定します。"
     },
     "MainTranslator": {
-        "message": "Main Provider",
-        "description": "Choose the main translation provider."
+        "message": "翻訳の主な情報源：",
+        "description": "メインの翻訳ソースを設定します。"
     },
     "DetailedTranslator": {
-        "message": "Detailed Provider",
-        "description": "Choose the detailed meaning provider."
+        "message": "言葉の詳細な説明：",
+        "description": "単語の詳細な説明のために翻訳ソースを設定します。"
     },
     "DefinitionTranslator": {
-        "message": "Definition Provider",
-        "description": "Choose the definition provider."
+        "message": "単語の定義：",
+        "description": "単語を設定して、翻訳ソースを定義します。"
     },
     "ExampleTranslator": {
-        "message": "Example Provider",
-        "description": "Choose the example provider."
+        "message": "典型的な例文：",
+        "description": "典型的な例文の翻訳ソースを設定します。"
     },
     "BaiduTranslate": {
-        "message": "Baidu Translate",
-        "description": "Baidu Translate."
+        "message": "Baidu翻訳",
+        "description": "Baidu Translate"
+    },
+    "BaiduTranslateShort": {
+        "message": "Baidu",
+        "description": "Baidu Translate"
     },
     "BingTranslate": {
-        "message": "Bing Translate",
-        "description": "Bing Translate"
+        "message": "ビング翻訳",
+        "description": "ビング翻訳"
+    },
+    "BingTranslateShort": {
+        "message": "ビング",
+        "description": "ビング翻訳"
     },
     "GoogleTranslate": {
-        "message": "Google Translate",
-        "description": "Google Translate"
+        "message": "グーグル翻訳",
+        "description": "グーグル翻訳"
+    },
+    "GoogleTranslateShort": {
+        "message": "グーグル",
+        "description": "グーグル翻訳"
     },
     "TencentTranslate": {
-        "message": "Tencent Translate",
-        "description": "Tencent Translate"
+        "message": "テンセント翻訳",
+        "description": "テンセント翻訳"
+    },
+    "TencentTranslateShort": {
+        "message": "テンセント",
+        "description": "テンセント翻訳"
     },
     "HybridTranslate": {
-        "message": "Hybrid Translate",
-        "description": "Translate with multiple translators."
+        "message": "ブレンド翻訳",
+        "description": "複数の翻訳ソースを混在させます。"
+    },
+    "HybridTranslateShort": {
+        "message": "ブレンド",
+        "description": "複数の翻訳ソースを混在させます。"
     },
     "NOTICE": {
         "message": "Notice from Edge Translate",
@@ -340,11 +384,11 @@
         "description": "a blank page"
     },
     "NoticeReason3": {
-        "message": "You are using Edge Translate on a file page where extension doesn't have the permission to access file links.",
+        "message": "You are using Edge Translate on a file page where extension doesn't have the permission to access the file URL.",
         "description": "the third reason of the notice message"
     },
     "NoticeReason4": {
-        "message": "Our extension are not allowed to run on the file page on Firefox.",
+        "message": "Our extension is not allowed to run on the file page on Firefox.",
         "description": "the fourth reason of the notice message"
     },
     "EnablePermission": {
@@ -354,6 +398,10 @@
     "OpenThisPage": {
         "message": "Open this page",
         "description": "Open this page"
+    },
+    "ReloadPage": {
+        "message": "Reload the file page",
+        "description": "Reload the file page"
     },
     "NoticeLinks": {
         "message": "Links",

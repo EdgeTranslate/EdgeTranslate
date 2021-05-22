@@ -1,5 +1,4 @@
 import axios from "../axios.js";
-import Messager from "common/scripts/messager.js";
 
 /**
  * Supported languages.
@@ -26,12 +25,7 @@ const LANGUAGES = [
 ];
 
 /**
- * Message receiver.
- */
-const RECEIVER = "tencent";
-
-/**
- * Title of the message.
+ * Event name.
  */
 const TENCENT_TOKEN_UPDATED = "tencent_token_updated";
 
@@ -63,8 +57,8 @@ const HOME_PAGE_LOADING_WATCHER = `
         if (event.data === "et_tencent_token_updated") {
             chrome.runtime.sendMessage(
                 JSON.stringify({
-                    to: { ${RECEIVER}: true },
-                    title: "${TENCENT_TOKEN_UPDATED}"
+                    type: "event",
+                    event: "${TENCENT_TOKEN_UPDATED}"
                 }),
                 () => window.close()
             );
@@ -76,7 +70,12 @@ const HOME_PAGE_LOADING_WATCHER = `
  * Tencent translator.
  */
 class TencentTranslator {
-    constructor() {
+    constructor(channel) {
+        /**
+         * Communication channel.
+         */
+        this.channel = channel;
+
         /**
          * Max retry times.
          */
@@ -173,14 +172,10 @@ class TencentTranslator {
          * Wait until token updated.
          */
         await new Promise((resolve) => {
-            Messager.receive(
-                RECEIVER,
-                (message) => {
-                    if (message.title === TENCENT_TOKEN_UPDATED) resolve();
-                    return Promise.resolve();
-                },
-                true
-            );
+            const cancel = this.channel.on(TENCENT_TOKEN_UPDATED, () => {
+                cancel();
+                resolve();
+            });
         });
     }
 
@@ -220,8 +215,8 @@ class TencentTranslator {
         // Parse original text and main meaning.
         let result = { originalText: "", mainMeaning: "" };
         for (let record of response.translate.records) {
+            result.mainMeaning += record.targetText;
             result.originalText += record.sourceText;
-            result.mainMeaning += record.targetText.split(/\s*\/\s*/g)[0];
         }
 
         // Unescape html characters.
@@ -248,7 +243,12 @@ class TencentTranslator {
             if (response.suggest.data[0].examples_json) {
                 result.examples = JSON.parse(response.suggest.data[0].examples_json).basic.map(
                     (item) => {
-                        return { source: item.sourceText, target: item.targetText };
+                        return {
+                            source: parser.parseFromString(item.sourceText, "text/html")
+                                .documentElement.textContent,
+                            target: parser.parseFromString(item.targetText, "text/html")
+                                .documentElement.textContent,
+                        };
                     }
                 );
             }
@@ -256,7 +256,11 @@ class TencentTranslator {
 
         if (response.dict && response.dict.abstract && response.dict.abstract.length > 0) {
             result.detailedMeanings = response.dict.abstract.map((item) => {
-                return { pos: item.ps, meaning: item.explanation.join(", ") };
+                return {
+                    pos: item.ps,
+                    meaning: parser.parseFromString(item.explanation.join(", "), "text/html")
+                        .documentElement.textContent,
+                };
             });
         }
 
@@ -445,8 +449,4 @@ class TencentTranslator {
     }
 }
 
-/**
- * Create and export default translator object.
- */
-const TRANSLATOR = new TencentTranslator();
-export default TRANSLATOR;
+export default TencentTranslator;

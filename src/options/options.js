@@ -1,5 +1,10 @@
-import Messager from "../common/scripts/messager.js";
-import { log, i18nHTML } from "../common/scripts/common.js";
+import Channel from "../common/scripts/channel.js";
+import { i18nHTML } from "../common/scripts/common.js";
+
+/**
+ * Communication channel.
+ */
+const channel = new Channel();
 
 /**
  * 初始化设置列表
@@ -17,7 +22,7 @@ window.onload = () => {
     chrome.storage.sync.get(["languageSetting", "HybridTranslatorConfig"], async (result) => {
         let config = result.HybridTranslatorConfig;
         let languageSetting = result.languageSetting;
-        let availableTranslators = await Messager.send("background", "get_available_translators", {
+        let availableTranslators = await channel.request("get_available_translators", {
             from: languageSetting.sl,
             to: languageSetting.tl,
         });
@@ -31,17 +36,9 @@ window.onload = () => {
     /**
      * Update translator config options on translator config update.
      */
-    Messager.receive("options", (message) => {
-        switch (message.title) {
-            case "hybrid_translator_config_updated":
-                setUpTranslateConfig(message.detail.config, message.detail.availableTranslators);
-                break;
-            default:
-                log(`Unknown message title: ${message.title}`);
-                break;
-        }
-        return Promise.resolve();
-    });
+    channel.on("hybrid_translator_config_updated", (detail) =>
+        setUpTranslateConfig(detail.config, detail.availableTranslators)
+    );
 
     /**
      * initiate and update settings

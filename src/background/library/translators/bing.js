@@ -680,8 +680,4 @@ class BingTranslator {
     }
 }
 
-/**
- * Create and export default translator object.
- */
-const TRANSLATOR = new BingTranslator();
-export default TRANSLATOR;
+export default BingTranslator;

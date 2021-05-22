@@ -71,6 +71,22 @@
         "message": "Phonetic Symbol",
         "description": "Phonetic Symbol"
     },
+    "SourcePronunciation": {
+        "message": "Source Pronunciation",
+        "description": "Source Pronunciation"
+    },
+    "TargetPronunciation": {
+        "message": "Target Pronunciation",
+        "description": "Target Pronunciation"
+    },
+    "SourcePronunciationIcon": {
+        "message": "Source Pronunciation Icon",
+        "description": "Source Pronunciation Icon"
+    },
+    "TargetPronunciationIcon": {
+        "message": "Target Pronunciation Icon",
+        "description": "Target Pronunciation Icon"
+    },
     "Pronounce": {
         "message": "Pronounce",
         "description": "Pronounce"
@@ -168,7 +184,7 @@
         "description": "Target Language"
     },
     "PermissionRemind": {
-        "message": "Open the 'Allow access to file URLs' switch in the extension management page",
+        "message": "To use EdgeTranslate on this page, you need to turn on the 'Allow access to file URLs' switch in the extension management page.",
         "description": "a hint to the user about the access to file url permission"
     },
     "ContentSettings": {
@@ -198,6 +214,10 @@
     "RTLSetting": {
         "message": "Right to left layout",
         "description": "Display contents from right to left in some languages."
+    },
+    "FoldLongContentSetting": {
+        "message": "Fold long content",
+        "description": "Fold too long translation content."
     },
     "OtherSettings": {
         "message": "Other Settings",
@@ -256,6 +276,10 @@
         "description": "Privacy policy."
     },
     "Settings": {
+        "message": "Settings",
+        "description": "Settings"
+    },
+    "SettingsTitle": {
         "message": "EdgeTranslate Settings",
         "description": "EdgeTranslate settings page"
     },
@@ -299,21 +323,41 @@
         "message": "Baidu Translate",
         "description": "Baidu Translate."
     },
+    "BaiduTranslateShort": {
+        "message": "Baidu",
+        "description": "Abbreviation of Baidu Translate."
+    },
     "BingTranslate": {
         "message": "Bing Translate",
-        "description": "Bing Translate"
+        "description": "Bing Translate."
+    },
+    "BingTranslateShort": {
+        "message": "Bing",
+        "description": "Abbreviation of Bing Translate."
     },
     "GoogleTranslate": {
         "message": "Google Translate",
-        "description": "Google Translate"
+        "description": "Google Translate."
+    },
+    "GoogleTranslateShort": {
+        "message": "Google",
+        "description": "Abbreviation of Google Translate."
     },
     "TencentTranslate": {
         "message": "Tencent Translate",
-        "description": "Tencent Translate"
+        "description": "Tencent Translate."
+    },
+    "TencentTranslateShort": {
+        "message": "Tencent",
+        "description": "Abbreviation of Tencent Translate."
     },
     "HybridTranslate": {
         "message": "Hybrid Translate",
         "description": "Translate with multiple translators."
+    },
+    "HybridTranslateShort": {
+        "message": "Hybrid",
+        "description": "Abbreviation of Hybrid Translate."
     },
     "NOTICE": {
         "message": "Notice from Edge Translate",
@@ -340,11 +384,11 @@
         "description": "a blank page"
     },
     "NoticeReason3": {
-        "message": "You are using Edge Translate on a file page where extension doesn't have the permission to access file links.",
+        "message": "You are using Edge Translate on a file page where extension doesn't have the permission to access the file URL.",
         "description": "the third reason of the notice message"
     },
     "NoticeReason4": {
-        "message": "Our extension are not allowed to run on the file page on Firefox.",
+        "message": "Our extension is not allowed to run on the file page on Firefox.",
         "description": "the fourth reason of the notice message"
     },
     "EnablePermission": {
@@ -354,6 +398,10 @@
     "OpenThisPage": {
         "message": "Open this page",
         "description": "Open this page"
+    },
+    "ReloadPage": {
+        "message": "Reload the file page",
+        "description": "Reload the file page."
     },
     "NoticeLinks": {
         "message": "Links",

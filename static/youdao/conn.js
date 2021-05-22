@@ -371,9 +371,9 @@ window.onload = function() {
             translate: function(request) {
                 chrome.runtime.sendMessage(
                     JSON.stringify({
-                        to: { background: true },
-                        title: "youdao_page_translate",
-                        detail: { request: request }
+                        type: "service",
+                        service: "youdao_page_translate",
+                        params: request,
                     }),
                     function(response) {
                         Response.sendMessage({

@@ -2,7 +2,7 @@
  * 检测用户语言，并设定翻译组件的语言。
  */
 chrome.runtime.sendMessage(
-    JSON.stringify({ to: { background: true }, title: "get_lang" }),
+    JSON.stringify({ type: "service", service: "get_lang" }),
     function (response) {
         let s = document.getElementById("google-translate-injection");
         if (s !== null) {

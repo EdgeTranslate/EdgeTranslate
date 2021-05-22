@@ -1,6 +1,9 @@
-import { getDomain } from "../../common/scripts/common.js";
+import { getDomain } from "common/scripts/common.js";
 import { isPDFjsPDFViewer, detectSelect } from "../common.js";
-import Messager from "../../common/scripts/messager.js";
+import Channel from "common/scripts/channel.js";
+
+// Communication channel.
+const channel = new Channel();
 
 // to indicate whether the translation button has been shown
 let HasButtonShown = false;
@@ -18,10 +21,10 @@ let translateButton = document.createElement("div");
 let buttonImage = document.createElement("img");
 buttonImage.src =
     "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAABmJLR0QAAAAAAAD5Q7t/AAAACXBIWXMAEgWuABIFrgFpirNTAAAMIUlEQVRo3s1Ze5RV1Xn//b597mMuw/CYEREwRhCVCisian1Q3joQQREhljSKrctXKIlpiHHFB9qoXTYrmiwa2rAqqUgaRFEBQSAIUtKFKChFCM+gCwGFgjAMM3PvOWfvr3/s+2KcQYxD9bvr3Hvufp3v9732/r4DnDL1Yfm/B3+7/lt3NOrXTn3+V4im/NuSpzer0z4vR92+bF4+N417eOGTr2RVb1+l+75sXk6ViqYz4f5Vc362T/Wa51Rr/0O393zwcOrLZi44Beb14lterLz62ze9JhkMfPUVaApgpxoYG7fTryIAAigwpoMfXHlm7+FDVxytQ989f1SkJNZUxrCySpzZvPALPl4J8AsJ4aQauOGXf7j0rMuvXvzhRnSJGiPNSKwWInGWqO4iqIrmSsszF+fNTgCMKmNwGQEDYES+7aMW5r5OYAuAegAPfCY4ttZx3+IPaw8neiza/0eXEImdVaWzSqdw6WRSzh/gtj91VeLCL6iCL0wlAFUdiWNHFQC+O++TW7/ev9OzixcAmURoARh1gMJBFS5IJKVdFffpwdW3c/9603vAGLQ/9wLNNmQZNRyFCQQE6ZyDDesJCpwCxqQYhQ1IVnbEwd3bUHfgPXY9/xJ1cYqII4RN9UhlKtFU18Tqc/pH7c7umE2mgA5GNWVs5t2tjVunT+iw+6QaqJ00fdrgqZMfWbqCSCK2RpyhAlAtU6eBYcCv/wVQmQJydQBNyXFYtjoJqPq+wgUHmCQgBrChH0MAFN9HAaIIUAcwBFIGqG6vePdPR2bMvbN68ujp+/nqlG4KNPOBm2ZvntG3z0X3rFoLaDa2psIZOEChJVcjQDpajbB9E2ER5BmPQYrnJs8oy+Bo2XdzuTV3YxIALQgHdUSkBj2qiT0fH2sEgLCprjjWAzjjEv7q4Ibfd6rD8KeegaYjp5kKNaoC4gTxk0o4eKmSzgUISxL2dlbiW0tQCOTXag6A5XdKev79A6kU0FinmaSR48caLADQ5YqrCzCeaPgA6369/OUDIZAWMEgJLcWvCPhod8Kt7xLmP+J/WTAGBeFYGOUnaeFePJtg/gMICCFghCKEvycohAiUhFII2NjmAEBdXK6BFxWNwOy7a3/18Z5fbr5gyPcW7Xsf7ZuOGSeBkogLMiygJgGlkEQAEpC85Qi9uRUsrYC6XO4Keu2VaUoVcK4gIUcfLIqap3X5yU5DnKDJZj6w/Invr+69PXvZoB/ct6xxL87Z+wE1mTBqxFJVy0BQTRCw5mzYVBo2QNH8aUBVgiyzGfWaY8E9VCEADAEVBzqFWgu6CHHDcQkOfwyNnFVQBXnQ3qycF0qZzzTfyLhz/o+3O1ReXPvD766sqUH/d98RFUdNBwUQQLqdkWQQ7944+9GRYf3eUG23hOoFqkF3QZDOP8/CxxEIoA5xJLCNIA454FBA1gVkHUVDVcT0ylOb6TW241mXjV3ELKrDMNZyd1GnrtyMWwKgAMyf5k8++u/rPrhy9KS7Fl4ztte1K9ZQG3Oi6VRMOCKZIlKJbLhx/mM70cZkdmc4dvhYZ0SYy8GBEJRCgwKALYPV0lHAApBw789yLz1+Xu3m362ZPX4kGFSI1DcFzlJos4qgQ6V0nfhass04F89L35seOqu6AhJmHcBShFUtid6Vyb2VswwccKEAwAtPDZr01rzNT948BKioEGkIjaMhXD1Ueo5sO9E7OADIdD2LQT0UqnCqeZ/zMGzkrf/Ms3sUvUBaX3GbAxIEgN8+0u/+pS99NPX6sUAqgEQWSBoEmfBw2wHIE2HV0gdaeIenZ1QRW4+kqqamdQ30HDnFlP5FRaQLHu32841LV44feR2Qi4CmCDkyaPN8oEONSVpFJ6WBiBR2SBpxsM55TZQ99VMA7rp3anLxrrrfdJ2yp/cJggEw+57h8/9n8Zxhg64DenTG+R07pm1bA3j/v98+mk3iUCoDiDFOqV4NqrCxtQBgy7j+FIAfjzyn6YpeVbeM6FfzBjDiU4e9eVNvWbV32dJrxtVi38XnJdu8KrFt5uVHNy1fMLKiG44l0mJoAgchnAJx5Me4svEt+sCUeXjj8hEV3YY//PLr+abS2QzAjLtHrZj20Jt9Nh/AkULbRQ+EreYWn5c2zRy7aeuSuYO790MuGRiRhHE0QGQlUWDmpAAYwaz8L2DgpMqhg3+wckUBBFkC8dpjVzatnSLFY+GWx5Nt6Q9c9/TEjbuWzBvS8zLYdNKIoUKdMQDgFCePQh0rYGxO8foSF/3lHUOHX/vDDUsAQPVETbQVDbtDywJH8RzLFT+9+c0tC+Zcc96lQJMN8EnW+1z5TtwigMBBq9IKzVmueA06aPIlo2p/tGkR0Cvwi/dpUxCjv4XO09/UZ3re9nZ3lMxVAWDV47es2rH0d9d+s5YYfGX3LgDQPv0ZAFSREKfIpJSJOIslr0KH3ttv9DfGTPxXP2Jrm4bP93blPmmo01uvmnjphg5/M78jTjRzrJj27d8f275x2t+N6RADwMyhPLkJUSEKAla1Mg1G9Tnu2AX06Desb1syXqDf3JO2uw/qH85owJkD/3rchv737Ti3+Zjbruj/j0/s1580b28ZAP1BWFUJB22fgdYfBj7cw7bfevNUn6VpCIHgI9ezX23vt0c8uqR/OUsAsP2bEp0SACklsj51UmoQAGDU5g5coFjJ400OYTa0B7e56j6jRq27dd6GofnuVk22ZQBShK35lIpIACY4ftoAJGsgsc8U6eJQ31vjEr2vumTljTPX33yyeS0f5ghR5zMwnwIV6h6HTlst1CXgHATqoAJQNXLLn3e4csiAudc9+tK9pZHBCUJsGYAArsSqUtXndmHDafOBI/vC40wiXxCAVgQQF0Vu8TLgukk3Pj3ue794zI+MVcr2otZqowQAEqpKEQPWfQTtPmDCIFu/Z0Z8vAG5hrQmqrqpMULSQGDgnF/cGAOoVdI6dbGN4iaqRoxtEwwBCmGjHAiDoF0Fwvjs2NbF/cIgUJCEAk5V21dQ6upDN3tRUr4z9fsPBJKumfeLu+92ZT7Rok3/w0J9Z/8B1/9oQ2ytwggIGxvNnCGs6gJoPhaQXqH5AkpZ3cJfIi2omIAt48ACCEPg6F6HOIzUSLGSRweqCFDXJGrTgUwYDbw1+93FL07/5zE4MldbBTBlqa4/+KEOqGuInFUI1dcjrALOiioUzmcaWgBSWKhYVIGyLJ6V7LEI1/9QfTlGaCl0oI8bDn478vIwYF0WqokE+30DOHAEGw68v//Ot6d2f6dFHwgTXkrO+nqN07zUVEHGFFomxDEQlUBUAqqYEy4nhkojjoaOBv4SOAa0NIz9LywFMYgYUAdVqFMqitVGzWtMtUOGzDVpvGMrMHkcBvS9tNuNrfoAFQwtkYsCFzuFeNMo5KZFYZcyv2LiWpR3oZqqILXYTxYrS8wXfQQqBI1YMSyd9AuPJAAR4ZF6xF/rhmDMQOC5f9nyyPM/n/ZTAGwRwJAuOG+LAz5pkMBab8tBXt1hCBgBTMIbiSuU3srrNwTo4CvNZYFXNV9hzE/RAMgFQM4CR/YGCBtjDQLHokDytbswhK3KmOD6EcSchxfetXrWDTP9ipXSIoD/XLT/n/YfqutxcOf7UcJEcaJdRkwiUwENTEV1Z6dKZA8fg/NFf1AIdf6kq+qIOFYGApAK56AkTEKUJOLI7+bJdEoDUc3u3Yo4JHqNvmlsu07J7rl6X07M1yapEGutMeMmMlo1d/WE1bNuWOC5/CsBDulp21k/L139wOEFvS7rfP3Hu0MHqiippDgJAnPRFWg8tPbVwc/+/Zj1fvTtBJ759PuBcrrrJaUm/OlHDVToX2K4OB8uU8CssmPtbSu1zP6BZ4dRb1vm26SZeaUzwNYPYrwx+y1g2dUKADXnd+pkGwClU6jAKTVTFZiuF+LgjiWvDFn00I1b81CLzAOnIbv6c+k7L+ua3GE38Eh9FFtF0LlLColqbNu1aFbt+hm378GJb0+L9FnviVul8S8oX5zQ8ivS8S+UtNHamOaUOwKTjQkVmHN7ppAzWLv8iftH/O+aJxvzQ770d9InpTEzde3fzlOdukZ1wnO6uGbgEwUhfGWs5KT0o1d056+3qF5157rZZc3mz17w/5PunaUyZ4vuHPaTLc9/Xub/D61PrC9fCdQYAAAAAElFTkSuQmCC";
+buttonImage.style.filter = "none";
 translateButton.appendChild(buttonImage);
 translateButton.id = "translate-button";
 translateButton.style.backgroundColor = "white"; // 动态设置样式以兼容Dark Reader
-document.documentElement.appendChild(translateButton);
 translateButton.addEventListener("mousedown", buttonClickHandler);
 
 let originScrollX = 0; // record the original scroll X position(before scroll event)
@@ -72,28 +75,29 @@ window.addEventListener("DOMContentLoaded", () => {
      * @param {boolean} isDoubleClick whether the event type is double click or triple click, set false by default
      */
     async function selectTranslate(event, isDoubleClick = false) {
-        if (shouldTranslate()) {
-            const inBlacklist = await isInBlacklist();
-            if (inBlacklist) {
-                chrome.storage.sync.get("OtherSettings", (result) => {
-                    let OtherSettings = result.OtherSettings;
-                    if (OtherSettings) {
-                        // store the position which would be transferred to display.js through messager.
-                        currentPosition = [event.clientX, event.clientY];
+        if (!shouldTranslate()) return;
 
-                        // Show translating result instantly.
-                        if (
-                            OtherSettings["TranslateAfterSelect"] ||
-                            (isDoubleClick && OtherSettings["TranslateAfterDblClick"])
-                        ) {
-                            translateSubmit();
-                        } else if (OtherSettings["SelectTranslate"]) {
-                            showButton(event);
-                        }
-                    }
-                });
+        const inBlacklist = await isInBlacklist();
+        if (inBlacklist) return;
+
+        chrome.storage.sync.get("OtherSettings", (result) => {
+            if (!result.OtherSettings) return;
+
+            let OtherSettings = result.OtherSettings;
+
+            // store the position which would be transferred to display.js through the Channel.
+            currentPosition = [event.clientX, event.clientY];
+
+            // Show translating result instantly.
+            if (
+                OtherSettings["TranslateAfterSelect"] ||
+                (isDoubleClick && OtherSettings["TranslateAfterDblClick"])
+            ) {
+                translateSubmit();
+            } else if (OtherSettings["SelectTranslate"]) {
+                showButton(event);
             }
-        }
+        });
     }
 });
 
@@ -115,7 +119,7 @@ function buttonClickHandler(event) {
  */
 function showButton(event) {
     // 使翻译按钮显示出来
-    translateButton.style.display = "inline-block";
+    document.documentElement.appendChild(translateButton);
     const XBias = 10,
         YBias = 15;
 
@@ -153,20 +157,22 @@ function showButton(event) {
 function translateSubmit() {
     // 发送消息给后台进行翻译。
     if (window.getSelection().toString().trim()) {
-        Messager.send("background", "translate", {
-            text: window.getSelection().toString(),
-            // send the position of selection icon to background
-            // to help locate the result panel
-            position: currentPosition, // an array
-        }).then(() => {
-            chrome.storage.sync.get("OtherSettings", (result) => {
-                // to check whether user need to cancel text selection after translation finished
-                if (result.OtherSettings && result.OtherSettings["CancelTextSelection"]) {
-                    cancelTextSelection();
-                }
+        channel
+            .request("translate", {
+                text: window.getSelection().toString(),
+                // send the position of selection icon to background
+                // to help locate the result panel
+                position: currentPosition, // an array
+            })
+            .then(() => {
+                chrome.storage.sync.get("OtherSettings", (result) => {
+                    // to check whether user need to cancel text selection after translation finished
+                    if (result.OtherSettings && result.OtherSettings["CancelTextSelection"]) {
+                        cancelTextSelection();
+                    }
+                });
+                disappearButton();
             });
-            disappearButton();
-        });
     }
 }
 
@@ -201,7 +207,7 @@ function shouldTranslate() {
  */
 function pronounceSubmit() {
     if (window.getSelection().toString().trim()) {
-        Messager.send("background", "pronounce", {
+        channel.request("pronounce", {
             text: window.getSelection().toString(),
             language: "auto",
         });
@@ -213,7 +219,7 @@ function pronounceSubmit() {
  */
 function disappearButton() {
     if (HasButtonShown) {
-        translateButton.style.display = "none";
+        document.documentElement.removeChild(translateButton);
         HasButtonShown = false;
     }
 }
@@ -243,9 +249,7 @@ function isInBlacklist() {
         chrome.storage.sync.get("blacklist", (result) => {
             let url = window.location.href;
             let blacklist = result.blacklist;
-            return resolve(
-                !blacklist || (!blacklist.domains[getDomain(url)] && !blacklist.urls[url])
-            );
+            return resolve(blacklist && (blacklist.domains[getDomain(url)] || blacklist.urls[url]));
         });
     });
 }
@@ -303,38 +307,33 @@ function getSelection() {
     let position;
     if (selection.rangeCount > 0) {
         selectedText = selection.toString().trim();
-        let rect = selection.getRangeAt(selection.rangeCount - 1).getBoundingClientRect();
-        position = [rect.left, rect.top];
+        const lastRange = selection.getRangeAt(selection.rangeCount - 1);
+        // If the user selects something in a shadow dom, the endContainer will be the HTML element and the position will be [0,0]. In this situation, we set the position undefined to avoid relocating the result panel.
+        if (lastRange.endContainer !== document.documentElement) {
+            let rect = selection.getRangeAt(selection.rangeCount - 1).getBoundingClientRect();
+            position = [rect.left, rect.top];
+        }
     }
     return { selectedText, position };
 }
 
-/**
- *  实现快捷键翻译
- */
-Messager.receive("content", (message) => {
-    switch (message.title) {
-        case "get_selection": {
-            return Promise.resolve(getSelection());
-        }
-        case "command":
-            switch (message.detail.command) {
-                case "translate_selected":
-                    currentPosition = getSelection().position;
-                    translateSubmit();
-                    break;
-                case "pronounce_selected":
-                    pronounceSubmit();
-                    break;
-                // case "cancel_page_translate":
-                //     cancelPageTranslate();
-                //     break;
-                default:
-                    break;
-            }
+// provide user's selection result for the background module
+channel.provide("get_selection", () => Promise.resolve(getSelection()));
+
+// handler for shortcut command
+channel.on("command", (detail) => {
+    switch (detail.command) {
+        case "translate_selected":
+            currentPosition = getSelection().position;
+            translateSubmit();
             break;
+        case "pronounce_selected":
+            pronounceSubmit();
+            break;
+        // case "cancel_page_translate":
+        //     cancelPageTranslate();
+        //     break;
         default:
             break;
     }
-    return Promise.resolve();
 });

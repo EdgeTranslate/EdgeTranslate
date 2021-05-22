@@ -335,8 +335,8 @@ var _text_layer = __w_pdfjs_require__(217);
 
 var _svg = __w_pdfjs_require__(218);
 
-var pdfjsVersion = '2.7.91';
-var pdfjsBuild = 'd6559b4d5';
+var pdfjsVersion = '2.7.115';
+var pdfjsBuild = 'd77b7d7c6';
 {
   var _require = __w_pdfjs_require__(7),
       isNodeJS = _require.isNodeJS;
@@ -12427,7 +12427,7 @@ function _fetchDocument(worker, source, pdfDataRangeTransport, docId) {
 
   return worker.messageHandler.sendWithPromise("GetDocRequest", {
     docId: docId,
-    apiVersion: '2.7.91',
+    apiVersion: '2.7.115',
     source: {
       data: source.data,
       url: source.url,
@@ -14757,9 +14757,9 @@ var InternalRenderTask = function InternalRenderTaskClosure() {
   return InternalRenderTask;
 }();
 
-var version = '2.7.91';
+var version = '2.7.115';
 exports.version = version;
-var build = 'd6559b4d5';
+var build = 'd77b7d7c6';
 exports.build = build;
 
 /***/ }),
@@ -21023,7 +21023,7 @@ var AnnotationElement = /*#__PURE__*/function () {
       var rect = _util.Util.normalizeRect([data.rect[0], page.view[3] - data.rect[1] + page.view[1], data.rect[2], page.view[3] - data.rect[3] + page.view[1]]);
 
       container.style.transform = "matrix(".concat(viewport.transform.join(","), ")");
-      container.style.transformOrigin = "-".concat(rect[0], "px -").concat(rect[1], "px");
+      container.style.transformOrigin = "".concat(-rect[0], "px ").concat(-rect[1], "px");
 
       if (!ignoreBorder && data.borderStyle.width > 0) {
         container.style.borderWidth = "".concat(data.borderStyle.width, "px");
@@ -21572,10 +21572,12 @@ var PopupAnnotationElement = /*#__PURE__*/function (_AnnotationElement4) {
         modificationDate: this.data.modificationDate,
         contents: this.data.contents
       });
-      var parentLeft = parseFloat(parentElement.style.left);
-      var parentWidth = parseFloat(parentElement.style.width);
-      this.container.style.transformOrigin = "-".concat(parentLeft + parentWidth, "px -").concat(parentElement.style.top);
-      this.container.style.left = "".concat(parentLeft + parentWidth, "px");
+      var parentTop = parseFloat(parentElement.style.top),
+          parentLeft = parseFloat(parentElement.style.left),
+          parentWidth = parseFloat(parentElement.style.width);
+      var popupLeft = parentLeft + parentWidth;
+      this.container.style.transformOrigin = "".concat(-popupLeft, "px ").concat(-parentTop, "px");
+      this.container.style.left = "".concat(popupLeft, "px");
       this.container.appendChild(popup.render());
       return this.container;
     }
