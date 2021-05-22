@@ -276,6 +276,10 @@
         "description": "Политика конфиденциальности."
     },
     "Settings": {
+        "message": "Настройки",
+        "description": "Настройки"
+    },
+    "SettingsTitle": {
         "message": "Настройки Edge Translate",
         "description": "Страница настроек Edge Translate"
     },

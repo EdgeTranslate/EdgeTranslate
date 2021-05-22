@@ -276,6 +276,10 @@
         "description": "隐私政策。"
     },
     "Settings": {
+        "message": "设置",
+        "description": "设置"
+    },
+    "SettingsTitle": {
         "message": "侧边翻译设置",
         "description": "侧边翻译设置页面"
     },

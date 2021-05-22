@@ -276,6 +276,10 @@
         "description": "Privacy policy."
     },
     "Settings": {
+        "message": "Settings",
+        "description": "Settings"
+    },
+    "SettingsTitle": {
         "message": "EdgeTranslate Settings",
         "description": "EdgeTranslate settings page"
     },

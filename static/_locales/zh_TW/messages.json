@@ -276,6 +276,10 @@
         "description": "隱私政策。"
     },
     "Settings": {
+        "message": "設置",
+        "description": "設置"
+    },
+    "SettingsTitle": {
         "message": "側邊翻譯設置",
         "description": "側邊翻譯設置頁面"
     },

@@ -276,6 +276,10 @@
         "description": "プライバシーポリシー"
     },
     "Settings": {
+        "message": "設定",
+        "description": "設定"
+    },
+    "SettingsTitle": {
         "message": "EdgeTranslateの設定",
         "description": "EdgeTranslateの設定ページ"
     },
