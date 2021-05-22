@@ -25,6 +25,14 @@
             "all_frames": true
         }
     ],
+    "commands" : {
+        "translate_page": {
+            "description": "__MSG_TranslatePage__"
+        },
+        "cancel_page_translate": {
+            "description": "__MSG_CancelPageTranslate__"
+        }
+    },
     "minimum_chrome_version": "55",
     "homepage_url": "https://github.com/EdgeTranslate/EdgeTranslate/wiki"
 }
