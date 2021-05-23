@@ -21,6 +21,10 @@ View this page in other languages:
 
 * [繁體中文](./docs/README_TW.md)
 
+## Demo
+
+![demo_en](./docs/images/demo_en.gif)
+
 ## Downloads
 
 [Microsoft Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/bfdogplmndidlpjfhoijckpakkdjkkil)

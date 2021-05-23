@@ -1,6 +1,11 @@
 import { LANGUAGES } from "../common/scripts/languages.js";
-import Messager from "common/scripts/messager";
-import { i18nHTML } from "common/scripts/common.js";
+import Channel from "../common/scripts/channel.js";
+import { i18nHTML } from "../common/scripts/common.js";
+
+/**
+ * Communication channel.
+ */
+const channel = new Channel();
 
 // 获取下拉列表元素
 let sourceLanguage = document.getElementById("sl");
@@ -123,7 +128,7 @@ chrome.commands.onCommand.addListener((command) => {
  */
 function updateLanguageSetting(sourceLanguage, targetLanguage) {
     // Update translator config.
-    Messager.send("background", "language_setting_update", {
+    channel.emit("language_setting_update", {
         from: sourceLanguage,
         to: targetLanguage,
     });
@@ -160,10 +165,10 @@ function addEventListener() {
     document.addEventListener("keypress", translatePreSubmit); // 对用户按下回车按键后的事件进行监听
     document.getElementById("setting-switch").addEventListener("click", settingSwitch);
     document.getElementById("google-page-translate").addEventListener("click", () => {
-        Messager.send("background", "translate_page_google");
+        channel.emit("translate_page_google", {});
     });
     document.getElementById("youdao-page-translate").addEventListener("click", () => {
-        Messager.send("background", "translate_page_youdao");
+        channel.emit("translate_page_youdao", {});
     });
 }
 
@@ -182,7 +187,7 @@ function translateSubmit() {
         document.getElementById("hint_message").style.display = "none";
 
         // send message to background to translate content
-        Messager.send("background", "translate", { text: content }).then(() => {
+        channel.request("translate", { text: content }).then(() => {
             setTimeout(() => {
                 window.close(); // 展示结束后关闭option页面
             }, 0);

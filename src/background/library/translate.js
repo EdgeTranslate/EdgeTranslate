@@ -1,19 +1,34 @@
 import axios from "./axios.js";
-import HYBRID_TRANSLATOR from "./translators/hybrid.js";
-import { sendMessageToCurrentTab } from "./common.js";
+import HybridTranslator from "./translators/hybrid.js";
 import { log } from "common/scripts/common.js";
-import Messager from "common/scripts/messager.js";
-import { promiseTabs, delayPromise } from "common/scripts/promise.js";
-import EVENT_MANAGER from "./event.js";
+import { promiseTabs, delayPromise } from "../../common/scripts/promise.js";
+import LocalTTS from "./local_tts.js";
+
+// Imported for auto code completion.
+// eslint-disable-next-line no-unused-vars
+import Channel from "../../common/scripts/channel.js";
 
 class TranslatorManager {
-    constructor() {
+    /**
+     * @param {Channel} channel Communication channel.
+     */
+    constructor(channel) {
+        /**
+         * @type {Channel} Communication channel.
+         */
+        this.channel = channel;
+
+        /**
+         * Hybrid translator.
+         */
+        this.HYBRID_TRANSLATOR = new HybridTranslator(channel);
+
         /**
          * Supported translators.
          */
         this.TRANSLATORS = {
-            HybridTranslate: HYBRID_TRANSLATOR,
-            ...HYBRID_TRANSLATOR.REAL_TRANSLATORS,
+            HybridTranslate: this.HYBRID_TRANSLATOR,
+            ...this.HYBRID_TRANSLATOR.REAL_TRANSLATORS,
         };
 
         /**
@@ -35,6 +50,75 @@ class TranslatorManager {
          * Config loaded flag.
          */
         this.CONFIG_LOADED = false;
+
+        /**
+         * Default TTS speed.
+         */
+        this.TTS_SPEED = "fast";
+
+        /**
+         * Local TTS service.
+         */
+        this.localTTS = new LocalTTS();
+
+        /**
+         * Start to provide services and listen to event.
+         */
+        this.provideServices();
+        this.listenToEvents();
+    }
+
+    /**
+     * Register service providers.
+     *
+     * This should be called for only once!
+     */
+    provideServices() {
+        // Translate service.
+        this.channel.provide("translate", (params) => this.translate(params.text, params.position));
+
+        // Pronounce service.
+        this.channel.provide("pronounce", (params) => {
+            let speed = params.speed;
+            if (!speed) {
+                speed = this.TTS_SPEED;
+                this.TTS_SPEED = speed === "fast" ? "slow" : "fast";
+            }
+
+            return this.pronounce(params.pronouncing, params.text, params.language, speed);
+        });
+
+        // Youdao page translate data loading service.
+        this.channel.provide("youdao_page_translate", youdaoPageTranslate);
+
+        // Get available translators service.
+        this.channel.provide("get_available_translators", (params) =>
+            Promise.resolve(this.getAvailableTranslators(params))
+        );
+
+        // Update default translator service.
+        this.channel.provide("update_default_translator", (detail) =>
+            this.updateDefaultTranslator(detail.translator)
+        );
+    }
+
+    /**
+     * Register event listeners.
+     *
+     * This should be called for only once!
+     */
+    listenToEvents() {
+        // Youdao page translate button clicked event.
+        this.channel.on("translate_page_youdao", executeYouDaoScript);
+
+        // Google page translate button clicked event.
+        this.channel.on("translate_page_google", executeGoogleScript);
+
+        // Language setting updated event.
+        this.channel.on("language_setting_update", this.onLanguageSettingUpdated.bind(this));
+
+        // Result frame closed event.
+        this.channel.on("frame_closed", this.stopPronounce.bind(this));
 
         /**
          * Update config cache on config changed.
@@ -92,7 +176,7 @@ class TranslatorManager {
      * get the id of the current tab
      * if the current tab can't display the result panel
      * open a notice page to display the result and explain why the page shows
-     * @returns the tab id
+     * @returns the tab id. If tabId===-1, the user is setting the file URLs access permission and nothing should be done.
      */
     async getCurrentTabId() {
         let tabId = -1;
@@ -100,7 +184,24 @@ class TranslatorManager {
         tabId = tabs[0].id;
 
         // to test whether the current tab can receive message(display results)
-        await Messager.sendToTab(tabId, "content", "before_translating", {}).catch(async () => {
+        await this.channel.requestToTab(tabId, "check_availability").catch(async () => {
+            const shouldOpenNoticePage = await new Promise((resolve) => {
+                // The page is a local file page
+                if (/^file:\/\.*/.test(tabs[0].url)) {
+                    chrome.extension.isAllowedFileSchemeAccess((allowed) => {
+                        if (!allowed && confirm(chrome.i18n.getMessage("PermissionRemind"))) {
+                            chrome.tabs.create({
+                                url: `chrome://extensions/?id=${chrome.runtime.id}`,
+                            });
+                            resolve(false);
+                        } else resolve(true);
+                    });
+                } else resolve(true);
+            });
+            if (!shouldOpenNoticePage) {
+                tabId = -1;
+                return;
+            }
             /**
              * the current tab can't display the result panel
              * so we open a notice page to display the result and explain why this page shows
@@ -162,6 +263,7 @@ class TranslatorManager {
 
         // get current tab id
         const currentTabId = await this.getCurrentTabId();
+        if (currentTabId === -1) return;
 
         /**
          * Get current time as timestamp.
@@ -174,12 +276,11 @@ class TranslatorManager {
          */
         let timestamp = new Date().getTime();
 
-        // Trigger translating start event.
-        EVENT_MANAGER.triggerEvent(EVENT_MANAGER.EVENTS.TRANSLATE_START, {
+        // Inform current tab translating started.
+        this.channel.emitToTabs(currentTabId, "start_translating", {
             text,
             position,
             timestamp,
-            tabId: currentTabId,
         });
 
         let sl = this.LANGUAGE_SETTING.sl,
@@ -207,18 +308,16 @@ class TranslatorManager {
             result.sourceLanguage = sl;
             result.targetLanguage = tl;
 
-            // Trigger translating finished event.
-            EVENT_MANAGER.triggerEvent(EVENT_MANAGER.EVENTS.TRANSLATE_FINISHED, {
-                content: result,
-                tabId: currentTabId,
+            // Send translating result to current tab.
+            this.channel.emitToTabs(currentTabId, "translating_finished", {
                 timestamp,
+                ...result,
             });
         } catch (error) {
-            // Trigger translating error event.
-            EVENT_MANAGER.triggerEvent(EVENT_MANAGER.EVENTS.TRANSLATE_ERROR, {
+            // Inform current tab translating failed.
+            this.channel.emitToTabs(currentTabId, "translating_error", {
                 error,
                 timestamp,
-                tabId: currentTabId,
             });
         }
     }
@@ -239,43 +338,47 @@ class TranslatorManager {
 
         // get current tab id
         const currentTabId = await this.getCurrentTabId();
+        if (currentTabId === -1) return;
 
         let lang = language;
         let timestamp = new Date().getTime();
 
-        // Trigger pronouncing start event.
-        EVENT_MANAGER.triggerEvent(EVENT_MANAGER.EVENTS.PRONOUNCE_START, {
+        // Inform current tab pronouncing started.
+        this.channel.emitToTabs(currentTabId, "start_pronouncing", {
             pronouncing,
             text,
             language,
             timestamp,
-            tabId: currentTabId,
         });
 
         try {
-            if (language == "auto") {
+            if (language === "auto") {
                 lang = await this.TRANSLATORS[this.DEFAULT_TRANSLATOR].detect(text);
             }
 
-            await this.TRANSLATORS[this.DEFAULT_TRANSLATOR].pronounce(text, lang, speed);
+            await this.TRANSLATORS[this.DEFAULT_TRANSLATOR].pronounce(text, lang, speed).catch(
+                ((error) => {
+                    // API pronouncing failed, try local TTS service.
+                    if (!this.localTTS.speak(text, lang, speed)) {
+                        throw error;
+                    }
+                }).bind(this)
+            );
 
-            // Trigger pronouncing finished event.
-            EVENT_MANAGER.triggerEvent(EVENT_MANAGER.EVENTS.PRONOUNCE_FINISHED, {
+            // Inform current tab pronouncing finished.
+            this.channel.emitToTabs(currentTabId, "pronouncing_finished", {
                 pronouncing,
                 text,
-                language: lang,
+                language,
                 timestamp,
-                tabId: currentTabId,
             });
         } catch (error) {
-            // Trigger pronouncing error event.
-            EVENT_MANAGER.triggerEvent(EVENT_MANAGER.EVENTS.PRONOUNCE_ERROR, {
+            // Inform current tab pronouncing failed.
+            this.channel.emitToTabs(currentTabId, "pronouncing_error", {
                 pronouncing,
                 error,
                 timestamp,
-                tabId: currentTabId,
             });
-            return Promise.resolve();
         }
     }
 
@@ -287,6 +390,7 @@ class TranslatorManager {
         await this.loadConfigIfNotLoaded();
 
         this.TRANSLATORS[this.DEFAULT_TRANSLATOR].stopPronounce();
+        this.localTTS.pause();
     }
 
     /**
@@ -298,7 +402,7 @@ class TranslatorManager {
      */
     getAvailableTranslators(detail) {
         return ["HybridTranslate"].concat(
-            HYBRID_TRANSLATOR.getAvailableTranslatorsFor(detail.from, detail.to)
+            this.HYBRID_TRANSLATOR.getAvailableTranslatorsFor(detail.from, detail.to)
         );
     }
 
@@ -316,7 +420,7 @@ class TranslatorManager {
         let availableTranslators = this.getAvailableTranslators(detail);
 
         // Update hybrid translator config.
-        let newConfig = await HYBRID_TRANSLATOR.updateConfigFor(detail.from, detail.to);
+        let newConfig = await this.HYBRID_TRANSLATOR.updateConfigFor(detail.from, detail.to);
 
         // If current default translator does not support new language setting, update it.
         if (!new Set(availableTranslators).has(selectedTranslator)) {
@@ -324,17 +428,19 @@ class TranslatorManager {
             chrome.storage.sync.set({ DefaultTranslator: selectedTranslator });
         }
 
-        // Send message to options page to update options.
-        Messager.send("options", "hybrid_translator_config_updated", {
+        // Inform options page to update options.
+        this.channel.emit("hybrid_translator_config_updated", {
             config: newConfig,
             availableTranslators: availableTranslators.slice(1),
-        }).catch(() => {});
+        });
 
-        // Send message to result frame to update options.
-        sendMessageToCurrentTab("update_translator_options", {
-            selectedTranslator,
-            availableTranslators,
-        }).catch(() => {});
+        // Inform result frame to update options.
+        promiseTabs.query({ active: true, currentWindow: true }).then((tabs) =>
+            this.channel.emitToTabs(tabs[0].id, "update_translator_options", {
+                selectedTranslator,
+                availableTranslators,
+            })
+        );
     }
 
     /**
@@ -352,13 +458,6 @@ class TranslatorManager {
         });
     }
 }
-
-/* EXPORTED OBJECTS AND FUNCTIONS START */
-
-/**
- * Create default translator manager object.
- */
-const TRANSLATOR_MANAGER = new TranslatorManager();
 
 /**
  * 使用用户选定的网页翻译引擎翻译当前网页。
@@ -425,65 +524,8 @@ function executeGoogleScript() {
     });
 }
 
-/* EXPORTED OBJECTS AND FUNCTIONS END */
-
-/**
- * Tell display that translating started.
- */
-EVENT_MANAGER.addEventListener(EVENT_MANAGER.EVENTS.TRANSLATE_START, (detail) => {
-    Messager.sendToTab(detail.tabId, "content", "start_translating", detail).catch((error) =>
-        log(error)
-    );
-});
-
-/**
- * Send translating result to display.
- */
-EVENT_MANAGER.addEventListener(EVENT_MANAGER.EVENTS.TRANSLATE_FINISHED, (detail) => {
-    Messager.sendToTab(detail.tabId, "content", "translating_finished", {
-        timestamp: detail.timestamp,
-        ...detail.content,
-    }).catch((error) => log(error));
-});
-
-/**
- * Tell display translating error.
- */
-EVENT_MANAGER.addEventListener(EVENT_MANAGER.EVENTS.TRANSLATE_ERROR, (detail) => {
-    Messager.sendToTab(detail.tabId, "content", "translating_error", detail).catch((error) =>
-        log(error)
-    );
-});
-
-/**
- * Tell display pronouncing start.
- */
-EVENT_MANAGER.addEventListener(EVENT_MANAGER.EVENTS.PRONOUNCE_START, (detail) => {
-    Messager.sendToTab(detail.tabId, "content", "start_pronouncing", detail).catch((error) =>
-        log(error)
-    );
-});
-
-/**
- * Tell display pronouncing finished.
- */
-EVENT_MANAGER.addEventListener(EVENT_MANAGER.EVENTS.PRONOUNCE_FINISHED, (detail) => {
-    Messager.sendToTab(detail.tabId, "content", "pronouncing_finished", detail).catch((error) =>
-        log(error)
-    );
-});
-
-/**
- * Tell display pronouncing error.
- */
-EVENT_MANAGER.addEventListener(EVENT_MANAGER.EVENTS.PRONOUNCE_ERROR, (detail) => {
-    Messager.sendToTab(detail.tabId, "content", "pronouncing_error", detail).catch((error) =>
-        log(error)
-    );
-});
-
 export {
-    TRANSLATOR_MANAGER,
+    TranslatorManager,
     translatePage,
     youdaoPageTranslate,
     executeYouDaoScript,

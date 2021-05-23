@@ -71,6 +71,22 @@
         "message": "音標",
         "description": "音標"
     },
+    "SourcePronunciation": {
+        "message": "原文讀音",
+        "description": "原文讀音"
+    },
+    "TargetPronunciation": {
+        "message": "翻譯讀音",
+        "description": "翻譯讀音"
+    },
+    "SourcePronunciationIcon": {
+        "message": "原文讀音按鈕",
+        "description": "原文讀音按鈕"
+    },
+    "TargetPronunciationIcon": {
+        "message": "翻譯讀音按鈕",
+        "description": "翻譯讀音按鈕"
+    },
     "Pronounce": {
         "message": "朗讀",
         "description": "朗讀"
@@ -168,7 +184,7 @@
         "description": "目標語言"
     },
     "PermissionRemind": {
-        "message": "在擴展程序管理頁面中開啟：'允許訪問文件網址' 的開關",
+        "message": "如果想在此頁面使用側邊翻譯，請在擴展程序管理頁面中開啟：'允許訪問文件網址' 的開關。",
         "description": "在用戶的 '允許訪問文件網址'的權限未打開時，給用戶合理的提醒"
     },
     "ContentSettings": {
@@ -198,6 +214,10 @@
     "RTLSetting": {
         "message": "從右到左的佈局",
         "description": "在某些語言下從右到左顯示內容。"
+    },
+    "FoldLongContentSetting": {
+        "message": "折疊過長的內容",
+        "description": "折疊過長的翻譯內容。"
     },
     "OtherSettings": {
         "message": "其他設定",
@@ -256,6 +276,10 @@
         "description": "隱私政策。"
     },
     "Settings": {
+        "message": "設置",
+        "description": "設置"
+    },
+    "SettingsTitle": {
         "message": "側邊翻譯設置",
         "description": "側邊翻譯設置頁面"
     },
@@ -299,21 +323,41 @@
         "message": "百度翻譯",
         "description": "百度翻譯翻譯源。"
     },
+    "BaiduTranslateShort": {
+        "message": "百度翻譯",
+        "description": "百度翻譯翻譯源縮寫。"
+    },
     "BingTranslate": {
         "message": "必應翻譯",
         "description": "必應翻譯翻譯源。"
+    },
+    "BingTranslateShort": {
+        "message": "必應翻譯",
+        "description": "必應翻譯翻譯源縮寫。"
     },
     "GoogleTranslate": {
         "message": "谷歌翻譯",
         "description": "谷歌翻譯翻譯源。"
     },
+    "GoogleTranslateShort": {
+        "message": "谷歌翻譯",
+        "description": "谷歌翻譯翻譯源縮寫。"
+    },
     "TencentTranslate": {
         "message": "騰訊翻譯",
         "description": "騰訊翻譯翻譯源。"
     },
+    "TencentTranslateShort": {
+        "message": "騰訊翻譯",
+        "description": "騰訊翻譯翻譯源縮寫。"
+    },
     "HybridTranslate": {
         "message": "混合翻譯",
         "description": "混合使用多個翻譯源。"
+    },
+    "HybridTranslateShort": {
+        "message": "混合翻譯",
+        "description": "混合使用多個翻譯源縮寫。"
     },
     "NOTICE": {
         "message": "提示",
@@ -354,6 +398,10 @@
     "OpenThisPage": {
         "message": "打開這個頁面",
         "description": "打開這個頁面"
+    },
+    "ReloadPage": {
+        "message": "重新加載文件頁面",
+        "description": "重新加載文件頁面。"
     },
     "NoticeLinks": {
         "message": "鏈接",

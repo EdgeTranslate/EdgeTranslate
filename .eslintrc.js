@@ -20,6 +20,7 @@ module.exports = {
         chrome: false,
         browser: false,
         BROWSER_ENV: false,
+        BUILD_ENV: false,
     },
     plugins: ["html", "prettier"],
     rules: {

@@ -458,6 +458,9 @@
   --toolbarButton-pageDown-icon: url(images/toolbarButton-pageDown.svg);
   --toolbarButton-zoomOut-icon: url(images/toolbarButton-zoomOut.svg);
   --toolbarButton-zoomIn-icon: url(images/toolbarButton-zoomIn.svg);
+  --toolbarButton-darkMode-auto-icon: url(images/toolbarButton-darkMode-auto.svg);
+  --toolbarButton-darkMode-dark-icon: url(images/toolbarButton-darkMode-dark.svg);
+  --toolbarButton-darkMode-light-icon: url(images/toolbarButton-darkMode-light.svg);
   --toolbarButton-presentationMode-icon: url(images/toolbarButton-presentationMode.svg);
   --toolbarButton-print-icon: url(images/toolbarButton-print.svg);
   --toolbarButton-openFile-icon: url(images/toolbarButton-openFile.svg);
@@ -522,14 +525,17 @@
     --loading-icon: url(images/loading-dark.svg);
     --treeitem-expanded-icon: url(images/treeitem-expanded-dark.svg);
     --treeitem-collapsed-icon: url(images/treeitem-collapsed-dark.svg);
-	--toolbarButton-menuArrow-icon: url(images/toolbarButton-menuArrow-dark.svg);
-	--toolbarButton-sidebarBack-icon: url(images/toolbarButton-sidebarBack-dark.svg);
+	  --toolbarButton-menuArrow-icon: url(images/toolbarButton-menuArrow-dark.svg);
+	  --toolbarButton-sidebarBack-icon: url(images/toolbarButton-sidebarBack-dark.svg);
     --toolbarButton-sidebarToggle-icon: url(images/toolbarButton-sidebarToggle-dark.svg);
     --toolbarButton-secondaryToolbarToggle-icon: url(images/toolbarButton-secondaryToolbarToggle-dark.svg);
     --toolbarButton-pageUp-icon: url(images/toolbarButton-pageUp-dark.svg);
     --toolbarButton-pageDown-icon: url(images/toolbarButton-pageDown-dark.svg);
     --toolbarButton-zoomOut-icon: url(images/toolbarButton-zoomOut-dark.svg);
     --toolbarButton-zoomIn-icon: url(images/toolbarButton-zoomIn-dark.svg);
+    --toolbarButton-darkMode-auto-icon: url(images/toolbarButton-darkMode-auto-dark.svg);
+    --toolbarButton-darkMode-dark-icon: url(images/toolbarButton-darkMode-dark-dark.svg);
+    --toolbarButton-darkMode-light-icon: url(images/toolbarButton-darkMode-light-dark.svg);
     --toolbarButton-presentationMode-icon: url(images/toolbarButton-presentationMode-dark.svg);
     --toolbarButton-print-icon: url(images/toolbarButton-print-dark.svg);
     --toolbarButton-openFile-icon: url(images/toolbarButton-openFile-dark.svg);
@@ -1700,9 +1706,6 @@ html[dir="rtl"] #findInput {
 #findInput:-ms-input-placeholder {
   font-style: normal;
 }
-#findInput::-ms-input-placeholder {
-  font-style: normal;
-}
 #findInput::placeholder {
   font-style: normal;
 }
@@ -2514,10 +2517,10 @@ html[dir="rtl"] .secondaryToolbarButton::before {
 
 @media (prefers-color-scheme: dark) {
 
-	.toolbarButton#sidebarToggle::before {
-	content: url(images/toolbarButton-sidebarBack-dark.svg);
-	content: var(--toolbarButton-sidebarBack-icon);
-	}
+  .toolbarButton#sidebarBack::before {
+  content: url(images/toolbarButton-sidebarBack-dark.svg);
+  content: var(--toolbarButton-sidebarBack-icon);
+  }
 }
 
 html[dir="rtl"] .toolbarButton#sidebarBack::before {
