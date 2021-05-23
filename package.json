@@ -34,7 +34,7 @@
         "pack:firefox": "gulp pack --browser firefox"
     },
     "devDependencies": {
-        "@babel/core": "^7.14.0",
+        "@babel/core": "^7.14.3",
         "@babel/eslint-parser": "^7.13.14",
         "@babel/plugin-transform-react-jsx": "^7.13.12",
         "@babel/preset-env": "^7.14.1",
