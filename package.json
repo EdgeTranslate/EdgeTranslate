@@ -1,6 +1,6 @@
 {
     "name": "edge_translate",
-    "version": "2.1.3",
+    "version": "2.2.0",
     "description": "A translator extension.",
     "keywords": [
         "Edge Translate",
@@ -34,12 +34,12 @@
         "pack:firefox": "gulp pack --browser firefox"
     },
     "devDependencies": {
-        "@babel/core": "^7.14.0",
-        "@babel/eslint-parser": "^7.13.14",
-        "@babel/plugin-transform-react-jsx": "^7.13.12",
-        "@babel/preset-env": "^7.14.1",
-        "@commitlint/cli": "^12.1.1",
-        "@commitlint/config-conventional": "^12.1.1",
+        "@babel/core": "^7.14.3",
+        "@babel/eslint-parser": "^7.14.3",
+        "@babel/plugin-transform-react-jsx": "^7.14.3",
+        "@babel/preset-env": "^7.14.2",
+        "@commitlint/cli": "^12.1.4",
+        "@commitlint/config-conventional": "^12.1.4",
         "@svgr/webpack": "^5.5.0",
         "axios": "^0.21.1",
         "axios-mock-adapter": "^1.19.0",
@@ -48,7 +48,7 @@
         "css": "^3.0.0",
         "cz-conventional-changelog": "^3.3.0",
         "del": "^6.0.0",
-        "eslint": "^7.25.0",
+        "eslint": "^7.27.0",
         "eslint-config-preact": "^1.1.4",
         "eslint-config-prettier": "^8.3.0",
         "eslint-plugin-html": "^6.1.2",
