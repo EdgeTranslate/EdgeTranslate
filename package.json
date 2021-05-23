@@ -39,7 +39,7 @@
         "@babel/plugin-transform-react-jsx": "^7.13.12",
         "@babel/preset-env": "^7.14.1",
         "@commitlint/cli": "^12.1.1",
-        "@commitlint/config-conventional": "^12.1.1",
+        "@commitlint/config-conventional": "^12.1.4",
         "@svgr/webpack": "^5.5.0",
         "axios": "^0.21.1",
         "axios-mock-adapter": "^1.19.0",
