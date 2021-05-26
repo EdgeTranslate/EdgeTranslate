@@ -170,6 +170,13 @@ class BingTranslator {
          */
         this.IG = "";
         this.IID = "";
+        this.token = "";
+        this.key = "";
+
+        /**
+         * Whether we have initiated tokens.
+         */
+        this.tokensInitiated = false;
 
         /**
          * TTS auth info.
@@ -228,10 +235,14 @@ class BingTranslator {
      *
      * @returns {Promise<void>} IG and IID Promise
      */
-    async updateIGIID() {
+    async updateTokens() {
         const response = await axios.get(this.HOME_PAGE);
 
         this.IG = response.data.match(/IG:"([a-zA-Z0-9]+)"/)[1];
+
+        [, this.key, this.token] = response.data.match(
+            /var params_RichTranslateHelper\s*=\s*\[([0-9]+),\s*"(.+)",\s*[0-9]+\];/
+        );
 
         let html = this.HTMLParser.parseFromString(response.data, "text/html");
         this.IID = html.getElementById("rich_tta").getAttribute("data-iid");
@@ -244,6 +255,7 @@ class BingTranslator {
      * Parse translate interface result.
      *
      * @param {Object} result translate result
+     * @param {Object} extras extra data
      *
      * @returns {Object} Parsed result
      */
@@ -264,6 +276,7 @@ class BingTranslator {
      * Parse the lookup interface result.
      *
      * @param {Object} result lookup result
+     * @param {Object} extras extra data
      *
      * @returns {Object} Parsed result
      */
@@ -299,6 +312,28 @@ class BingTranslator {
     }
 
     /**
+     * Parse example response.
+     *
+     * @param {Object} result example response
+     * @param {Object} extras extra data
+     *
+     * @returns parse result
+     */
+    parseExampleResult(result, extras) {
+        let parsed = extras || new Object();
+
+        try {
+            parsed.examples = result[0].examples.map((example) => ({
+                source: `${example.sourcePrefix}<b>${example.sourceTerm}</b>${example.sourceSuffix}`,
+                target: `${example.targetPrefix}<b>${example.targetTerm}</b>${example.targetSuffix}`,
+            }));
+            // eslint-disable-next-line no-empty
+        } catch (error) {}
+
+        return parsed;
+    }
+
+    /**
      * Get TTS auth token.
      *
      * @returns {Promise<void>} request finished Promise
@@ -312,7 +347,9 @@ class BingTranslator {
                     this.IID
                 }.${this.count.toString()}`,
                 headers: this.HEADERS,
-                data: "",
+                data: `&token=${encodeURIComponent(this.token)}&key=${encodeURIComponent(
+                    this.key
+                )}`,
             };
         };
 
@@ -367,7 +404,9 @@ class BingTranslator {
         let url = `ttranslatev3?isVertical=1&IG=${this.IG}&IID=${
                 this.IID
             }.${this.count.toString()}`,
-            data = `&fromLang=auto-detect&to=zh-Hans&text=${encodeURIComponent(text)}`;
+            data = `&fromLang=auto-detect&to=zh-Hans&text=${encodeURIComponent(
+                text
+            )}&token=${encodeURIComponent(this.token)}&key=${encodeURIComponent(this.key)}`;
 
         return {
             method: "POST",
@@ -388,15 +427,14 @@ class BingTranslator {
      * @returns {Object} constructed parameters
      */
     constructTranslateParams(text, from, to) {
-        /**
-         * Request the translate api to detect the language of the text and get a basic translation.
-         */
         let translateURL = `ttranslatev3?isVertical=1&IG=${this.IG}&IID=${
                 this.IID
             }.${this.count.toString()}`,
             translateData = `&fromLang=${this.LAN_TO_CODE.get(from)}&to=${this.LAN_TO_CODE.get(
                 to
-            )}&text=${encodeURIComponent(text)}`;
+            )}&text=${encodeURIComponent(text)}&token=${encodeURIComponent(
+                this.token
+            )}&key=${encodeURIComponent(this.key)}`;
 
         return {
             method: "POST",
@@ -417,16 +455,15 @@ class BingTranslator {
      * @returns {Object} constructed parameters
      */
     constructLookupParams(text, from, to) {
-        /**
-         * Attempt to request the lookup api to get detailed translation.
-         */
         let lookupURL = `tlookupv3?isVertical=1&IG=${this.IG}&IID=${
                 this.IID
             }.${this.count.toString()}`,
             lookupData = `&from=${
                 // Use detected language.
                 from
-            }&to=${this.LAN_TO_CODE.get(to)}&text=${encodeURIComponent(text)}`;
+            }&to=${this.LAN_TO_CODE.get(to)}&text=${encodeURIComponent(
+                text
+            )}&token=${encodeURIComponent(this.token)}&key=${encodeURIComponent(this.key)}`;
 
         return {
             method: "POST",
@@ -434,6 +471,38 @@ class BingTranslator {
             url: lookupURL,
             headers: this.HEADERS,
             data: lookupData,
+        };
+    }
+
+    /**
+     * Construct example request parameters dynamically.
+     *
+     * @param {String} from source language
+     * @param {String} to target language
+     * @param {String} text original text
+     * @param {String} translation text translation
+     *
+     * @returns {Object} constructed parameters
+     */
+    constructExampleParams(from, to, text, translation) {
+        let exampleURL = `texamplev3?isVertical=1&IG=${this.IG}&IID=${
+                this.IID
+            }.${this.count.toString()}`,
+            exampleData = `&from=${
+                // Use detected language.
+                from
+            }&to=${this.LAN_TO_CODE.get(to)}&text=${encodeURIComponent(
+                text
+            )}&translation=${encodeURIComponent(translation)}&token=${encodeURIComponent(
+                this.token
+            )}&key=${encodeURIComponent(this.key)}`;
+
+        return {
+            method: "POST",
+            baseURL: this.HOST,
+            url: exampleURL,
+            headers: this.HEADERS,
+            data: exampleData,
         };
     }
 
@@ -509,7 +578,7 @@ class BingTranslator {
             // Retry after failure
             if (retry && retryCount < this.MAX_RETRY) {
                 retryCount++;
-                return await this.updateIGIID().then(requestOnce);
+                return await this.updateTokens().then(requestOnce);
             }
 
             // Throw error.
@@ -520,8 +589,9 @@ class BingTranslator {
             };
         };
 
-        if (!(this.IG.length > 0 && this.IID.length > 0)) {
-            await this.updateIGIID();
+        if (!this.tokensInitiated) {
+            await this.updateTokens();
+            this.tokensInitiated = true;
         }
 
         return requestOnce();
@@ -580,9 +650,8 @@ class BingTranslator {
     async translate(text, from, to) {
         let transResponse;
         try {
-            /*
-             * Use var to prevent putting all of the code that referenced transResponse
-             * into this try-catch scope.
+            /**
+             * Request the translate api to detect the language of the text and get a basic translation.
              */
             transResponse = await this.request(this.constructTranslateParams, [text, from, to]);
         } catch (error) {
@@ -602,12 +671,25 @@ class BingTranslator {
         });
 
         try {
+            /**
+             * Attempt to request the lookup api to get detailed translation.
+             */
             const lookupResponse = await this.request(
                 this.constructLookupParams,
                 [text, transResponse[0].detectedLanguage.language, to],
                 false
             );
-            return this.parseLookupResult(lookupResponse, transResult);
+            let lookupResult = this.parseLookupResult(lookupResponse, transResult);
+
+            /**
+             * Attempt to request the example api to get examples for word.
+             */
+            const exampleResponse = await this.request(
+                this.constructExampleParams,
+                [transResponse[0].detectedLanguage.language, to, text, lookupResult.mainMeaning],
+                false
+            );
+            return this.parseExampleResult(exampleResponse, lookupResult);
         } catch (e) {
             return transResult;
         }
