@@ -250,22 +250,24 @@ class GoogleTranslator {
             result.mainMeaning = "";
             result.originalText = "";
 
-            /**
-             * The last item of response.sentences is pronunciation of texts,
-             * so we need to deal with it specially.
-             */
-            let last = response.sentences.length - 1;
-            for (let i = 0; i < last; i++) {
+            let i = 0;
+            for (; i < response.sentences.length && response.sentences[i].trans; i++) {
                 result.mainMeaning += response.sentences[i].trans;
                 result.originalText += response.sentences[i].orig;
             }
 
-            if (response.sentences[last].translit) {
-                result.tPronunciation = response.sentences[last].translit;
-            }
+            /**
+             * If there is an item that doesn't contain translation in response.sentences,
+             * it should be the pronunciation of the text.
+             */
+            if (i < response.sentences.length) {
+                if (response.sentences[i].translit) {
+                    result.tPronunciation = response.sentences[i].translit;
+                }
 
-            if (response.sentences[last].src_translit) {
-                result.sPronunciation = response.sentences[last].src_translit;
+                if (response.sentences[i].src_translit) {
+                    result.sPronunciation = response.sentences[i].src_translit;
+                }
             }
         }
 
