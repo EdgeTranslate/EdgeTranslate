@@ -116,11 +116,6 @@ const LANGUAGES = [
  */
 class GoogleTranslator {
     constructor() {
-        /**
-         * Max retry times.
-         */
-        this.MAX_RETRY = 3;
-
         // tk需要的密钥
         this.TKK = [434217, 1534559001];
 
@@ -134,6 +129,17 @@ class GoogleTranslator {
 
         this.TRANSLATE_URL = `${this.HOST}translate_a/single?client=gtx&dj=1&dt=t&dt=at&dt=bd&dt=ex&dt=md&dt=rw&dt=ss&dt=rm`;
         this.TTS_URL = `${this.HOST}translate_tts?client=gtx`;
+
+        /**
+         * Fallback translate API.
+         */
+        this.FALLBACK_TRANSLATE_URL = `${this.HOST}translate_a/single?ie=UTF-8&client=webapp&otf=1&ssel=0&tsel=0&kc=5&dt=t&dt=at&dt=bd&dt=ex&dt=md&dt=rw&dt=ss&dt=rm`;
+        this.FALLBACK_TTS_URL = `${this.HOST}translate_tts?ie=UTF-8&client=webapp`;
+
+        /**
+         * Should we fall back?
+         */
+        this.fallBacking = false;
 
         /**
          * Language to translator language code.
@@ -237,13 +243,71 @@ class GoogleTranslator {
     }
 
     /**
-     * Parse Google translate result.
+     * Fall back to use old API and set a timeout to recover.
+     */
+    fallBack() {
+        this.fallBacking = true;
+        setTimeout(() => {
+            this.fallBacking = false;
+        }, 30 * 60 * 1000 /* 30 minutes */);
+    }
+
+    /**
+     * Generate language detecting URL.
+     *
+     * @param {String} text text to detect
+     *
+     * @returns {String} the URL
+     */
+    generateDetectURL(text) {
+        let query = "&sl=auto&tl=zh-cn";
+        query += `&tk=${this.generateTK(text, this.TKK[0], this.TKK[1])}&q=${encodeURIComponent(
+            text
+        )}`;
+
+        if (this.fallBacking) return this.FALLBACK_TRANSLATE_URL + query;
+        return this.TRANSLATE_URL + query;
+    }
+
+    /**
+     * Generate translating URL.
+     *
+     * @param {String} text text to translate
+     * @param {String} from source language
+     * @param {String} to target language
+     *
+     * @returns {String} the URL
+     */
+    generateTranslateURL(text, from, to) {
+        let query = `&sl=${this.LAN_TO_CODE.get(from)}&tl=${this.LAN_TO_CODE.get(to)}`;
+        query += `&tk=${this.generateTK(text, this.TKK[0], this.TKK[1])}&q=${encodeURIComponent(
+            text
+        )}`;
+
+        if (this.fallBacking) return this.FALLBACK_TRANSLATE_URL + query;
+        return this.TRANSLATE_URL + query;
+    }
+
+    /**
+     * Parse detecting result.
+     *
+     * @param {Object} response detecting URL response
+     *
+     * @returns {String} detected language
+     */
+    parseDetectResult(response) {
+        if (this.fallBacking) return this.CODE_TO_LAN.get(response[2]);
+        return this.CODE_TO_LAN.get(response.ld_result.srclangs[0]);
+    }
+
+    /**
+     * Parse better Google translate result.
      *
      * @param {Object} response Google translate response
      *
      * @returns {Object} parsed result
      */
-    parseResult(response) {
+    parseBetterResult(response) {
         let result = new Object();
 
         if (response.sentences) {
@@ -312,6 +376,105 @@ class GoogleTranslator {
     }
 
     /**
+     * Parse fallback Google translate result.
+     *
+     * @param {Object} response Google translate response
+     *
+     * @returns {Object} parsed result
+     */
+    parseFallbackResult(response) {
+        let result = new Object();
+        for (let i = 0; i < response.length; i++) {
+            if (response[i]) {
+                let items = response[i];
+                switch (i) {
+                    // 单词的基本意思和音标
+                    case 0: {
+                        let mainMeanings = [];
+                        let originalTexts = [];
+                        let lastIndex = items.length - 1;
+
+                        for (let j = 0; j <= lastIndex; j++) {
+                            mainMeanings.push(items[j][0]);
+                            originalTexts.push(items[j][1]);
+                        }
+
+                        result.mainMeaning = mainMeanings.join("");
+                        result.originalText = originalTexts.join("");
+                        try {
+                            if (lastIndex > 0) {
+                                if (items[lastIndex][2] && items[lastIndex][2].length > 0) {
+                                    result.tPronunciation = items[lastIndex][2];
+                                }
+
+                                if (items[lastIndex][3] && items[lastIndex][3].length > 0) {
+                                    result.sPronunciation = items[lastIndex][3];
+                                }
+                            }
+                        } catch (error) {}
+                        // log("text: " + result.originalText + "\nmeaning: " + result.mainMeaning);
+                        break;
+                    }
+                    // 单词的所有词性及对应的意思
+                    case 1:
+                        result.detailedMeanings = new Array();
+                        items.forEach((item) =>
+                            result.detailedMeanings.push({
+                                pos: item[0],
+                                meaning: item[1].join(", "),
+                            })
+                        );
+                        // log("detailedMeanings: " + JSON.stringify(result.detailedMeanings));
+                        break;
+                    case 2:
+                        result.from = items;
+                        // log(result.from);
+                        break;
+                    // 单词的定义及对应例子
+                    case 12:
+                        result.definitions = new Array();
+                        items.forEach((item) => {
+                            item[1].forEach((element) => {
+                                result.definitions.push({
+                                    pos: item[0],
+                                    meaning: element[0],
+                                    example: element[2],
+                                });
+                            });
+                        });
+                        // log("definitions: " + JSON.stringify(result.definitions));
+                        break;
+                    // 单词的例句
+                    case 13:
+                        result.examples = new Array();
+                        items.forEach((item) =>
+                            item.forEach((element) =>
+                                result.examples.push({ source: null, target: element[0] })
+                            )
+                        );
+                        // log("examples: " + JSON.stringify(result.examples));
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Parse Google translate result.
+     *
+     * @param {Object} response Google translate response
+     *
+     * @returns {Object} parsed result
+     */
+    parseTranslateResult(response) {
+        if (this.fallBacking) return this.parseFallbackResult(response);
+        return this.parseBetterResult(response);
+    }
+
+    /**
      * Get supported languages of this API.
      *
      * @returns {Set<String>} supported languages
@@ -328,30 +491,24 @@ class GoogleTranslator {
      * @returns {Promise<String>} detected language Promise
      */
     detect(text) {
-        let retryCount = 0;
         let detectOnce = async () => {
-            let query = "&sl=auto&tl=zh-cn";
-            query += `&tk=${this.generateTK(text, this.TKK[0], this.TKK[1])}&q=${encodeURIComponent(
-                text
-            )}`;
-
             /**
              * Google uses 4xx errors to indicate request parameters invalid, so axios should
              * not throw error when status code is less than 500.
              */
-            const response = await axios.get(this.TRANSLATE_URL + query, {
+            const response = await axios.get(this.generateDetectURL(text), {
                 validateStatus: (status) => status < 500,
             });
 
             if (response.status === 200) {
-                return this.CODE_TO_LAN.get(response.data.ld_result.srclangs[0]);
+                return this.parseDetectResult(response.data);
             }
 
             /**
-             * 429 means token outdated, update token and retry.
+             * 429 means we are blocked by Google. Fallback to old API.
              */
-            if (response.status === 429 && retryCount < this.MAX_RETRY) {
-                retryCount++;
+            if (response.status === 429 && !this.fallBacking) {
+                this.fallBack();
                 return await this.updateTKK().then(detectOnce);
             }
 
@@ -382,31 +539,25 @@ class GoogleTranslator {
      * @returns {Promise<Object>} translation Promise
      */
     translate(text, from, to) {
-        let retryCount = 0;
         let translateOnce = async () => {
-            let query = `&sl=${this.LAN_TO_CODE.get(from)}&tl=${this.LAN_TO_CODE.get(to)}`;
-            query += `&tk=${this.generateTK(text, this.TKK[0], this.TKK[1])}&q=${encodeURIComponent(
-                text
-            )}`;
-
             /**
              * Google uses 4xx errors to indicate request parameters invalid, so axios should
              * not throw error when status code is less than 500.
              */
-            const response = await axios.get(this.TRANSLATE_URL + query, {
+            const response = await axios.get(this.generateTranslateURL(text, from, to), {
                 validateStatus: (status) => status < 500,
             });
 
             if (response.status === 200) {
-                let result = this.parseResult(response.data);
+                let result = this.parseTranslateResult(response.data);
                 return result;
             }
 
             /**
-             * 429 means token outdated, update token and retry.
+             * 429 means we are blocked by Google. Fallback to old API.
              */
-            if (response.status === 429 && retryCount < this.MAX_RETRY) {
-                retryCount++;
+            if (response.status === 429 && !this.fallBacking) {
+                this.fallBack();
                 return await this.updateTKK().then(translateOnce);
             }
 
@@ -439,9 +590,13 @@ class GoogleTranslator {
     async pronounce(text, language, speed) {
         this.stopPronounce();
         let speedValue = speed === "fast" ? "0.8" : "0.2";
-        this.AUDIO.src = `${this.TTS_URL}&q=${encodeURIComponent(text)}&tl=${this.LAN_TO_CODE.get(
+
+        this.AUDIO.src = `${
+            this.fallBacking ? this.FALLBACK_TTS_URL : this.TTS_URL
+        }&q=${encodeURIComponent(text)}&tl=${this.LAN_TO_CODE.get(
             language
         )}&ttsspeed=${speedValue}&tk=${this.generateTK(text, this.TKK[0], this.TKK[1])}`;
+
         try {
             await this.AUDIO.play();
         } catch (error) {
