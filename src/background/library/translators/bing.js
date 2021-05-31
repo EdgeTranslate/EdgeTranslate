@@ -551,8 +551,8 @@ class BingTranslator {
             this.count++;
             const response = await axios(constructParams.call(this, ...constructParamsArgs));
 
-            // response.data.statusCode will indicate the info of error when error encountered
-            if (!response.data.statusCode || response.data.statusCode < 300) {
+            // response.data.StatusCode will indicate the info of error when error encountered
+            if (!response.data.StatusCode || response.data.StatusCode < 300) {
                 // Parse the actually requested url to get the requested host.
                 let responseHost = /(https:\/\/.*\.bing\.com\/).*/g.exec(
                     response.request.responseURL
@@ -584,7 +584,7 @@ class BingTranslator {
             // Throw error.
             throw {
                 errorType: "API_ERR",
-                errorCode: response.data.statusCode,
+                errorCode: response.data.StatusCode,
                 errorMsg: "Request failed.",
             };
         };
