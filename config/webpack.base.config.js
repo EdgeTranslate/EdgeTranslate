@@ -44,9 +44,11 @@ module.exports = {
             "react-dom/test-utils": "preact/test-utils",
             "react-dom": "preact/compat",
         },
-    },
-    node: {
-        fs: "empty",
+        fallback: {
+            path: false,
+            fs: false,
+            stream: false,
+        },
     },
     performance: {
         hints: false,
