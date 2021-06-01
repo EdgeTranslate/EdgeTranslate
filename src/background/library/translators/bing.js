@@ -238,6 +238,21 @@ class BingTranslator {
     async updateTokens() {
         const response = await axios.get(this.HOME_PAGE);
 
+        /**
+         * Bing redirects user requests based on user region. For example, if we are in China and request
+         * www.bing.com, we will be redirected to cn.bing.com. This causes translating error because IG and IID
+         * for one region are not usable for another. Therefore, we need to update HOST, HOME_PAGE, IG and IID
+         * whenever a redirection happened.
+         *
+         * If the requested host is different from the original host, which means there was a redirection,
+         * update HOST and HOME_PAGE with the redirecting host.
+         */
+        let responseHost = /(https:\/\/.*\.bing\.com\/).*/g.exec(response.request.responseURL);
+        if (responseHost && responseHost[1] != this.HOST) {
+            this.HOST = responseHost[1];
+            this.HOME_PAGE = `${this.HOST}translator`;
+        }
+
         this.IG = response.data.match(/IG:"([a-zA-Z0-9]+)"/)[1];
 
         [, this.key, this.token] = response.data.match(
@@ -551,16 +566,17 @@ class BingTranslator {
             this.count++;
             const response = await axios(constructParams.call(this, ...constructParamsArgs));
 
-            // response.data.StatusCode will indicate the info of error when error encountered
-            if (!response.data.StatusCode || response.data.StatusCode < 300) {
+            // statusCode will indicate the info of error when error encountered
+            let statusCode = response.data.StatusCode || response.data.statusCode || 200;
+            if (statusCode < 300) {
                 // Parse the actually requested url to get the requested host.
                 let responseHost = /(https:\/\/.*\.bing\.com\/).*/g.exec(
                     response.request.responseURL
                 );
 
                 /**
-                 * Bing redirects user requests based on user region. For example, if you are in China and request
-                 * www.bing.com, you will be redirected to cn.bing.com. This causes translating error because IG and IID
+                 * Bing redirects user requests based on user region. For example, if we are in China and request
+                 * www.bing.com, we will be redirected to cn.bing.com. This causes translating error because IG and IID
                  * for one region are not usable for another. Therefore, we need to update HOST, HOME_PAGE, IG and IID
                  * whenever a redirection happened.
                  *
@@ -584,7 +600,7 @@ class BingTranslator {
             // Throw error.
             throw {
                 errorType: "API_ERR",
-                errorCode: response.data.StatusCode,
+                errorCode: statusCode,
                 errorMsg: "Request failed.",
             };
         };
