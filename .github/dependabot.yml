@@ -4,7 +4,7 @@ updates:
   - package-ecosystem: 'npm'
     directory: '/'
     schedule:
-      interval: 'daily'
+      interval: 'weekly'
     # Raise pull requests for version updates
     # to pip against the `develop` branch
     target-branch: "develop"
