@@ -26,6 +26,7 @@ translateButton.appendChild(buttonImage);
 translateButton.id = "edge-translate-button";
 translateButton.style.backgroundColor = "white"; // 动态设置样式以兼容Dark Reader
 translateButton.addEventListener("mousedown", buttonClickHandler);
+translateButton.addEventListener("contextmenu", (e) => e.preventDefault());
 
 let originScrollX = 0; // record the original scroll X position(before scroll event)
 let originScrollY = 0; // record the original scroll Y position(before scroll event)
@@ -107,6 +108,8 @@ window.addEventListener("DOMContentLoaded", () => {
  * @param {MouseEvent} event 鼠标点击事件
  */
 function buttonClickHandler(event) {
+    event.preventDefault();
+    event.stopPropagation();
     if (event.button === 0) {
         translateSubmit();
     } else if (event.button === 2) {
