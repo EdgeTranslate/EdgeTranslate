@@ -31,7 +31,9 @@
         "build:chrome": "gulp build --browser chrome",
         "build:firefox": "gulp build --browser firefox",
         "pack:chrome": "gulp pack --browser chrome",
-        "pack:firefox": "gulp pack --browser firefox"
+        "pack:firefox": "gulp pack --browser firefox",
+        "e2e:chrome": "SELENIUM_BROWSER=chrome node test/e2e/base.js",
+        "e2e:firefox": "SELENIUM_BROWSER=firefox node test/e2e/base.js"
     },
     "devDependencies": {
         "@babel/core": "^7.14.3",
@@ -67,6 +69,7 @@
         "prettier": "^2.3.1",
         "querystring": "^0.2.1",
         "raw-loader": "^4.0.2",
+        "selenium-webdriver": "^4.0.0-beta.3",
         "webpack": "^5.38.1",
         "webpack-merge": "^5.7.3",
         "webpack-stream": "^6.1.2"
