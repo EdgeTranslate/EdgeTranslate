@@ -27,6 +27,9 @@ function wrapElementWithAPI(element, driver) {
     return element;
 }
 
+/**
+ * Wrap the selenium webdriver to enhance its capabilities.
+ */
 class Driver {
     /**
      * @param {!ThenableWebDriver} driver - A {@code WebDriver} instance
@@ -290,6 +293,33 @@ class Driver {
         return errorObjects.filter(
             (entry) => !ignoredErrorMessages.some((message) => entry.message.includes(message))
         );
+    }
+
+    /**
+     * Proxy the selenium webdriver.
+     * See node_modules/selenium-webdriver/lib/webdriver.js.
+     */
+
+    get(url) {
+        return this.driver.get(url);
+    }
+    getTitle() {
+        return this.driver.getTitle();
+    }
+    getCurrentUrl() {
+        return this.driver.getCurrentUrl();
+    }
+    actions(options) {
+        return this.driver.actions(options);
+    }
+    executeScript(script, ...args) {
+        return this.driver.executeScript(script, ...args);
+    }
+    executeAsyncScript(script, ...args) {
+        return this.driver.executeAsyncScript(script, ...args);
+    }
+    takeScreenshot() {
+        return this.driver.takeScreenshot();
     }
 }
 

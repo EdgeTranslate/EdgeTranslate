@@ -9,13 +9,12 @@ class CustomEnvironment extends JSDomEnvironment {
 
     async setup() {
         await super.setup();
-        this.global.WebDriver = (await buildWebDriver()).driver;
-        this.global.driver = this.global.WebDriver.driver;
+        this.global.driver = (await buildWebDriver()).driver;
     }
 
     async teardown() {
-        await this.global.WebDriver.delay(5_000);
-        await this.global.WebDriver?.quit();
+        await this.global.driver.delay(5_000);
+        await this.global.driver?.quit();
         await super.teardown();
     }
 

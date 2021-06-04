@@ -21,7 +21,6 @@ module.exports = {
         browser: false,
         BROWSER_ENV: false,
         BUILD_ENV: false,
-        WebDriver: false,
         driver: false,
     },
     plugins: ["html", "prettier"],
