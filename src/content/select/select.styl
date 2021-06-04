@@ -6,33 +6,33 @@ image-size = 20px;
  * 划词翻译按钮样式
  */
 #edge-translate-button {
-    display: inline-block;
-    width: image-size;
-    height: image-size;
-    padding: 0.4%;
-    margin: 0;
-    position: fixed;
-    box-shadow: 0px 0px 2px 2px #ddd;
-    cursor: pointer;
-    border-radius: 50%;
-    z-index: 2147483647;
-    box-sizing: content-box;
-    overflow: hidden;
-    transition: box-shadow 200ms ease-in-out, transform 300ms ease; // set transtition effect when hover occurs
-    animation: fade-in 300ms ease-in-out; // set fade-in animation on selection icon
+    display: inline-block !important;
+    width: image-size !important;
+    height: image-size !important;
+    padding: 0.4% !important;
+    margin: 0 !important;
+    position: fixed !important;
+    box-shadow: 0px 0px 2px 2px #ddd !important;
+    cursor: pointer !important;
+    border-radius: 50% !important;
+    z-index: 2147483647 !important;
+    box-sizing: content-box !important;
+    overflow: hidden !important;
+    transition: box-shadow 200ms ease-in-out, transform 300ms ease !important; // set transtition effect when hover occurs
+    animation: fade-in 300ms ease-in-out !important; // set fade-in animation on selection icon
 
-    &&:hover {
-        box-shadow: 0px 0px 8px 3px #bbb;
-        transform: rotate(180deg);
+    &:hover {
+        box-shadow: 0px 0px 8px 3px #bbb !important;
+        transform: rotate(180deg) !important;
     }
 
     img {
-        width: image-size;
-        height: image-size;
-        padding: 0;
-        border: 0;
-        margin: 0;
-        vertical-align: top; // fix the style problem in some websites
+        width: image-size !important;
+        height: image-size !important;
+        padding: 0 !important;
+        border: 0 !important;
+        margin: 0 !important;
+        vertical-align: top !important; // fix the style problem in some websites
     }
 
     @keyframes fade-in {
