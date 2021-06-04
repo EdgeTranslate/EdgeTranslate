@@ -14,7 +14,8 @@ class CustomEnvironment extends JSDomEnvironment {
     }
 
     async teardown() {
-        this.global.WebDriver?.quit();
+        await this.global.WebDriver.delay(5_000);
+        await this.global.WebDriver?.quit();
         await super.teardown();
     }
 

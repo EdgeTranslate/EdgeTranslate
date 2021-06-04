@@ -156,6 +156,21 @@ class Driver {
         await element.click();
     }
 
+    /**
+     * Select the text of an element.
+     */
+    async selectElement(rawLocator) {
+        const element = await this.findElement(rawLocator);
+        const actions = this.driver.actions({ async: true });
+        const { width, x, y } = await element.getRect();
+        await actions
+            .move({ x, y })
+            .press()
+            .move({ x: x + width, y })
+            .release()
+            .perform();
+    }
+
     async clickPoint(rawLocator, x, y) {
         const locator = this.buildLocator(rawLocator);
         const element = await this.findElement(locator);
