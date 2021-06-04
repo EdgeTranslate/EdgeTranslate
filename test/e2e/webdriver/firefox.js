@@ -20,9 +20,12 @@ class FirefoxDriver {
      * @param {Object} options - the options for the build
      * @returns {Promise<{driver: !ThenableWebDriver, extensionUrl: string, extensionId: string}>}
      */
-    static async build({ responsive, port }) {
+    static async build({ responsive, port, headless }) {
         const templateProfile = fs.mkdtempSync(TEMP_PROFILE_PATH_PREFIX);
         const options = new firefox.Options().setProfile(templateProfile);
+        if (headless) {
+            options.headless = true;
+        }
         const builder = new Builder().forBrowser("firefox").setFirefoxOptions(options);
         if (port) {
             const service = new firefox.ServiceBuilder().setPort(port);

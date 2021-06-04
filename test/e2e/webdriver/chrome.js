@@ -5,10 +5,13 @@ const chrome = require("selenium-webdriver/chrome");
  * A wrapper around a {@code WebDriver} instance exposing Chrome-specific functionality
  */
 class ChromeDriver {
-    static async build({ responsive, port }) {
+    static async build({ responsive, port, headless }) {
         const args = ["load-extension=build/chrome"];
         if (responsive) {
             args.push("--auto-open-devtools-for-tabs");
+        }
+        if (headless) {
+            args.push("--headless");
         }
         const options = new chrome.Options().addArguments(args);
         const builder = new Builder().forBrowser("chrome").setChromeOptions(options);
