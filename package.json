@@ -64,7 +64,7 @@
         "lodash": "^4.17.21",
         "merge-stream": "^2.0.0",
         "minimist": "^1.2.5",
-        "prettier": "^2.2.1",
+        "prettier": "^2.3.1",
         "querystring": "^0.2.1",
         "raw-loader": "^4.0.2",
         "webpack": "^5.38.1",
