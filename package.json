@@ -94,7 +94,7 @@
         }
     },
     "dependencies": {
-        "dompurify": "^2.2.8",
+        "dompurify": "^2.2.9",
         "preact": "^10.5.13",
         "preact-render-to-string": "^5.1.19",
         "react-shadow": "^19.0.2",
