@@ -11,6 +11,10 @@ describe("selection translation functions", () => {
         await driver.selectElement(`#${text}`);
         expect(await driver.executeScript("return window.getSelection().toString();")).toBe(text);
 
-        await driver.clickElement("#edge-translate-button");
+        await driver.delay(200);
+        const selectionButton = await driver.findElement("#edge-translate-button");
+        expect(await selectionButton.takeScreenshot(true)).toMatchImageSnapshot();
+
+        await selectionButton.click();
     });
 });
