@@ -1,5 +1,6 @@
 import path from "path";
 
+const SelectionButtonId = "edge-translate-button";
 describe("selection translation functions", () => {
     test("selection", async () => {
         await driver.get(`file://${path.resolve(__dirname, "../pages/selection.html")}`);
@@ -11,10 +12,12 @@ describe("selection translation functions", () => {
         await driver.selectElement(`#${text}`);
         expect(await driver.executeScript("return window.getSelection().toString();")).toBe(text);
 
-        await driver.delay(200);
-        const selectionButton = await driver.findElement("#edge-translate-button");
+        await driver.delay(500);
+        const selectionButton = await driver.findElement(`#${SelectionButtonId}`);
         expect(await selectionButton.takeScreenshot(true)).toMatchImageSnapshot();
 
         await selectionButton.click();
+        await driver.delay(1000);
+        expect(await (await driver.getPanel()).takeScreenshot(true)).toMatchImageSnapshot();
     });
 });

@@ -58,6 +58,10 @@ class Driver {
             // For backwards compatibility, checking if the locator has a value prop
             // tells us this is a Selenium locator
             return locator;
+        } else if (locator.xpath) {
+            // Providing an xpath prop to the object will consume the locator as an
+            // xpath locator.
+            return By.xpath(locator.xpath);
         }
         throw new Error(`The locator '${locator}' is not supported by the E2E test driver`);
     }
@@ -136,6 +140,19 @@ class Driver {
         const locator = this.buildLocator(rawLocator);
         const elements = await this.driver.wait(until.elementsLocated(locator), this.timeout);
         return elements.map((element) => wrapElementWithAPI(element, this));
+    }
+
+    /**
+     * Get the result panel element.
+     * @returns the result panel element
+     */
+    async getPanel() {
+        const panelContainerEl = await this.findElement({ xpath: "/html/div[last()]" });
+        const shadowRoot = await this.driver.executeScript(
+            "return arguments[0].shadowRoot",
+            panelContainerEl
+        );
+        return (await shadowRoot.findElements(By.css("div")))[0];
     }
 
     async findClickableElements(rawLocator) {
