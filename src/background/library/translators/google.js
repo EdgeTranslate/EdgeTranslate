@@ -370,6 +370,11 @@ class GoogleTranslator {
                     target: null,
                 });
             }
+
+            // Sort the result to fix the order of examples.
+            result.examples.sort((a, b) =>
+                a.source > b.source ? 1 : a.source === b.source ? 0 : -1
+            );
         }
 
         return result;
