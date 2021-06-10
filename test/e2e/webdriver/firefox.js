@@ -1,6 +1,7 @@
 const fs = require("fs");
 const os = require("os");
 const path = require("path");
+const AdmZip = require("adm-zip");
 const { Builder, By, until } = require("selenium-webdriver");
 const firefox = require("selenium-webdriver/firefox");
 
@@ -10,6 +11,14 @@ const firefox = require("selenium-webdriver/firefox");
  * @type {string}
  */
 const TEMP_PROFILE_PATH_PREFIX = path.join(os.tmpdir(), "EdgeTranslate-Fx-Profile");
+
+/**
+ * Pack the directory of firefox to a .zip file.
+ */
+const targetZipPath = "build/edge_translate_firefox.zip";
+const zip = new AdmZip();
+zip.addLocalFolder("build/firefox");
+zip.writeZip(targetZipPath);
 
 /**
  * A wrapper around a {@code WebDriver} instance exposing Firefox-specific functionality
@@ -36,10 +45,7 @@ class FirefoxDriver {
         const driver = builder.build();
         const fxDriver = new FirefoxDriver(driver);
 
-        const extensionId = await fxDriver.installExtension(
-            "build/edge_translate_firefox.zip",
-            true
-        );
+        const extensionId = await fxDriver.installExtension(targetZipPath, true);
         const internalExtensionId = await fxDriver.getInternalId();
 
         if (responsive) {
