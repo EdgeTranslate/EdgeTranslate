@@ -253,10 +253,10 @@ class BingTranslator {
             this.HOME_PAGE = `${this.HOST}translator`;
         }
 
-        this.IG = response.data.match(/IG:"([a-zA-Z0-9]+)"/)[1];
+        this.IG = response.data.match(/IG:"([A-Za-z0-9]+)"/)[1];
 
         [, this.key, this.token] = response.data.match(
-            /var params_RichTranslateHelper\s*=\s*\[([0-9]+),\s*"(.+)",\s*[0-9]+\];/
+            /var params_RichTranslateHelper\s*=\s*\[([0-9]+),\s*"([^"]+)",[^\]]*\];/
         );
 
         let html = this.HTMLParser.parseFromString(response.data, "text/html");
