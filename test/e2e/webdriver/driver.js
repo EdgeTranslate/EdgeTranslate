@@ -208,6 +208,22 @@ class Driver {
             .perform();
     }
 
+    /**
+     * Select an option with a specified value from a given dropdown selection element.
+     * @param {WebElement} selectEl a given dropdown selection element
+     * @param {string} value a specified value
+     */
+    async selectOption(selectEl, value) {
+        const optionEls = await selectEl.findElements(By.css("option"));
+        optionEls.map(async (optionEl) => {
+            const optionValue = await optionEl.getAttribute("value");
+            if (optionValue === value) {
+                await optionEl.click();
+                return;
+            }
+        });
+    }
+
     async clickPoint(rawLocator, x, y) {
         const locator = this.buildLocator(rawLocator);
         const element = await this.findElement(locator);
