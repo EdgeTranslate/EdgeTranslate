@@ -31,9 +31,7 @@ class FirefoxDriver {
      */
     static async build({ responsive, port, headless }) {
         const templateProfile = fs.mkdtempSync(TEMP_PROFILE_PATH_PREFIX);
-        const options = new firefox.Options()
-            .windowSize({ width: 1280, height: 720 })
-            .setProfile(templateProfile);
+        const options = new firefox.Options().setProfile(templateProfile);
         if (headless) {
             options.headless = true;
         }

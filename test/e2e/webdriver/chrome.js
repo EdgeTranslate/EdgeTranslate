@@ -13,9 +13,7 @@ class ChromeDriver {
         if (headless) {
             args.push("--headless");
         }
-        const options = new chrome.Options()
-            .windowSize({ width: 1280, height: 720 })
-            .addArguments(args);
+        const options = new chrome.Options().addArguments(args);
         const builder = new Builder().forBrowser("chrome").setChromeOptions(options);
         if (port) {
             const service = new chrome.ServiceBuilder().setPort(port);

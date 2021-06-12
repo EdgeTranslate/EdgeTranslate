@@ -148,11 +148,23 @@ class Driver {
      */
     async getPanel() {
         const panelContainerEl = await this.findElement({ xpath: "/html/div[last()]" });
-        const shadowRoot = await this.driver.executeScript(
-            "return arguments[0].shadowRoot",
-            panelContainerEl
-        );
-        return (await shadowRoot.findElements(By.css("div")))[0];
+        if (this.browser === "chrome") {
+            const shadowRoot = await this.driver.executeScript(
+                "return arguments[0].shadowRoot",
+                panelContainerEl
+            );
+            return (await shadowRoot.findElements(By.css("div")))[0];
+        } else if (this.browser === "firefox") {
+            /**
+             * Code of chrome version will throw the error "Javascript Exception: Cyclic object error".
+             * See more https://stackoverflow.com/questions/58174366/how-to-handle-shadow-dom-elements-using-selenium-webdriver-for-firefox.
+             */
+            const shadowChildren = await this.driver.executeScript(
+                "return arguments[0].shadowRoot.children",
+                panelContainerEl
+            );
+            return shadowChildren[1];
+        }
     }
 
     async findClickableElements(rawLocator) {
@@ -183,10 +195,11 @@ class Driver {
         const element = await this.findElement(rawLocator);
         const actions = this.driver.actions({ async: true });
         const { width, x, y } = await element.getRect();
+        // The arguments x and y must be int.
         await actions
-            .move({ x, y })
+            .move({ x: Math.floor(x), y: Math.floor(y) })
             .press()
-            .move({ x: x + width, y })
+            .move({ x: Math.ceil(x + width), y: Math.ceil(y) })
             .release()
             .perform();
     }

@@ -17,7 +17,7 @@ describe("selection translation functions", () => {
         expect(await selectionButton.takeScreenshot(true)).toMatchImageSnapshot();
 
         await selectionButton.click();
-        await driver.delay(1000);
+        await driver.delay(5_000);
         expect(await (await driver.getPanel()).takeScreenshot(true)).toMatchImageSnapshot();
     });
 });
