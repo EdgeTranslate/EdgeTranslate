@@ -29,11 +29,14 @@ class FirefoxDriver {
      * @param {Object} options - the options for the build
      * @returns {Promise<{driver: !ThenableWebDriver, extensionUrl: string, extensionId: string}>}
      */
-    static async build({ responsive, port, headless }) {
+    static async build({ responsive, port, headless, language }) {
         const templateProfile = fs.mkdtempSync(TEMP_PROFILE_PATH_PREFIX);
-        const options = new firefox.Options().setProfile(templateProfile);
+        let options = new firefox.Options().setProfile(templateProfile);
         if (headless) {
-            options.headless = true;
+            options = options.headless();
+        }
+        if (language) {
+            options = options.setPreference("intl.accept_languages", language);
         }
         const builder = new Builder().forBrowser("firefox").setFirefoxOptions(options);
         if (port) {

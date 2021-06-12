@@ -48,6 +48,10 @@ class Driver {
             BACK_SPACE: "\uE003",
             ENTER: "\uE007",
         };
+        this.PAGES = {
+            OPTIONS: "options/options",
+            POPUP: "popup/popup",
+        };
     }
 
     buildLocator(locator) {
@@ -375,11 +379,5 @@ function collectMetrics() {
 
     return results;
 }
-
-Driver.PAGES = {
-    HOME: "home",
-    NOTIFICATION: "notification",
-    POPUP: "popup",
-};
 
 module.exports = Driver;
