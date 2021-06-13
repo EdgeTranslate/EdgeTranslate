@@ -8,6 +8,7 @@ class CustomEnvironment extends JSDomEnvironment {
 
     async setup() {
         await super.setup();
+        this.global.server = process.server;
         this.global.driver = process.driver;
     }
 

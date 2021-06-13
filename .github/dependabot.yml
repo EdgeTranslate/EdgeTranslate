@@ -8,3 +8,6 @@ updates:
     # Raise pull requests for version updates
     # to pip against the `develop` branch
     target-branch: "develop"
+    ignore:      
+      - dependency-name: "mockttp"
+        versions: ["2.x"]

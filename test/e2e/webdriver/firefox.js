@@ -29,15 +29,19 @@ class FirefoxDriver {
      * @param {Object} options - the options for the build
      * @returns {Promise<{driver: !ThenableWebDriver, extensionUrl: string, extensionId: string}>}
      */
-    static async build({ responsive, port, headless, language }) {
+    static async build({ responsive, port, headless, language, proxyUrl }) {
         const templateProfile = fs.mkdtempSync(TEMP_PROFILE_PATH_PREFIX);
         let options = new firefox.Options().setProfile(templateProfile);
-        if (headless) {
-            options = options.headless();
-        }
-        if (language) {
-            options = options.setPreference("intl.accept_languages", language);
-        }
+        if (headless) options = options.headless();
+        if (language) options = options.setPreference("intl.accept_languages", language);
+        if (proxyUrl)
+            options = options
+                .setProxy({
+                    proxyType: "manual",
+                    httpProxy: proxyUrl,
+                    sslProxy: proxyUrl,
+                })
+                .setAcceptInsecureCerts(true);
         const builder = new Builder().forBrowser("firefox").setFirefoxOptions(options);
         if (port) {
             const service = new firefox.ServiceBuilder().setPort(port);

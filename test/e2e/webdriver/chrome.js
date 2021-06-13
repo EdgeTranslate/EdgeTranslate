@@ -1,22 +1,22 @@
 const { Builder } = require("selenium-webdriver");
 const chrome = require("selenium-webdriver/chrome");
+let proxy = require("selenium-webdriver/proxy");
 
 /**
  * A wrapper around a {@code WebDriver} instance exposing Chrome-specific functionality
  */
 class ChromeDriver {
-    static async build({ responsive, port, headless, language }) {
+    static async build({ responsive, port, headless, language, proxyUrl }) {
         const args = ["load-extension=build/chrome"];
-        if (responsive) {
-            args.push("--auto-open-devtools-for-tabs");
-        }
-        if (headless) {
-            args.push("--headless");
-        }
-        if (language) {
-            args.push(`--lang=${language}`);
-        }
+        if (responsive) args.push("--auto-open-devtools-for-tabs");
+        if (headless) args.push("--headless");
+        if (language) args.push(`--lang=${language}`);
+        if (proxyUrl) args.push("ignore-certificate-errors");
+
         const options = new chrome.Options().addArguments(args);
+        if (proxyUrl) {
+            options.setProxy(proxy.manual({ http: proxyUrl, https: proxyUrl }));
+        }
         const builder = new Builder().forBrowser("chrome").setChromeOptions(options);
         if (port) {
             const service = new chrome.ServiceBuilder().setPort(port);
