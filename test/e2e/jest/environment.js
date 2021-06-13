@@ -1,5 +1,4 @@
 const JSDomEnvironment = require("jest-environment-jsdom");
-import { buildWebDriver } from "../webdriver";
 
 class CustomEnvironment extends JSDomEnvironment {
     constructor(config, context) {
@@ -9,12 +8,10 @@ class CustomEnvironment extends JSDomEnvironment {
 
     async setup() {
         await super.setup();
-        this.global.driver = (await buildWebDriver()).driver;
-        await this.global.driver.driver.manage().window().maximize();
+        this.global.driver = process.driver;
     }
 
     async teardown() {
-        await this.global.driver?.quit();
         await super.teardown();
     }
 
