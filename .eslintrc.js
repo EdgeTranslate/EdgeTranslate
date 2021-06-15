@@ -22,6 +22,7 @@ module.exports = {
         BROWSER_ENV: false,
         BUILD_ENV: false,
         driver: false,
+        server: false,
     },
     plugins: ["html", "prettier"],
     rules: {

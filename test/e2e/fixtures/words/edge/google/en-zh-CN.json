@@ -1,0 +1,379 @@
+{
+	"sentences": [
+			{ "trans": "边缘", "orig": "edge", "backend": 10 },
+			{ "translit": "Biānyuán", "src_translit": "ej" }
+	],
+	"dict": [
+			{
+					"pos": "名词",
+					"terms": ["边缘", "边", "缘", "边沿", "刃", "棱", "锋", "翼", "镶", "际", "塝", "埸"],
+					"entry": [
+							{
+									"word": "边缘",
+									"reverse_translation": [
+											"edge",
+											"periphery",
+											"fringe",
+											"brink",
+											"verge",
+											"borderline"
+									],
+									"score": 0.416862
+							},
+							{
+									"word": "边",
+									"reverse_translation": ["side", "edge", "rim", "border", "margin", "boundary"],
+									"score": 0.15822297
+							},
+							{ "word": "缘", "reverse_translation": ["edge", "reason"], "score": 0.059123605 },
+							{
+									"word": "边沿",
+									"reverse_translation": ["edge", "rim", "margin", "brim", "fringe", "brink"],
+									"score": 0.043936934
+							},
+							{ "word": "刃", "reverse_translation": ["edge"], "score": 0.02426428 },
+							{
+									"word": "棱",
+									"reverse_translation": ["edge", "ridge", "arris", "corner", "square beam"],
+									"score": 0.0041511287
+							},
+							{
+									"word": "锋",
+									"reverse_translation": [
+											"edge",
+											"sharp point",
+											"cutting edge",
+											"pungency",
+											"point of a tool",
+											"van"
+									],
+									"score": 2.4162467e-4
+							},
+							{
+									"word": "翼",
+									"reverse_translation": ["wing", "flank", "side", "ala", "edge", "arm"],
+									"score": 4.400312e-5
+							},
+							{
+									"word": "镶",
+									"reverse_translation": ["facing", "edge", "rim", "border", "ridge"],
+									"score": 2.5072222e-5
+							},
+							{
+									"word": "际",
+									"reverse_translation": ["border", "boundary", "edge", "interval"],
+									"score": 7.646596e-6
+							},
+							{
+									"word": "塝",
+									"reverse_translation": ["rim", "hem", "edge", "brink", "brim", "fringe"],
+									"score": 3.0416056e-6
+							},
+							{
+									"word": "埸",
+									"reverse_translation": [
+											"border",
+											"boundary",
+											"circumference",
+											"edge",
+											"edging",
+											"frame"
+									],
+									"score": 1.5294154e-6
+							}
+					],
+					"base_form": "edge",
+					"pos_enum": 1
+			},
+			{
+					"pos": "动词",
+					"terms": ["镶边", "使锐利"],
+					"entry": [
+							{ "word": "镶边", "reverse_translation": ["edge"], "score": 2.3419065e-4 },
+							{ "word": "使锐利", "reverse_translation": ["edge"] }
+					],
+					"base_form": "edge",
+					"pos_enum": 2
+			}
+	],
+	"src": "en",
+	"alternative_translations": [
+			{
+					"src_phrase": "edge",
+					"alternative": [
+							{
+									"word_postproc": "边缘",
+									"score": 1000,
+									"has_preceding_space": true,
+									"attach_to_next_token": false,
+									"backends": [10]
+							},
+							{
+									"word_postproc": "慢慢移动",
+									"score": 1000,
+									"has_preceding_space": true,
+									"attach_to_next_token": false,
+									"backends": [10]
+							},
+							{
+									"word_postproc": "边",
+									"score": 1000,
+									"has_preceding_space": true,
+									"attach_to_next_token": false,
+									"backends": [2]
+							}
+					],
+					"srcunicodeoffsets": [{ "begin": 0, "end": 4 }],
+					"raw_src_segment": "edge",
+					"start_pos": 0,
+					"end_pos": 0
+			}
+	],
+	"confidence": 1.0,
+	"spell": {},
+	"ld_result": { "srclangs": ["en"], "srclangs_confidences": [1.0], "extended_srclangs": ["en"] },
+	"synsets": [
+			{
+					"pos": "名词",
+					"entry": [
+							{
+									"synonym": ["marge", "bourn", "skirt"],
+									"definition_id": "m_en_gbus0311770.006",
+									"label_info": { "register": ["literary"] }
+							},
+							{
+									"synonym": [
+											"border",
+											"boundary",
+											"extremity",
+											"fringe",
+											"margin",
+											"side",
+											"lip",
+											"rim",
+											"brim",
+											"brink",
+											"verge",
+											"perimeter",
+											"circumference",
+											"periphery",
+											"contour",
+											"outline",
+											"limit",
+											"limits",
+											"outer limit",
+											"bound",
+											"bounds"
+									],
+									"definition_id": "m_en_gbus0311770.006"
+							},
+							{
+									"synonym": ["causticity", "mordacity"],
+									"definition_id": "m_en_gbus0311770.016",
+									"label_info": { "register": ["rare"] }
+							},
+							{
+									"synonym": [
+											"sharpness",
+											"severity",
+											"bite",
+											"sting",
+											"pointedness",
+											"asperity",
+											"pungency",
+											"mordancy",
+											"acerbity",
+											"acidity",
+											"tartness",
+											"trenchancy",
+											"sarcasm",
+											"acrimony",
+											"malice",
+											"spite",
+											"venom"
+									],
+									"definition_id": "m_en_gbus0311770.016"
+							},
+							{
+									"synonym": ["the catbird seat", "the box seat"],
+									"definition_id": "m_en_gbus0311770.018",
+									"label_info": { "register": ["informal"] }
+							},
+							{
+									"synonym": [
+											"advantage",
+											"lead",
+											"head",
+											"head start",
+											"trump card",
+											"the whip hand",
+											"superiority",
+											"the upper hand",
+											"dominance",
+											"ascendancy",
+											"supremacy",
+											"primacy",
+											"precedence",
+											"power",
+											"mastery",
+											"control",
+											"sway",
+											"authority"
+									],
+									"definition_id": "m_en_gbus0311770.018"
+							}
+					],
+					"base_form": "edge"
+			},
+			{
+					"pos": "动词",
+					"entry": [
+							{
+									"synonym": [
+											"border",
+											"fringe",
+											"rim",
+											"verge",
+											"skirt",
+											"be alongside",
+											"surround",
+											"enclose",
+											"encircle",
+											"circle",
+											"encompass",
+											"bound",
+											"line",
+											"flank"
+									],
+									"definition_id": "m_en_gbus0311770.021"
+							},
+							{
+									"synonym": [
+											"trim",
+											"pipe",
+											"band",
+											"decorate",
+											"finish",
+											"border",
+											"fringe",
+											"bind",
+											"hem"
+									],
+									"definition_id": "m_en_gbus0311770.021"
+							},
+							{
+									"synonym": [
+											"creep",
+											"inch (one\u0027s way)",
+											"worm (one\u0027s way)",
+											"work (one\u0027s way)",
+											"pick one\u0027s way",
+											"nose (one\u0027s way)",
+											"ease (oneself)",
+											"ease (one\u0027s way)",
+											"advance slowly",
+											"advance stealthily",
+											"sidle",
+											"steal",
+											"slink"
+									],
+									"definition_id": "m_en_gbus0311770.028"
+							}
+					],
+					"base_form": "edge"
+			}
+	],
+	"definitions": [
+			{
+					"pos": "名词",
+					"entry": [
+							{
+									"gloss": "the outside limit of an object, area, or surface; a place or part farthest away from the center of something.",
+									"definition_id": "m_en_gbus0311770.006",
+									"example": "a willow tree at the water\u0027s edge"
+							},
+							{
+									"gloss": "the sharpened side of the blade of a cutting implement or weapon.",
+									"definition_id": "m_en_gbus0311770.013",
+									"example": "a knife with a razor-sharp edge"
+							},
+							{
+									"gloss": "a quality or factor that gives superiority over close rivals or competitors.",
+									"definition_id": "m_en_gbus0311770.018",
+									"example": "the veal had the edge on flavor"
+							}
+					],
+					"base_form": "edge"
+			},
+			{
+					"pos": "动词",
+					"entry": [
+							{
+									"gloss": "provide with a border or edge.",
+									"definition_id": "m_en_gbus0311770.021",
+									"example": "the pool is edged with paving"
+							},
+							{
+									"gloss": "move gradually, carefully, or furtively in a particular direction.",
+									"definition_id": "m_en_gbus0311770.028",
+									"example": "she tried to edge away from him"
+							},
+							{
+									"gloss": "give an intense or sharp quality to.",
+									"definition_id": "m_en_gbus0311770.032",
+									"example": "desperation edged her voice"
+							},
+							{
+									"gloss": "ski with one\u0027s weight on the edges of one\u0027s skis.",
+									"definition_id": "m_en_gbus0311770.036",
+									"example": "you will be edging early, controlling a parallel turn"
+							}
+					],
+					"base_form": "edge"
+			}
+	],
+	"examples": {
+			"example": [
+					{
+							"text": "a flamenco singer brings a primitive \u003cb\u003eedge\u003c/b\u003e to the music",
+							"source_type": 3,
+							"definition_id": "m_en_gbus0311770.016"
+					},
+					{
+							"text": "she tried to \u003cb\u003eedge\u003c/b\u003e away from him",
+							"source_type": 3,
+							"definition_id": "m_en_gbus0311770.028"
+					},
+					{
+							"text": "she was still smiling, but there was an \u003cb\u003eedge\u003c/b\u003e to her voice",
+							"source_type": 3,
+							"definition_id": "m_en_gbus0311770.016"
+					},
+					{
+							"text": "the cliff \u003cb\u003eedge\u003c/b\u003e",
+							"source_type": 3,
+							"definition_id": "m_en_gbus0311770.009"
+					},
+					{
+							"text": "the veal had the \u003cb\u003eedge\u003c/b\u003e on flavor",
+							"source_type": 3,
+							"definition_id": "m_en_gbus0311770.018"
+					},
+					{
+							"text": "a knife with a razor-sharp \u003cb\u003eedge\u003c/b\u003e",
+							"source_type": 3,
+							"definition_id": "m_en_gbus0311770.013"
+					},
+					{
+							"text": "a willow tree at the water\u0027s \u003cb\u003eedge\u003c/b\u003e",
+							"source_type": 3,
+							"definition_id": "m_en_gbus0311770.006"
+					},
+					{
+							"text": "the economy was teetering on the \u003cb\u003eedge\u003c/b\u003e of recession",
+							"source_type": 3,
+							"definition_id": "m_en_gbus0311770.010"
+					}
+			]
+	}
+}

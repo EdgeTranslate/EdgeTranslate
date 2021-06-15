@@ -8,8 +8,6 @@ module.exports = async () => {
     const https = await mockttp.generateCACertificate();
     const server = mockttp.getLocal({ https });
     await server.start(ProxyPort);
-    // Proxy all requests through as normal, untouched.
-    server.anyRequest().thenPassThrough();
     global.server = server;
     process.server = server;
 

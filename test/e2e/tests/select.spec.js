@@ -1,13 +1,33 @@
 import path from "path";
 
 const SelectionButtonId = "edge-translate-button";
-const WaitTranslationResultTime = 5_000;
+const WaitTranslationResultTime = 200; // Delayed time for waiting the response of translation result.
+const WaitButtonTime = 350; // Delayed time for waiting the animation of button to finish.
 
+const SL = "en",
+    TL = "zh-CN",
+    WordsList = ["edge"];
 describe("selection translation functions", () => {
     beforeAll(async () => {
+        // Mock the translation requests for the words.
+        WordsList.reduce(
+            (server, word) =>
+                server
+                    .withQuery({
+                        sl: SL,
+                        tl: TL,
+                        q: word,
+                    })
+                    .thenFromFile(
+                        200,
+                        path.resolve(__dirname, `../fixtures/words/${word}/google/${SL}-${TL}.json`)
+                    ),
+            server.anyRequest().forHost("translate.google.cn")
+        );
+
         await changeLanguageSetting({
-            source: "auto",
-            target: "zh-CN",
+            source: SL,
+            target: TL,
             mutual: false,
         });
     });
@@ -22,7 +42,7 @@ describe("selection translation functions", () => {
         await driver.selectElement(`#${text}`);
         expect(await driver.executeScript("return window.getSelection().toString();")).toBe(text);
 
-        await driver.delay(500);
+        await driver.delay(WaitButtonTime);
         const selectionButton = await driver.findElement(`#${SelectionButtonId}`);
         expect(await selectionButton.takeScreenshot(true)).toMatchImageSnapshot();
     });
@@ -59,7 +79,7 @@ describe("selection translation functions", () => {
 
         const text = "edge";
         await driver.selectElement(`#${text}`);
-        await driver.delay(500);
+        await driver.delay(WaitButtonTime);
         await driver.clickElement(`#${SelectionButtonId}`);
         await driver.delay(WaitTranslationResultTime);
         // The selected text should be canceled.
@@ -82,7 +102,7 @@ describe("selection translation functions", () => {
         await actions.doubleClick(textEl).perform();
         expect(await driver.executeScript("return window.getSelection().toString();")).toBe(text);
 
-        await driver.delay(500);
+        await driver.delay(WaitButtonTime);
         const selectionButton = await driver.findElement(`#${SelectionButtonId}`);
         expect(await selectionButton.takeScreenshot(true)).toMatchImageSnapshot();
     });

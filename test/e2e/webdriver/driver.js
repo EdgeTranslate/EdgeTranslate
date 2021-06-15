@@ -215,12 +215,15 @@ class Driver {
      */
     async selectOption(selectEl, value) {
         const optionEls = await selectEl.findElements(By.css("option"));
-        optionEls.map(async (optionEl) => {
-            const optionValue = await optionEl.getAttribute("value");
-            if (optionValue === value) {
-                await optionEl.click();
-                return;
-            }
+        return new Promise((resolve) => {
+            optionEls.map((optionEl) => {
+                optionEl.getAttribute("value").then((optionValue) => {
+                    if (optionValue === value) {
+                        optionEl.click();
+                        resolve();
+                    }
+                });
+            });
         });
     }
 
