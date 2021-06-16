@@ -257,12 +257,21 @@ class Driver {
         return newHandle;
     }
 
+    /**
+     *
+     * @param {string | number} handle A handle string for a specified window or a number for the nth(or the last nth) of all windows.
+     */
     async switchToWindow(handle) {
-        await this.driver.switchTo().window(handle);
-    }
-
-    async getAllWindowHandles() {
-        return await this.driver.getAllWindowHandles();
+        let targetHandle;
+        if (typeof handle === "number") {
+            const handles = await this.driver.getAllWindowHandles();
+            if (handle < 0) {
+                targetHandle = handles[handles.length + handle];
+            } else if (handle < handles.length) {
+                targetHandle = handles[handle];
+            } else throw new Error(`Can't locate the ${handle}th window.`);
+        } else targetHandle = handle;
+        await this.driver.switchTo().window(targetHandle);
     }
 
     async waitUntilXWindowHandles(x, delayStep = 1000, timeout = 5000) {
@@ -362,6 +371,12 @@ class Driver {
     getCurrentUrl() {
         return this.driver.getCurrentUrl();
     }
+    getWindowHandle() {
+        return this.driver.getWindowHandle();
+    }
+    getAllWindowHandles() {
+        return this.driver.getAllWindowHandles();
+    }
     actions(options) {
         return this.driver.actions(options);
     }
@@ -373,6 +388,9 @@ class Driver {
     }
     takeScreenshot() {
         return this.driver.takeScreenshot();
+    }
+    close() {
+        return this.driver.close();
     }
 }
 

@@ -3,10 +3,11 @@ import path from "path";
 const SelectionButtonId = "edge-translate-button";
 const WaitTranslationResultTime = 200; // Delayed time for waiting the response of translation result.
 const WaitButtonTime = 350; // Delayed time for waiting the animation of button to finish.
+const PageName = "main.html";
 
 describe("selection translation functions", () => {
     test("Selection button shows once a text is selected.", async () => {
-        await driver.get(`file://${path.resolve(__dirname, "../pages/main.html")}`);
+        await driver.get(`file://${path.resolve(__dirname, "../pages", PageName)}`);
 
         const text = "edge";
         const textEl = await driver.findElement(`#${text}`);
@@ -25,7 +26,7 @@ describe("selection translation functions", () => {
         /* Open translating after select mode. */
         await driver.clickElement("#translate-after-select");
 
-        await driver.get(`file://${path.resolve(__dirname, "../pages/main.html")}`);
+        await driver.get(`file://${path.resolve(__dirname, "../pages", PageName)}`);
 
         const text = "edge";
         const textEl = await driver.findElement(`#${text}`);
@@ -48,7 +49,7 @@ describe("selection translation functions", () => {
         await driver.navigate(driver.PAGES.OPTIONS);
         await driver.clickElement("#cancel-text-selection");
 
-        await driver.get(`file://${path.resolve(__dirname, "../pages/main.html")}`);
+        await driver.get(`file://${path.resolve(__dirname, "../pages", PageName)}`);
 
         const text = "edge";
         await driver.selectElement(`#${text}`);
@@ -64,7 +65,7 @@ describe("selection translation functions", () => {
     });
 
     test("Double click text to show translation button.", async () => {
-        await driver.get(`file://${path.resolve(__dirname, "../pages/main.html")}`);
+        await driver.get(`file://${path.resolve(__dirname, "../pages", PageName)}`);
 
         const text = "edge";
         const textEl = await driver.findElement(`#${text}`);
@@ -84,7 +85,7 @@ describe("selection translation functions", () => {
         await driver.navigate(driver.PAGES.OPTIONS);
         await driver.clickElement("#translate-after-dbl-click");
 
-        await driver.get(`file://${path.resolve(__dirname, "../pages/main.html")}`);
+        await driver.get(`file://${path.resolve(__dirname, "../pages", PageName)}`);
 
         const text = "edge";
         const textEl = await driver.findElement(`#${text}`);
