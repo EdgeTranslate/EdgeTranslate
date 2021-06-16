@@ -220,7 +220,7 @@ class Driver {
                 optionEl.getAttribute("value").then((optionValue) => {
                     if (optionValue === value) {
                         optionEl.click();
-                        resolve();
+                        return resolve();
                     }
                 });
             });

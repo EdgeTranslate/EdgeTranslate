@@ -48,6 +48,8 @@ class ChromeDriver {
      */
     async getExtensionIdByName(extensionName) {
         await this._driver.get("chrome://extensions");
+        // Wait for the extension to load.
+        await new Promise((resolve) => setTimeout(resolve, 500));
         return await this._driver.executeScript(`
       const extensions = document.querySelector("extensions-manager").shadowRoot
         .querySelector("extensions-item-list").shadowRoot

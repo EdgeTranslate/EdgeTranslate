@@ -590,8 +590,8 @@ export default function ResultPanel() {
                 }
             >
                 <GlobalStyle />
-                <Panel ref={onDisplayStatusChange} displayType={displayType}>
-                    <Head ref={headElRef}>
+                <Panel ref={onDisplayStatusChange} displayType={displayType} data-testid="Panel">
+                    <Head ref={headElRef} data-testid="Head">
                         <SourceOption
                             title={chrome.i18n.getMessage(`${currentTranslator}Short`)}
                             activeKey={currentTranslator}
@@ -608,6 +608,7 @@ export default function ResultPanel() {
                                             });
                                     });
                             }}
+                            data-testid="SourceOption"
                         >
                             {availableTranslators?.map((translator) => (
                                 <Dropdown.Item key={translator} eventKey={translator}>
@@ -619,6 +620,7 @@ export default function ResultPanel() {
                             <HeadIcon
                                 title={chrome.i18n.getMessage("Settings")}
                                 onClick={() => channel.emit("open_options_page")}
+                                data-testid="SettingIcon"
                             >
                                 <SettingIcon />
                             </HeadIcon>
@@ -632,12 +634,14 @@ export default function ResultPanel() {
                                         fixSetting: !panelFix,
                                     });
                                 }}
+                                data-testid="PinIcon"
                             >
                                 <StyledPinIcon fix={panelFix} />
                             </HeadIcon>
                             <HeadIcon
                                 title={chrome.i18n.getMessage("CloseResultFrame")}
                                 onClick={() => setOpen(false)}
+                                data-testid="CloseIcon"
                             >
                                 <CloseIcon />
                             </HeadIcon>

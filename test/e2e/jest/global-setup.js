@@ -1,5 +1,8 @@
-import { buildWebDriver } from "../webdriver";
+const path = require("path");
 const mockttp = require("mockttp");
+
+import { buildWebDriver } from "../webdriver";
+import { changeLanguageSetting } from "../library/initiate.js";
 
 const ProxyPort = 8080;
 
@@ -11,11 +14,37 @@ module.exports = async () => {
     global.server = server;
     process.server = server;
 
-    global.driver = (
+    const driver = (
         await buildWebDriver({
             proxyUrl: `localhost:${ProxyPort}`,
         })
     ).driver;
-    await global.driver.driver.manage().window().maximize();
-    process.driver = global.driver;
+    global.driver = driver;
+    process.driver = driver;
+    await driver.driver.manage().window().maximize();
+
+    const SL = "en",
+        TL = "zh-CN",
+        WordsList = ["edge"];
+    // Mock the translation requests for the words.
+    WordsList.reduce(
+        (server, word) =>
+            server
+                .withQuery({
+                    sl: SL,
+                    tl: TL,
+                    q: word,
+                })
+                .thenFromFile(
+                    200,
+                    path.resolve(__dirname, `../fixtures/words/${word}/google/${SL}-${TL}.json`)
+                ),
+        server.anyRequest().forHost("translate.google.cn")
+    );
+
+    await changeLanguageSetting({
+        source: SL,
+        target: TL,
+        mutual: false,
+    });
 };
