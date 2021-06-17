@@ -1,0 +1,116 @@
+{
+  "projectName": "EdgeTranslate",
+  "projectOwner": "EdgeTranslate",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "commitConvention": "none",
+  "contributors": [
+    {
+      "login": "nickyc975",
+      "name": "Nicky Chen",
+      "avatar_url": "https://avatars.githubusercontent.com/u/25877145?v=4",
+      "profile": "https://nickyc975.github.io/",
+      "contributions": [
+        "code",
+        "data",
+        "doc",
+        "ideas",
+        "maintenance"
+      ]
+    },
+    {
+      "login": "Mark-Fenng",
+      "name": "Lucky Feng",
+      "avatar_url": "https://avatars.githubusercontent.com/u/27533910?v=4",
+      "profile": "https://blog.csdn.net/Clark_Fitz817",
+      "contributions": [
+        "code",
+        "design",
+        "mentoring",
+        "ideas",
+        "maintenance"
+      ]
+    },
+    {
+      "login": "sansroman",
+      "name": "Zia",
+      "avatar_url": "https://avatars.githubusercontent.com/u/17476682?v=4",
+      "profile": "https://github.com/sansroman",
+      "contributions": [
+        "code",
+        "design",
+        "ideas"
+      ]
+    },
+    {
+      "login": "Atry",
+      "name": "Yang, Bo",
+      "avatar_url": "https://avatars.githubusercontent.com/u/601530?v=4",
+      "profile": "https://www.yang-bo.com/",
+      "contributions": [
+        "code",
+        "ideas"
+      ]
+    },
+    {
+      "login": "Isildur46",
+      "name": "Isildur46",
+      "avatar_url": "https://avatars.githubusercontent.com/u/19759799?v=4",
+      "profile": "https://github.com/Isildur46",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "ykyuki",
+      "name": "ykyuki",
+      "avatar_url": "https://avatars.githubusercontent.com/u/28839969?v=4",
+      "profile": "https://ykyuki.net/",
+      "contributions": [
+        "translation"
+      ]
+    },
+    {
+      "login": "electrolom42",
+      "name": "ElectroLom",
+      "avatar_url": "https://avatars.githubusercontent.com/u/25820887?v=4",
+      "profile": "https://github.com/electrolom42",
+      "contributions": [
+        "translation"
+      ]
+    },
+    {
+      "login": "axionl",
+      "name": "ArielAxionL",
+      "avatar_url": "https://avatars.githubusercontent.com/u/8396456?v=4",
+      "profile": "https://axionl.me/",
+      "contributions": [
+        "doc"
+      ]
+    },
+    {
+      "login": "vanja-san",
+      "name": "The_BadUser",
+      "avatar_url": "https://avatars.githubusercontent.com/u/7201687?v=4",
+      "profile": "https://github.com/vanja-san",
+      "contributions": [
+        "translation"
+      ]
+    },
+    {
+      "login": "knlyknly",
+      "name": "knlyknly",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1418612?v=4",
+      "profile": "https://github.com/knlyknly",
+      "contributions": [
+        "code"
+      ]
+    }
+  ],
+  "contributorsPerLine": 5
+}
