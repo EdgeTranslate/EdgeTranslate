@@ -13,14 +13,6 @@ const firefox = require("selenium-webdriver/firefox");
 const TEMP_PROFILE_PATH_PREFIX = path.join(os.tmpdir(), "EdgeTranslate-Fx-Profile");
 
 /**
- * Pack the directory of firefox to a .zip file.
- */
-const targetZipPath = "build/edge_translate_firefox.zip";
-const zip = new AdmZip();
-zip.addLocalFolder("build/firefox");
-zip.writeZip(targetZipPath);
-
-/**
  * A wrapper around a {@code WebDriver} instance exposing Firefox-specific functionality
  */
 class FirefoxDriver {
@@ -30,6 +22,14 @@ class FirefoxDriver {
      * @returns {Promise<{driver: !ThenableWebDriver, extensionUrl: string, extensionId: string}>}
      */
     static async build({ responsive, port, headless, language, proxyUrl }) {
+        /**
+         * Pack the directory of firefox to a .zip file.
+         */
+        const targetZipPath = "build/edge_translate_firefox.zip";
+        const zip = new AdmZip();
+        zip.addLocalFolder("build/firefox");
+        zip.writeZip(targetZipPath);
+
         const templateProfile = fs.mkdtempSync(TEMP_PROFILE_PATH_PREFIX);
         let options = new firefox.Options().setProfile(templateProfile);
         if (headless) options = options.headless();
