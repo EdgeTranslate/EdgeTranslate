@@ -18,7 +18,7 @@ Promise.all([
             `${screenSize.width}x${screenSize.height}`
         ),
         comparisonMethod: "ssim",
-        failureThreshold: 0.1,
+        failureThreshold: 0.01,
         failureThresholdType: "percent",
     });
     expect.extend({ toMatchImageSnapshot });
