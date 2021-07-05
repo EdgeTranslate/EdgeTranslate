@@ -81,7 +81,7 @@
     },
     "dependencies": {
         "dompurify": "^2.2.8",
-        "preact": "^10.5.13",
+        "preact": "^10.5.14",
         "preact-render-to-string": "^5.1.19",
         "react-shadow": "^19.0.2",
         "react-use": "^17.2.4",
