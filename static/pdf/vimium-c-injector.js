@@ -53,6 +53,7 @@
     const onMark = (event) => {
         const channelElement = event.relatedTarget;
         const box = channelElement && document.getElementById("viewerContainer");
+        event.stopImmediatePropagation();
         if (!box) {
             return;
         }
