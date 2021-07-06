@@ -74,21 +74,48 @@
     };
 
     chrome.storage.sync.get("vimiumExtensionInjector", (result) => {
-        let injectorURL = result.vimiumExtensionInjector;
-        if (injectorURL === "nul" || injectorURL === "/dev/null") {
+        let injector = result.vimiumExtensionInjector;
+        if (injector === "nul" || injector === "/dev/null") {
             return;
         }
-        if (!injectorURL) {
-            injectorURL = /\sEdg\//.test(navigator.appVersion)
+        if (!injector) {
+            injector = /\sEdg\//.test(navigator.appVersion)
                 ? "aibcglbfblnogfjhbcmmpobjhnomhcdo"
                 : "hfjbmagddngcpeloejdejnfgbamkjaeg";
-            chrome.storage.sync.set({ vimiumExtensionInjector: injectorURL });
+            chrome.storage.sync.set({ vimiumExtensionInjector: injector });
         }
-        if (!injectorURL.includes("://")) {
-            injectorURL = `chrome-extension://${injectorURL}/lib/injector.js`;
+        if (injector.includes("://") && injector.includes("/", injector.indexOf("://") + 3)) {
+            inject(injector);
+            return;
         }
+        let extId;
+        try {
+            if (injector.includes("://")) {
+                extId = new URL(injector).hostname;
+            } else {
+                extId = injector;
+            }
+        } catch (_e) {
+            return;
+        }
+        chrome.runtime.sendMessage(extId, { handler: "id" }, (response) => {
+            if (!response || !response.injector || typeof response.injector !== "string") {
+                if (response === false) {
+                    console.log("Connection to the extension named %o was refused.", extId);
+                }
+                return chrome.runtime.lastError;
+            }
+            console.log(
+                `Successfully connected to ${extId}: %o (version ${response.version}).`,
+                response.name
+            );
+            inject(response.injector);
+        });
+    });
+
+    const inject = (url) => {
         const script = document.createElement("script");
-        script.src = injectorURL;
+        script.src = url;
         script.async = true;
         script.onload = () => {
             // 在 https://github.com/gdh1995/vimium-c/blob/master/lib/injector.ts#L87 处定义
@@ -101,5 +128,5 @@
             }
         };
         document.head.appendChild(script);
-    });
+    };
 })();
