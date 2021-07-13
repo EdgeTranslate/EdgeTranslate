@@ -100,6 +100,10 @@ Right click on the icon ![icon](../../images/icon.png) in the top right corner o
 
 ![options](../../images/options.gif)
 
+### Vimium support
+
+We have integrated [Vimium C](https://github.com/gdh1995/vimium-c) into our PDF viewer. If you get used to operating your browser through vimium, why not try the extension [Vimium C](https://github.com/gdh1995/vimium-c)?
+
 ### Advanced usage scenarios
 
 In order to further achieve the goal of convenient translation, we have added a number of shortcuts for Edge Translate. Learn these shortcuts to turn your browser into a convenient word-searching tool.
