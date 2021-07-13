@@ -4,7 +4,9 @@
   "repoType": "github",
   "repoHost": "https://github.com",
   "files": [
-    "README.md"
+    "README.md",
+    "docs/README_TW.md",
+    "docs/README_CN.md"
   ],
   "imageSize": 100,
   "commit": false,
@@ -55,6 +57,16 @@
       "contributions": [
         "code",
         "ideas"
+      ]
+    },
+    {
+      "login": "gdh1995",
+      "name": "Dahan Gong",
+      "avatar_url": "https://avatars.githubusercontent.com/u/5547703?v=4",
+      "profile": "https://github.com/gdh1995",
+      "contributions": [
+        "code",
+        "plugin"
       ]
     },
     {
@@ -110,7 +122,7 @@
       "contributions": [
         "code"
       ]
-    }
+    }   
   ],
   "contributorsPerLine": 5
 }

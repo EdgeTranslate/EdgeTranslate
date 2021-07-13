@@ -6,7 +6,7 @@
 [![License](https://img.shields.io/badge/License-NPL%20(The%20996%20Prohibited%20License)-blue.svg)](https://github.com/EdgeTranslate/EdgeTranslate/blob/master/LICENSE.NPL)
 
 [![Version](https://img.shields.io/github/release/EdgeTranslate/EdgeTranslate.svg?label=version)](https://github.com/EdgeTranslate/EdgeTranslate/releases)
-[![Build Status](https://travis-ci.org/EdgeTranslate/EdgeTranslate.svg?branch=develop)](https://travis-ci.org/EdgeTranslate/EdgeTranslate)
+[![Build Status](https://travis-ci.com/EdgeTranslate/EdgeTranslate.svg?branch=develop)](https://travis-ci.com/github/EdgeTranslate/EdgeTranslate)
 [![codebeat badge](https://codebeat.co/badges/93aa3e86-a3e7-449f-bda2-abdc34595ebb)](https://codebeat.co/projects/github-com-edgetranslate-edgetranslate-develop)
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FEdgeTranslate%2FEdgeTranslate.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FEdgeTranslate%2FEdgeTranslate?ref=badge_shield)
 
@@ -145,17 +145,33 @@ QQ 群: [側邊翻譯用戶交流群](https://jq.qq.com/?_wv=1027&k=gT5EYfFB)
 
 ## 貢獻者
 
-* [Yang, Bo](https://github.com/Atry)
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tr>
+    <td align="center"><a href="https://nickyc975.github.io/"><img src="https://avatars.githubusercontent.com/u/25877145?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Nicky Chen</b></sub></a><br /><a href="https://github.com/EdgeTranslate/EdgeTranslate/commits?author=nickyc975" title="Code">💻</a> <a href="#data-nickyc975" title="Data">🔣</a> <a href="https://github.com/EdgeTranslate/EdgeTranslate/commits?author=nickyc975" title="Documentation">📖</a> <a href="#ideas-nickyc975" title="Ideas, Planning, & Feedback">🤔</a> <a href="#maintenance-nickyc975" title="Maintenance">🚧</a></td>
+    <td align="center"><a href="https://blog.csdn.net/Clark_Fitz817"><img src="https://avatars.githubusercontent.com/u/27533910?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Lucky Feng</b></sub></a><br /><a href="https://github.com/EdgeTranslate/EdgeTranslate/commits?author=Mark-Fenng" title="Code">💻</a> <a href="#design-Mark-Fenng" title="Design">🎨</a> <a href="#mentoring-Mark-Fenng" title="Mentoring">🧑‍🏫</a> <a href="#ideas-Mark-Fenng" title="Ideas, Planning, & Feedback">🤔</a> <a href="#maintenance-Mark-Fenng" title="Maintenance">🚧</a></td>
+    <td align="center"><a href="https://github.com/sansroman"><img src="https://avatars.githubusercontent.com/u/17476682?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Zia</b></sub></a><br /><a href="https://github.com/EdgeTranslate/EdgeTranslate/commits?author=sansroman" title="Code">💻</a> <a href="#design-sansroman" title="Design">🎨</a> <a href="#ideas-sansroman" title="Ideas, Planning, & Feedback">🤔</a></td>
+    <td align="center"><a href="https://www.yang-bo.com/"><img src="https://avatars.githubusercontent.com/u/601530?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Yang, Bo</b></sub></a><br /><a href="https://github.com/EdgeTranslate/EdgeTranslate/commits?author=Atry" title="Code">💻</a> <a href="#ideas-Atry" title="Ideas, Planning, & Feedback">🤔</a></td>
+    <td align="center"><a href="https://github.com/gdh1995"><img src="https://avatars.githubusercontent.com/u/5547703?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Dahan Gong</b></sub></a><br /><a href="https://github.com/EdgeTranslate/EdgeTranslate/commits?author=gdh1995" title="Code">💻</a> <a href="#plugin-gdh1995" title="Plugin/utility libraries">🔌</a></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="https://github.com/Isildur46"><img src="https://avatars.githubusercontent.com/u/19759799?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Isildur46</b></sub></a><br /><a href="https://github.com/EdgeTranslate/EdgeTranslate/commits?author=Isildur46" title="Code">💻</a></td>
+    <td align="center"><a href="https://ykyuki.net/"><img src="https://avatars.githubusercontent.com/u/28839969?v=4?s=100" width="100px;" alt=""/><br /><sub><b>ykyuki</b></sub></a><br /><a href="#translation-ykyuki" title="Translation">🌍</a></td>
+    <td align="center"><a href="https://github.com/electrolom42"><img src="https://avatars.githubusercontent.com/u/25820887?v=4?s=100" width="100px;" alt=""/><br /><sub><b>ElectroLom</b></sub></a><br /><a href="#translation-electrolom42" title="Translation">🌍</a></td>
+    <td align="center"><a href="https://axionl.me/"><img src="https://avatars.githubusercontent.com/u/8396456?v=4?s=100" width="100px;" alt=""/><br /><sub><b>ArielAxionL</b></sub></a><br /><a href="https://github.com/EdgeTranslate/EdgeTranslate/commits?author=axionl" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://github.com/vanja-san"><img src="https://avatars.githubusercontent.com/u/7201687?v=4?s=100" width="100px;" alt=""/><br /><sub><b>The_BadUser</b></sub></a><br /><a href="#translation-vanja-san" title="Translation">🌍</a></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="https://github.com/knlyknly"><img src="https://avatars.githubusercontent.com/u/1418612?v=4?s=100" width="100px;" alt=""/><br /><sub><b>knlyknly</b></sub></a><br /><a href="https://github.com/EdgeTranslate/EdgeTranslate/commits?author=knlyknly" title="Code">💻</a></td>
+  </tr>
+</table>
 
-* [ArielAxionL](https://github.com/axionl) 
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
 
-* [ElectroLom](https://github.com/electrolom42)
-
-* [knlyknly](https://github.com/knlyknly)
-
-* [ykyuki](https://github.com/ykyuki)
-
-* [Isildur46](https://github.com/Isildur46)
+<!-- ALL-CONTRIBUTORS-LIST:END -->
 
 ## 幫助本地化
 
