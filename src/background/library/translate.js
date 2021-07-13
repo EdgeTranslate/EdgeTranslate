@@ -4,17 +4,13 @@ import HybridTranslator from "./translators/hybrid.js";
 import { promiseTabs, delayPromise } from "../../common/scripts/promise.js";
 import LocalTTS from "./local_tts.js";
 
-// Imported for auto code completion.
-// eslint-disable-next-line no-unused-vars
-import Channel from "../../common/scripts/channel.js";
-
 class TranslatorManager {
     /**
-     * @param {Channel} channel Communication channel.
+     * @param {import("../../common/scripts/channel.js").default} channel Communication channel.
      */
     constructor(channel) {
         /**
-         * @type {Channel} Communication channel.
+         * @type {import("../../common/scripts/channel.js").default} Communication channel.
          */
         this.channel = channel;
 
