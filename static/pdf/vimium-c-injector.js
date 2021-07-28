@@ -13,12 +13,15 @@
             if (typeof oldScroll === "function") {
                 /**
                  * 接管滚动命令，用于全屏模式下立即翻页（忽略平滑滚动）
+                 * @returns { boolean | Promise<boolean> } 是否成功滚动（版本 1.92+）
                  */
-                api.$ = (element, di, amount) => {
+                api.$ = function (element, _di, amount) {
                     if (
+                        Math.abs(amount) >= 0.1 &&
                         element.id === "viewerContainer" &&
                         element.classList.contains("pdfPresentationMode")
                     ) {
+                        const old = element.scrollTop
                         element.dispatchEvent(
                             new WheelEvent("wheel", {
                                 bubbles: true,
@@ -27,8 +30,9 @@
                                 deltaY: Math.sign(amount) * 120,
                             })
                         );
+                        return element.scrollTop !== old
                     } else {
-                        oldScroll.call(this, element, di, amount);
+                        return oldScroll.apply(this, arguments);
                     }
                 };
             }
