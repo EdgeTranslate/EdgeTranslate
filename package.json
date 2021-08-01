@@ -47,7 +47,7 @@
         "axios": "^0.21.1",
         "axios-mock-adapter": "^1.19.0",
         "babel-loader": "^8.2.1",
-        "chromedriver": "^91.0.1",
+        "chromedriver": "^92.0.0",
         "crypto": "^1.0.1",
         "css": "^3.0.0",
         "cz-conventional-changelog": "^3.3.0",
@@ -75,7 +75,7 @@
         "querystring": "^0.2.1",
         "raw-loader": "^4.0.2",
         "selenium-webdriver": "^4.0.0-beta.4",
-        "webpack": "^5.44.0",
+        "webpack": "^5.47.1",
         "webpack-merge": "^5.8.0",
         "webpack-stream": "^6.1.2"
     },
