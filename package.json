@@ -39,7 +39,7 @@
         "@babel/core": "^7.14.8",
         "@babel/eslint-parser": "^7.15.0",
         "@babel/plugin-transform-react-jsx": "^7.14.9",
-        "@babel/preset-env": "^7.14.7",
+        "@babel/preset-env": "^7.15.0",
         "@commitlint/cli": "^13.1.0",
         "@commitlint/config-conventional": "^13.1.0",
         "@svgr/webpack": "^5.5.0",
