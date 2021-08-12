@@ -36,7 +36,7 @@
         "e2e:firefox": "SELENIUM_BROWSER=firefox jest -i --config './test/e2e/jest/jest.config.js'"
     },
     "devDependencies": {
-        "@babel/core": "^7.14.8",
+        "@babel/core": "^7.15.0",
         "@babel/eslint-parser": "^7.15.0",
         "@babel/plugin-transform-react-jsx": "^7.14.9",
         "@babel/preset-env": "^7.15.0",
