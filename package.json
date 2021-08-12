@@ -52,7 +52,7 @@
         "css": "^3.0.0",
         "cz-conventional-changelog": "^3.3.0",
         "del": "^6.0.0",
-        "eslint": "^7.30.0",
+        "eslint": "^7.32.0",
         "eslint-config-preact": "^1.1.4",
         "eslint-config-prettier": "^8.3.0",
         "eslint-plugin-html": "^6.1.2",
