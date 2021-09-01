@@ -45,7 +45,7 @@
         "@svgr/webpack": "^5.5.0",
         "adm-zip": "^0.5.5",
         "axios": "^0.21.1",
-        "axios-mock-adapter": "^1.19.0",
+        "axios-mock-adapter": "^1.20.0",
         "babel-loader": "^8.2.1",
         "chromedriver": "^92.0.1",
         "crypto": "^1.0.1",
