@@ -99,6 +99,7 @@ export default function Result(props) {
                             {props.mainMeaning}
                         </div>
                         <StyledCopyIcon
+                            role="button"
                             onClick={() =>
                                 setCopyResult({
                                     copy: true,
@@ -114,7 +115,10 @@ export default function Result(props) {
                                 (targetPronouncing ? (
                                     <StyledPronounceLoadingIcon />
                                 ) : (
-                                    <StyledPronounceIcon onClick={() => setTargetPronounce(true)} />
+                                    <StyledPronounceIcon
+                                        role="button"
+                                        onClick={() => setTargetPronounce(true)}
+                                    />
                                 ))}
                             {displayTPronunciation && (
                                 <PronounceText
@@ -147,6 +151,7 @@ export default function Result(props) {
                         </div>
                         {editing ? (
                             <StyledEditDoneIcon
+                                role="button"
                                 title={chrome.i18n.getMessage("Retranslate")}
                                 onClick={() =>
                                     setEditing({
@@ -157,6 +162,7 @@ export default function Result(props) {
                             />
                         ) : (
                             <StyledEditIcon
+                                role="button"
                                 title={chrome.i18n.getMessage("EditText")}
                                 onClick={() =>
                                     setEditing({
@@ -173,7 +179,10 @@ export default function Result(props) {
                                 (sourcePronouncing ? (
                                     <StyledPronounceLoadingIcon />
                                 ) : (
-                                    <StyledPronounceIcon onClick={() => setSourcePronounce(true)} />
+                                    <StyledPronounceIcon
+                                        role="button"
+                                        onClick={() => setSourcePronounce(true)}
+                                    />
                                 ))}
                             {displaySPronunciation && (
                                 <PronounceText
