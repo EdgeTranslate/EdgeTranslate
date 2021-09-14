@@ -593,6 +593,7 @@ export default function ResultPanel() {
                 <Panel ref={onDisplayStatusChange} displayType={displayType} data-testid="Panel">
                     <Head ref={headElRef} data-testid="Head">
                         <SourceOption
+                            role="button"
                             title={chrome.i18n.getMessage(`${currentTranslator}Short`)}
                             activeKey={currentTranslator}
                             onSelect={(eventKey) => {
@@ -611,13 +612,14 @@ export default function ResultPanel() {
                             data-testid="SourceOption"
                         >
                             {availableTranslators?.map((translator) => (
-                                <Dropdown.Item key={translator} eventKey={translator}>
+                                <Dropdown.Item role="button" key={translator} eventKey={translator}>
                                     {chrome.i18n.getMessage(translator)}
                                 </Dropdown.Item>
                             ))}
                         </SourceOption>
                         <HeadIcons>
                             <HeadIcon
+                                role="button"
                                 title={chrome.i18n.getMessage("Settings")}
                                 onClick={() => channel.emit("open_options_page")}
                                 data-testid="SettingIcon"
@@ -625,6 +627,7 @@ export default function ResultPanel() {
                                 <SettingIcon />
                             </HeadIcon>
                             <HeadIcon
+                                role="button"
                                 title={chrome.i18n.getMessage(
                                     panelFix ? "UnfixResultFrame" : "FixResultFrame"
                                 )}
@@ -639,6 +642,7 @@ export default function ResultPanel() {
                                 <StyledPinIcon fix={panelFix} />
                             </HeadIcon>
                             <HeadIcon
+                                role="button"
                                 title={chrome.i18n.getMessage("CloseResultFrame")}
                                 onClick={() => setOpen(false)}
                                 data-testid="CloseIcon"

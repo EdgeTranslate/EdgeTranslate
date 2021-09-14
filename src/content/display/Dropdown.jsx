@@ -76,6 +76,7 @@ Dropdown.displayName = "Dropdown";
 Dropdown.Item = function DropdownItem(props) {
     return (
         <Item
+            role="menuitem"
             className={props.className}
             active={props.active}
             onClick={(event) => {
