@@ -80,7 +80,7 @@
         "webpack-stream": "^6.1.2"
     },
     "dependencies": {
-        "dompurify": "^2.3.1",
+        "dompurify": "^2.3.3",
         "preact": "^10.5.14",
         "preact-render-to-string": "^5.1.19",
         "react-shadow": "^19.0.2",
