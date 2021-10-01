@@ -61,7 +61,7 @@
         "gulp": "^4.0.2",
         "gulp-eslint": "^6.0.0",
         "gulp-stylus": "^2.7.0",
-        "gulp-terser": "^2.0.1",
+        "gulp-terser": "^2.1.0",
         "gulp-zip": "^5.1.0",
         "husky": "^4.3.8",
         "jest": "^27.2.0",
@@ -71,7 +71,7 @@
         "merge-stream": "^2.0.0",
         "minimist": "^1.2.5",
         "mockttp": "^1.2.2",
-        "prettier": "^2.4.0",
+        "prettier": "^2.4.1",
         "querystring": "^0.2.1",
         "raw-loader": "^4.0.2",
         "selenium-webdriver": "^4.0.0-rc-1",
@@ -86,7 +86,7 @@
         "react-shadow": "^19.0.2",
         "react-use": "^17.3.1",
         "resize-observer-polyfill": "^1.5.1",
-        "simplebar-react": "^2.3.5",
+        "simplebar-react": "^2.3.6",
         "styled-components": "^5.3.1"
     },
     "jest": {
