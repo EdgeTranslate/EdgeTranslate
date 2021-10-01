@@ -55,7 +55,7 @@
         "eslint": "^7.32.0",
         "eslint-config-preact": "^1.1.4",
         "eslint-config-prettier": "^8.3.0",
-        "eslint-plugin-html": "^6.1.2",
+        "eslint-plugin-html": "^6.2.0",
         "eslint-plugin-prettier": "^3.4.1",
         "geckodriver": "^2.0.4",
         "gulp": "^4.0.2",
