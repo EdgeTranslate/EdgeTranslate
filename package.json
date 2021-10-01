@@ -61,7 +61,7 @@
         "gulp": "^4.0.2",
         "gulp-eslint": "^6.0.0",
         "gulp-stylus": "^2.7.0",
-        "gulp-terser": "^2.0.1",
+        "gulp-terser": "^2.1.0",
         "gulp-zip": "^5.1.0",
         "husky": "^4.3.8",
         "jest": "^27.2.0",
