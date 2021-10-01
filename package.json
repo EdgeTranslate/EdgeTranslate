@@ -40,7 +40,7 @@
         "@babel/eslint-parser": "^7.15.7",
         "@babel/plugin-transform-react-jsx": "^7.14.9",
         "@babel/preset-env": "^7.15.6",
-        "@commitlint/cli": "^13.1.0",
+        "@commitlint/cli": "^13.2.0",
         "@commitlint/config-conventional": "^13.2.0",
         "@svgr/webpack": "^5.5.0",
         "adm-zip": "^0.5.6",
