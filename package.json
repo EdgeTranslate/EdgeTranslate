@@ -43,7 +43,7 @@
         "@commitlint/cli": "^13.2.0",
         "@commitlint/config-conventional": "^13.2.0",
         "@svgr/webpack": "^5.5.0",
-        "adm-zip": "^0.5.6",
+        "adm-zip": "^0.5.7",
         "axios": "^0.22.0",
         "axios-mock-adapter": "^1.20.0",
         "babel-loader": "^8.2.1",
