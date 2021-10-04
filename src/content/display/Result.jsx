@@ -799,12 +799,14 @@ function copyContent(_, action) {
 /**
  * Update the position of editing cursor.
  *
+ * @param {Selection} selection selection
  * @param {Node} node node
  * @param {Number} offset offset
  */
-function setEditCursor(node, offset) {
+function setEditCursor(selection, node, offset) {
+    if (!node) return;
+
     let range = document.createRange();
-    let selection = window.getSelection();
 
     range.setStart(node, offset);
     range.collapse(true);
@@ -818,34 +820,61 @@ function setEditCursor(node, offset) {
  */
 
 /**
- * Prevent keydown event from propagation.
+ * Prevent keydown event from propagation and handle some special keydown events.
  *
  * @param {Event} event keydown event.
  */
 function onKeyDownInTextEditor(event) {
     event.stopPropagation();
-    let selection = window.getSelection();
-    let content = event.target.textContent;
+
+    /**
+     * In Chrome, we cannot get selection info inside a shadow DOM through the global document
+     * object. Thus we need to find the direct shadow root of the element.
+     */
+    let selection = (
+        BROWSER_ENV === "chrome" ? event.target.getRootNode() : document
+    ).getSelection();
     let start = Math.min(selection.anchorOffset, selection.focusOffset),
         end = Math.max(selection.anchorOffset, selection.focusOffset);
+    let content = event.target.textContent;
 
     switch (event.key) {
         case "Backspace":
+            /**
+             * Handle backspace keydown.
+             *
+             * Backspace should remove the character before the cursor OR the selected text.
+             * "start === end" means no text selected, we remove the character before the cursor.
+             * Otherwise we remove the selected text.
+             */
             event.preventDefault();
             if (start === end) start -= 1;
-            event.target.textContent = content.substr(0, start) + content.substr(end);
-            setEditCursor(event.target.childNodes[0], start);
+            event.target.textContent = content.substring(0, start) + content.substring(end);
+            setEditCursor(selection, event.target.childNodes[0], start);
             break;
         case "Delete":
+            /**
+             * Handle delete keydown.
+             *
+             * Delete should remove the character after the cursor OR the selected text.
+             * "start === end" means no text selected, we remove the character after the cursor.
+             * Otherwise we remove the selected text.
+             */
             event.preventDefault();
             if (start === end) end += 1;
-            event.target.textContent = content.substr(0, start) + content.substr(end);
-            setEditCursor(event.target.childNodes[0], start);
+            event.target.textContent = content.substring(0, start) + content.substring(end);
+            setEditCursor(selection, event.target.childNodes[0], start);
             break;
         case "Enter":
+            /**
+             * Handle enter keydown.
+             *
+             * Enter should insert a \n at the cursor OR replace the selected text with \n.
+             * Those two cases can be handled uniformly.
+             */
             event.preventDefault();
-            event.target.textContent = `${content.substr(0, start)}\n${content.substr(end)}`;
-            setEditCursor(event.target.childNodes[0], start + 1);
+            event.target.textContent = `${content.substring(0, start)}\n${content.substring(end)}`;
+            setEditCursor(selection, event.target.childNodes[0], start + 1);
             break;
         default:
             break;
