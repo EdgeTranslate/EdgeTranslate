@@ -797,6 +797,23 @@ function copyContent(_, action) {
 }
 
 /**
+ * Update the position of editing cursor.
+ *
+ * @param {Node} node node
+ * @param {Number} offset offset
+ */
+function setEditCursor(node, offset) {
+    let range = document.createRange();
+    let selection = window.getSelection();
+
+    range.setStart(node, offset);
+    range.collapse(true);
+
+    selection.removeAllRanges();
+    selection.addRange(range);
+}
+
+/**
  * The following 4 functions are intended to prevent input events from being caught by other elements.
  */
 
@@ -807,6 +824,32 @@ function copyContent(_, action) {
  */
 function onKeyDownInTextEditor(event) {
     event.stopPropagation();
+    let selection = window.getSelection();
+    let content = event.target.textContent;
+    let start = Math.min(selection.anchorOffset, selection.focusOffset),
+        end = Math.max(selection.anchorOffset, selection.focusOffset);
+
+    switch (event.key) {
+        case "Backspace":
+            event.preventDefault();
+            if (start === end) start -= 1;
+            event.target.textContent = content.substr(0, start) + content.substr(end);
+            setEditCursor(event.target.childNodes[0], start);
+            break;
+        case "Delete":
+            event.preventDefault();
+            if (start === end) end += 1;
+            event.target.textContent = content.substr(0, start) + content.substr(end);
+            setEditCursor(event.target.childNodes[0], start);
+            break;
+        case "Enter":
+            event.preventDefault();
+            event.target.textContent = `${content.substr(0, start)}\n${content.substr(end)}`;
+            setEditCursor(event.target.childNodes[0], start + 1);
+            break;
+        default:
+            break;
+    }
 }
 
 /**
