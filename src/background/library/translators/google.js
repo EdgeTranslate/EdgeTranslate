@@ -119,14 +119,15 @@ class GoogleTranslator {
         // tk需要的密钥
         this.TKK = [434217, 1534559001];
 
+        // Deprecated host.
+        // this.HOST = "https://translate.google.cn/";
+
+        // Spare host.
+        this.HOST = "https://translate.googleapis.com/";
+
         /**
          * Translate API.
          */
-        this.HOST = "https://translate.google.cn/";
-
-        // Spare host.
-        // this.HOST = "https://translate.googleapis.com/";
-
         this.TRANSLATE_URL = `${this.HOST}translate_a/single?client=gtx&dj=1&dt=t&dt=at&dt=bd&dt=ex&dt=md&dt=rw&dt=ss&dt=rm`;
         this.TTS_URL = `${this.HOST}translate_tts?client=gtx`;
 
