@@ -270,9 +270,9 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
         case "translate":
             channel
                 .requestToTab(tab.id, "get_selection")
-                .then(({ selectedText, position }) => {
-                    if (selectedText) {
-                        return TRANSLATOR_MANAGER.translate(selectedText, position);
+                .then(({ text, position }) => {
+                    if (text) {
+                        return TRANSLATOR_MANAGER.translate(text, position);
                     }
                     return Promise.reject();
                 })
