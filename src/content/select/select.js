@@ -8,12 +8,6 @@ const channel = new Channel();
 // to indicate whether the translation button has been shown
 let HasButtonShown = false;
 
-/* store the position of selection icon to help locate the result panel*/
-// store start position of the icon
-let startPosition;
-// store the latest position of the icon. scroll event may change the icon's position
-let currentPosition;
-
 /**
  * 创建翻译按钮的图标元素
  */
@@ -86,9 +80,6 @@ window.addEventListener("DOMContentLoaded", () => {
 
             let OtherSettings = result.OtherSettings;
 
-            // store the position which would be transferred to display.js through the Channel.
-            currentPosition = [event.clientX, event.clientY];
-
             // Show translating result instantly.
             if (
                 OtherSettings["TranslateAfterSelect"] ||
@@ -131,10 +122,6 @@ function showButton(event) {
     // 翻译按钮的纵坐标位置: 鼠标停留位置 + y方向滚动的高度 + bias
     let YPosition = event.y - YBias - translateButton.clientHeight;
 
-    // transfer this position to display.js through the translate submission
-    startPosition = [event.clientX, event.clientY];
-    currentPosition = startPosition;
-
     // if the icon is beyond the right side of the page, we need to put the icon on the left of the cursor
     if (XPosition + translateButton.clientWidth > document.documentElement.clientWidth)
         XPosition = event.x - XBias - translateButton.clientWidth;
@@ -155,27 +142,49 @@ function showButton(event) {
 }
 
 /**
+ * get selected text and its position in the page
+ *
+ * @returns {Object} format: {text: "string", position: [p1,p2]}
+ */
+function getSelection() {
+    let selection = window.getSelection();
+    let text = "";
+    let position;
+    if (selection.rangeCount > 0) {
+        text = selection.toString().trim();
+        if (isPDFjsPDFViewer()) {
+            /**
+             * pdf.js adds \n at the end of every line and breaks down single sentences into multiple lines.
+             * Thus we have to replace \n with space to improve translation.
+             */
+            text = text.replace(/\n/g, " ");
+        }
+
+        const lastRange = selection.getRangeAt(selection.rangeCount - 1);
+        // If the user selects something in a shadow dom, the endContainer will be the HTML element and the position will be [0,0]. In this situation, we set the position undefined to avoid relocating the result panel.
+        if (lastRange.endContainer !== document.documentElement) {
+            let rect = selection.getRangeAt(selection.rangeCount - 1).getBoundingClientRect();
+            position = [rect.left, rect.top];
+        }
+    }
+    return { text, position };
+}
+
+/**
  * 处理点击翻译按钮后的事件
  */
 function translateSubmit() {
-    // 发送消息给后台进行翻译。
-    if (window.getSelection().toString().trim()) {
-        channel
-            .request("translate", {
-                text: window.getSelection().toString(),
-                // send the position of selection icon to background
-                // to help locate the result panel
-                position: currentPosition, // an array
-            })
-            .then(() => {
-                chrome.storage.sync.get("OtherSettings", (result) => {
-                    // to check whether user need to cancel text selection after translation finished
-                    if (result.OtherSettings && result.OtherSettings["CancelTextSelection"]) {
-                        cancelTextSelection();
-                    }
-                });
-                disappearButton();
+    let selection = getSelection();
+    if (selection.text && selection.text.length > 0) {
+        channel.request("translate", selection).then(() => {
+            chrome.storage.sync.get("OtherSettings", (result) => {
+                // to check whether user need to cancel text selection after translation finished
+                if (result.OtherSettings && result.OtherSettings["CancelTextSelection"]) {
+                    cancelTextSelection();
+                }
             });
+            disappearButton();
+        });
     }
 }
 
@@ -209,9 +218,10 @@ function shouldTranslate() {
  * 处理发音快捷键
  */
 function pronounceSubmit() {
-    if (window.getSelection().toString().trim()) {
+    let selection = getSelection();
+    if (selection.text && selection.text.length > 0) {
         channel.request("pronounce", {
-            text: window.getSelection().toString(),
+            text: selection.text,
             language: "auto",
         });
     }
@@ -238,7 +248,6 @@ function scrollHandler() {
 
         translateButton.style.left = `${originPositionX + distanceX}px`;
         translateButton.style.top = `${originPositionY + distanceY}px`;
-        currentPosition = [startPosition[0] + distanceX, startPosition[1] + distanceY];
     }
 }
 
@@ -300,26 +309,6 @@ function cancelTextSelection() {
 //     }
 // }
 
-/**
- * get selected text and its position in the page
- * @returns {Object} format: {selectedText: "string", position: [p1,p2]}
- */
-function getSelection() {
-    let selection = window.getSelection();
-    let selectedText;
-    let position;
-    if (selection.rangeCount > 0) {
-        selectedText = selection.toString().trim();
-        const lastRange = selection.getRangeAt(selection.rangeCount - 1);
-        // If the user selects something in a shadow dom, the endContainer will be the HTML element and the position will be [0,0]. In this situation, we set the position undefined to avoid relocating the result panel.
-        if (lastRange.endContainer !== document.documentElement) {
-            let rect = selection.getRangeAt(selection.rangeCount - 1).getBoundingClientRect();
-            position = [rect.left, rect.top];
-        }
-    }
-    return { selectedText, position };
-}
-
 // provide user's selection result for the background module
 channel.provide("get_selection", () => Promise.resolve(getSelection()));
 
@@ -327,7 +316,6 @@ channel.provide("get_selection", () => Promise.resolve(getSelection()));
 channel.on("command", (detail) => {
     switch (detail.command) {
         case "translate_selected":
-            currentPosition = getSelection().position;
             translateSubmit();
             break;
         case "pronounce_selected":
