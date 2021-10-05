@@ -2,7 +2,7 @@ import path from "path";
 import { By } from "selenium-webdriver";
 
 const SelectionButtonId = "edge-translate-button";
-const WaitTranslationResultTime = 200; // Delayed time for waiting the response of translation result.
+const WaitTranslationResultTime = 250; // Delayed time for waiting the response of translation result.
 const WaitButtonTime = 350; // Delayed time for waiting the animation of button to finish.
 const PageName = "main.html";
 
@@ -99,5 +99,23 @@ describe("panel functions", () => {
         await driver.switchToWindow(mainPageHandle);
         expect((await driver.getAllWindowHandles()).length).toEqual(1);
         expect(await driver.getTitle()).toEqual(PageName);
+    });
+
+    test("Display content from right to left.", async () => {
+        /* Open the setting for showing content from right to left. */
+        await driver.navigate(driver.PAGES.OPTIONS);
+        await driver.clickElement("#RTL");
+
+        await driver.get(`file://${path.resolve(__dirname, "../pages", PageName)}`);
+        const text = "edge";
+        await driver.selectElement(`#${text}`);
+        await driver.delay(WaitButtonTime);
+        await driver.clickElement(`#${SelectionButtonId}`);
+        await driver.delay(WaitTranslationResultTime);
+        expect(await driver.takeScreenshot(await driver.getPanel())).toMatchImageSnapshot();
+
+        /* Restore the setting. */
+        await driver.navigate(driver.PAGES.OPTIONS);
+        await driver.clickElement("#RTL");
     });
 });

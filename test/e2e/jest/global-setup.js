@@ -39,7 +39,7 @@ module.exports = async () => {
                     200,
                     path.resolve(__dirname, `../fixtures/words/${word}/google/${SL}-${TL}.json`)
                 ),
-        server.anyRequest().forHost("translate.google.cn")
+        server.anyRequest().forHost("translate.googleapis.com")
     );
 
     await changeLanguageSetting({
