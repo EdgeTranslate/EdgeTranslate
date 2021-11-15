@@ -119,6 +119,9 @@ class GoogleTranslator {
         // tk需要的密钥
         this.TKK = [434217, 1534559001];
 
+        // Google Translate home page.
+        this.HOME_PAGE = "https://translate.google.cn/";
+
         // Deprecated host.
         // this.HOST = "https://translate.google.cn/";
 
@@ -225,7 +228,7 @@ class GoogleTranslator {
      * @returns {Promise<void>} promise
      */
     async updateTKK() {
-        const response = await axios.get(this.HOST);
+        const response = await axios.get(this.HOME_PAGE);
 
         let body = response.data;
         let tkk = (body.match(/TKK=(.*?)\(\)\)'\);/i) || [""])[0]
