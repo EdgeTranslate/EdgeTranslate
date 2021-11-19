@@ -335,6 +335,14 @@
         "message": "ビング",
         "description": "ビング翻訳"
     },
+    "DeepLTranslate": {
+        "message": "DeepL Translate",
+        "description": "DeepL Translate."
+    },
+    "DeepLTranslateShort": {
+        "message": "DeepL",
+        "description": "Abbreviation of DeepL Translate."
+    },
     "GoogleTranslate": {
         "message": "グーグル翻訳",
         "description": "グーグル翻訳"

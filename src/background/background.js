@@ -405,6 +405,24 @@ chrome.webRequest.onHeadersReceived.addListener(
 );
 
 /**
+ * Modify the CSP header of DeepL home page.
+ */
+chrome.webRequest.onHeadersReceived.addListener(
+    (details) => ({
+        responseHeaders: details.responseHeaders.map((header) =>
+            /^content-security-policy$/i.test(header.name)
+                ? {
+                      name: header.name,
+                      value: header.value.replaceAll(/frame-ancestors [^;]*;?/g, ""),
+                  }
+                : header
+        ),
+    }),
+    { urls: ["*://*.deepl.com/*"], types: ["main_frame", "sub_frame"] },
+    ["blocking", "responseHeaders"]
+);
+
+/**
  * Modify the cross-origin-resource-policy header of Google TTS response.
  */
 chrome.webRequest.onHeadersReceived.addListener(
