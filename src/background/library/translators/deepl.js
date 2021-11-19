@@ -54,6 +54,17 @@ class DeepLTranslator {
          */
         this.langDetector = langDetector;
         this.TTSEngine = TTSEngine;
+
+        this._createIframe();
+    }
+
+    /**
+     * Create the iframe.
+     */
+    _createIframe() {
+        this.deepLIframe = document.createElement("iframe");
+        document.body.appendChild(this.deepLIframe);
+        this.deepLIframe.src = this.HOME_PAGE;
     }
 
     /**
@@ -86,34 +97,28 @@ class DeepLTranslator {
      * @returns {Promise<Object>} translation Promise
      */
     async translate(text, from, to) {
-        /**
-         * Create the iframe if it has not been created.
-         */
-        if (!this.deepLIframe) {
-            this.deepLIframe = document.createElement("iframe");
-            document.body.appendChild(this.deepLIframe);
-            this.deepLIframe.src = this.HOME_PAGE;
-
-            /**
-             * Wait for the iframe to finish loading.
-             */
-            await new Promise((resolve) => {
-                this.deepLIframe.onload = resolve;
-            });
-        }
-
         try {
-            const result = await new Promise((resolve) => {
+            const result = await new Promise((resolve, reject) => {
+                /**
+                 * Prevent infinitely waiting for the result.
+                 */
+                const timeoutId = setTimeout(() => {
+                    reject({ status: 408, errorMsg: "Request timeout!" });
+                }, 10000);
+
                 /**
                  * Wait for the iframe to send back translate result.
                  *
                  * @param {MessageEvent} msg message
                  */
                 const listener = (msg) => {
-                    if (!msg.data.type || msg.data.type !== "edge_translate_deepl_result") return;
+                    if (!msg.data.type || msg.data.type !== "edge_translate_deepl_response") return;
 
                     window.removeEventListener("message", listener);
-                    resolve(msg.data.result);
+                    clearTimeout(timeoutId);
+
+                    if (msg.data.status === 200) resolve(msg.data.result);
+                    else reject(msg.data);
                 };
                 window.addEventListener("message", listener);
 
@@ -133,6 +138,16 @@ class DeepLTranslator {
 
             return { mainMeaning: result, originalText: text };
         } catch (error) {
+            /**
+             * Status 408 means we can not communicate with the iframe. Thus we have to recreate it.
+             */
+            if (error.status === 408) {
+                document.body.removeChild(this.deepLIframe);
+                this.deepLIframe = null;
+                this._createIframe();
+            }
+
+            error.errorCode = error.status || 0;
             error.errorMsg = error.errorMsg || error.message;
             error.errorAct = {
                 api: "deepl",
