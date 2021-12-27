@@ -314,7 +314,7 @@ class TencentTranslator {
      *
      * @returns {Promise<Object>} translation Promise
      */
-    translate(text, from, to) {
+    async translate(text, from, to) {
         let retryCount = 0;
         let translateOnce = async () => {
             const response = await axios({
@@ -356,8 +356,7 @@ class TencentTranslator {
             // Retry.
             if (retryCount < this.MAX_RETRY) {
                 retryCount++;
-                await this.updateTokens();
-                return translateOnce();
+                return await this.updateTokens().then(translateOnce);
             }
 
             throw {
@@ -374,7 +373,10 @@ class TencentTranslator {
             };
         };
 
-        return translateOnce();
+        // Update tokens first.
+        if (this.qtk.length === 0 || this.qtv.length === 0) await this.updateTokens();
+
+        return await translateOnce();
     }
 
     /**
