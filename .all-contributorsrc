@@ -6,7 +6,8 @@
   "files": [
     "README.md",
     "docs/README_TW.md",
-    "docs/README_CN.md"
+    "docs/README_CN.md",
+    "docs/README_RU.md"
   ],
   "imageSize": 100,
   "commit": false,
@@ -70,6 +71,15 @@
       ]
     },
     {
+      "login": "ViktorOn",
+      "name": "Viktor",
+      "avatar_url": "https://avatars.githubusercontent.com/u/63919734?v=4",
+      "profile": "https://github.com/ViktorOn",
+      "contributions": [
+        "translation"
+      ]
+    },
+    {
       "login": "Isildur46",
       "name": "Isildur46",
       "avatar_url": "https://avatars.githubusercontent.com/u/19759799?v=4",
@@ -122,7 +132,7 @@
       "contributions": [
         "code"
       ]
-    }   
+    }
   ],
   "contributorsPerLine": 5
 }
