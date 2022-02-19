@@ -23,6 +23,8 @@ View this page in other languages:
 
 * [繁體中文](./docs/README_TW.md)
 
+* [Русский](./docs/README_RU.MD)
+
 ## Demo
 
 ![demo_en](./docs/images/demo_en.gif)
