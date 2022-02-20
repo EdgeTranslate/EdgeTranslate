@@ -23,7 +23,7 @@ View this page in other languages:
 
 * [繁體中文](./docs/README_TW.md)
 
-* [Русский](./docs/README_RU.MD)
+* [Русский](./docs/README_RU.md)
 
 ## Demo
 
