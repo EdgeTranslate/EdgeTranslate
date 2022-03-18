@@ -29,11 +29,11 @@
 / [QQ Browser Web Store](https://appcenter.browser.qq.com/search/detail?key=edgetranslate&id=bocbaocobfecmglnmeaeppambideimao%20&title=edgetranslate)
 / [360 Browser Web Store](https://ext.se.360.cn/webstore/detail/jkhojcaggkaojlhfddocjkkphfdkejeg)
 
-__Внимание:__ Версия в надстройках Firefox больше не поддерживает перевод страницы. Если вам нужен перевод страницы, пожалуйста, обратитесь [сюда](./wiki/en/ToFirefoxUsers.md).
+__Внимание:__ Версия в дополнениях Firefox больше не поддерживает перевод страницы. Если вам нужен перевод страницы, пожалуйста, обратитесь [сюда](./wiki/en/ToFirefoxUsers.md).
 
 ## Установка вручную
 
-Во-первых, вам необходимо загрузить пакет расширения для вашего браузера (Chrome и QQ Browser используют один и тот же пакет) из [GitHub Releases](https://github.com/EdgeTranslate/EdgeTranslate/releases).
+Для начала вам необходимо загрузить пакет расширения для вашего браузера (Chrome и QQ Browser используют один и тот же пакет) из [GitHub Releases](https://github.com/EdgeTranslate/EdgeTranslate/releases).
 
 Всегда рекомендуется скачивать последнюю версию.
 
@@ -141,7 +141,7 @@ Telegram-канал: [Edge Translate Channel](https://t.me/EdgeTranslate)
 
 ## Лицензия
 
-[MIT](../LICENSE.MIT) AND [NPL](../LICENSE.NPL)
+[MIT](../LICENSE.MIT) И [NPL](../LICENSE.NPL)
 
 ## Участники
 
@@ -184,4 +184,4 @@ Telegram-канал: [Edge Translate Channel](https://t.me/EdgeTranslate)
 
 Нам потребовалось много времени и сил, чтобы разработать этот проект. Если он действительно помог вам в чем-то, вы могли бы вознаградить нас банками кока-колы, чтобы поддержать нас в желании продолжать улучшать его: [PayPal](https://paypal.me/EdgeTranslate).
 
-Но это абсолютно __добровольно__. Спонсорство не влечет за собой особого отношения, и вы по-прежнему сможете свободно использовать Edge Translate и без спонсорства. Делайте это в соответствии с вашими возможностями!
+Но это абсолютно __добровольно__. Спонсорство не подразумевает особого отношения, и вы по-прежнему сможете свободно использовать Edge Translate и без спонсорства. Делайте это в соответствии с вашими возможностями!
