@@ -335,6 +335,14 @@
         "message": "Bing",
         "description": "Abbreviation of Bing Translate."
     },
+    "DeepLTranslate": {
+        "message": "DeepL Translate",
+        "description": "DeepL Translate."
+    },
+    "DeepLTranslateShort": {
+        "message": "DeepL",
+        "description": "Abbreviation of DeepL Translate."
+    },
     "GoogleTranslate": {
         "message": "Google Translate",
         "description": "Google Translate."

@@ -566,32 +566,53 @@ class BingTranslator {
             this.count++;
             const response = await axios(constructParams.call(this, ...constructParamsArgs));
 
-            // statusCode will indicate the info of error when error encountered
-            let statusCode = response.data.StatusCode || response.data.statusCode || 200;
-            if (statusCode < 300) {
-                // Parse the actually requested url to get the requested host.
-                let responseHost = /(https:\/\/.*\.bing\.com\/).*/g.exec(
-                    response.request.responseURL
-                );
-
-                /**
-                 * Bing redirects user requests based on user region. For example, if we are in China and request
-                 * www.bing.com, we will be redirected to cn.bing.com. This causes translating error because IG and IID
-                 * for one region are not usable for another. Therefore, we need to update HOST, HOME_PAGE, IG and IID
-                 * whenever a redirection happened.
-                 *
-                 * If the requested host is different from the original host, which means there was a redirection,
-                 * update HOST and HOME_PAGE with the redirecting host.
-                 */
-                if (responseHost && responseHost[1] !== this.HOST) {
-                    this.HOST = responseHost[1];
-                    this.HOME_PAGE = `${this.HOST}translator`;
-                } else {
-                    return response.data;
-                }
+            /**
+             * Status codes 401 and 429 mean that Bing thinks we are robots. We have to wait for it to calm down.
+             */
+            if (response.status === 401 || response.status === 429) {
+                // Throw error.
+                throw {
+                    errorType: "API_ERR",
+                    errorCode: response.status,
+                    errorMsg: "Request too frequently!",
+                };
             }
 
-            // Retry after failure
+            /**
+             * Bing redirects user requests based on user region. For example, if we are in China and request
+             * www.bing.com, we will be redirected to cn.bing.com. This causes translating error because IG and IID
+             * for one region are not usable for another. Therefore, we need to update HOST, HOME_PAGE, IG and IID
+             * whenever a redirection happened.
+             *
+             * If the requested host is different from the original host, which means there was a redirection,
+             * update HOST and HOME_PAGE with the redirecting host and retry.
+             */
+            const responseHost = /(https:\/\/.*\.bing\.com\/).*/g.exec(
+                response.request.responseURL
+            );
+            if (responseHost && responseHost[1] !== this.HOST) {
+                this.HOST = responseHost[1];
+                this.HOME_PAGE = `${this.HOST}translator`;
+                return await this.updateTokens().then(requestOnce);
+            }
+
+            /**
+             * statusCode will indicate the status of translating.
+             *
+             * no statusCode or 200: translated successfully
+             * 205: tokens need to be updated
+             */
+            const statusCode = response.data.StatusCode || response.data.statusCode || 200;
+            switch (statusCode) {
+                case 200:
+                    return response.data;
+                case 205:
+                    return await this.updateTokens().then(requestOnce);
+                default:
+                    break;
+            }
+
+            // Retry after unknown failure.
             if (retry && retryCount < this.MAX_RETRY) {
                 retryCount++;
                 return await this.updateTokens().then(requestOnce);

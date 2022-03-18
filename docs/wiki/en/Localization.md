@@ -8,7 +8,7 @@ We developed this extension to help more people overcome language barriers. But 
   
 - Traditional Chinese
 
-- Russian(Thanks to [ElectroLom](https://github.com/electrolom42))
+- Russian(Thanks to [ElectroLom](https://github.com/electrolom42) and [Viktor](https://github.com/ViktorOn))
 
 - Japanese(Thanks to [ykyuki](https://github.com/ykyuki))
 
