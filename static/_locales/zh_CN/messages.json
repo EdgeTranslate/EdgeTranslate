@@ -335,6 +335,14 @@
         "message": "必应翻译",
         "description": "必应翻译翻译源缩写。"
     },
+    "DeepLTranslate": {
+        "message": "DeepL翻译",
+        "description": "DeepL翻译翻译源"
+    },
+    "DeepLTranslateShort": {
+        "message": "DeepL",
+        "description": "DeepL翻译翻译源缩写"
+    },
     "GoogleTranslate": {
         "message": "谷歌翻译",
         "description": "谷歌翻译翻译源。"

@@ -26,6 +26,11 @@
             "js": ["./content/select/select.js"],
             "css": ["./content/select/select.css"],
             "all_frames": true
+        },
+        {
+            "matches": ["*://*.deepl.com/*"],
+            "js": ["./content/deepl-injector.js"],
+            "all_frames": true
         }
     ],
     "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"

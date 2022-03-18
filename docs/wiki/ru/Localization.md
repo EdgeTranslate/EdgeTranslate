@@ -8,7 +8,7 @@
   
 - Китайский традиционный
 
-- Русский (спасибо за это [ElectroLom](https://github.com/electrolom42))
+- Русский (спасибо за это [ElectroLom](https://github.com/electrolom42) и [Viktor](https://github.com/ViktorOn))
 
 - Японский (спасибо за это [ykyuki](https://github.com/ykyuki))
 
