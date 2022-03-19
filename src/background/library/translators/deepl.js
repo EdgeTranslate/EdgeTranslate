@@ -130,7 +130,9 @@ class DeepLTranslator {
                         type: "edge_translate_deepl_request",
                         url: `${this.HOME_PAGE}#${this.LAN_TO_CODE.get(
                             from
-                        )}/${this.LAN_TO_CODE.get(to)}/${encodeURIComponent(text)}`,
+                        )}/${this.LAN_TO_CODE.get(to)}/${encodeURIComponent(
+                            text.replaceAll("/", "\\/") // Escape '/', or the text will be truncated at the first '/'.
+                        )}`,
                     },
                     this.HOME_PAGE
                 );
