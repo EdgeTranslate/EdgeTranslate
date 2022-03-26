@@ -69,7 +69,7 @@
         "jest-raw-loader": "^1.0.1",
         "lodash": "^4.17.21",
         "merge-stream": "^2.0.0",
-        "minimist": "^1.2.5",
+        "minimist": "^1.2.6",
         "mockttp": "^1.2.2",
         "prettier": "^2.6.0",
         "querystring": "^0.2.1",
