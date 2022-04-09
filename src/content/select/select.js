@@ -30,41 +30,20 @@ let scrollingElement = window; // store the specific scrolling element. In norma
 // store the name of scroll property according to scrollingElement(pageXOffset for window and scrollLeft for pdf.js element)
 let scrollPropertyX = "pageXOffset";
 let scrollPropertyY = "pageYOffset";
+// store the position setting of the translation button. default: "TopLeft"
+let ButtonPositionSetting = "TopRight";
 
-// init transform Button position 默认为右上
-let XBias = 10,
-YBias = -15;
+// Fetch the button position setting.
 chrome.storage.sync.get("LayoutSettings", (result) => {
-    if (!result.LayoutSettings) return;
-    let LayoutSettings = result.LayoutSettings;
-    switch(LayoutSettings.SelectTranslatePosition){
-        case "TopRight":{
-            XBias=10
-            YBias=-15
-            break
-        }
-        case "TopLeft":{
-            XBias=-35
-            YBias=-15
-            break
-        }
-        case "BottomRight":{
-            XBias=10
-            YBias=35
-            break
-        }
-        case "BottomLeft":{
-            XBias=-40
-            YBias=45
-            break
-        }
-        default :{
-            break
-        }
-    }
-    
-
+    if (!result.LayoutSettings && !result.LayoutSettings.SelectTranslatePosition) return;
+    ButtonPositionSetting = result.LayoutSettings.SelectTranslatePosition;
 });
+// Update the button position setting when the setting is changed.
+chrome.storage.onChanged.addListener((changes, area) => {
+    if (area !== "sync" || !changes.LayoutSettings) return;
+    ButtonPositionSetting = changes.LayoutSettings.newValue.SelectTranslatePosition;
+});
+
 // this listener activated when document content is loaded
 // to make selection button available ASAP
 window.addEventListener("DOMContentLoaded", () => {
@@ -143,26 +122,44 @@ function buttonClickHandler(event) {
 }
 
 /**
- * 当鼠标选中一段文字后，调用此函数，显示出翻译按钮
+ * Use this function to show the translation buttion.
  */
 function showButton(event) {
-
-    // 使翻译按钮显示出来
     document.documentElement.appendChild(translateButton);
 
-    // 翻译按钮的横坐标位置: 鼠标停留位置 + x方向滚动的高度 + bias
+    const OffsetXValue = 10,
+        OffsetYValue = 20;
+    let XBias, YBias;
+    switch (ButtonPositionSetting) {
+        default:
+        case "TopRight":
+            XBias = OffsetXValue;
+            YBias = -OffsetYValue - translateButton.clientHeight;
+            break;
+        case "TopLeft":
+            XBias = -OffsetXValue - translateButton.clientWidth;
+            YBias = -OffsetYValue - translateButton.clientHeight;
+            break;
+        case "BottomRight":
+            XBias = OffsetXValue;
+            YBias = OffsetYValue;
+            break;
+        case "BottomLeft":
+            XBias = -OffsetXValue - translateButton.clientWidth;
+            YBias = OffsetYValue;
+            break;
+    }
+
     let XPosition = event.x + XBias;
-    // 翻译按钮的纵坐标位置: 鼠标停留位置 + y方向滚动的高度 + bias
-    let YPosition = event.y + YBias - translateButton.clientHeight;
-    // 自定义按钮位置 不需要判定了
-    // if the icon is beyond the right side of the page, we need to put the icon on the left of the cursor
-    // if (XPosition + translateButton.clientWidth > document.documentElement.clientWidth)
-    //     XPosition = event.x - XBias - translateButton.clientWidth;
-    // if the icon is above the top of the page, we need to put the icon below the cursor
-    // if (YPosition <= 0) YPosition = event.y + YBias;
+    let YPosition = event.y + YBias;
+
+    // If the icon is beyond the side of the page, we need to reposition the icon inside the page.
+    if (XPosition <= 0 || XPosition + translateButton.clientWidth > window.innerWidth)
+        XPosition = event.x - XBias - translateButton.clientWidth;
+    if (YPosition <= 0 || YPosition + translateButton.clientHeight > window.innerHeight)
+        YPosition = event.y - YBias - translateButton.clientHeight;
 
     // set the new position of the icon
-    // translateButton.style.transform = "translate(" + XPosition + "px," + YPosition + "px)";
     translateButton.style.top = `${YPosition}px`;
     translateButton.style.left = `${XPosition}px`;
 

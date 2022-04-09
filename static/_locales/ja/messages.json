@@ -280,8 +280,8 @@
         "description": "設定"
     },
     "SelectTranslatePosition":{
-        "message":"翻訳ボタンの場所を選択：",
-        "description": "翻訳ボタンの場所を選択"
+        "message":"翻訳ボタン位置",
+        "description": "翻訳ボタン位置"
     },
     "TopRight":{
         "message":"右上",

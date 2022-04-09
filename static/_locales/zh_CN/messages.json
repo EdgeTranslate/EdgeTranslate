@@ -279,24 +279,24 @@
         "message": "设置",
         "description": "设置"
     },
-    "SelectTranslatePosition":{
-        "message":"选中翻译按钮位置：",
-        "description": "选中翻译按钮位置"
+    "SelectTranslatePosition": {
+        "message": "翻译按钮位置",
+        "description": "翻译按钮位置"
     },
-    "TopRight":{
-        "message":"右上",
+    "TopRight": {
+        "message": "右上",
         "description": "右上"
     },
-    "TopLeft":{
-        "message":"左上",
+    "TopLeft": {
+        "message": "左上",
         "description": "左上"
     },
-    "BottomRight":{
-        "message":"右下",
+    "BottomRight": {
+        "message": "右下",
         "description": "右下"
     },
-    "BottomLeft":{
-        "message":"左下",
+    "BottomLeft": {
+        "message": "左下",
         "description": "左下"
     },
     "SettingsTitle": {

@@ -279,25 +279,25 @@
         "message": "Settings",
         "description": "Settings"
     },
-    "SelectTranslatePosition":{
-        "message":"Select the translation button location：",
+    "SelectTranslatePosition": {
+        "message": "Translation button location",
         "description": "Select the translation button location"
     },
-    "TopRight":{
-        "message":"Upper right",
-        "description": "Upper right"
+    "TopRight": {
+        "message": "Upper Right",
+        "description": "Upper Right"
     },
-    "TopLeft":{
-        "message":"Upper left",
-        "description": "Upper left"
+    "TopLeft": {
+        "message": "Upper Left",
+        "description": "Upper Left"
     },
-    "BottomRight":{
-        "message":"lower right",
-        "description": "lower right"
+    "BottomRight": {
+        "message": "Lower Right",
+        "description": "Lower Right"
     },
-    "BottomLeft":{
-        "message":"Lower left",
-        "description": "Lower left"
+    "BottomLeft": {
+        "message": "Lower Left",
+        "description": "Lower Left"
     },
     "SettingsTitle": {
         "message": "EdgeTranslate Settings",

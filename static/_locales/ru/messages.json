@@ -279,24 +279,24 @@
         "message": "Настройки",
         "description": "Настройки"
     },
-    "SelectTranslatePosition":{
-        "message":"Изберете местоположението на бутона за превод：",
-        "description": "Изберете местоположението на бутона за превод"
+    "SelectTranslatePosition": {
+        "message": "Расположение кнопки перевода",
+        "description": "Расположение кнопки перевода"
     },
-    "TopRight":{
-        "message":"Горе вдясно",
+    "TopRight": {
+        "message": "Горе вдясно",
         "description": "Горе вдясно"
     },
-    "TopLeft":{
-        "message":"Горе вляво",
+    "TopLeft": {
+        "message": "Горе вляво",
         "description": "Горе вляво"
     },
-    "BottomRight":{
-        "message":"долно дясно",
+    "BottomRight": {
+        "message": "долно дясно",
         "description": "долно дясно"
     },
-    "BottomLeft":{
-        "message":"Долно ляво",
+    "BottomLeft": {
+        "message": "Долно ляво",
         "description": "Долно ляво"
     },
     "SettingsTitle": {

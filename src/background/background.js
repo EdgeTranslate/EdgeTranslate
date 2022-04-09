@@ -29,12 +29,12 @@ const DEFAULT_SETTINGS = {
     // Resize: determine whether the web page will resize when showing translation result
     // RTL: determine whether the text in translation block should display from right to left
     // FoldLongContent: determine whether to fold long translation content
-    // SelectTranslatePosition: then position of select translate Button 
+    // SelectTranslatePosition: the position of select translate button.
     LayoutSettings: {
         Resize: false,
         RTL: false,
         FoldLongContent: true,
-        SelectTranslatePosition:'TopRight'
+        SelectTranslatePosition: "TopRight",
     },
     // Default settings of source language and target language
     languageSetting: { sl: "auto", tl: BROWSER_LANGUAGES_MAP[chrome.i18n.getUILanguage()] },
