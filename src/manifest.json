@@ -64,6 +64,9 @@
         },
         "cancel_page_translate": {
             "description": "__MSG_CancelPageTranslate__"
+        },
+        "toggle_page_translate_banner": {
+            "description": "Show/Hide page translator banner"
         }
     },
     "web_accessible_resources": ["**/*.css", "**/*.png", "youdao/*", "google/*"],

@@ -25,6 +25,10 @@
             "all_frames": true
         },
         {
+            "matches": ["<all_urls>"],
+            "js": ["./content/banner_controller.js"]
+        },
+        {
             "matches": ["*://*.deepl.com/*"],
             "js": ["./content/deepl-injector.js"],
             "all_frames": true

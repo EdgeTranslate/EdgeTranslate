@@ -87,6 +87,7 @@ const DEFAULT_SETTINGS = {
         "definitions",
         "examples",
     ],
+    HidePageTranslatorBanner: false,
 };
 
 /**
@@ -287,13 +288,13 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
                 });
             break;
         case "translate_page":
-            translatePage();
+            translatePage(channel);
             break;
         case "translate_page_youdao":
-            executeYouDaoScript();
+            executeYouDaoScript(channel);
             break;
         case "translate_page_google":
-            executeGoogleScript();
+            executeGoogleScript(channel);
             break;
         case "settings":
             chrome.runtime.openOptionsPage();
@@ -351,6 +352,13 @@ channel.on("redirect", (detail, sender) => chrome.tabs.update(sender.tab.id, { u
 channel.on("open_options_page", () => chrome.runtime.openOptionsPage());
 
 /**
+ * Forward page translate event back to pages.
+ */
+channel.on("page_translate_event", (detail, sender) => {
+    channel.emitToTabs(sender.tab.id, "page_translate_event", detail);
+});
+
+/**
  * Provide UI language detecting service.
  */
 channel.provide("get_lang", () => {
@@ -365,7 +373,7 @@ channel.provide("get_lang", () => {
 chrome.commands.onCommand.addListener((command) => {
     switch (command) {
         case "translate_page":
-            translatePage();
+            translatePage(channel);
             break;
         default:
             promiseTabs

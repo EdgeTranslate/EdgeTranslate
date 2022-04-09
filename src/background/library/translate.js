@@ -105,10 +105,14 @@ class TranslatorManager {
      */
     listenToEvents() {
         // Youdao page translate button clicked event.
-        this.channel.on("translate_page_youdao", executeYouDaoScript);
+        this.channel.on("translate_page_youdao", () => {
+            executeYouDaoScript(this.channel);
+        });
 
         // Google page translate button clicked event.
-        this.channel.on("translate_page_google", executeGoogleScript);
+        this.channel.on("translate_page_google", () => {
+            executeGoogleScript(this.channel);
+        });
 
         // Language setting updated event.
         this.channel.on("language_setting_update", this.onLanguageSettingUpdated.bind(this));
@@ -457,19 +461,21 @@ class TranslatorManager {
 
 /**
  * 使用用户选定的网页翻译引擎翻译当前网页。
+ *
+ * @param {import("../../common/scripts/channel.js").default} channel Communication channel.
  */
-function translatePage() {
+function translatePage(channel) {
     chrome.storage.sync.get(["DefaultPageTranslator"], (result) => {
         let translator = result.DefaultPageTranslator;
         switch (translator) {
             case "YouDaoPageTranslate":
-                executeYouDaoScript();
+                executeYouDaoScript(channel);
                 break;
             case "GooglePageTranslate":
-                executeGoogleScript();
+                executeGoogleScript(channel);
                 break;
             default:
-                executeYouDaoScript();
+                executeYouDaoScript(channel);
                 break;
         }
     });
@@ -498,24 +504,36 @@ async function youdaoPageTranslate(request) {
 
 /**
  * 执行有道网页翻译相关脚本
+ *
+ * @param {import("../../common/scripts/channel.js").default} channel Communication channel.
  */
-function executeYouDaoScript() {
+function executeYouDaoScript(channel) {
     chrome.tabs.executeScript({ file: "/youdao/main.js" }, (result) => {
         if (chrome.runtime.lastError) {
             log(`Chrome runtime error: ${chrome.runtime.lastError}`);
             log(`Detail: ${result}`);
+        } else {
+            promiseTabs.query({ active: true, currentWindow: true }).then((tabs) => {
+                channel.emitToTabs(tabs[0].id, "start_page_translate", { translator: "youdao" });
+            });
         }
     });
 }
 
 /**
  * 执行谷歌网页翻译相关脚本。
+ *
+ * @param {import("../../common/scripts/channel.js").default} channel Communication channel.
  */
-function executeGoogleScript() {
+function executeGoogleScript(channel) {
     chrome.tabs.executeScript({ file: "/google/init.js" }, (result) => {
         if (chrome.runtime.lastError) {
             log(`Chrome runtime error: ${chrome.runtime.lastError}`);
             log(`Detail: ${result}`);
+        } else {
+            promiseTabs.query({ active: true, currentWindow: true }).then((tabs) => {
+                channel.emitToTabs(tabs[0].id, "start_page_translate", { translator: "google" });
+            });
         }
     });
 }
