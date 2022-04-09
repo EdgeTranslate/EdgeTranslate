@@ -47,7 +47,8 @@ window.onload = () => {
      */
     chrome.storage.sync.get((result) => {
         let inputElements = document.getElementsByTagName("input");
-        for (let element of inputElements) {
+        const selectTranslatePositionElement=document.getElementById("select-translate-position")
+        for (let element of [...inputElements,selectTranslatePositionElement]) {
             let settingItemPath = element.getAttribute("setting-path").split(/\s/g);
             let settingItemValue = getSetting(result, settingItemPath);
 
@@ -88,6 +89,16 @@ window.onload = () => {
                         saveOption(result, settingItemPath, event.target.checked);
                     };
                     break;
+                case "select":
+                    element.value=settingItemValue
+                    // update setting value
+                    element.onchange = (event) => {
+                        const ele=event.target
+                        let settingItemPath = event.target
+                            .getAttribute("setting-path")
+                            .split(/\s/g);
+                        saveOption(result, settingItemPath, ele.options[ele.selectedIndex].value);
+                    };
                 default:
                     break;
             }

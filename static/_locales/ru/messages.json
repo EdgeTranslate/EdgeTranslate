@@ -279,6 +279,26 @@
         "message": "Настройки",
         "description": "Настройки"
     },
+    "SelectTranslatePosition":{
+        "message":"Изберете местоположението на бутона за превод：",
+        "description": "Изберете местоположението на бутона за превод"
+    },
+    "TopRight":{
+        "message":"Горе вдясно",
+        "description": "Горе вдясно"
+    },
+    "TopLeft":{
+        "message":"Горе вляво",
+        "description": "Горе вляво"
+    },
+    "BottomRight":{
+        "message":"долно дясно",
+        "description": "долно дясно"
+    },
+    "BottomLeft":{
+        "message":"Долно ляво",
+        "description": "Долно ляво"
+    },
     "SettingsTitle": {
         "message": "Настройки Edge Translate",
         "description": "Страница настроек Edge Translate"

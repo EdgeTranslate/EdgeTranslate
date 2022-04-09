@@ -279,6 +279,26 @@
         "message": "Settings",
         "description": "Settings"
     },
+    "SelectTranslatePosition":{
+        "message":"Select the translation button location：",
+        "description": "Select the translation button location"
+    },
+    "TopRight":{
+        "message":"Upper right",
+        "description": "Upper right"
+    },
+    "TopLeft":{
+        "message":"Upper left",
+        "description": "Upper left"
+    },
+    "BottomRight":{
+        "message":"lower right",
+        "description": "lower right"
+    },
+    "BottomLeft":{
+        "message":"Lower left",
+        "description": "Lower left"
+    },
     "SettingsTitle": {
         "message": "EdgeTranslate Settings",
         "description": "EdgeTranslate settings page"

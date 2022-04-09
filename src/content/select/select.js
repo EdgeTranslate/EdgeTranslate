@@ -31,6 +31,40 @@ let scrollingElement = window; // store the specific scrolling element. In norma
 let scrollPropertyX = "pageXOffset";
 let scrollPropertyY = "pageYOffset";
 
+// init transform Button position 默认为右上
+let XBias = 10,
+YBias = -15;
+chrome.storage.sync.get("LayoutSettings", (result) => {
+    if (!result.LayoutSettings) return;
+    let LayoutSettings = result.LayoutSettings;
+    switch(LayoutSettings.SelectTranslatePosition){
+        case "TopRight":{
+            XBias=10
+            YBias=-15
+            break
+        }
+        case "TopLeft":{
+            XBias=-35
+            YBias=-15
+            break
+        }
+        case "BottomRight":{
+            XBias=10
+            YBias=35
+            break
+        }
+        case "BottomLeft":{
+            XBias=-40
+            YBias=45
+            break
+        }
+        default :{
+            break
+        }
+    }
+    
+
+});
 // this listener activated when document content is loaded
 // to make selection button available ASAP
 window.addEventListener("DOMContentLoaded", () => {
@@ -112,21 +146,20 @@ function buttonClickHandler(event) {
  * 当鼠标选中一段文字后，调用此函数，显示出翻译按钮
  */
 function showButton(event) {
+
     // 使翻译按钮显示出来
     document.documentElement.appendChild(translateButton);
-    const XBias = 10,
-        YBias = 15;
 
     // 翻译按钮的横坐标位置: 鼠标停留位置 + x方向滚动的高度 + bias
     let XPosition = event.x + XBias;
     // 翻译按钮的纵坐标位置: 鼠标停留位置 + y方向滚动的高度 + bias
-    let YPosition = event.y - YBias - translateButton.clientHeight;
-
+    let YPosition = event.y + YBias - translateButton.clientHeight;
+    // 自定义按钮位置 不需要判定了
     // if the icon is beyond the right side of the page, we need to put the icon on the left of the cursor
-    if (XPosition + translateButton.clientWidth > document.documentElement.clientWidth)
-        XPosition = event.x - XBias - translateButton.clientWidth;
+    // if (XPosition + translateButton.clientWidth > document.documentElement.clientWidth)
+    //     XPosition = event.x - XBias - translateButton.clientWidth;
     // if the icon is above the top of the page, we need to put the icon below the cursor
-    if (YPosition <= 0) YPosition = event.y + YBias;
+    // if (YPosition <= 0) YPosition = event.y + YBias;
 
     // set the new position of the icon
     // translateButton.style.transform = "translate(" + XPosition + "px," + YPosition + "px)";
