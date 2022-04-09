@@ -328,14 +328,12 @@ function cancelPageTranslate() {
     if (frame !== null && frame !== undefined) {
         let cancelButton = frame.contentDocument.getElementById(":0.close");
         checkAndClick(cancelButton);
-        return;
     }
 
     frame = document.getElementById("OUTFOX_JTR_BAR");
     if (frame !== null && frame !== undefined) {
         let cancelButton = frame.contentDocument.getElementById("OUTFOX_JTR_BAR_CLOSE");
         checkAndClick(cancelButton);
-        return;
     }
 }
 
