@@ -477,17 +477,20 @@ export default function ResultPanel() {
             resizePageFlag.current = result.LayoutSettings.Resize;
             // user set to resize the document body
             if (resizePageFlag.current) {
-                // store the original css text. when fixed panel is removed, restore the style of document.body
-                documentBodyCSS = document.body.style.cssText;
+                // If `documentBodyCSS` is empty, this means the panel is created for the first time. Ths creation animation is only needed when the panel is firstly created.
+                if (documentBodyCSS === "") {
+                    // store the original css text. when fixed panel is removed, restore the style of document.body
+                    documentBodyCSS = document.body.style.cssText;
 
-                document.body.style.position = "absolute";
-                document.body.style.transition = `width ${transitionDuration}ms`;
-                panelElRef.current.style.transition = `width ${transitionDuration}ms`;
-                /* set the start width to make the transition effect work */
-                document.body.style.width = "100%";
-                move(0, window.innerHeight, offsetLeft, 0);
-                // wait some time to make the setting of width applied
-                await delayPromise(50);
+                    document.body.style.position = "absolute";
+                    document.body.style.transition = `width ${transitionDuration}ms`;
+                    panelElRef.current.style.transition = `width ${transitionDuration}ms`;
+                    /* set the start width to make the transition effect work */
+                    document.body.style.width = "100%";
+                    move(0, window.innerHeight, offsetLeft, 0);
+                    // wait some time to make the setting of width applied
+                    await delayPromise(50);
+                }
                 // the fixed panel in on the left side
                 if (displaySettingRef.current.fixedData.position === "left") {
                     document.body.style.right = "0";
@@ -527,6 +530,7 @@ export default function ResultPanel() {
             document.body.style.width = "100%";
             await delayPromise(transitionDuration);
             document.body.style.cssText = documentBodyCSS;
+            documentBodyCSS = "";
         }
     }
 
