@@ -158,12 +158,13 @@ Telegram-канал: [Edge Translate Channel](https://t.me/EdgeTranslate)
   </tr>
   <tr>
     <td align="center"><a href="https://github.com/ViktorOn"><img src="https://avatars.githubusercontent.com/u/63919734?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Viktor</b></sub></a><br /><a href="#translation-ViktorOn" title="Translation">🌍</a></td>
+    <td align="center"><a href="https://github.com/derlans"><img src="https://avatars.githubusercontent.com/u/58926947?v=4?s=100" width="100px;" alt=""/><br /><sub><b>derlans</b></sub></a><br /><a href="https://github.com/EdgeTranslate/EdgeTranslate/commits?author=derlans" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/Isildur46"><img src="https://avatars.githubusercontent.com/u/19759799?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Isildur46</b></sub></a><br /><a href="https://github.com/EdgeTranslate/EdgeTranslate/commits?author=Isildur46" title="Code">💻</a></td>
     <td align="center"><a href="https://ykyuki.net/"><img src="https://avatars.githubusercontent.com/u/28839969?v=4?s=100" width="100px;" alt=""/><br /><sub><b>ykyuki</b></sub></a><br /><a href="#translation-ykyuki" title="Translation">🌍</a></td>
     <td align="center"><a href="https://github.com/electrolom42"><img src="https://avatars.githubusercontent.com/u/25820887?v=4?s=100" width="100px;" alt=""/><br /><sub><b>ElectroLom</b></sub></a><br /><a href="#translation-electrolom42" title="Translation">🌍</a></td>
-    <td align="center"><a href="https://axionl.me/"><img src="https://avatars.githubusercontent.com/u/8396456?v=4?s=100" width="100px;" alt=""/><br /><sub><b>ArielAxionL</b></sub></a><br /><a href="https://github.com/EdgeTranslate/EdgeTranslate/commits?author=axionl" title="Documentation">📖</a></td>
   </tr>
   <tr>
+    <td align="center"><a href="https://axionl.me/"><img src="https://avatars.githubusercontent.com/u/8396456?v=4?s=100" width="100px;" alt=""/><br /><sub><b>ArielAxionL</b></sub></a><br /><a href="https://github.com/EdgeTranslate/EdgeTranslate/commits?author=axionl" title="Documentation">📖</a></td>
     <td align="center"><a href="https://github.com/vanja-san"><img src="https://avatars.githubusercontent.com/u/7201687?v=4?s=100" width="100px;" alt=""/><br /><sub><b>The_BadUser</b></sub></a><br /><a href="#translation-vanja-san" title="Translation">🌍</a></td>
     <td align="center"><a href="https://github.com/knlyknly"><img src="https://avatars.githubusercontent.com/u/1418612?v=4?s=100" width="100px;" alt=""/><br /><sub><b>knlyknly</b></sub></a><br /><a href="https://github.com/EdgeTranslate/EdgeTranslate/commits?author=knlyknly" title="Code">💻</a></td>
   </tr>
