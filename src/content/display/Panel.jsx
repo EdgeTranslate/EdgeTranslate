@@ -440,11 +440,11 @@ export default function ResultPanel() {
                 ];
             showFloatingPanel();
             moveablePanelRef.current.request("draggable", { x: position[0], y: position[1] });
-            // Indicate that the movable panel is ready to show.
-            setMoveableReady(true);
         } else {
             showFixedPanel();
         }
+        // Indicate that the movable panel is ready to show.
+        setMoveableReady(true);
     }
 
     /**
@@ -520,10 +520,6 @@ export default function ResultPanel() {
                 document.body.style.transition = "";
             } else move(width, window.innerHeight, offsetLeft, 0);
         });
-
-        /* Cancel the border radius of the fixed type result panel */
-        headElRef.current.style["border-radius"] = "";
-        bodyElRef.current.style["border-radius"] = "";
     }
 
     /**
