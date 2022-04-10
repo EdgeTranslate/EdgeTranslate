@@ -28,6 +28,10 @@
             "all_frames": true
         },
         {
+            "matches": ["<all_urls>"],
+            "js": ["./content/banner-controller.js"]
+        },
+        {
             "matches": ["*://*.deepl.com/*"],
             "js": ["./content/deepl-injector.js"],
             "all_frames": true

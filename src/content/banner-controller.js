@@ -132,10 +132,12 @@ class BannerController {
                 // destroyed, and the banner has been moved up.
                 chrome.storage.sync.get("HidePageTranslatorBanner", (result) => {
                     if (result.HidePageTranslatorBanner) {
-                        this.toggleBannerFrame(false);
-                        // If user decide to hide the banner, we just keep the top
-                        // of the page at 0px.
-                        this.movePage("top", 0, true);
+                        setTimeout(() => {
+                            this.toggleBannerFrame(false);
+                            // If user decide to hide the banner, we just keep the top
+                            // of the page at 0px.
+                            this.movePage("top", 0, true);
+                        }, 0);
                     }
                 });
 
@@ -166,11 +168,13 @@ class BannerController {
                 // destroyed, and the banner has been moved up.
                 chrome.storage.sync.get("HidePageTranslatorBanner", (result) => {
                     if (result.HidePageTranslatorBanner) {
-                        this.toggleBannerFrame(false);
-                        // If user decide to hide the banner, we should undo the
-                        // movements done by Youdao page translator both on banner
-                        // creation and destroying.
-                        this.movePage("margin-top", -detail.distance, false);
+                        setTimeout(() => {
+                            this.toggleBannerFrame(false);
+                            // If user decide to hide the banner, we should undo the
+                            // movements done by Youdao page translator both on banner
+                            // creation and destroying.
+                            this.movePage("margin-top", -detail.distance, false);
+                        }, 0);
                     }
                 });
 
