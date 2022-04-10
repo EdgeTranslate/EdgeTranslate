@@ -1,3 +1,21 @@
+function notifyEdgeTranslate(event, detail) {
+    chrome.runtime.sendMessage(
+        JSON.stringify({
+            type: "event",
+            event: "page_translate_event",
+            detail: {
+                event,
+                ...detail,
+            },
+        }),
+        () => {
+            if (chrome.runtime.lastError) {
+                console.error(chrome.runtime.lastError);
+            }
+        }
+    );
+}
+
 /* eslint-disable */
 
 if (this.JSON && this.JSON.stringify.toString().indexOf("[native code]") !== -1) {
@@ -828,8 +846,18 @@ if (this.JSON && this.JSON.stringify.toString().indexOf("[native code]") !== -1)
                     }
                 };
                 return function(n) {
+                    // EDGE TRANSLATE MODIFICATION START
+
+                    // Google page translator posted messages may be received here
+                    // and cause an error, we just ignore it.
+                    let data = JSONDAO.parse(n.data);
+                    if (data.type && data.type === "edge_translate_page_translate_event")
+                        return;
+
                     var m = JSONDAO.parse(n.data);
                     j[m.handler](JSONDAO.parse(n.data));
+
+                    // EDGE TRANSLATE MODIFICATION END
                 };
             })();
             a.bind(window, "message", function(j) {
@@ -2360,12 +2388,21 @@ if (!J || !J.bind) {
                 }
                 this.context.style.cssText += ";margin-top:" + (d + g) + "px !important;";
             }
+
+            // EDGE TRANSLATE MODIFICATION START
+            notifyEdgeTranslate("page_moved", { translator: "youdao", distance: d });
+            // EDGE TRANSLATE MODIFICATION END
         },
         initFrame: function(f, i) {
             var d = this;
             var h = document.createElement("div");
             h.id = "OUTFOX_BAR_WRAPPER";
             this.context.appendChild(h);
+
+            // EDGE TRANSLATE MODIFICATION START
+            notifyEdgeTranslate("banner_created", { translator: "youdao" });
+            // EDGE TRANSLATE MODIFICATION END
+
             this.wrapper = h;
             function g(k) {
                 k.innerHTML = '<iframe id="OUTFOX_JTR_BAR" src="" style="display:none;"></iframe>';

@@ -104,11 +104,15 @@ class TranslatorManager {
      * This should be called for only once!
      */
     listenToEvents() {
-        // Youdao page translate button clicked event.
-        // this.channel.on("translate_page_youdao", executeYouDaoScript);
+        // // Youdao page translate button clicked event.
+        // this.channel.on("translate_page_youdao", () => {
+        //     executeYouDaoScript(this.channel);
+        // });
 
-        // Google page translate button clicked event.
-        // this.channel.on("translate_page_google", executeGoogleScript);
+        // // Google page translate button clicked event.
+        // this.channel.on("translate_page_google", () => {
+        //     executeGoogleScript(this.channel);
+        // });
 
         // Language setting updated event.
         this.channel.on("language_setting_update", this.onLanguageSettingUpdated.bind(this));
@@ -455,21 +459,23 @@ class TranslatorManager {
     }
 }
 
-/**
- * 使用用户选定的网页翻译引擎翻译当前网页。
- */
-// function translatePage() {
-//     chrome.storage.sync.get(["DefaultPageTranslator"], result => {
+// /**
+//  * 使用用户选定的网页翻译引擎翻译当前网页。
+//  *
+//  * @param {import("../../common/scripts/channel.js").default} channel Communication channel.
+//  */
+// function translatePage(channel) {
+//     chrome.storage.sync.get(["DefaultPageTranslator"], (result) => {
 //         let translator = result.DefaultPageTranslator;
 //         switch (translator) {
 //             case "YouDaoPageTranslate":
-//                 executeYouDaoScript();
+//                 executeYouDaoScript(channel);
 //                 break;
 //             case "GooglePageTranslate":
-//                 executeGoogleScript();
+//                 executeGoogleScript(channel);
 //                 break;
 //             default:
-//                 executeYouDaoScript();
+//                 executeYouDaoScript(channel);
 //                 break;
 //         }
 //     });
@@ -487,35 +493,47 @@ class TranslatorManager {
 //         method: request.type,
 //         baseURL: request.url,
 //         headers: isPost ? { "Content-Type": "application/x-www-form-urlencoded" } : {},
-//         data: isPost ? request.data : null
+//         data: isPost ? request.data : null,
 //     });
 
 //     return {
 //         response: response.status === 200 ? JSON.stringify(response.data) : null,
-//         index: request.index
+//         index: request.index,
 //     };
 // }
 
 // /**
 //  * 执行有道网页翻译相关脚本
+//  *
+//  * @param {import("../../common/scripts/channel.js").default} channel Communication channel.
 //  */
-// function executeYouDaoScript() {
-//     chrome.tabs.executeScript({ file: "/youdao/main.js" }, function(result) {
+// function executeYouDaoScript(channel) {
+//     chrome.tabs.executeScript({ file: "/youdao/main.js" }, (result) => {
 //         if (chrome.runtime.lastError) {
-//             log("Chrome runtime error: " + chrome.runtime.lastError);
-//             log("Detail: " + result);
+//             log(`Chrome runtime error: ${chrome.runtime.lastError}`);
+//             log(`Detail: ${result}`);
+//         } else {
+//             promiseTabs.query({ active: true, currentWindow: true }).then((tabs) => {
+//                 channel.emitToTabs(tabs[0].id, "start_page_translate", { translator: "youdao" });
+//             });
 //         }
 //     });
 // }
 
 // /**
 //  * 执行谷歌网页翻译相关脚本。
+//  *
+//  * @param {import("../../common/scripts/channel.js").default} channel Communication channel.
 //  */
-// function executeGoogleScript() {
-//     chrome.tabs.executeScript({ file: "/google/injection.js" }, function(result) {
+// function executeGoogleScript(channel) {
+//     chrome.tabs.executeScript({ file: "/google/init.js" }, (result) => {
 //         if (chrome.runtime.lastError) {
-//             log("Chrome runtime error: " + chrome.runtime.lastError);
-//             log("Detail: " + result);
+//             log(`Chrome runtime error: ${chrome.runtime.lastError}`);
+//             log(`Detail: ${result}`);
+//         } else {
+//             promiseTabs.query({ active: true, currentWindow: true }).then((tabs) => {
+//                 channel.emitToTabs(tabs[0].id, "start_page_translate", { translator: "google" });
+//             });
 //         }
 //     });
 // }

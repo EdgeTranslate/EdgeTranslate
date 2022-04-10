@@ -47,7 +47,8 @@ window.onload = () => {
      */
     chrome.storage.sync.get((result) => {
         let inputElements = document.getElementsByTagName("input");
-        for (let element of inputElements) {
+        const selectTranslatePositionElement = document.getElementById("select-translate-position");
+        for (let element of [...inputElements, selectTranslatePositionElement]) {
             let settingItemPath = element.getAttribute("setting-path").split(/\s/g);
             let settingItemValue = getSetting(result, settingItemPath);
 
@@ -56,9 +57,9 @@ window.onload = () => {
                     element.checked = settingItemValue.indexOf(element.value) !== -1;
                     // update setting value
                     element.onchange = (event) => {
-                        let target = event.target;
-                        let settingItemPath = target.getAttribute("setting-path").split(/\s/g);
-                        let settingItemValue = getSetting(result, settingItemPath);
+                        const target = event.target;
+                        const settingItemPath = target.getAttribute("setting-path").split(/\s/g);
+                        const settingItemValue = getSetting(result, settingItemPath);
 
                         // if user checked this option, add value to setting array
                         if (target.checked) settingItemValue.push(target.value);
@@ -71,8 +72,8 @@ window.onload = () => {
                     element.checked = settingItemValue === element.value;
                     // update setting value
                     element.onchange = (event) => {
-                        let target = event.target;
-                        let settingItemPath = target.getAttribute("setting-path").split(/\s/g);
+                        const target = event.target;
+                        const settingItemPath = target.getAttribute("setting-path").split(/\s/g);
                         if (target.checked) {
                             saveOption(result, settingItemPath, target.value);
                         }
@@ -82,10 +83,23 @@ window.onload = () => {
                     element.checked = settingItemValue;
                     // update setting value
                     element.onchange = (event) => {
-                        let settingItemPath = event.target
+                        const settingItemPath = event.target
                             .getAttribute("setting-path")
                             .split(/\s/g);
                         saveOption(result, settingItemPath, event.target.checked);
+                    };
+                    break;
+                case "select":
+                    element.value = settingItemValue;
+                    // update setting value
+                    element.onchange = (event) => {
+                        const target = event.target;
+                        const settingItemPath = target.getAttribute("setting-path").split(/\s/g);
+                        saveOption(
+                            result,
+                            settingItemPath,
+                            target.options[target.selectedIndex].value
+                        );
                     };
                     break;
                 default:

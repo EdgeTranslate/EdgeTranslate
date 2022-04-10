@@ -29,10 +29,12 @@ const DEFAULT_SETTINGS = {
     // Resize: determine whether the web page will resize when showing translation result
     // RTL: determine whether the text in translation block should display from right to left
     // FoldLongContent: determine whether to fold long translation content
+    // SelectTranslatePosition: the position of select translate button.
     LayoutSettings: {
         Resize: false,
         RTL: false,
         FoldLongContent: true,
+        SelectTranslatePosition: "TopRight",
     },
     // Default settings of source language and target language
     languageSetting: { sl: "auto", tl: BROWSER_LANGUAGES_MAP[chrome.i18n.getUILanguage()] },
@@ -85,6 +87,7 @@ const DEFAULT_SETTINGS = {
         "definitions",
         "examples",
     ],
+    HidePageTranslatorBanner: false,
 };
 
 /**
@@ -285,13 +288,13 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
                 });
             break;
         // case "translate_page":
-        //     translatePage();
+        //     translatePage(channel);
         //     break;
         // case "translate_page_youdao":
-        //     executeYouDaoScript();
+        //     executeYouDaoScript(channel);
         //     break;
         // case "translate_page_google":
-        //     executeGoogleScript();
+        //     executeGoogleScript(channel);
         //     break;
         case "settings":
             chrome.runtime.openOptionsPage();
@@ -349,6 +352,13 @@ channel.on("redirect", (detail, sender) => chrome.tabs.update(sender.tab.id, { u
 channel.on("open_options_page", () => chrome.runtime.openOptionsPage());
 
 /**
+ * Forward page translate event back to pages.
+ */
+channel.on("page_translate_event", (detail, sender) => {
+    channel.emitToTabs(sender.tab.id, "page_translate_event", detail);
+});
+
+/**
  * Provide UI language detecting service.
  */
 channel.provide("get_lang", () => {
@@ -363,7 +373,7 @@ channel.provide("get_lang", () => {
 chrome.commands.onCommand.addListener((command) => {
     switch (command) {
         // case "translate_page":
-        //     translatePage();
+        //     translatePage(channel);
         //     break;
         default:
             promiseTabs
@@ -403,6 +413,24 @@ chrome.commands.onCommand.addListener((command) => {
 //     { urls: ["*://*/*"], types: ["main_frame", "sub_frame"] },
 //     ["blocking", "responseHeaders"]
 // );
+
+/**
+ * Modify the CSP header of DeepL home page.
+ */
+chrome.webRequest.onHeadersReceived.addListener(
+    (details) => ({
+        responseHeaders: details.responseHeaders.map((header) =>
+            /^content-security-policy$/i.test(header.name)
+                ? {
+                      name: header.name,
+                      value: header.value.replaceAll(/frame-ancestors [^;]*;?/g, ""),
+                  }
+                : header
+        ),
+    }),
+    { urls: ["*://*.deepl.com/*"], types: ["main_frame", "sub_frame"] },
+    ["blocking", "responseHeaders"]
+);
 
 /**
  * Modify the cross-origin-resource-policy header of Google TTS response.

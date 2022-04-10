@@ -259,6 +259,10 @@
         "message": "取消頁面翻譯",
         "description": "取消頁面翻譯。"
     },
+    "TogglePageTranslateBanner": {
+        "message": "隱藏/展示網頁翻譯頂欄",
+        "description": "隱藏或展示網頁翻譯器的頂欄。"
+    },
     "TranslatePageYouDao": {
         "message": "使用有道翻譯此頁",
         "description": "使用有道翻譯的api翻譯當前頁面。"
@@ -278,6 +282,26 @@
     "Settings": {
         "message": "設置",
         "description": "設置"
+    },
+    "SelectTranslatePosition": {
+        "message": "翻譯按鈕位置",
+        "description": "翻譯按鈕位置"
+    },
+    "TopRight": {
+        "message": "右上",
+        "description": "右上"
+    },
+    "TopLeft": {
+        "message": "左上",
+        "description": "左上"
+    },
+    "BottomRight": {
+        "message": "右下",
+        "description": "右下"
+    },
+    "BottomLeft": {
+        "message": "左下",
+        "description": "左下"
     },
     "SettingsTitle": {
         "message": "側邊翻譯設置",
@@ -334,6 +358,14 @@
     "BingTranslateShort": {
         "message": "必應翻譯",
         "description": "必應翻譯翻譯源縮寫。"
+    },
+    "DeepLTranslate": {
+        "message": "DeepL翻譯",
+        "description": "DeepL翻譯翻譯源"
+    },
+    "DeepLTranslateShort": {
+        "message": "DeepL",
+        "description": "DeepL翻譯翻譯源縮寫"
     },
     "GoogleTranslate": {
         "message": "谷歌翻譯",

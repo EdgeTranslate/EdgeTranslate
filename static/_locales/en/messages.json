@@ -259,6 +259,10 @@
         "message": "Cancel page translate",
         "description": "Cancel page translate."
     },
+    "TogglePageTranslateBanner": {
+        "message": "Toggle page translate banner",
+        "description": "Show/Hide page translator's banner."
+    },
     "TranslatePageYouDao": {
         "message": "Translate this page with YouDao",
         "description": "Translate current page with YouDao translate api."
@@ -278,6 +282,26 @@
     "Settings": {
         "message": "Settings",
         "description": "Settings"
+    },
+    "SelectTranslatePosition": {
+        "message": "Translation button location",
+        "description": "Select the translation button location"
+    },
+    "TopRight": {
+        "message": "Upper Right",
+        "description": "Upper Right"
+    },
+    "TopLeft": {
+        "message": "Upper Left",
+        "description": "Upper Left"
+    },
+    "BottomRight": {
+        "message": "Lower Right",
+        "description": "Lower Right"
+    },
+    "BottomLeft": {
+        "message": "Lower Left",
+        "description": "Lower Left"
     },
     "SettingsTitle": {
         "message": "EdgeTranslate Settings",
@@ -334,6 +358,14 @@
     "BingTranslateShort": {
         "message": "Bing",
         "description": "Abbreviation of Bing Translate."
+    },
+    "DeepLTranslate": {
+        "message": "DeepL Translate",
+        "description": "DeepL Translate."
+    },
+    "DeepLTranslateShort": {
+        "message": "DeepL",
+        "description": "Abbreviation of DeepL Translate."
     },
     "GoogleTranslate": {
         "message": "Google Translate",

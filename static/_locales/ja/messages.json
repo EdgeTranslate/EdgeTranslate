@@ -259,6 +259,10 @@
         "message": "ページ翻訳をキャンセル",
         "description": "ページ翻訳をキャンセル"
     },
+    "TogglePageTranslateBanner": {
+        "message": "Toggle page translate banner",
+        "description": "Show/Hide page translator's banner."
+    },
     "TranslatePageYouDao": {
         "message": "YouDaoでこのページを翻訳",
         "description": "YouDao翻訳APIで現在のページを翻訳します。"
@@ -278,6 +282,26 @@
     "Settings": {
         "message": "設定",
         "description": "設定"
+    },
+    "SelectTranslatePosition":{
+        "message":"翻訳ボタン位置",
+        "description": "翻訳ボタン位置"
+    },
+    "TopRight":{
+        "message":"右上",
+        "description": "右上"
+    },
+    "TopLeft":{
+        "message":"左上",
+        "description": "左上"
+    },
+    "BottomRight":{
+        "message":"右下",
+        "description": "右下"
+    },
+    "BottomLeft":{
+        "message":"左下",
+        "description": "左下"
     },
     "SettingsTitle": {
         "message": "EdgeTranslateの設定",
@@ -334,6 +358,14 @@
     "BingTranslateShort": {
         "message": "ビング",
         "description": "ビング翻訳"
+    },
+    "DeepLTranslate": {
+        "message": "DeepL Translate",
+        "description": "DeepL Translate."
+    },
+    "DeepLTranslateShort": {
+        "message": "DeepL",
+        "description": "Abbreviation of DeepL Translate."
     },
     "GoogleTranslate": {
         "message": "グーグル翻訳",

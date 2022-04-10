@@ -9,7 +9,7 @@ import { h } from "preact";
 export default function Loading(props) {
     return (
         <svg
-            class={props.class}
+            class={props.className}
             id={props.id}
             xmlns="http://www.w3.org/2000/svg"
             style={props.style}

@@ -21,7 +21,7 @@
                         element.id === "viewerContainer" &&
                         element.classList.contains("pdfPresentationMode")
                     ) {
-                        const old = element.scrollTop
+                        const old = element.scrollTop;
                         element.dispatchEvent(
                             new WheelEvent("wheel", {
                                 bubbles: true,
@@ -30,10 +30,10 @@
                                 deltaY: Math.sign(amount) * 120,
                             })
                         );
-                        return element.scrollTop !== old
-                    } else {
-                        return oldScroll.apply(this, arguments);
+                        return element.scrollTop !== old;
                     }
+                    // eslint-disable-next-line prefer-rest-params
+                    return oldScroll.apply(this, arguments);
                 };
             }
             /**

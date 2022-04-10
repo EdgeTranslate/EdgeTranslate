@@ -1,3 +1,16 @@
+function notifyEdgeTranslate(event, detail) {
+    window.postMessage(
+        JSON.stringify({
+            type: "edge_translate_page_translate_event",
+            event,
+            ...detail,
+        }),
+        window.href
+    );
+}
+
+/* eslint-disable */
+
 (function() {
     /*
 
@@ -13985,6 +13998,10 @@
                 '" class="goog-te-banner-frame skiptranslate" frameBorder=0 style="visibility:visible"></iframe>'
         );
         this.S(a);
+
+        // EDGE TRANSLATE MODIFICATION START
+        notifyEdgeTranslate("banner_created", { translator: "google" });
+        // EDGE TRANSLATE MODIFICATION END
     };
     x.O = function() {
         Ku.m.O.call(this);
@@ -14205,8 +14222,9 @@
                 var b = parseInt("0" + this.b.a.body.leftMargin, 10),
                     c = parseInt("0" + this.b.a.body.topMargin, 10);
             var d = "BackCompat" == this.b.a.compatMode;
-            a
-                ? (P(this.b.a.body, "top", "40px"),
+            // EDGE TRANSLATE MODIFICATION START
+            if (a) {
+               (P(this.b.a.body, "top", "40px"),
                   Q(this.j(), !0),
                   I &&
                       (L("7.0")
@@ -14216,10 +14234,17 @@
                           ? ((this.b.a.body.topMargin = c + 40),
                             (window._bannerquirkfixleft = window._bannerquirkfixtop = 0))
                           : ((window._bannerquirkfixleft = -b),
-                            (window._bannerquirkfixtop = -c - 40))))
-                : (P(this.b.a.body, "top", "0px"),
+                            (window._bannerquirkfixtop = -c - 40))));
+
+                notifyEdgeTranslate("page_moved", { translator: "google", distance: 40 });
+            } else {
+                (P(this.b.a.body, "top", "0px"),
                   Q(this.j(), !1),
                   d && 40 <= c && (this.b.a.body.topMargin = c - 40));
+
+                notifyEdgeTranslate("page_moved", { translator: "google", distance: -40 });
+            }
+            // EDGE TRANSLATE MODIFICATION END
         }
     };
     x.wf = function(a) {
