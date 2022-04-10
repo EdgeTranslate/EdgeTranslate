@@ -90,6 +90,8 @@
 
 -   [ ] 打开/关闭网页翻译(谷歌/有道)的顶部栏
 
+-   [ ] 与`Vimium C - All by Keyboard`插件在 PDF 阅读器中能够共同运行
+
 ## 版本信息
 
 -   manifest.json，package.json，package-lock.json
