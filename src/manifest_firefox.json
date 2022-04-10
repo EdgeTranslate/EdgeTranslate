@@ -29,11 +29,11 @@
         },
         {
             "matches": ["<all_urls>"],
-            "js": ["./content/banner-controller.js"]
+            "js": ["./content/banner_controller.js"]
         },
         {
             "matches": ["*://*.deepl.com/*"],
-            "js": ["./content/deepl-injector.js"],
+            "js": ["./content/deepl_injector.js"],
             "all_frames": true
         }
     ],
