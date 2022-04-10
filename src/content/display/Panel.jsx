@@ -374,15 +374,6 @@ export default function ResultPanel() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    /* Called when user translate another time */
-    useEffect(() => {
-        // If panel is open and the panel position is updated
-        if (panelElRef.current && content.position) {
-            showPanel();
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [content.position]);
-
     /* Fit the floating panel to the content size after the content is updated. */
     useEffect(() => {
         if (displaySettingRef.current.type === "floating")
