@@ -259,6 +259,10 @@
         "message": "Cancel page translate",
         "description": "Cancel page translate."
     },
+    "TogglePageTranslateBanner": {
+        "message": "Toggle page translate banner",
+        "description": "Show/Hide page translator's banner."
+    },
     "TranslatePageYouDao": {
         "message": "Translate this page with YouDao",
         "description": "Translate current page with YouDao translate api."

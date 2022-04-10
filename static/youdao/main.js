@@ -846,8 +846,18 @@ if (this.JSON && this.JSON.stringify.toString().indexOf("[native code]") !== -1)
                     }
                 };
                 return function(n) {
+                    // EDGE TRANSLATE MODIFICATION START
+
+                    // Google page translator posted messages may be received here
+                    // and cause an error, we just ignore it.
+                    let data = JSONDAO.parse(n.data);
+                    if (data.type && data.type === "edge_translate_page_translate_event")
+                        return;
+
                     var m = JSONDAO.parse(n.data);
                     j[m.handler](JSONDAO.parse(n.data));
+
+                    // EDGE TRANSLATE MODIFICATION END
                 };
             })();
             a.bind(window, "message", function(j) {

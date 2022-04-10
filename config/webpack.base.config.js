@@ -4,7 +4,7 @@ module.exports = {
     entry: {
         "/background/background": "./src/background/background.js",
         "/content/pdf": "./src/content/pdf.js",
-        "/content/banner_controller": "./src/content/banner_controller.js",
+        "/content/banner-controller": "./src/content/banner-controller.js",
         "/content/select/select": "./src/content/select/select.js",
         "/content/display/display": "./src/content/display/index.js",
         "/content/notice/notice": "./src/content/notice/notice.js",

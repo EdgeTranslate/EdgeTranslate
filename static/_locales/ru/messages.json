@@ -259,6 +259,10 @@
         "message": "Отменить перевод страницы",
         "description": "Отменить перевод страницы."
     },
+    "TogglePageTranslateBanner": {
+        "message": "Toggle page translate banner",
+        "description": "Show/Hide page translator's banner."
+    },
     "TranslatePageYouDao": {
         "message": "Перевести страницу с помощью YouDao",
         "description": "Перевод текущей страницы с помощью YouDao Translate API."

@@ -259,6 +259,10 @@
         "message": "取消頁面翻譯",
         "description": "取消頁面翻譯。"
     },
+    "TogglePageTranslateBanner": {
+        "message": "隱藏/展示網頁翻譯頂欄",
+        "description": "隱藏或展示網頁翻譯器的頂欄。"
+    },
     "TranslatePageYouDao": {
         "message": "使用有道翻譯此頁",
         "description": "使用有道翻譯的api翻譯當前頁面。"

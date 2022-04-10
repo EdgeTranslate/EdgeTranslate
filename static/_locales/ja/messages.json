@@ -259,6 +259,10 @@
         "message": "ページ翻訳をキャンセル",
         "description": "ページ翻訳をキャンセル"
     },
+    "TogglePageTranslateBanner": {
+        "message": "Toggle page translate banner",
+        "description": "Show/Hide page translator's banner."
+    },
     "TranslatePageYouDao": {
         "message": "YouDaoでこのページを翻訳",
         "description": "YouDao翻訳APIで現在のページを翻訳します。"
