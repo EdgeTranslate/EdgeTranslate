@@ -1,5 +1,5 @@
 /** @jsx h */
-import { h } from "preact";
+import { h, Fragment } from "preact";
 import { useEffect, useState, useRef, useCallback } from "preact/hooks";
 import { useLatest, useEvent, useClickAway } from "react-use";
 import styled, { createGlobalStyle } from "styled-components";
@@ -7,7 +7,7 @@ import root from "react-shadow/styled-components";
 import SimpleBar from "simplebar-react";
 import SimpleBarStyle from "simplebar-react/dist/simplebar.min.css";
 import Channel from "common/scripts/channel.js";
-import moveable from "./library/moveable/moveable.js";
+import Moveable from "./library/moveable/moveable.js";
 import { delayPromise } from "common/scripts/promise.js";
 import { isChromePDFViewer } from "../common.js";
 import Result from "./Result.jsx"; // display translate result
@@ -64,7 +64,10 @@ export default function ResultPanel() {
         panelElRef = useRef(), // panel element
         headElRef = useRef(), // panel head element
         bodyElRef = useRef(); // panel body element
-    // store the moveable object return by moveable.js
+
+    // Indicate whether the movable panel is ready or not.
+    const [moveableReady, setMoveableReady] = useState(false);
+    // store the moveable object returned by moveable.js
     const moveablePanelRef = useRef(null);
     const simplebarRef = useRef();
     // store the display type("floating"|"fixed")
@@ -203,6 +206,7 @@ export default function ResultPanel() {
         if (!panelEl) {
             // Clear the outdated moveable object.
             moveablePanelRef.current = null;
+            setMoveableReady(false);
 
             // Tell select.js that the result panel has been removed.
             window.isDisplayingResult = false;
@@ -224,7 +228,7 @@ export default function ResultPanel() {
         window.isDisplayingResult = true;
 
         /* Make the resultPanel resizable and draggable */
-        moveablePanelRef.current = new moveable(panelEl, {
+        moveablePanelRef.current = new Moveable(panelEl, {
             draggable: true,
             resizable: true,
             /* Set threshold value to increase the resize area */
@@ -436,6 +440,8 @@ export default function ResultPanel() {
                 ];
             showFloatingPanel();
             moveablePanelRef.current.request("draggable", { x: position[0], y: position[1] });
+            // Indicate that the movable panel is ready to show.
+            setMoveableReady(true);
         } else {
             showFixedPanel();
         }
@@ -595,73 +601,85 @@ export default function ResultPanel() {
             >
                 <GlobalStyle />
                 <Panel ref={onDisplayStatusChange} displayType={displayType} data-testid="Panel">
-                    <Head ref={headElRef} data-testid="Head">
-                        <SourceOption
-                            role="button"
-                            title={chrome.i18n.getMessage(`${currentTranslator}Short`)}
-                            activeKey={currentTranslator}
-                            onSelect={(eventKey) => {
-                                setCurrentTranslator(eventKey);
-                                channel
-                                    .request("update_default_translator", {
-                                        translator: eventKey,
-                                    })
-                                    .then(() => {
-                                        if (window.translateResult.originalText)
-                                            channel.request("translate", {
-                                                text: window.translateResult.originalText,
-                                            });
-                                    });
-                            }}
-                            data-testid="SourceOption"
-                        >
-                            {availableTranslators?.map((translator) => (
-                                <Dropdown.Item role="button" key={translator} eventKey={translator}>
-                                    {chrome.i18n.getMessage(translator)}
-                                </Dropdown.Item>
-                            ))}
-                        </SourceOption>
-                        <HeadIcons>
-                            <HeadIcon
-                                role="button"
-                                title={chrome.i18n.getMessage("Settings")}
-                                onClick={() => channel.emit("open_options_page")}
-                                data-testid="SettingIcon"
-                            >
-                                <SettingIcon />
-                            </HeadIcon>
-                            <HeadIcon
-                                role="button"
-                                title={chrome.i18n.getMessage(
-                                    panelFix ? "UnfixResultFrame" : "FixResultFrame"
-                                )}
-                                onClick={() => {
-                                    setPanelFix(!panelFix);
-                                    chrome.storage.sync.set({
-                                        fixSetting: !panelFix,
-                                    });
-                                }}
-                                data-testid="PinIcon"
-                            >
-                                <StyledPinIcon fix={panelFix} />
-                            </HeadIcon>
-                            <HeadIcon
-                                role="button"
-                                title={chrome.i18n.getMessage("CloseResultFrame")}
-                                onClick={() => setOpen(false)}
-                                data-testid="CloseIcon"
-                            >
-                                <CloseIcon />
-                            </HeadIcon>
-                        </HeadIcons>
-                    </Head>
-                    <Body ref={bodyElRef}>
-                        <SimpleBar ref={simplebarRef}>
-                            {contentType === "LOADING" && <Loading />}
-                            {contentType === "RESULT" && <Result {...content} />}
-                            {contentType === "ERROR" && <Error {...content} />}
-                        </SimpleBar>
-                    </Body>
+                    {
+                        // Only show the panel's content when the panel is movable.
+                        moveableReady && (
+                            <Fragment>
+                                <Head ref={headElRef} data-testid="Head">
+                                    <SourceOption
+                                        role="button"
+                                        title={chrome.i18n.getMessage(`${currentTranslator}Short`)}
+                                        activeKey={currentTranslator}
+                                        onSelect={(eventKey) => {
+                                            setCurrentTranslator(eventKey);
+                                            channel
+                                                .request("update_default_translator", {
+                                                    translator: eventKey,
+                                                })
+                                                .then(() => {
+                                                    if (window.translateResult.originalText)
+                                                        channel.request("translate", {
+                                                            text: window.translateResult
+                                                                .originalText,
+                                                        });
+                                                });
+                                        }}
+                                        data-testid="SourceOption"
+                                    >
+                                        {availableTranslators?.map((translator) => (
+                                            <Dropdown.Item
+                                                role="button"
+                                                key={translator}
+                                                eventKey={translator}
+                                            >
+                                                {chrome.i18n.getMessage(translator)}
+                                            </Dropdown.Item>
+                                        ))}
+                                    </SourceOption>
+                                    <HeadIcons>
+                                        <HeadIcon
+                                            role="button"
+                                            title={chrome.i18n.getMessage("Settings")}
+                                            onClick={() => channel.emit("open_options_page")}
+                                            data-testid="SettingIcon"
+                                        >
+                                            <SettingIcon />
+                                        </HeadIcon>
+                                        <HeadIcon
+                                            role="button"
+                                            title={chrome.i18n.getMessage(
+                                                panelFix ? "UnfixResultFrame" : "FixResultFrame"
+                                            )}
+                                            onClick={() => {
+                                                setPanelFix(!panelFix);
+                                                chrome.storage.sync.set({
+                                                    fixSetting: !panelFix,
+                                                });
+                                            }}
+                                            data-testid="PinIcon"
+                                        >
+                                            <StyledPinIcon fix={panelFix} />
+                                        </HeadIcon>
+                                        <HeadIcon
+                                            role="button"
+                                            title={chrome.i18n.getMessage("CloseResultFrame")}
+                                            onClick={() => setOpen(false)}
+                                            data-testid="CloseIcon"
+                                        >
+                                            <CloseIcon />
+                                        </HeadIcon>
+                                    </HeadIcons>
+                                </Head>
+                                <Body ref={bodyElRef}>
+                                    <SimpleBar ref={simplebarRef}>
+                                        {contentType === "LOADING" && <Loading />}
+                                        {contentType === "RESULT" && <Result {...content} />}
+                                        {contentType === "ERROR" && <Error {...content} />}
+                                    </SimpleBar>
+                                </Body>
+                            </Fragment>
+                        )
+                    }
                 </Panel>
                 {highlight.show && (
                     <Highlight
