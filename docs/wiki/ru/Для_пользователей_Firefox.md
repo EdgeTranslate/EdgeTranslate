@@ -24,7 +24,7 @@
    
    1. Скачайте и установите [версию ESR](https://www.mozilla.org/ru/firefox/enterprise/), [версию Developer](https://www.mozilla.org/ru/firefox/developer/) или [версию Nightly](https://www.mozilla.org/ru/firefox/channel/desktop/#nightly) Firefox. Вы можете выбрать любую, но рекомендется такой приоритет ESR > Developer > Nightly.
    
-   2. Загрузите последнюю версию с переводчика страниц Edge Translate для Firefox из [Releases](https://github.com/EdgeTranslate/EdgeTranslate/releases/latest), название пакета в формате `EdgeTranslate_vx.x.x_firefox.zip`
+   2. Загрузите последнюю версию с переводчика страниц Edge Translate для Firefox из [Releases](https://github.com/EdgeTranslate/EdgeTranslate/releases/latest), название пакета в формате `EdgeTranslate_vx.x.x_firefox.zip`.
    
    3. Откройте радактор настроек Firefox (Перейдите к `about:config`), Найдите `xpinstall.signatures.required` и измените значение на `false` (Нажмите на стрелку в конце, чтобы переключиться).
    
