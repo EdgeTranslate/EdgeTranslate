@@ -862,6 +862,7 @@
   --toolbarButton-pageDown-icon: url(images/toolbarButton-pageDown.svg);
   --toolbarButton-zoomOut-icon: url(images/toolbarButton-zoomOut.svg);
   --toolbarButton-zoomIn-icon: url(images/toolbarButton-zoomIn.svg);
+  --toolbarButton-copyLink-icon: url(images/toolbarButton-copyLink.svg);
   --toolbarButton-darkMode-auto-icon: url(images/toolbarButton-darkMode-auto.svg);
   --toolbarButton-darkMode-dark-icon: url(images/toolbarButton-darkMode-dark.svg);
   --toolbarButton-darkMode-light-icon: url(images/toolbarButton-darkMode-light.svg);
@@ -2032,6 +2033,12 @@ html[dir="rtl"] .toolbarButton#sidebarBack::before {
 .toolbarButton.zoomIn::before {
   -webkit-mask-image: var(--toolbarButton-zoomIn-icon);
           mask-image: var(--toolbarButton-zoomIn-icon);
+}
+
+.toolbarButton.copyLink::before,
+.secondaryToolbarButton.copyLink::before {
+  -webkit-mask-image: var(--toolbarButton-copyLink-icon);
+          mask-image: var(--toolbarButton-copyLink-icon);
 }
 
 .toolbarButton.presentationMode::before,

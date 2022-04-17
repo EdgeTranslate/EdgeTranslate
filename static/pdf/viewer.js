@@ -342,39 +342,41 @@ var _password_prompt = __webpack_require__(10);
 
 var _pdf_attachment_viewer = __webpack_require__(11);
 
-var _pdf_dark_mode = __webpack_require__(13);
+var _pdf_copy_link = __webpack_require__(13);
 
-var _pdf_document_properties = __webpack_require__(14);
+var _pdf_dark_mode = __webpack_require__(14);
 
-var _pdf_find_bar = __webpack_require__(15);
+var _pdf_document_properties = __webpack_require__(15);
 
-var _pdf_find_controller = __webpack_require__(16);
+var _pdf_find_bar = __webpack_require__(16);
 
-var _pdf_history = __webpack_require__(18);
+var _pdf_find_controller = __webpack_require__(17);
 
-var _pdf_layer_viewer = __webpack_require__(19);
+var _pdf_history = __webpack_require__(19);
 
-var _pdf_outline_viewer = __webpack_require__(20);
+var _pdf_layer_viewer = __webpack_require__(20);
 
-var _pdf_presentation_mode = __webpack_require__(21);
+var _pdf_outline_viewer = __webpack_require__(21);
 
-var _pdf_rendering_queue = __webpack_require__(22);
+var _pdf_presentation_mode = __webpack_require__(22);
 
-var _pdf_scripting_manager = __webpack_require__(23);
+var _pdf_rendering_queue = __webpack_require__(23);
 
-var _pdf_sidebar = __webpack_require__(24);
+var _pdf_scripting_manager = __webpack_require__(24);
 
-var _pdf_sidebar_resizer = __webpack_require__(25);
+var _pdf_sidebar = __webpack_require__(25);
 
-var _pdf_thumbnail_viewer = __webpack_require__(26);
+var _pdf_sidebar_resizer = __webpack_require__(26);
 
-var _pdf_viewer = __webpack_require__(28);
+var _pdf_thumbnail_viewer = __webpack_require__(27);
 
-var _secondary_toolbar = __webpack_require__(37);
+var _pdf_viewer = __webpack_require__(29);
 
-var _toolbar = __webpack_require__(38);
+var _secondary_toolbar = __webpack_require__(38);
 
-var _view_history = __webpack_require__(39);
+var _toolbar = __webpack_require__(39);
+
+var _view_history = __webpack_require__(40);
 
 const DISABLE_AUTO_FETCH_LOADING_BAR_TIMEOUT = 5000;
 const FORCE_PAGES_LOADED_TIMEOUT = 10000;
@@ -778,6 +780,7 @@ const PDFViewerApplication = {
     this.pdfSidebar.onToggled = this.forceRendering.bind(this);
     this.pdfSidebarResizer = new _pdf_sidebar_resizer.PDFSidebarResizer(appConfig.sidebarResizer, eventBus, this.l10n);
     this.darkMode = new _pdf_dark_mode.PDFDarkMode(appConfig.toolbar.darkModeButton, eventBus, this.l10n);
+    this.copyLink = new _pdf_copy_link.PDFCopyLink(appConfig.toolbar.copyLinkButton, eventBus, this.l10n);
   },
 
   run(config) {
@@ -5085,6 +5088,71 @@ exports.BaseTreeViewer = BaseTreeViewer;
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
+exports.PDFCopyLink = void 0;
+
+class PDFCopyLink {
+  constructor(button, eventBus, l10n) {
+    this.button = button;
+    this.eventBus = eventBus;
+    this.l10n = l10n;
+    this.eventBus.on("copylink", this.copyLink.bind(this));
+  }
+
+  fallbacKCopy(fileLink) {
+    const textArea = document.createElement("textarea");
+    textArea.value = fileLink;
+    textArea.style.top = "0";
+    textArea.style.left = "0";
+    textArea.style.position = "fixed";
+    textArea.style.visibility = "hidden";
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+
+    try {
+      if (!document.execCommand("copy")) {
+        throw new Error("execute copy command failed");
+      }
+    } catch (err) {
+      console.error(`Failed to copy PDF file link "${fileLink}": ${err}`);
+    }
+
+    textArea.remove();
+  }
+
+  copyLink() {
+    let fileLink = "";
+
+    try {
+      fileLink = window.location.href.split("?")[1].split("&").find(param => param.startsWith("file=")).split("=")[1].split("#")[0];
+      fileLink = decodeURIComponent(fileLink);
+    } catch (err) {
+      console.error(`Failed to parse window.location.href "${window.location.href}": ${err}`);
+      return;
+    }
+
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(fileLink).catch(err => {
+        console.error(`Failed to copy PDF file link "${fileLink}": ${err}`);
+      });
+    } else {
+      this.fallbacKCopy();
+    }
+  }
+
+}
+
+exports.PDFCopyLink = PDFCopyLink;
+
+/***/ }),
+/* 14 */
+/***/ ((__unused_webpack_module, exports) => {
+
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
 exports.PDFDarkMode = void 0;
 const STORAGE_KEY = "pdfjs.dark_mode";
 const STYLE_ELEMENT_ID = "pdfjs-dark-mode-style";
@@ -5187,7 +5255,7 @@ class PDFDarkMode {
 exports.PDFDarkMode = PDFDarkMode;
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -5443,7 +5511,7 @@ class PDFDocumentProperties {
 exports.PDFDocumentProperties = PDFDocumentProperties;
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -5453,7 +5521,7 @@ Object.defineProperty(exports, "__esModule", ({
 }));
 exports.PDFFindBar = void 0;
 
-var _pdf_find_controller = __webpack_require__(16);
+var _pdf_find_controller = __webpack_require__(17);
 
 const MATCHES_COUNT_LIMIT = 1000;
 
@@ -5646,7 +5714,7 @@ class PDFFindBar {
 exports.PDFFindBar = PDFFindBar;
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -5660,7 +5728,7 @@ var _ui_utils = __webpack_require__(3);
 
 var _pdfjsLib = __webpack_require__(5);
 
-var _pdf_find_utils = __webpack_require__(17);
+var _pdf_find_utils = __webpack_require__(18);
 
 const FindState = {
   FOUND: 0,
@@ -6408,7 +6476,7 @@ class PDFFindController {
 exports.PDFFindController = PDFFindController;
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -6503,7 +6571,7 @@ function getCharacterType(charCode) {
 }
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -7112,7 +7180,7 @@ function isDestArraysEqual(firstDest, secondDest) {
 }
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -7296,7 +7364,7 @@ class PDFLayerViewer extends _base_tree_viewer.BaseTreeViewer {
 exports.PDFLayerViewer = PDFLayerViewer;
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -7631,7 +7699,7 @@ class PDFOutlineViewer extends _base_tree_viewer.BaseTreeViewer {
 exports.PDFOutlineViewer = PDFOutlineViewer;
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -7959,7 +8027,7 @@ class PDFPresentationMode {
 exports.PDFPresentationMode = PDFPresentationMode;
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -8121,7 +8189,7 @@ class PDFRenderingQueue {
 exports.PDFRenderingQueue = PDFRenderingQueue;
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -8615,7 +8683,7 @@ class PDFScriptingManager {
 exports.PDFScriptingManager = PDFScriptingManager;
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -8985,7 +9053,7 @@ class PDFSidebar {
 exports.PDFSidebar = PDFSidebar;
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -9116,7 +9184,7 @@ class PDFSidebarResizer {
 exports.PDFSidebarResizer = PDFSidebarResizer;
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -9128,7 +9196,7 @@ exports.PDFThumbnailViewer = void 0;
 
 var _ui_utils = __webpack_require__(3);
 
-var _pdf_thumbnail_view = __webpack_require__(27);
+var _pdf_thumbnail_view = __webpack_require__(28);
 
 const THUMBNAIL_SCROLL_MARGIN = -19;
 const THUMBNAIL_SELECTED_CLASS = "selected";
@@ -9400,7 +9468,7 @@ class PDFThumbnailViewer {
 exports.PDFThumbnailViewer = PDFThumbnailViewer;
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -9796,7 +9864,7 @@ class PDFThumbnailView {
 exports.PDFThumbnailView = PDFThumbnailView;
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -9808,7 +9876,7 @@ exports.PDFViewer = exports.PDFSinglePageViewer = void 0;
 
 var _ui_utils = __webpack_require__(3);
 
-var _base_viewer = __webpack_require__(29);
+var _base_viewer = __webpack_require__(30);
 
 class PDFViewer extends _base_viewer.BaseViewer {}
 
@@ -9835,7 +9903,7 @@ class PDFSinglePageViewer extends _base_viewer.BaseViewer {
 exports.PDFSinglePageViewer = PDFSinglePageViewer;
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -9849,23 +9917,23 @@ var _pdfjsLib = __webpack_require__(5);
 
 var _ui_utils = __webpack_require__(3);
 
-var _annotation_layer_builder = __webpack_require__(30);
+var _annotation_layer_builder = __webpack_require__(31);
 
-var _l10n_utils = __webpack_require__(31);
+var _l10n_utils = __webpack_require__(32);
 
-var _pdf_page_view = __webpack_require__(32);
+var _pdf_page_view = __webpack_require__(33);
 
-var _pdf_rendering_queue = __webpack_require__(22);
+var _pdf_rendering_queue = __webpack_require__(23);
 
 var _pdf_link_service = __webpack_require__(8);
 
-var _struct_tree_layer_builder = __webpack_require__(33);
+var _struct_tree_layer_builder = __webpack_require__(34);
 
-var _text_highlighter = __webpack_require__(34);
+var _text_highlighter = __webpack_require__(35);
 
-var _text_layer_builder = __webpack_require__(35);
+var _text_layer_builder = __webpack_require__(36);
 
-var _xfa_layer_builder = __webpack_require__(36);
+var _xfa_layer_builder = __webpack_require__(37);
 
 const DEFAULT_CACHE_SIZE = 10;
 const ENABLE_PERMISSIONS_CLASS = "enablePermissions";
@@ -9955,7 +10023,7 @@ class BaseViewer {
       throw new Error("Cannot initialize BaseViewer.");
     }
 
-    const viewerVersion = '2.14.177';
+    const viewerVersion = '2.14.181';
 
     if (_pdfjsLib.version !== viewerVersion) {
       throw new Error(`The API version "${_pdfjsLib.version}" does not match the Viewer version "${viewerVersion}".`);
@@ -11575,7 +11643,7 @@ class BaseViewer {
 exports.BaseViewer = BaseViewer;
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -11587,7 +11655,7 @@ exports.AnnotationLayerBuilder = void 0;
 
 var _pdfjsLib = __webpack_require__(5);
 
-var _l10n_utils = __webpack_require__(31);
+var _l10n_utils = __webpack_require__(32);
 
 class AnnotationLayerBuilder {
   constructor({
@@ -11681,7 +11749,7 @@ class AnnotationLayerBuilder {
 exports.AnnotationLayerBuilder = AnnotationLayerBuilder;
 
 /***/ }),
-/* 31 */
+/* 32 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -11809,7 +11877,7 @@ const NullL10n = {
 exports.NullL10n = NullL10n;
 
 /***/ }),
-/* 32 */
+/* 33 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -11825,7 +11893,7 @@ var _ui_utils = __webpack_require__(3);
 
 var _app_options = __webpack_require__(1);
 
-var _l10n_utils = __webpack_require__(31);
+var _l10n_utils = __webpack_require__(32);
 
 const MAX_CANVAS_PIXELS = _app_options.compatibilityParams.maxCanvasPixels || 16777216;
 
@@ -12592,7 +12660,7 @@ class PDFPageView {
 exports.PDFPageView = PDFPageView;
 
 /***/ }),
-/* 33 */
+/* 34 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -12711,7 +12779,7 @@ class StructTreeLayerBuilder {
 exports.StructTreeLayerBuilder = StructTreeLayerBuilder;
 
 /***/ }),
-/* 34 */
+/* 35 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -12984,7 +13052,7 @@ class TextHighlighter {
 exports.TextHighlighter = TextHighlighter;
 
 /***/ }),
-/* 35 */
+/* 36 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -13146,7 +13214,7 @@ class TextLayerBuilder {
 exports.TextLayerBuilder = TextLayerBuilder;
 
 /***/ }),
-/* 36 */
+/* 37 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -13244,7 +13312,7 @@ class XfaLayerBuilder {
 exports.XfaLayerBuilder = XfaLayerBuilder;
 
 /***/ }),
-/* 37 */
+/* 38 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -13258,7 +13326,7 @@ var _ui_utils = __webpack_require__(3);
 
 var _pdf_cursor_tools = __webpack_require__(6);
 
-var _base_viewer = __webpack_require__(29);
+var _base_viewer = __webpack_require__(30);
 
 class SecondaryToolbar {
   constructor(options, mainContainer, eventBus) {
@@ -13268,6 +13336,10 @@ class SecondaryToolbar {
     this.buttons = [{
       element: options.darkModeButton,
       eventName: "darkmode",
+      close: true
+    }, {
+      element: options.copyLinkButton,
+      eventName: "copylink",
       close: true
     }, {
       element: options.presentationModeButton,
@@ -13594,7 +13666,7 @@ class SecondaryToolbar {
 exports.SecondaryToolbar = SecondaryToolbar;
 
 /***/ }),
-/* 38 */
+/* 39 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -13634,6 +13706,9 @@ class Toolbar {
     }, {
       element: options.darkModeButton,
       eventName: "darkmode"
+    }, {
+      element: options.copyLinkButton,
+      eventName: "copylink"
     }, {
       element: options.presentationModeButton,
       eventName: "presentationmode"
@@ -13867,7 +13942,7 @@ class Toolbar {
 exports.Toolbar = Toolbar;
 
 /***/ }),
-/* 39 */
+/* 40 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -13962,7 +14037,7 @@ class ViewHistory {
 exports.ViewHistory = ViewHistory;
 
 /***/ }),
-/* 40 */
+/* 41 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -13974,13 +14049,13 @@ exports.GenericCom = void 0;
 
 var _app = __webpack_require__(2);
 
-var _preferences = __webpack_require__(41);
+var _preferences = __webpack_require__(42);
 
-var _download_manager = __webpack_require__(42);
+var _download_manager = __webpack_require__(43);
 
-var _genericl10n = __webpack_require__(43);
+var _genericl10n = __webpack_require__(44);
 
-var _generic_scripting = __webpack_require__(45);
+var _generic_scripting = __webpack_require__(46);
 
 ;
 const GenericCom = {};
@@ -14023,7 +14098,7 @@ class GenericExternalServices extends _app.DefaultExternalServices {
 _app.PDFViewerApplication.externalServices = GenericExternalServices;
 
 /***/ }),
-/* 41 */
+/* 42 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -14159,7 +14234,7 @@ class BasePreferences {
 exports.BasePreferences = BasePreferences;
 
 /***/ }),
-/* 42 */
+/* 43 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -14256,7 +14331,7 @@ class DownloadManager {
 exports.DownloadManager = DownloadManager;
 
 /***/ }),
-/* 43 */
+/* 44 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -14266,9 +14341,9 @@ Object.defineProperty(exports, "__esModule", ({
 }));
 exports.GenericL10n = void 0;
 
-__webpack_require__(44);
+__webpack_require__(45);
 
-var _l10n_utils = __webpack_require__(31);
+var _l10n_utils = __webpack_require__(32);
 
 const webL10n = document.webL10n;
 
@@ -14307,7 +14382,7 @@ class GenericL10n {
 exports.GenericL10n = GenericL10n;
 
 /***/ }),
-/* 44 */
+/* 45 */
 /***/ (() => {
 
 
@@ -15129,7 +15204,7 @@ document.webL10n = function (window, document, undefined) {
 }(window, document);
 
 /***/ }),
-/* 45 */
+/* 46 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -15197,7 +15272,7 @@ class GenericScripting {
 exports.GenericScripting = GenericScripting;
 
 /***/ }),
-/* 46 */
+/* 47 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -15211,7 +15286,7 @@ var _pdfjsLib = __webpack_require__(5);
 
 var _app = __webpack_require__(2);
 
-var _print_utils = __webpack_require__(47);
+var _print_utils = __webpack_require__(48);
 
 let activeService = null;
 let dialog = null;
@@ -15495,7 +15570,7 @@ _app.PDFPrintServiceFactory.instance = {
 };
 
 /***/ }),
-/* 47 */
+/* 48 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -15509,7 +15584,7 @@ var _pdfjsLib = __webpack_require__(5);
 
 var _pdf_link_service = __webpack_require__(8);
 
-var _xfa_layer_builder = __webpack_require__(36);
+var _xfa_layer_builder = __webpack_require__(37);
 
 function getXfaHtmlForPrinting(printContainer, pdfDocument) {
   const xfaHtml = pdfDocument.allXfaHtml;
@@ -15588,18 +15663,18 @@ var _app_options = __webpack_require__(1);
 
 var _app = __webpack_require__(2);
 
-const pdfjsVersion = '2.14.177';
-const pdfjsBuild = 'fa6cd1a62';
+const pdfjsVersion = '2.14.181';
+const pdfjsBuild = '75d7bae92';
 window.PDFViewerApplication = _app.PDFViewerApplication;
 window.PDFViewerApplicationOptions = _app_options.AppOptions;
 ;
 ;
 {
-  __webpack_require__(40);
+  __webpack_require__(41);
 }
 ;
 {
-  __webpack_require__(46);
+  __webpack_require__(47);
 }
 
 function getViewerConfiguration() {
@@ -15630,6 +15705,7 @@ function getViewerConfiguration() {
       openFile: document.getElementById("openFile"),
       print: document.getElementById("print"),
       darkModeButton: document.getElementById("darkMode"),
+      copyLinkButton: document.getElementById("copyLink"),
       presentationModeButton: document.getElementById("presentationMode"),
       download: document.getElementById("download"),
       viewBookmark: document.getElementById("viewBookmark")
@@ -15639,6 +15715,7 @@ function getViewerConfiguration() {
       toggleButton: document.getElementById("secondaryToolbarToggle"),
       toolbarButtonContainer: document.getElementById("secondaryToolbarButtonContainer"),
       darkModeButton: document.getElementById("secondaryDarkMode"),
+      copyLinkButton: document.getElementById("secondaryCopyLink"),
       presentationModeButton: document.getElementById("secondaryPresentationMode"),
       openFileButton: document.getElementById("secondaryOpenFile"),
       printButton: document.getElementById("secondaryPrint"),
