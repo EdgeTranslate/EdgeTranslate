@@ -5101,10 +5101,7 @@ class PDFCopyLink {
   fallbacKCopy(fileLink) {
     const textArea = document.createElement("textarea");
     textArea.value = fileLink;
-    textArea.style.top = "0";
-    textArea.style.left = "0";
-    textArea.style.position = "fixed";
-    textArea.style.visibility = "hidden";
+    textArea.style.cssText = "top: 0px; left: 0px; position: fixed;";
     document.body.appendChild(textArea);
     textArea.focus();
     textArea.select();
@@ -5136,7 +5133,7 @@ class PDFCopyLink {
         console.error(`Failed to copy PDF file link "${fileLink}": ${err}`);
       });
     } else {
-      this.fallbacKCopy();
+      this.fallbacKCopy(fileLink);
     }
   }
 
@@ -10023,7 +10020,7 @@ class BaseViewer {
       throw new Error("Cannot initialize BaseViewer.");
     }
 
-    const viewerVersion = '2.14.181';
+    const viewerVersion = '2.14.182';
 
     if (_pdfjsLib.version !== viewerVersion) {
       throw new Error(`The API version "${_pdfjsLib.version}" does not match the Viewer version "${viewerVersion}".`);
@@ -15663,8 +15660,8 @@ var _app_options = __webpack_require__(1);
 
 var _app = __webpack_require__(2);
 
-const pdfjsVersion = '2.14.181';
-const pdfjsBuild = '75d7bae92';
+const pdfjsVersion = '2.14.182';
+const pdfjsBuild = '6385b74d9';
 window.PDFViewerApplication = _app.PDFViewerApplication;
 window.PDFViewerApplicationOptions = _app_options.AppOptions;
 ;
