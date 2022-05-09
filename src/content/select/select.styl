@@ -1,6 +1,6 @@
 @import '../display/library/notifier/notifier.styl';
 
-image-size = 20px;
+image-size = 32px;
 
 /*
  * 划词翻译按钮样式
@@ -9,7 +9,7 @@ image-size = 20px;
     display: inline-block !important;
     width: image-size !important;
     height: image-size !important;
-    padding: 0.4% !important;
+    padding: 0 !important;
     margin: 0 !important;
     position: fixed !important;
     box-shadow: 0px 0px 2px 2px #ddd !important;
@@ -25,19 +25,6 @@ image-size = 20px;
     &:hover {
         box-shadow: 0px 0px 8px 3px #bbb !important;
         transform: rotate(180deg) !important;
-    }
-
-    img {        
-        width: image-size !important;
-        height: image-size !important;
-        min-width: 0 !important;
-        max-width: image-size !important;
-        min-height: 0 !important;
-        max-height: image-size !important;
-        padding: 0 !important;
-        border: 0 !important;
-        margin: 0 !important;
-        vertical-align: top !important; // fix the style problem in some websites
     }
 
     @keyframes fade-in {
