@@ -20,10 +20,17 @@ export default class Notifier {
      * @param {string} position enum{"center", "left", "right"} locate the position on screen to display all notification
      */
     constructor(position = "center") {
+        this.position = position;
+        this.notificationCount = 0;
+    }
+
+    createContainer() {
         /* create a shadow dom container */
         this.notifierContainer = document.createElement("div");
-        this.notifierContainer.id = `${SELECTOR_PREFIX}container`;
-        this.notifierContainer.classList.add(`${SELECTOR_PREFIX}${position}`);
+        this.notifierContainer.classList.add(
+            `${SELECTOR_PREFIX}${this.position}`,
+            `${SELECTOR_PREFIX}container`
+        );
         // store a shadow dom which is used to attach notifier container
         this.shadowDom = this.notifierContainer.attachShadow({ mode: "open" });
 
@@ -52,15 +59,12 @@ export default class Notifier {
         });
     }
 
-    /**
-     * public function
-     * This is a one-way operation
-     * This function will destroy the whole notifier
-     * Once you call this function, notification won't show up on the screen
-     */
-    destroyNotifier() {
-        if (document.documentElement.contains(this.notifierContainer))
+    destroyContainer() {
+        if (document.documentElement.contains(this.notifierContainer)) {
             document.documentElement.removeChild(this.notifierContainer);
+            this.notifierContainer = null;
+            this.shadowDom = null;
+        }
     }
 
     /**
@@ -90,6 +94,8 @@ export default class Notifier {
         if (!option.title) return;
         if (option.duration < ANIMATION_DURATION) option.duration = 0;
 
+        if (!this.notifierContainer) this.createContainer();
+
         let notificationElement = document.createElement("div");
         notificationElement.innerHTML = render(<NotifierTemplate {...option} />);
         notificationElement = notificationElement.firstChild;
@@ -111,6 +117,7 @@ export default class Notifier {
         });
         // resume timeout after user's mouse leave the notification element
         notificationElement.addEventListener("mouseleave", () => setDestroyTimeout());
+        this.notificationCount++;
     }
 
     /**
@@ -124,6 +131,8 @@ export default class Notifier {
             await delayPromise(ANIMATION_DURATION);
             if (this.shadowDom.contains(notificationElement))
                 this.shadowDom.removeChild(notificationElement);
+            this.notificationCount--;
+            if (this.notificationCount === 0) this.destroyContainer();
         }
     }
 }
