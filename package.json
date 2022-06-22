@@ -22,7 +22,9 @@
         "type": "git",
         "url": "https://github.com/EdgeTranslate/EdgeTranslate.git"
     },
-    "scripts": {},
+    "scripts": {
+        "prepublish": "turbo run prepublish"
+    },
     "devDependencies": {
         "@commitlint/cli": "^13.2.1",
         "@commitlint/config-conventional": "^13.2.0",
@@ -34,7 +36,8 @@
         "eslint-plugin-prettier": "^3.4.1",
         "husky": "^4.3.8",
         "jest": "^27.5.1",
-        "prettier": "^2.6.0"
+        "prettier": "^2.6.0",
+        "turbo": "^1.2.16"
     },
     "workspaces": [
         "packages/*"

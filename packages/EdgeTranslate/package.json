@@ -12,7 +12,8 @@
         "pack:chrome": "gulp pack --browser chrome",
         "pack:firefox": "gulp pack --browser firefox",
         "e2e:chrome": "SELENIUM_BROWSER=chrome jest -i --config './test/e2e/jest/jest.config.js'",
-        "e2e:firefox": "SELENIUM_BROWSER=firefox jest -i --config './test/e2e/jest/jest.config.js'"
+        "e2e:firefox": "SELENIUM_BROWSER=firefox jest -i --config './test/e2e/jest/jest.config.js'",
+        "prepublish": "echo '\npacking package for chrome' && gulp pack --browser chrome && echo '\npacking package for firefox' && gulp pack --browser firefox"
     },
     "devDependencies": {
         "@babel/core": "^7.17.7",
