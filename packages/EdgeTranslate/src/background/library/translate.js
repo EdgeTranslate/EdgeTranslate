@@ -1,5 +1,4 @@
-import axios from "./axios.js";
-import HybridTranslator from "./translators/hybrid.js";
+import { axios, HybridTranslator } from "@edge_translate/translators";
 import { log } from "common/scripts/common.js";
 import { promiseTabs, delayPromise } from "../../common/scripts/promise.js";
 import LocalTTS from "./local_tts.js";

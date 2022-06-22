@@ -7,6 +7,7 @@
         "translator"
     ],
     "scripts": {
+        "prepare": "npm run build",
         "dev": "vite build --watch",
         "build": "vite build && tsc && mv dist/src dist/types"
     },
