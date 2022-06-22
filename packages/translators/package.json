@@ -1,0 +1,28 @@
+{
+    "name": "@edge_translate/translators",
+    "version": "0.1.0",
+    "description": "Collection of translators with unified interface.",
+    "keywords": [
+        "translate",
+        "translator"
+    ],
+    "scripts": {
+        "dev": "vite build --watch",
+        "build": "vite build && tsc && mv dist/src dist/types"
+    },
+    "files": [
+        "dist"
+    ],
+    "main": "dist/translators.umd.js",
+    "unpkg": "dist/translators.iife.js",
+    "module": "./dist/translators.es.js",
+    "types": "./dist/types/index.d.ts",
+    "devDependencies": {
+        "@types/chrome": "^0.0.190",
+        "typescript": "^4.5.4",
+        "vite": "^2.9.9"
+    },
+    "peerDependencies": {
+        "axios": "^0.27.2"
+    }
+}
