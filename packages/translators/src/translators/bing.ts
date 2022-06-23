@@ -260,7 +260,7 @@ class BingTranslator {
         );
 
         const html = this.HTMLParser.parseFromString(response.data, "text/html");
-        this.IID = html.getElementById("rich_tta")?.getAttribute("data-iid") || "";
+        this.IID = html.getElementById("rich_tta")!.getAttribute("data-iid") || "";
 
         // Reset request count.
         this.count = 0;
