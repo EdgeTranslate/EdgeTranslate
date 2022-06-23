@@ -1,4 +1,4 @@
-import { LANGUAGES } from "../common/scripts/languages.js";
+import { LANGUAGES } from "@edge_translate/translators";
 import Channel from "../common/scripts/channel.js";
 import { i18nHTML } from "../common/scripts/common.js";
 

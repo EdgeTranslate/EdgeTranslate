@@ -1,6 +1,6 @@
 import type { AxiosResponse } from "axios";
-import axios from "../axios.js";
-import { PronunciationSpeed, TranslationResult } from "../types.js";
+import axios from "../axios";
+import { PronunciationSpeed, TranslationResult } from "../types";
 
 /**
  * Supported languages.
@@ -94,7 +94,7 @@ class TencentTranslator {
      * Request headers.
      */
     HEADERS = {
-        // Origin: this.BASE_URL
+        // Origin: this.BASE_URL,
     };
 
     /**

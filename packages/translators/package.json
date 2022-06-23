@@ -9,6 +9,7 @@
     "scripts": {
         "dev": "vite build --watch",
         "build": "vite build && tsc && mv dist/src dist/types",
+        "test": "jest",
         "prepublish": "npm run build"
     },
     "files": [
@@ -20,7 +21,12 @@
     "types": "./dist/types/index.d.ts",
     "devDependencies": {
         "@types/chrome": "^0.0.190",
-        "typescript": "^4.5.4",
+        "@types/jest": "^28.1.3",
+        "jest": "^28.1.1",
+        "jest-chrome": "^0.7.2",
+        "jest-environment-jsdom": "^28.1.1",
+        "ts-jest": "^28.0.5",
+        "typescript": "^4.7.4",
         "vite": "^2.9.9"
     },
     "peerDependencies": {

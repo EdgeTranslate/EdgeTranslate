@@ -14,9 +14,31 @@ class TranslatorManager {
         this.channel = channel;
 
         /**
-         * Hybrid translator.
+         * Get configuration for hybrid translator.
          */
-        this.HYBRID_TRANSLATOR = new HybridTranslator(channel);
+        new Promise((resolve, reject) => {
+            chrome.storage.sync.get("HybridTranslatorConfig", (res) => {
+                if (chrome.runtime.lastError) {
+                    reject(chrome.runtime.lastError);
+                    return;
+                }
+                resolve(res.HybridTranslatorConfig);
+            });
+        }).then((config) => {
+            // Init hybrid translator.
+            this.HYBRID_TRANSLATOR = new HybridTranslator(config, channel);
+
+            // Update config cache in the translator on config changed.
+            chrome.storage.onChanged.addListener(
+                ((changes, area) => {
+                    if (area === "sync" && changes["HybridTranslatorConfig"]) {
+                        this.HYBRID_TRANSLATOR.useConfig(
+                            changes["HybridTranslatorConfig"].newValue
+                        );
+                    }
+                }).bind(this)
+            );
+        });
 
         /**
          * Supported translators.
@@ -419,7 +441,9 @@ class TranslatorManager {
         let availableTranslators = this.getAvailableTranslators(detail);
 
         // Update hybrid translator config.
-        let newConfig = await this.HYBRID_TRANSLATOR.updateConfigFor(detail.from, detail.to);
+        const newConfig = this.HYBRID_TRANSLATOR.updateConfigFor(detail.from, detail.to);
+        // Update config.
+        chrome.storage.sync.set({ HybridTranslatorConfig: newConfig });
 
         // If current default translator does not support new language setting, update it.
         if (!new Set(availableTranslators).has(selectedTranslator)) {

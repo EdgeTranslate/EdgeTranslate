@@ -1,5 +1,5 @@
 import type { AxiosResponse } from "axios";
-import axios from "../axios.js";
+import axios from "../axios";
 import {
     Definition,
     DetailedMeaning,
@@ -7,7 +7,7 @@ import {
     PronunciationSpeed,
     TranslationError,
     TranslationResult,
-} from "../types.js";
+} from "../types";
 
 /**
  * Supported languages.

@@ -18,3 +18,5 @@ jobs:
               run: yarn install
             - name: pack packages for chrome and firefox
               run: yarn prepublish
+            - name: run all tests
+              run: yarn test

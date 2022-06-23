@@ -1,5 +1,5 @@
-import axios from "../axios.js";
-import { Example, PronunciationSpeed, TranslationResult } from "../types.js";
+import axios from "../axios";
+import { Example, PronunciationSpeed, TranslationResult } from "../types";
 
 /**
  * Language maps.

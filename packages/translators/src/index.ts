@@ -9,18 +9,21 @@ import axios from "./axios";
 /**
  * Default hybrid translator.
  */
-const HYBRID_TRANSLATOR = new HybridTranslator({
-    translators: ["bing", "google"],
-    selections: {
-        originalText: "bing",
-        mainMeaning: "bing",
-        tPronunciation: "bing",
-        sPronunciation: "google",
-        detailedMeanings: "google",
-        definitions: "google",
-        examples: "google",
+const HYBRID_TRANSLATOR = new HybridTranslator(
+    {
+        translators: ["BingTranslate", "GoogleTranslate"],
+        selections: {
+            originalText: "BingTranslate",
+            mainMeaning: "BingTranslate",
+            tPronunciation: "BingTranslate",
+            sPronunciation: "GoogleTranslate",
+            detailedMeanings: "GoogleTranslate",
+            definitions: "GoogleTranslate",
+            examples: "GoogleTranslate",
+        },
     },
-});
+    {}
+);
 
 /**
  * Supported translators.

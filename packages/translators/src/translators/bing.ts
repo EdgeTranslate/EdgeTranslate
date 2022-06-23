@@ -1,6 +1,6 @@
 import type { AxiosRequestConfig, AxiosResponse } from "axios";
-import axios from "../axios.js";
-import { PronunciationSpeed, TranslationResult } from "../types.js";
+import axios from "../axios";
+import { PronunciationSpeed, TranslationResult } from "../types";
 
 /**
  * Supported languages.

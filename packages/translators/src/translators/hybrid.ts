@@ -4,12 +4,12 @@ import {
     Example,
     PronunciationSpeed,
     TranslationResult,
-} from "../types.js";
-import BaiduTranslator from "./baidu.js";
-import BingTranslator from "./bing.js";
-import DeepLTranslator from "./deepl.js";
-import GoogleTranslator from "./google.js";
-import TencentTranslator from "./tencent.js";
+} from "../types";
+import BaiduTranslator from "./baidu";
+import BingTranslator from "./bing";
+import DeepLTranslator from "./deepl";
+import GoogleTranslator from "./google";
+import TencentTranslator from "./tencent";
 
 export type HybridSupportedTranslators =
     | "BaiduTranslate"
@@ -20,7 +20,7 @@ export type HybridSupportedTranslators =
 
 export type HybridConfig = {
     selections: Selections;
-    translators: HybridSupportedTranslators[];
+    translators: HybridSupportedTranslators[]; // a collection of used translators which is generated based on selections. The generating process is in options.js.
 };
 export type Selections = Record<keyof TranslationResult, HybridSupportedTranslators>;
 
@@ -42,7 +42,7 @@ class HybridTranslator {
     };
     MAIN_TRANSLATOR: HybridSupportedTranslators = "GoogleTranslate";
 
-    constructor(channel: any) {
+    constructor(config: HybridConfig, channel: any) {
         this.channel = channel;
 
         /**
@@ -64,42 +64,24 @@ class HybridTranslator {
             this.REAL_TRANSLATORS.GoogleTranslate
         );
 
-        /**
-         * Update config cache on config changed.
-         */
-        chrome.storage.onChanged.addListener(
-            ((changes: any, area: string) => {
-                if (area === "sync" && changes["HybridTranslatorConfig"]) {
-                    this.CONFIG = changes["HybridTranslatorConfig"].newValue;
-                    this.MAIN_TRANSLATOR = this.CONFIG.selections.mainMeaning;
-                }
-            }).bind(this)
-        );
+        this.useConfig(config);
     }
 
     /**
-     * Load hybrid translator config if it is not loaded.
+     * Update config.
      *
-     * @returns loading Promise.
+     * @param {Object} config to use.
      */
-    loadConfigIfNotLoaded() {
-        return new Promise<void>((resolve, reject) => {
-            if (this.CONFIG.translators && this.CONFIG.selections) {
-                resolve();
-                return;
-            }
+    useConfig(config: HybridConfig) {
+        /**
+         * Validate config.
+         */
+        if (!config || !config.translators || !config.selections) {
+            throw new Error("Invalid config for HybridTranslator!");
+        }
 
-            chrome.storage.sync.get("HybridTranslatorConfig", (res) => {
-                if (chrome.runtime.lastError) {
-                    reject(chrome.runtime.lastError);
-                    return;
-                }
-
-                this.CONFIG = res.HybridTranslatorConfig;
-                this.MAIN_TRANSLATOR = this.CONFIG.selections.mainMeaning;
-                resolve();
-            });
-        });
+        this.CONFIG = config;
+        this.MAIN_TRANSLATOR = config.selections.mainMeaning;
     }
 
     /**
@@ -128,12 +110,9 @@ class HybridTranslator {
      * @param from source language
      * @param to target language
      *
-     * @returns new config Promise
+     * @returns new config
      */
-    async updateConfigFor(from: string, to: string) {
-        // Load config if not loaded.
-        await this.loadConfigIfNotLoaded();
-
+    updateConfigFor(from: string, to: string) {
         const newConfig: HybridConfig = { translators: [], selections: {} as Selections };
         const translatorsSet = new Set<HybridSupportedTranslators>();
 
@@ -165,11 +144,8 @@ class HybridTranslator {
         // Update used translator set.
         newConfig.translators = Array.from(translatorsSet);
 
-        // Update config.
-        chrome.storage.sync.set({ HybridTranslatorConfig: newConfig });
-
         // Provide new config.
-        return Promise.resolve(newConfig);
+        return newConfig;
     }
 
     /**
@@ -180,11 +156,6 @@ class HybridTranslator {
      * @returns Promise of language of given text
      */
     async detect(text: string) {
-        /**
-         * Check config firstly.
-         */
-        await this.loadConfigIfNotLoaded();
-
         return this.REAL_TRANSLATORS[this.MAIN_TRANSLATOR].detect(text);
     }
 
@@ -198,9 +169,6 @@ class HybridTranslator {
      * @returns result Promise
      */
     async translate(text: string, from: string, to: string) {
-        // Check config firstly.
-        await this.loadConfigIfNotLoaded();
-
         // Initiate translation requests.
         let requests = [];
         for (let translator of this.CONFIG.translators) {
@@ -246,11 +214,6 @@ class HybridTranslator {
      * @returns pronounce finished
      */
     async pronounce(text: string, language: string, speed: PronunciationSpeed) {
-        /**
-         * Check config firstly.
-         */
-        await this.loadConfigIfNotLoaded();
-
         return this.REAL_TRANSLATORS[this.MAIN_TRANSLATOR].pronounce(text, language, speed);
     }
 
@@ -258,11 +221,6 @@ class HybridTranslator {
      * Pause pronounce.
      */
     async stopPronounce() {
-        /**
-         * Check config firstly.
-         */
-        await this.loadConfigIfNotLoaded();
-
         this.REAL_TRANSLATORS[this.MAIN_TRANSLATOR].stopPronounce();
     }
 }
