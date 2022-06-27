@@ -7,33 +7,6 @@ import HybridTranslator from "./translators/hybrid";
 import axios from "./axios";
 
 /**
- * Default hybrid translator.
- */
-const HYBRID_TRANSLATOR = new HybridTranslator(
-    {
-        translators: ["BingTranslate", "GoogleTranslate"],
-        selections: {
-            originalText: "BingTranslate",
-            mainMeaning: "BingTranslate",
-            tPronunciation: "BingTranslate",
-            sPronunciation: "GoogleTranslate",
-            detailedMeanings: "GoogleTranslate",
-            definitions: "GoogleTranslate",
-            examples: "GoogleTranslate",
-        },
-    },
-    {}
-);
-
-/**
- * Supported translators.
- */
-const TRANSLATORS = Object.freeze({
-    hybrid: HYBRID_TRANSLATOR,
-    ...HYBRID_TRANSLATOR.REAL_TRANSLATORS,
-});
-
-/**
  * Supported languages.
  */
 const LANGUAGES = {
@@ -256,7 +229,6 @@ const LANGUAGES = {
 export {
     axios,
     LANGUAGES,
-    TRANSLATORS,
     HybridTranslator,
     BingTranslator,
     GoogleTranslator,
