@@ -9,8 +9,7 @@
     "scripts": {
         "dev": "vite build --watch",
         "build": "vite build && tsc && mv dist/src dist/types",
-        "test": "jest",
-        "prepublish": "npm run build"
+        "test": "jest"
     },
     "files": [
         "dist"

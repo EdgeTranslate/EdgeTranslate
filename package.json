@@ -23,7 +23,7 @@
         "url": "https://github.com/EdgeTranslate/EdgeTranslate.git"
     },
     "scripts": {
-        "prepublish": "turbo run prepublish",
+        "build": "turbo run build",
         "test": "turbo run test"
     },
     "devDependencies": {

@@ -2,12 +2,10 @@
     "$schema": "https://turborepo.org/schema.json",
     "baseBranch": "origin/main",
     "pipeline": {
-        "prepublish": {
-            "dependsOn": ["^prepublish"],
+        "build": {
+            "dependsOn": ["^build"],
             "outputs": ["dist/**", "build/**"]
         },
-        "test": {},
-        "test:watch": {},
-        "dev": {}
+        "test": {}
     }
 }

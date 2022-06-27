@@ -16,5 +16,7 @@ jobs:
                   node-version: "12"
             - name: install dependencies
               run: yarn install
+            - name: build packages for chrome and firefox
+              run: yarn build
             - name: run all tests
               run: yarn test
