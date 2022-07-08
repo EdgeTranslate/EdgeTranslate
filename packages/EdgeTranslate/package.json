@@ -13,7 +13,7 @@
         "pack:firefox": "gulp pack --browser firefox",
         "e2e:chrome": "SELENIUM_BROWSER=chrome jest -i --config './test/e2e/jest/jest.config.js'",
         "e2e:firefox": "SELENIUM_BROWSER=firefox jest -i --config './test/e2e/jest/jest.config.js'",
-        "build": "echo '\npacking package for chrome' && gulp pack --browser chrome && echo '\npacking package for firefox' && gulp pack --browser firefox"
+        "build": "node -e \"console.log('\\npacking package for chrome')\" && gulp pack --browser chrome && node -e \"console.log('\\npacking package for firefox')\" && gulp pack --browser firefox"
     },
     "devDependencies": {
         "@babel/core": "^7.17.7",
