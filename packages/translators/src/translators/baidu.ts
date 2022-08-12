@@ -292,8 +292,8 @@ class BaiduTranslator {
                 timeout: 5000,
             })) as AxiosResponse<any>;
 
-            this.token = response.data.match(/token: '(.*?)',/)[1];
-            this.gtk = response.data.match(/window.gtk = '(.*?)'/)[1];
+            this.token = response.data.match(/token *: *['"](.*)['"]/)[1];
+            this.gtk = response.data.match(/window.gtk *= *['"](.*)['"]/)[1];
         };
 
         // request two times to ensure the token is the latest value
