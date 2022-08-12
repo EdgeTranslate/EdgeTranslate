@@ -28,6 +28,14 @@ class TranslatorManager {
             // Init hybrid translator.
             this.HYBRID_TRANSLATOR = new HybridTranslator(config, channel);
 
+            /**
+             * Supported translators.
+             */
+            this.TRANSLATORS = {
+                HybridTranslate: this.HYBRID_TRANSLATOR,
+                ...this.HYBRID_TRANSLATOR.REAL_TRANSLATORS,
+            };
+
             // Update config cache in the translator on config changed.
             chrome.storage.onChanged.addListener(
                 ((changes, area) => {
@@ -39,14 +47,6 @@ class TranslatorManager {
                 }).bind(this)
             );
         });
-
-        /**
-         * Supported translators.
-         */
-        this.TRANSLATORS = {
-            HybridTranslate: this.HYBRID_TRANSLATOR,
-            ...this.HYBRID_TRANSLATOR.REAL_TRANSLATORS,
-        };
 
         /**
          * Mutual translating mode flag.
