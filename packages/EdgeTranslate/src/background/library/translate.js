@@ -14,59 +14,38 @@ class TranslatorManager {
         this.channel = channel;
 
         /**
-         * Get configuration for hybrid translator.
+         * Initialize configurations.
          */
-        new Promise((resolve, reject) => {
-            chrome.storage.sync.get("HybridTranslatorConfig", (res) => {
-                if (chrome.runtime.lastError) {
-                    reject(chrome.runtime.lastError);
-                    return;
+        this.config_loader = new Promise((resolve, reject) => {
+            chrome.storage.sync.get(
+                ["HybridTranslatorConfig", "DefaultTranslator", "languageSetting", "OtherSettings"],
+                (configs) => {
+                    if (chrome.runtime.lastError) {
+                        reject(chrome.runtime.lastError);
+                        return;
+                    }
+                    resolve(configs);
                 }
-                resolve(res.HybridTranslatorConfig);
-            });
-        }).then((config) => {
+            );
+        }).then((configs) => {
             // Init hybrid translator.
-            this.HYBRID_TRANSLATOR = new HybridTranslator(config, channel);
+            this.HYBRID_TRANSLATOR = new HybridTranslator(configs.HybridTranslatorConfig, channel);
 
-            /**
-             * Supported translators.
-             */
+            // Supported translators.
             this.TRANSLATORS = {
                 HybridTranslate: this.HYBRID_TRANSLATOR,
                 ...this.HYBRID_TRANSLATOR.REAL_TRANSLATORS,
             };
 
-            // Update config cache in the translator on config changed.
-            chrome.storage.onChanged.addListener(
-                ((changes, area) => {
-                    if (area === "sync" && changes["HybridTranslatorConfig"]) {
-                        this.HYBRID_TRANSLATOR.useConfig(
-                            changes["HybridTranslatorConfig"].newValue
-                        );
-                    }
-                }).bind(this)
-            );
+            // Mutual translating mode flag.
+            this.IN_MUTUAL_MODE = configs.OtherSettings.MutualTranslate;
+
+            // Translation language settings.
+            this.LANGUAGE_SETTING = configs.languageSetting;
+
+            // The default translator to use.
+            this.DEFAULT_TRANSLATOR = configs.DefaultTranslator;
         });
-
-        /**
-         * Mutual translating mode flag.
-         */
-        this.IN_MUTUAL_MODE = null;
-
-        /**
-         * Language setting.
-         */
-        this.LANGUAGE_SETTING = {};
-
-        /**
-         * Default translator.
-         */
-        this.DEFAULT_TRANSLATOR = "";
-
-        /**
-         * Config loaded flag.
-         */
-        this.CONFIG_LOADED = false;
 
         /**
          * Default TTS speed.
@@ -147,6 +126,12 @@ class TranslatorManager {
         chrome.storage.onChanged.addListener(
             ((changes, area) => {
                 if (area === "sync") {
+                    if (changes["HybridTranslatorConfig"]) {
+                        this.HYBRID_TRANSLATOR.useConfig(
+                            changes["HybridTranslatorConfig"].newValue
+                        );
+                    }
+
                     if (changes["OtherSettings"]) {
                         this.IN_MUTUAL_MODE = changes["OtherSettings"].newValue.MutualTranslate;
                     }
@@ -161,36 +146,6 @@ class TranslatorManager {
                 }
             }).bind(this)
         );
-    }
-
-    /**
-     * Load default translator if it is not loaded.
-     *
-     * @returns {Promise<void>} loading Promise.
-     */
-    loadConfigIfNotLoaded() {
-        return new Promise((resolve, reject) => {
-            if (this.CONFIG_LOADED) {
-                resolve();
-                return;
-            }
-
-            chrome.storage.sync.get(
-                ["DefaultTranslator", "languageSetting", "OtherSettings"],
-                (res) => {
-                    if (chrome.runtime.lastError) {
-                        reject(chrome.runtime.lastError);
-                        return;
-                    }
-
-                    this.IN_MUTUAL_MODE = res.OtherSettings.MutualTranslate;
-                    this.LANGUAGE_SETTING = res.languageSetting;
-                    this.DEFAULT_TRANSLATOR = res.DefaultTranslator;
-                    this.CONFIG_LOADED = true;
-                    resolve();
-                }
-            );
-        });
     }
 
     /**
@@ -259,8 +214,8 @@ class TranslatorManager {
      * @returns {Promise<String>} detected language Promise
      */
     async detect(text) {
-        // Check config.
-        await this.loadConfigIfNotLoaded();
+        // Ensure that configurations have been initialized.
+        await this.config_loader;
 
         return this.TRANSLATORS[this.DEFAULT_TRANSLATOR].detect(text);
     }
@@ -279,8 +234,8 @@ class TranslatorManager {
      * @returns {Promise<void>} translate finished Promise
      */
     async translate(text, position) {
-        // Check config.
-        await this.loadConfigIfNotLoaded();
+        // Ensure that configurations have been initialized.
+        await this.config_loader;
 
         // get current tab id
         const currentTabId = await this.getCurrentTabId();
@@ -354,8 +309,8 @@ class TranslatorManager {
      * @returns {Promise<void>} pronounce finished Promise
      */
     async pronounce(pronouncing, text, language, speed) {
-        // Check config.
-        await this.loadConfigIfNotLoaded();
+        // Ensure that configurations have been initialized.
+        await this.config_loader;
 
         // get current tab id
         const currentTabId = await this.getCurrentTabId();
@@ -407,8 +362,8 @@ class TranslatorManager {
      * Stop pronounce proxy.
      */
     async stopPronounce() {
-        // Check config.
-        await this.loadConfigIfNotLoaded();
+        // Ensure that configurations have been initialized.
+        await this.config_loader;
 
         this.TRANSLATORS[this.DEFAULT_TRANSLATOR].stopPronounce();
         this.localTTS.pause();
