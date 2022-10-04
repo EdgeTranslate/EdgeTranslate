@@ -120,10 +120,10 @@ class GoogleTranslator {
     TKK = [434217, 1534559001];
 
     // Google Translate home page.
-    HOME_PAGE = "https://translate.google.cn/";
+    HOME_PAGE = "https://translate.google.com/";
 
     // Deprecated host.
-    // this.HOST = "https://translate.google.cn/";
+    // this.HOST = "https://translate.google.com/";
 
     // Spare host.
     HOST = "https://translate.googleapis.com/";

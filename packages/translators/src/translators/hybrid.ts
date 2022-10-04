@@ -60,8 +60,8 @@ class HybridTranslator {
          * DeepL translator needs help from other translators and we choose Google for now.
          */
         this.REAL_TRANSLATORS.DeepLTranslate = new DeepLTranslator(
-            this.REAL_TRANSLATORS.GoogleTranslate,
-            this.REAL_TRANSLATORS.GoogleTranslate
+            this.REAL_TRANSLATORS.BingTranslate,
+            this.REAL_TRANSLATORS.BingTranslate
         );
 
         this.useConfig(config);
