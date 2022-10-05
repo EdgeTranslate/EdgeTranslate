@@ -1,6 +1,6 @@
 {
     "name": "@edge_translate/translators",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "Collection of translators with unified interface.",
     "keywords": [
         "translate",
