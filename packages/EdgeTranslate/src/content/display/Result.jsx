@@ -563,6 +563,7 @@ const StyledCopyIcon = styled(CopyIcon)`
 const StyledPronounceIcon = styled(PronounceIcon)`
     width: 20px;
     height: 20px;
+    padding: 2px;
     margin-right: 10px;
     fill: ${LightPrimary};
     flex-shrink: 0;
@@ -585,6 +586,7 @@ const StyledPronounceIcon = styled(PronounceIcon)`
 const StyledPronounceLoadingIcon = styled(PronounceLoadingIcon)`
     width: 24px;
     height: 24px;
+    margin-right: 10px;
     fill: ${LightPrimary};
     padding: 0;
     flex-shrink: 0;
