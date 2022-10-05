@@ -1,6 +1,7 @@
 import { axios, HybridTranslator } from "@edge_translate/translators";
 import { log } from "common/scripts/common.js";
-import { promiseTabs, delayPromise } from "../../common/scripts/promise.js";
+import { promiseTabs, delayPromise } from "common/scripts/promise.js";
+import { DEFAULT_SETTINGS, getOrSetDefaultSettings } from "common/scripts/settings.js";
 import LocalTTS from "./local_tts.js";
 
 class TranslatorManager {
@@ -14,20 +15,12 @@ class TranslatorManager {
         this.channel = channel;
 
         /**
-         * Initialize configurations.
+         * @type {Promise<Void>} Initialize configurations.
          */
-        this.config_loader = new Promise((resolve, reject) => {
-            chrome.storage.sync.get(
-                ["HybridTranslatorConfig", "DefaultTranslator", "languageSetting", "OtherSettings"],
-                (configs) => {
-                    if (chrome.runtime.lastError) {
-                        reject(chrome.runtime.lastError);
-                        return;
-                    }
-                    resolve(configs);
-                }
-            );
-        }).then((configs) => {
+        this.config_loader = getOrSetDefaultSettings(
+            ["HybridTranslatorConfig", "DefaultTranslator", "languageSetting", "OtherSettings"],
+            DEFAULT_SETTINGS
+        ).then((configs) => {
             // Init hybrid translator.
             this.HYBRID_TRANSLATOR = new HybridTranslator(configs.HybridTranslatorConfig, channel);
 
@@ -38,7 +31,7 @@ class TranslatorManager {
             };
 
             // Mutual translating mode flag.
-            this.IN_MUTUAL_MODE = configs.OtherSettings.MutualTranslate;
+            this.IN_MUTUAL_MODE = configs.OtherSettings.MutualTranslate || false;
 
             // Translation language settings.
             this.LANGUAGE_SETTING = configs.languageSetting;
@@ -124,8 +117,11 @@ class TranslatorManager {
          * Update config cache on config changed.
          */
         chrome.storage.onChanged.addListener(
-            ((changes, area) => {
+            (async (changes, area) => {
                 if (area === "sync") {
+                    // Ensure that configurations have been initialized.
+                    await this.config_loader;
+
                     if (changes["HybridTranslatorConfig"]) {
                         this.HYBRID_TRANSLATOR.useConfig(
                             changes["HybridTranslatorConfig"].newValue
@@ -443,7 +439,7 @@ class TranslatorManager {
  * @param {import("../../common/scripts/channel.js").default} channel Communication channel.
  */
 function translatePage(channel) {
-    chrome.storage.sync.get(["DefaultPageTranslator"], (result) => {
+    getOrSetDefaultSettings(["DefaultPageTranslator"], DEFAULT_SETTINGS).then((result) => {
         let translator = result.DefaultPageTranslator;
         switch (translator) {
             case "YouDaoPageTranslate":

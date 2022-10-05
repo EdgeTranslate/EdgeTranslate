@@ -9,6 +9,7 @@ import SimpleBarStyle from "simplebar-react/dist/simplebar.min.css";
 import Channel from "common/scripts/channel.js";
 import Moveable from "./library/moveable/moveable.js";
 import { delayPromise } from "common/scripts/promise.js";
+import { DEFAULT_SETTINGS, getOrSetDefaultSettings } from "common/scripts/settings.js";
 import { isChromePDFViewer } from "../common.js";
 import Result from "./Result.jsx"; // display translate result
 import Loading from "./Loading.jsx"; // display loading animation
@@ -125,17 +126,19 @@ export default function ResultPanel() {
     useEffect(() => {
         getDisplaySetting();
 
-        chrome.storage.sync.get(["languageSetting", "DefaultTranslator"], async (result) => {
-            let languageSetting = result.languageSetting;
-            let availableTranslators = await channel.request("get_available_translators", {
-                from: languageSetting.sl,
-                to: languageSetting.tl,
-            });
-            setAvailableTranslators(availableTranslators);
-            setCurrentTranslator(result.DefaultTranslator);
-        });
+        getOrSetDefaultSettings(["languageSetting", "DefaultTranslator"], DEFAULT_SETTINGS).then(
+            async (result) => {
+                let languageSetting = result.languageSetting;
+                let availableTranslators = await channel.request("get_available_translators", {
+                    from: languageSetting.sl,
+                    to: languageSetting.tl,
+                });
+                setAvailableTranslators(availableTranslators);
+                setCurrentTranslator(result.DefaultTranslator);
+            }
+        );
 
-        chrome.storage.sync.get("fixSetting", (result) => {
+        getOrSetDefaultSettings("fixSetting", DEFAULT_SETTINGS).then((result) => {
             setPanelFix(result.fixSetting);
         });
 
@@ -179,7 +182,7 @@ export default function ResultPanel() {
         channel.on("command", (detail) => {
             switch (detail.command) {
                 case "fix_result_frame":
-                    chrome.storage.sync.get("fixSetting", (result) => {
+                    getOrSetDefaultSettings("fixSetting", DEFAULT_SETTINGS).then((result) => {
                         setPanelFix(!result.fixSetting);
                         chrome.storage.sync.set({
                             fixSetting: !result.fixSetting,
@@ -470,7 +473,7 @@ export default function ResultPanel() {
         let offsetLeft = 0;
         if (displaySettingRef.current.fixedData.position === "right")
             offsetLeft = window.innerWidth - width - (hasScrollbar() ? scrollbarWidth : 0);
-        chrome.storage.sync.get("LayoutSettings", async (result) => {
+        getOrSetDefaultSettings("LayoutSettings", DEFAULT_SETTINGS).then(async (result) => {
             resizePageFlag.current = result.LayoutSettings.Resize;
             // user set to resize the document body
             if (resizePageFlag.current) {
@@ -551,7 +554,7 @@ export default function ResultPanel() {
      */
     function getDisplaySetting() {
         return new Promise((resolve) => {
-            chrome.storage.sync.get("DisplaySetting", (result) => {
+            getOrSetDefaultSettings("DisplaySetting", DEFAULT_SETTINGS).then((result) => {
                 if (result.DisplaySetting) {
                     displaySettingRef.current = result.DisplaySetting;
                 } else {

@@ -77,7 +77,8 @@ class HybridTranslator {
          * Validate config.
          */
         if (!config || !config.translators || !config.selections) {
-            throw new Error("Invalid config for HybridTranslator!");
+            console.error("Invalid config for HybridTranslator!");
+            return;
         }
 
         this.CONFIG = config;

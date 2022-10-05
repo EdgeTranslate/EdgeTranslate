@@ -1,4 +1,5 @@
 import Channel from "common/scripts/channel.js";
+import { DEFAULT_SETTINGS, getOrSetDefaultSettings } from "common/scripts/settings.js";
 
 /**
  * Control the visibility of page translator banners.
@@ -130,16 +131,18 @@ class BannerController {
                 // If the distance property is positive, it means the banner is created, and
                 // the page has been moved down. Else if it is negative, it means the banner is
                 // destroyed, and the banner has been moved up.
-                chrome.storage.sync.get("HidePageTranslatorBanner", (result) => {
-                    if (result.HidePageTranslatorBanner) {
-                        setTimeout(() => {
-                            this.toggleBannerFrame(false);
-                            // If user decide to hide the banner, we just keep the top
-                            // of the page at 0px.
-                            this.movePage("top", 0, true);
-                        }, 0);
+                getOrSetDefaultSettings("HidePageTranslatorBanner", DEFAULT_SETTINGS).then(
+                    (result) => {
+                        if (result.HidePageTranslatorBanner) {
+                            setTimeout(() => {
+                                this.toggleBannerFrame(false);
+                                // If user decide to hide the banner, we just keep the top
+                                // of the page at 0px.
+                                this.movePage("top", 0, true);
+                            }, 0);
+                        }
                     }
-                });
+                );
 
                 // If the banner is destroyed, we should cancel listeners.
                 if (data.distance <= 0) {
@@ -166,17 +169,19 @@ class BannerController {
                 // If the distance property is positive, it means the banner is created, and
                 // the page has been moved down. Else if it is negative, it means the banner is
                 // destroyed, and the banner has been moved up.
-                chrome.storage.sync.get("HidePageTranslatorBanner", (result) => {
-                    if (result.HidePageTranslatorBanner) {
-                        setTimeout(() => {
-                            this.toggleBannerFrame(false);
-                            // If user decide to hide the banner, we should undo the
-                            // movements done by Youdao page translator both on banner
-                            // creation and destroying.
-                            this.movePage("margin-top", -detail.distance, false);
-                        }, 0);
+                getOrSetDefaultSettings("HidePageTranslatorBanner", DEFAULT_SETTINGS).then(
+                    (result) => {
+                        if (result.HidePageTranslatorBanner) {
+                            setTimeout(() => {
+                                this.toggleBannerFrame(false);
+                                // If user decide to hide the banner, we should undo the
+                                // movements done by Youdao page translator both on banner
+                                // creation and destroying.
+                                this.movePage("margin-top", -detail.distance, false);
+                            }, 0);
+                        }
                     }
-                });
+                );
 
                 // If the banner is destroyed, we should cancel listeners.
                 if (detail.distance <= 0) {
@@ -198,7 +203,7 @@ class BannerController {
     toggleBanner() {
         if (!this.currentTranslator) return;
 
-        chrome.storage.sync.get("HidePageTranslatorBanner", (result) => {
+        getOrSetDefaultSettings("HidePageTranslatorBanner", DEFAULT_SETTINGS).then((result) => {
             result.HidePageTranslatorBanner = !result.HidePageTranslatorBanner;
             chrome.storage.sync.set(result);
 
