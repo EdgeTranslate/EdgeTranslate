@@ -241,7 +241,11 @@ const channel = new Channel();
 /**
  * Create translator manager and register event listeners and service providers.
  */
-const TRANSLATOR_MANAGER = new TranslatorManager(channel);
+let TRANSLATOR_MANAGER;
+
+setTimeout(() => {
+    TRANSLATOR_MANAGER = new TranslatorManager(channel);
+}, 2000);
 
 /**
  * 监听用户点击通知事件
@@ -490,7 +494,7 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
 // send basic hit data to google analytics
 setTimeout(() => {
     sendHitRequest("background", "pageview", null);
-}, 1000);
+}, 2000);
 
 /**
  * assign default value to settings which are undefined in recursive way
