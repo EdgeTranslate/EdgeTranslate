@@ -1,19 +1,17 @@
 {
-	// See https://go.microsoft.com/fwlink/?LinkId=827846 to learn about workspace recommendations.
-	// Extension identifier format: ${publisher}.${name}. Example: vscode.csharp
+    // See https://go.microsoft.com/fwlink/?LinkId=827846 to learn about workspace recommendations.
+    // Extension identifier format: ${publisher}.${name}. Example: vscode.csharp
 
-	// List of extensions which should be recommended for users of this workspace.
-	"recommendations": [
-		"streetsidesoftware.code-spell-checker",
+    // List of extensions which should be recommended for users of this workspace.
+    "recommendations": [
+        "streetsidesoftware.code-spell-checker",
         "dbaeumer.vscode-eslint",
         "rvest.vs-code-prettier-eslint",
         "felixjb.testify",
-				"thisismanta.stylus-supremacy",
-				"vivaxy.vscode-conventional-commits",
-				"jpoissonnier.vscode-styled-components"
-	],
-	// List of extensions recommended by VS Code that should not be recommended for users of this workspace.
-	"unwantedRecommendations": [
-		
-	]
+        "thisismanta.stylus-supremacy",
+        "vivaxy.vscode-conventional-commits",
+        "styled-components.vscode-styled-components"
+    ],
+    // List of extensions recommended by VS Code that should not be recommended for users of this workspace.
+    "unwantedRecommendations": []
 }

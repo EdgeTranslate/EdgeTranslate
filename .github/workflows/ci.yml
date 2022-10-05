@@ -1,0 +1,22 @@
+name: CI
+
+on:
+    push:
+        branches: ["master", "develop"]
+    pull_request:
+        branches: ["master", "develop"]
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+            - uses: actions/setup-node@v3
+              with:
+                  node-version: "12"
+            - name: install dependencies
+              run: yarn install
+            - name: build packages for chrome and firefox
+              run: yarn build
+            - name: run all tests
+              run: yarn test
