@@ -170,9 +170,6 @@ function addEventListener() {
     document.getElementById("google-page-translate").addEventListener("click", () => {
         channel.emit("translate_page_google", {});
     });
-    document.getElementById("youdao-page-translate").addEventListener("click", () => {
-        channel.emit("translate_page_youdao", {});
-    });
 }
 
 /**

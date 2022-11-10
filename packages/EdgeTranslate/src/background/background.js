@@ -1,9 +1,4 @@
-import {
-    TranslatorManager,
-    translatePage,
-    executeYouDaoScript,
-    executeGoogleScript,
-} from "./library/translate.js";
+import { TranslatorManager, translatePage, executeGoogleScript } from "./library/translate.js";
 import {
     addUrlBlacklist,
     addDomainBlacklist,
@@ -47,12 +42,6 @@ chrome.contextMenus.create({
     id: "translate_page",
     title: chrome.i18n.getMessage("TranslatePage"),
     contexts: ["page"],
-});
-
-chrome.contextMenus.create({
-    id: "translate_page_youdao",
-    title: chrome.i18n.getMessage("TranslatePageYouDao"),
-    contexts: ["browser_action"],
 });
 
 chrome.contextMenus.create({
@@ -221,9 +210,6 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
             break;
         case "translate_page":
             translatePage(channel);
-            break;
-        case "translate_page_youdao":
-            executeYouDaoScript(channel);
             break;
         case "translate_page_google":
             executeGoogleScript(channel);

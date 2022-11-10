@@ -69,7 +69,7 @@
             "description": "__MSG_TogglePageTranslateBanner__"
         }
     },
-    "web_accessible_resources": ["**/*.css", "**/*.png", "youdao/*", "google/*"],
+    "web_accessible_resources": ["**/*.css", "**/*.png", "google/*"],
     "icons": {
         "16": "icon/icon16.png",
         "48": "icon/icon48.png",

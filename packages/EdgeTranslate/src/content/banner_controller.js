@@ -9,7 +9,7 @@ class BannerController {
         // Communication channel.
         this.channel = new Channel();
 
-        // Allowed translator: youdao, google.
+        // Allowed translator: google.
         this.currentTranslator = null;
 
         // Message listener canceller.
@@ -37,15 +37,6 @@ class BannerController {
                         }).bind(this);
                         break;
                     }
-                    case "youdao":
-                        // Youdao page translator runs in extension context, chrome.runtime.sendMessage
-                        // is available.
-                        this.currentTranslator = "youdao";
-                        this.canceller = this.channel.on(
-                            "page_translate_event",
-                            this.youdaoMessageHandler.bind(this)
-                        );
-                        break;
                     default:
                         break;
                 }
@@ -79,14 +70,6 @@ class BannerController {
                 }
                 break;
             }
-            case "youdao": {
-                let banner = document.getElementById("OUTFOX_BAR_WRAPPER");
-                if (banner !== null && banner !== undefined) {
-                    banner.style.visibility = visible ? "visible" : "hidden";
-                    return;
-                }
-                break;
-            }
             default:
                 break;
         }
@@ -95,8 +78,8 @@ class BannerController {
     /**
      * Move the page body.
      *
-     * @param {String} property indicates which style property to use for moving,
-     *                           Google uses "top", Youdao uses "margin-top".
+     * @param {String} property indicates which style property to use for moving. Google uses "top".
+     *
      * @param {Number} distance the distance to move.
      * @param {boolean} absolute whether the distance is relative or absolute.
      */
@@ -157,45 +140,6 @@ class BannerController {
     }
 
     /**
-     * Handle messages sent by Youdao page translator.
-     *
-     * @param {Object} msg the message content.
-     * @returns {void} nothing
-     */
-    youdaoMessageHandler(detail) {
-        switch (detail.event) {
-            case "page_moved":
-                // The "page_moved" event may be sent when the banner is created or destroyed.
-                // If the distance property is positive, it means the banner is created, and
-                // the page has been moved down. Else if it is negative, it means the banner is
-                // destroyed, and the banner has been moved up.
-                getOrSetDefaultSettings("HidePageTranslatorBanner", DEFAULT_SETTINGS).then(
-                    (result) => {
-                        if (result.HidePageTranslatorBanner) {
-                            setTimeout(() => {
-                                this.toggleBannerFrame(false);
-                                // If user decide to hide the banner, we should undo the
-                                // movements done by Youdao page translator both on banner
-                                // creation and destroying.
-                                this.movePage("margin-top", -detail.distance, false);
-                            }, 0);
-                        }
-                    }
-                );
-
-                // If the banner is destroyed, we should cancel listeners.
-                if (detail.distance <= 0) {
-                    this.canceller();
-                    this.canceller = null;
-                    this.currentTranslator = null;
-                }
-                break;
-            default:
-                break;
-        }
-    }
-
-    /**
      * Toggle the visibility of the banner.
      *
      * @returns {void} nothing
@@ -217,18 +161,6 @@ class BannerController {
                         // Show the banner.
                         this.toggleBannerFrame(true);
                         this.movePage("top", 40, true);
-                    }
-                    break;
-                }
-                case "youdao": {
-                    if (result.HidePageTranslatorBanner) {
-                        // Hide the banner.
-                        this.toggleBannerFrame(false);
-                        this.movePage("margin-top", -50, false);
-                    } else {
-                        // Show the banner.
-                        this.toggleBannerFrame(true);
-                        this.movePage("margin-top", 50, false);
                     }
                     break;
                 }
