@@ -371,6 +371,14 @@
         "message": "Google Translate",
         "description": "Google Translate."
     },
+    "ChatGPTTranslate": {
+        "message": "ChatGPT翻译",
+        "description": "ChatGPT翻译翻译源"
+    },
+    "ChatGPTTranslateShort": {
+        "message": "ChatGPT",
+        "description": "ChatGPT翻译翻译源缩写"
+    },
     "GoogleTranslateShort": {
         "message": "Google",
         "description": "Abbreviation of Google Translate."
