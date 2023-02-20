@@ -10,11 +10,13 @@ import BingTranslator from "./bing";
 import DeepLTranslator from "./deepl";
 import GoogleTranslator from "./google";
 import TencentTranslator from "./tencent";
+import ChatGPTTranslator from "./chatgpt";
 
 export type HybridSupportedTranslators =
     | "BaiduTranslate"
     | "BingTranslate"
     | "DeepLTranslate"
+    | "ChatGPTTranslate"
     | "GoogleTranslate"
     | "TencentTranslate";
 
@@ -39,6 +41,7 @@ class HybridTranslator {
         GoogleTranslate: GoogleTranslator;
         TencentTranslate: TencentTranslator;
         DeepLTranslate: DeepLTranslator;
+        ChatGPTTranslate:ChatGPTTranslator;
     };
     MAIN_TRANSLATOR: HybridSupportedTranslators = "GoogleTranslate";
 
@@ -54,6 +57,7 @@ class HybridTranslator {
             GoogleTranslate: new GoogleTranslator(),
             TencentTranslate: new TencentTranslator(channel),
             DeepLTranslate: null as unknown as DeepLTranslator,
+            ChatGPTTranslate : null as unknown as ChatGPTTranslator,
         };
 
         /**
@@ -63,7 +67,10 @@ class HybridTranslator {
             this.REAL_TRANSLATORS.BingTranslate,
             this.REAL_TRANSLATORS.BingTranslate
         );
-
+        this.REAL_TRANSLATORS.ChatGPTTranslate = new ChatGPTTranslator(
+            this.REAL_TRANSLATORS.BingTranslate,
+            this.REAL_TRANSLATORS.BingTranslate
+        );
         this.useConfig(config);
     }
 

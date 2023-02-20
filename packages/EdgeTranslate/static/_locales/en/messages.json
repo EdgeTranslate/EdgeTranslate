@@ -371,6 +371,19 @@
         "message": "Google Translate",
         "description": "Google Translate."
     },
+    "ChatGPTTranslate": {
+        "message": "ChatGPT Translate",
+        "description": "ChatGPT Translate"
+    },
+    "ChatGPTTranslateShort": {
+        "message": "ChatGPT",
+        "description": "Abbreviation of ChatGPT Translate"
+    },
+    "ChatGPTKey": {
+        "message": "ChatGPTKey",
+        "description": "ChatGPTKey"
+    },
+    
     "GoogleTranslateShort": {
         "message": "Google",
         "description": "Abbreviation of Google Translate."
