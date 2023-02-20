@@ -36,8 +36,8 @@ const LANGUAGES: [string, string][] = [
  */
 class ChatGPTTranslator {
 
-    API_URL = 'https://api.openai.com/v1/engines/davinci-codex/completions';
-    API_KEY = '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';
+    API_URL = 'https://api.openai.com/v1/completions';
+    API_KEY = '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';
     /**
      * Language to translator language code.
      */
@@ -90,14 +90,12 @@ class ChatGPTTranslator {
      *
      * @returns translation Promise
      */
-    async translate(text: string, from: string, to: string) {
-
+    async translate(text: string, from: string, to: string) { 
         const response = await axios.post(this.API_URL, {
             prompt: `Translate "${text}" from ${from} to ${to}:`,
-            max_tokens: 1024,
+            max_tokens: 3000,
             temperature: 0.7,
             n: 1,
-            stop: '\n',
             frequency_penalty: 0,
             presence_penalty: 0,
             model: 'text-davinci-003',
