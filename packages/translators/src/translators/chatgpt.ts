@@ -36,8 +36,7 @@ const LANGUAGES: [string, string][] = [
  */
 class ChatGPTTranslator {
 
-    API_URL = 'https://api.openai.com/v1/completions';
-    API_KEY = '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';
+    API_URL = 'https://api.openai.com/v1/completions'; 
     /**
      * Language to translator language code.
      */
@@ -91,6 +90,8 @@ class ChatGPTTranslator {
      * @returns translation Promise
      */
     async translate(text: string, from: string, to: string) { 
+        var result =  await  chrome.storage.sync.get("OtherSettings");
+        let ChatGPTKey = result.OtherSettings["ChatGPTKey"];
         const response = await axios.post(this.API_URL, {
             prompt: `Translate "${text}" from ${from} to ${to}:`,
             max_tokens: 3000,
@@ -102,7 +103,7 @@ class ChatGPTTranslator {
         }, {
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${this.API_KEY}`,
+                'Authorization': `Bearer ${ChatGPTKey}`,
             },
         });
         const translation = (response.data as any).choices[0].text.trim();

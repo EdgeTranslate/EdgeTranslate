@@ -368,12 +368,16 @@
         "description": "DeepL翻譯翻譯源縮寫"
     },
     "ChatGPTTranslate": {
-        "message": "ChatGPT翻译",
-        "description": "ChatGPT翻译翻译源"
+        "message": "ChatGPT翻譯",
+        "description": "ChatGPT翻譯翻譯源"
     },
     "ChatGPTTranslateShort": {
         "message": "ChatGPT",
-        "description": "ChatGPT翻译翻译源缩写"
+        "description": "ChatGPT翻譯翻譯源縮寫"
+    },
+    "ChatGPTKey": {
+        "message": "ChatGPTKey",
+        "description": "ChatGPTKey"
     },
     "GoogleTranslate": {
         "message": "谷歌翻譯",
