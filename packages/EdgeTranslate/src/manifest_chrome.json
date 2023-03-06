@@ -10,7 +10,8 @@
         "tabs",
         "<all_urls>",
         "webRequest",
-        "webRequestBlocking"
+        "webRequestBlocking",
+        "clipboardWrite"
     ],
     "content_scripts": [
         {

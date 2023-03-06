@@ -161,16 +161,28 @@ export default function Result(props) {
                                 }
                             />
                         ) : (
-                            <StyledEditIcon
-                                role="button"
-                                title={chrome.i18n.getMessage("EditText")}
-                                onClick={() =>
-                                    setEditing({
-                                        edit: true,
-                                        element: originalTextElRef.current,
-                                    })
-                                }
-                            />
+                            <div>
+                                <StyledCopyIcon
+                                    role="button"
+                                    onClick={() =>
+                                        setCopyResult({
+                                            copy: true,
+                                            element: originalTextElRef.current,
+                                        })
+                                    }
+                                    title={chrome.i18n.getMessage("CopyResult")}
+                                />
+                                <StyledEditIcon
+                                    role="button"
+                                    title={chrome.i18n.getMessage("EditText")}
+                                    onClick={() =>
+                                        setEditing({
+                                            edit: true,
+                                            element: originalTextElRef.current,
+                                        })
+                                    }
+                                />
+                            </div>
                         )}
                     </TextLine>
                     {(displaySPronunciationIcon || displaySPronunciation) && (
@@ -793,7 +805,7 @@ function copyContent(_, action) {
         window.getSelection().removeAllRanges();
         window.getSelection().addRange(range);
 
-        document.execCommand("copy");
+        navigator.clipboard.writeText(action.element.innerText);
     } else if (!action.copy) window.getSelection().removeAllRanges();
     return action.copy;
 }
