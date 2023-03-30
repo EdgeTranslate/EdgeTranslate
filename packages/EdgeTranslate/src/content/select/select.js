@@ -57,6 +57,7 @@ translationButtonIFrame.addEventListener("load", () => {
         padding: 0,
         margin: 0,
         border: "none",
+        overflow: "hidden",
     };
     Object.assign(translationButtonIFrame.contentDocument.documentElement.style, CleanStyle);
     Object.assign(translationButtonIFrame.contentDocument.body.style, CleanStyle);
