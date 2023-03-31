@@ -315,14 +315,15 @@ chrome.webRequest.onHeadersReceived.addListener(
                           .replaceAll(
                               // Remove 'none' and "none".
                               /((^|;)\s*(default-src|script-src|img-src|connect-src))\s+['"]none['"]/g,
-                              "$1"
+                              "$1 "
                           )
                           .replaceAll(
                               // Add Google Page Translate related domains.
-                              /((^|;)\s*(default-src|script-src|img-src|connect-src))/g,
+                              // The last "\s" is added to prevent matching script-src-attr, script-src-elem, etc..
+                              /((^|;)\s*(default-src|script-src|img-src|connect-src))\s/g,
                               // eslint-disable-next-line prefer-template
                               "$1 translate.googleapis.com translate.google.com www.google.com www.gstatic.com " +
-                                  chrome.runtime.getURL("")
+                                  chrome.runtime.getURL(" ")
                           ),
                   }
                 : header
