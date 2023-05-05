@@ -405,10 +405,10 @@ chrome.webRequest.onHeadersReceived.addListener(
                           )
                           .replaceAll(
                               // Add Google Page Translate related domains.
-                              /((^|;)\s*(default-src|script-src|img-src|connect-src))/g,
+                              /((^|;)\s*(default-src|script-src|img-src|connect-src)\s+)/g,
                               // eslint-disable-next-line prefer-template
-                              "$1 translate.googleapis.com translate.google.com www.google.com www.gstatic.com " +
-                                  chrome.runtime.getURL("")
+                              "$1translate.googleapis.com translate.google.com www.google.com www.gstatic.com " +
+                                  chrome.runtime.getURL("") + " "
                           ),
                   }
                 : header
