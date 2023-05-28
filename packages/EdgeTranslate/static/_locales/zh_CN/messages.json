@@ -243,10 +243,6 @@
         "message": "翻译后取消文本选择",
         "description": "翻译后自动取消文本选择"
     },
-    "YouDaoPageTranslate": {
-        "message": "有道网页翻译",
-        "description": "使用有道翻译的api翻译当前页面。"
-    },
     "GooglePageTranslate": {
         "message": "谷歌网页翻译",
         "description": "使用谷歌翻译的api翻译当前页面。"
@@ -262,10 +258,6 @@
     "TogglePageTranslateBanner": {
         "message": "隐藏/展示网页翻译顶栏",
         "description": "隐藏或展示网页翻译器的顶栏。"
-    },
-    "TranslatePageYouDao": {
-        "message": "使用有道翻译此页",
-        "description": "使用有道翻译的api翻译当前页面。"
     },
     "TranslatePageGoogle": {
         "message": "使用谷歌翻译此页",

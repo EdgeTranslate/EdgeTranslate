@@ -1,6 +1,6 @@
 {
     "name": "@edge_translate/translators",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "description": "Collection of translators with unified interface.",
     "keywords": [
         "translate",
@@ -26,7 +26,7 @@
         "jest-environment-jsdom": "^28.1.1",
         "ts-jest": "^28.0.5",
         "typescript": "^4.7.4",
-        "vite": "^2.9.9"
+        "vite": "^2.9.13"
     },
     "peerDependencies": {
         "axios": "^0.27.2"

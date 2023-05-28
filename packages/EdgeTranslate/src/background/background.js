@@ -1,9 +1,4 @@
-import {
-    TranslatorManager,
-    translatePage,
-    executeYouDaoScript,
-    executeGoogleScript,
-} from "./library/translate.js";
+import { TranslatorManager, translatePage, executeGoogleScript } from "./library/translate.js";
 import {
     addUrlBlacklist,
     addDomainBlacklist,
@@ -12,83 +7,12 @@ import {
     updateBLackListMenu,
 } from "./library/blacklist.js";
 import { sendHitRequest } from "./library/analytics.js";
-import { promiseTabs } from "../common/scripts/promise.js";
-import Channel from "../common/scripts/channel.js";
-import { getDomain } from "../common/scripts/common.js";
+import { promiseTabs } from "common/scripts/promise.js";
+import Channel from "common/scripts/channel.js";
+import { getDomain } from "common/scripts/common.js";
 // map language abbreviation from browser languages to translation languages
-import { BROWSER_LANGUAGES_MAP } from "../common/scripts/languages.js";
-
-/**
- * default settings for this extension
- */
-const DEFAULT_SETTINGS = {
-    blacklist: {
-        urls: {},
-        domains: { "chrome.google.com": true, extensions: true },
-    },
-    // Resize: determine whether the web page will resize when showing translation result
-    // RTL: determine whether the text in translation block should display from right to left
-    // FoldLongContent: determine whether to fold long translation content
-    // SelectTranslatePosition: the position of select translate button.
-    LayoutSettings: {
-        Resize: false,
-        RTL: false,
-        FoldLongContent: true,
-        SelectTranslatePosition: "TopRight",
-    },
-    // Default settings of source language and target language
-    languageSetting: { sl: "auto", tl: BROWSER_LANGUAGES_MAP[chrome.i18n.getUILanguage()] },
-    OtherSettings: {
-        MutualTranslate: false,
-        SelectTranslate: true,
-        TranslateAfterDblClick: false,
-        TranslateAfterSelect: false,
-        CancelTextSelection: false,
-        UseGoogleAnalytics: true,
-        UsePDFjs: true,
-    },
-    DefaultTranslator: "GoogleTranslate",
-    DefaultPageTranslator: "YouDaoPageTranslate",
-    HybridTranslatorConfig: {
-        // The translators used in current hybrid translate.
-        translators: ["BaiduTranslate", "BingTranslate", "GoogleTranslate"],
-
-        // The translators for each item.
-        selections: {
-            // ATTENTION: The following four items MUST HAVE THE SAME TRANSLATOR!
-            originalText: "BaiduTranslate",
-            mainMeaning: "BaiduTranslate",
-            tPronunciation: "BaiduTranslate",
-            sPronunciation: "BaiduTranslate",
-
-            // For the following three items, any translator combination is OK.
-            detailedMeanings: "BingTranslate",
-            definitions: "GoogleTranslate",
-            examples: "BaiduTranslate",
-        },
-    },
-    // Defines which contents in the translating result should be displayed.
-    TranslateResultFilter: {
-        mainMeaning: true,
-        originalText: true,
-        tPronunciation: true,
-        sPronunciation: true,
-        tPronunciationIcon: true,
-        sPronunciationIcon: true,
-        detailedMeanings: true,
-        definitions: true,
-        examples: true,
-    },
-    // Defines the order of displaying contents.
-    ContentDisplayOrder: [
-        "mainMeaning",
-        "originalText",
-        "detailedMeanings",
-        "definitions",
-        "examples",
-    ],
-    HidePageTranslatorBanner: false,
-};
+import { BROWSER_LANGUAGES_MAP } from "common/scripts/languages.js";
+import { DEFAULT_SETTINGS, setDefaultSettings } from "common/scripts/settings.js";
 
 /**
  * BEGIN SETTING UP CONTEXT MENUS
@@ -118,12 +42,6 @@ chrome.contextMenus.create({
     id: "translate_page",
     title: chrome.i18n.getMessage("TranslatePage"),
     contexts: ["page"],
-});
-
-chrome.contextMenus.create({
-    id: "translate_page_youdao",
-    title: chrome.i18n.getMessage("TranslatePageYouDao"),
-    contexts: ["browser_action"],
 });
 
 chrome.contextMenus.create({
@@ -170,14 +88,7 @@ chrome.contextMenus.create({
 /**
  * 初始化插件配置。
  */
-chrome.runtime.onInstalled.addListener((details) => {
-    // assign default value to settings of this extension
-    chrome.storage.sync.get((result) => {
-        let buffer = result; // use var buffer as a pointer
-        setDefaultSettings(buffer, DEFAULT_SETTINGS); // assign default value to buffer
-        chrome.storage.sync.set(buffer);
-    });
-
+chrome.runtime.onInstalled.addListener(async (details) => {
     // 只有在生产环境下，才会展示说明页面
     if (process.env.NODE_ENV === "production") {
         if (details.reason === "install") {
@@ -203,8 +114,18 @@ chrome.runtime.onInstalled.addListener((details) => {
                 });
             }, 10 * 60 * 1000); // 10 min
         } else if (details.reason === "update") {
+            await new Promise((resolve) => {
+                chrome.storage.sync.get((result) => {
+                    let buffer = result; // use var buffer as a pointer
+                    setDefaultSettings(buffer, DEFAULT_SETTINGS); // assign default value to buffer
+                    chrome.storage.sync.set(buffer, resolve);
+                });
+            });
+
             // Fix language setting compatibility between Edge Translate 2.x and 1.x.x.
             chrome.storage.sync.get("languageSetting", (result) => {
+                if (!result.languageSetting) return;
+
                 if (result.languageSetting.sl === "zh-cn") {
                     result.languageSetting.sl = "zh-CN";
                 } else if (result.languageSetting.sl === "zh-tw") {
@@ -241,11 +162,7 @@ const channel = new Channel();
 /**
  * Create translator manager and register event listeners and service providers.
  */
-let TRANSLATOR_MANAGER;
-
-setTimeout(() => {
-    TRANSLATOR_MANAGER = new TranslatorManager(channel);
-}, 2000);
+const TRANSLATOR_MANAGER = new TranslatorManager(channel);
 
 /**
  * 监听用户点击通知事件
@@ -293,9 +210,6 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
             break;
         case "translate_page":
             translatePage(channel);
-            break;
-        case "translate_page_youdao":
-            executeYouDaoScript(channel);
             break;
         case "translate_page_google":
             executeGoogleScript(channel);
@@ -401,14 +315,15 @@ chrome.webRequest.onHeadersReceived.addListener(
                           .replaceAll(
                               // Remove 'none' and "none".
                               /((^|;)\s*(default-src|script-src|img-src|connect-src))\s+['"]none['"]/g,
-                              "$1"
+                              "$1 "
                           )
                           .replaceAll(
                               // Add Google Page Translate related domains.
-                              /((^|;)\s*(default-src|script-src|img-src|connect-src))/g,
+                              // The last "\s" is added to prevent matching script-src-attr, script-src-elem, etc..
+                              /((^|;)\s*(default-src|script-src|img-src|connect-src))\s/g,
                               // eslint-disable-next-line prefer-template
                               "$1 translate.googleapis.com translate.google.com www.google.com www.gstatic.com " +
-                                  chrome.runtime.getURL("")
+                                  chrome.runtime.getURL(" ")
                           ),
                   }
                 : header
@@ -494,33 +409,7 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
 // send basic hit data to google analytics
 setTimeout(() => {
     sendHitRequest("background", "pageview", null);
-}, 2000);
-
-/**
- * assign default value to settings which are undefined in recursive way
- * @param {*} result setting result stored in chrome.storage
- * @param {*} settings default settings
- */
-function setDefaultSettings(result, settings) {
-    for (let i in settings) {
-        // settings[i] contains key-value settings
-        if (
-            typeof settings[i] === "object" &&
-            !(settings[i] instanceof Array) &&
-            Object.keys(settings[i]).length > 0
-        ) {
-            if (result[i]) {
-                setDefaultSettings(result[i], settings[i]);
-            } else {
-                // settings[i] contains several setting items but these have not been set before
-                result[i] = settings[i];
-            }
-        } else if (result[i] === undefined) {
-            // settings[i] is a single setting item and it has not been set before
-            result[i] = settings[i];
-        }
-    }
-}
+}, 60 * 1000);
 
 /**
  * dynamic importing hot reload function only in development env

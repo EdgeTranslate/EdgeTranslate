@@ -2,23 +2,23 @@
 
 ### Word Translation
 
-* Method 1: Select the word or sentence that needs to be translated, click the right mouse button and you'll see the context menu, select `Translate 'xxx'` to view the translation result.
+-   Method 1: Select the word or sentence that needs to be translated, click the right mouse button and you'll see the context menu, select `Translate 'xxx'` to view the translation result.
 
 ![selecting_translate_1](../../images/selecting_translate_1.gif)
 
-* Method 2: Select the word or sentence that needs to be translated, and click the icon ![icon](../../images/icon.png) that pops up near the mouse cursor to translate.
+-   Method 2: Select the word or sentence that needs to be translated, and click the icon ![icon](../../images/icon.png) that pops up near the mouse cursor to translate.
 
 ![selecting_translate_2](../../images/selecting_translate_2.gif)
 
-* Method 3: Select the word or sentence that needs to be translated, press the shortcut key to translate ( this shortcut key must be set in [Quick Key Settings](chrome://extensions/shortcuts) before you use it. )
+-   Method 3: Select the word or sentence that needs to be translated, press the shortcut key to translate ( this shortcut key must be set in [Quick Key Settings](chrome://extensions/shortcuts) before you use it. )
 
 #### About The Immediate Translating After Selecting
 
 If you feel that it is too much trouble to get the translation after clicking the word again, we offer two more radical choices:
 
-* Double-click the word to translate immediately: Enable the 'Double-click word to translate immediately' in the Options of this extension, then just double-click the word you want to translate, and the translation result will be displayed immediately, no more operations are needed.
+-   Double-click the word to translate immediately: Enable the 'Double-click word to translate immediately' in the Options of this extension, then just double-click the word you want to translate, and the translation result will be displayed immediately, no more operations are needed.
 
-* Translate immediately after wording: If it can't meet your needs by double-clicking the word, you can also enable 'Translate immediately after wording'. When enabled, the translation result will be displayed immediately after selecting, regardless of the way you select the text.
+-   Translate immediately after wording: If it can't meet your needs by double-clicking the word, you can also enable 'Translate immediately after wording'. When enabled, the translation result will be displayed immediately after selecting, regardless of the way you select the text.
 
 ### Word Query
 
@@ -28,11 +28,11 @@ Click the icon ![icon](../../images/icon.png) in the upper right corner of the b
 
 ### Fix Translation Results
 
-* Method 1: If you want to keep the translation result displayed, you can click the pin icon in the upper right corner of the translation result bar to fix the bar. After fixing it, clicking again will cancel the fixation.
+-   Method 1: If you want to keep the translation result displayed, you can click the pin icon in the upper right corner of the translation result bar to fix the bar. After fixing it, clicking again will cancel the fixation.
 
 ![keep_showing](../../images/keep_showing.gif)
 
-* Method 2: Press the shortcut key (default `Alt + X`) to fix the display bar. After fixing it, press the shortcut key again (default `Alt + X`) will cancel the fixation.
+-   Method 2: Press the shortcut key (default `Alt + X`) to fix the display bar. After fixing it, press the shortcut key again (default `Alt + X`) will cancel the fixation.
 
 ### Change Translation Languages
 
@@ -42,51 +42,47 @@ Method 1: Click the icon ![icon](../../images/icon.png) in the upper right corne
 
 Method 2: Click the icon ![icon](../../images/icon.png) in the upper right corner of the browser and press the shortcut key (default `Alt + W`) to expand the language selection page. Press again to hide the language selection page.
 
-Method 3: Click the icon ![icon](../../images/icon.png) in the upper right corner of the browser and press the shortcut key (default `Alt + S`) to complete the language exchange (__recommended__).
+Method 3: Click the icon ![icon](../../images/icon.png) in the upper right corner of the browser and press the shortcut key (default `Alt + S`) to complete the language exchange (**recommended**).
 
 ### Mutual translation mode
 
-* __What is the translation mode?__
+-   **What is the translation mode?**
 
-  When users mainly switch between two languages, frequent exchange of the source language and the target language will be very annoying, so we introduced the mutual translation mode. In the mutual translation mode, after the user selects the text, the plug-in automatically detects the language of the text, and then translates the text to the corresponding another language according to the user's settings.
+    When users mainly switch between two languages, frequent exchange of the source language and the target language will be very annoying, so we introduced the mutual translation mode. In the mutual translation mode, after the user selects the text, the plug-in automatically detects the language of the text, and then translates the text to the corresponding another language according to the user's settings.
 
-  For example: The user sets the source language to English, the target language to Chinese, and then enables the translation mode. When the user selects non-Chinese text, the text will be translated into Chinese. When the user selects Chinese text, The text will be translated into English.
+    For example: The user sets the source language to English, the target language to Chinese, and then enables the translation mode. When the user selects non-Chinese text, the text will be translated into Chinese. When the user selects Chinese text, The text will be translated into English.
 
-  __Note:__ When the source language is set to auto detect, the mutual translation mode will be forcibly turned off and cannot be turned on!
+    **Note:** When the source language is set to auto detect, the mutual translation mode will be forcibly turned off and cannot be turned on!
 
-* __How to turn on / off the mutual translation mode?__
+-   **How to turn on / off the mutual translation mode?**
 
-  Click the logo in the upper right corner of the browser, and then click the down arrow in the pop-up box to see the switch of the translation mode.
+    Click the logo in the upper right corner of the browser, and then click the down arrow in the pop-up box to see the switch of the translation mode.
 
-  The mutual translation mode also supports the use of shortcut keys to turn on / off, but the shortcut keys need to be manually set, and only effective when the pop-up box in the upper right corner is turned on.
+    The mutual translation mode also supports the use of shortcut keys to turn on / off, but the shortcut keys need to be manually set, and only effective when the pop-up box in the upper right corner is turned on.
 
-* __Example__
+-   **Example**
 
 ![mutual_translate](../../images/mutual_translate.gif)
 
 ### Web Page Translation
 
-* YouDao web page translation
+-   YouDao web page translation
 
-Using the web page translation API of YouDao Translate, the effect is as follows:
+We had supported YouDao Translate. However, because YouDao official has stopped the service of web page translation, we have to remove this feature.
 
-![youdao_page_translate](../../images/youdao_page_translate.gif)
-
-The advantage of YouDao web page translation is that there is no web page restriction, and almost any page can be translated (except for pdf documents); the disadvantage is that it can only be translated into Chinese and the target language cannot be changed.
-
-* Google web page translation
+-   Google web page translation
 
 Using the web page translation API of Google Translate, the effect is as follows:
 
 ![google_page_translate](../../images/google_page_translate.gif)
 
-The advantage of Google Translate is that you can freely choose the target language, and the translation speed is usually faster than YouDao Translate. The disadvantage is that some pages cannot be translated, such as Github.
+The advantage of Google Translate is that you can freely choose the target language, and the translation speed is usually faster than other Translators. The disadvantage is under some Internet environments, the translation may fail.
 
-* Precautions
+-   Precautions
 
-    - Whether you use YouDao web page translation or Google web page translation, you can only translate web pages. __You can't translate pdf files!__
+    -   You can only translate web pages. **You can't translate pdf files!**
 
-    - Due to the domestic network environment, Google's webpage translation may be unusable. Please use YouDao web page translation when it happens.
+    -   Due to the domestic network environment, Google's webpage translation may be unusable. If you can't use it, you can try to use the proxy function of the browser.
 
 ### Blacklist Setting
 
@@ -112,13 +108,13 @@ A typical usage scenario is:
 
 1. On any non-initial page of the browser, press `Alt + Q` to open the search input box.
 
-   * You may need to use `Alt + S` to exchange source and target languages
+    - You may need to use `Alt + S` to exchange source and target languages
 
-       + When the source language is `Auto Detect`, the exchange is not supported. Please use the following method to set it manually.
+        - When the source language is `Auto Detect`, the exchange is not supported. Please use the following method to set it manually.
 
-   * Alternatively, you may need to use `Alt + W` to further set the source and target languages.
+    - Alternatively, you may need to use `Alt + W` to further set the source and target languages.
 
-       + After setting the source or target language, press `Alt + W` again to turn off the language setting and return focus to the input box.
+        - After setting the source or target language, press `Alt + W` again to turn off the language setting and return focus to the input box.
 
 2. Type or paste the word you want to check and press `Enter` to view the translation result.
 

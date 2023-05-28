@@ -1,6 +1,7 @@
-import { axios, HybridTranslator } from "@edge_translate/translators";
+import { HybridTranslator } from "@edge_translate/translators";
 import { log } from "common/scripts/common.js";
-import { promiseTabs, delayPromise } from "../../common/scripts/promise.js";
+import { promiseTabs, delayPromise } from "common/scripts/promise.js";
+import { DEFAULT_SETTINGS, getOrSetDefaultSettings } from "common/scripts/settings.js";
 import LocalTTS from "./local_tts.js";
 
 class TranslatorManager {
@@ -14,20 +15,12 @@ class TranslatorManager {
         this.channel = channel;
 
         /**
-         * Initialize configurations.
+         * @type {Promise<Void>} Initialize configurations.
          */
-        this.config_loader = new Promise((resolve, reject) => {
-            chrome.storage.sync.get(
-                ["HybridTranslatorConfig", "DefaultTranslator", "languageSetting", "OtherSettings"],
-                (configs) => {
-                    if (chrome.runtime.lastError) {
-                        reject(chrome.runtime.lastError);
-                        return;
-                    }
-                    resolve(configs);
-                }
-            );
-        }).then((configs) => {
+        this.config_loader = getOrSetDefaultSettings(
+            ["HybridTranslatorConfig", "DefaultTranslator", "languageSetting", "OtherSettings"],
+            DEFAULT_SETTINGS
+        ).then((configs) => {
             // Init hybrid translator.
             this.HYBRID_TRANSLATOR = new HybridTranslator(configs.HybridTranslatorConfig, channel);
 
@@ -38,7 +31,7 @@ class TranslatorManager {
             };
 
             // Mutual translating mode flag.
-            this.IN_MUTUAL_MODE = configs.OtherSettings.MutualTranslate;
+            this.IN_MUTUAL_MODE = configs.OtherSettings.MutualTranslate || false;
 
             // Translation language settings.
             this.LANGUAGE_SETTING = configs.languageSetting;
@@ -84,9 +77,6 @@ class TranslatorManager {
             return this.pronounce(params.pronouncing, params.text, params.language, speed);
         });
 
-        // Youdao page translate data loading service.
-        this.channel.provide("youdao_page_translate", youdaoPageTranslate);
-
         // Get available translators service.
         this.channel.provide("get_available_translators", (params) =>
             Promise.resolve(this.getAvailableTranslators(params))
@@ -104,11 +94,6 @@ class TranslatorManager {
      * This should be called for only once!
      */
     listenToEvents() {
-        // Youdao page translate button clicked event.
-        this.channel.on("translate_page_youdao", () => {
-            executeYouDaoScript(this.channel);
-        });
-
         // Google page translate button clicked event.
         this.channel.on("translate_page_google", () => {
             executeGoogleScript(this.channel);
@@ -124,8 +109,11 @@ class TranslatorManager {
          * Update config cache on config changed.
          */
         chrome.storage.onChanged.addListener(
-            ((changes, area) => {
+            (async (changes, area) => {
                 if (area === "sync") {
+                    // Ensure that configurations have been initialized.
+                    await this.config_loader;
+
                     if (changes["HybridTranslatorConfig"]) {
                         this.HYBRID_TRANSLATOR.useConfig(
                             changes["HybridTranslatorConfig"].newValue
@@ -443,57 +431,15 @@ class TranslatorManager {
  * @param {import("../../common/scripts/channel.js").default} channel Communication channel.
  */
 function translatePage(channel) {
-    chrome.storage.sync.get(["DefaultPageTranslator"], (result) => {
+    getOrSetDefaultSettings(["DefaultPageTranslator"], DEFAULT_SETTINGS).then((result) => {
         let translator = result.DefaultPageTranslator;
         switch (translator) {
-            case "YouDaoPageTranslate":
-                executeYouDaoScript(channel);
-                break;
             case "GooglePageTranslate":
                 executeGoogleScript(channel);
                 break;
             default:
-                executeYouDaoScript(channel);
+                executeGoogleScript(channel);
                 break;
-        }
-    });
-}
-
-/**
- * 有道翻译接口
- * @param {Object} request request
- *
- * @returns {Promise<Object>} response Promise
- */
-async function youdaoPageTranslate(request) {
-    let isPost = request.type === "POST";
-    let response = await axios({
-        method: request.type,
-        baseURL: request.url,
-        headers: isPost ? { "Content-Type": "application/x-www-form-urlencoded" } : {},
-        data: isPost ? request.data : null,
-    });
-
-    return {
-        response: response.status === 200 ? JSON.stringify(response.data) : null,
-        index: request.index,
-    };
-}
-
-/**
- * 执行有道网页翻译相关脚本
- *
- * @param {import("../../common/scripts/channel.js").default} channel Communication channel.
- */
-function executeYouDaoScript(channel) {
-    chrome.tabs.executeScript({ file: "/youdao/main.js" }, (result) => {
-        if (chrome.runtime.lastError) {
-            log(`Chrome runtime error: ${chrome.runtime.lastError}`);
-            log(`Detail: ${result}`);
-        } else {
-            promiseTabs.query({ active: true, currentWindow: true }).then((tabs) => {
-                channel.emitToTabs(tabs[0].id, "start_page_translate", { translator: "youdao" });
-            });
         }
     });
 }
@@ -516,10 +462,4 @@ function executeGoogleScript(channel) {
     });
 }
 
-export {
-    TranslatorManager,
-    translatePage,
-    youdaoPageTranslate,
-    executeYouDaoScript,
-    executeGoogleScript,
-};
+export { TranslatorManager, translatePage, executeGoogleScript };

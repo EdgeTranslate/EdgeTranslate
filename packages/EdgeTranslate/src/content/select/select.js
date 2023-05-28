@@ -1,6 +1,7 @@
 import { getDomain } from "common/scripts/common.js";
 import { isPDFjsPDFViewer, detectSelect } from "../common.js";
 import Channel from "common/scripts/channel.js";
+import { DEFAULT_SETTINGS, getOrSetDefaultSettings } from "common/scripts/settings.js";
 
 // Communication channel.
 const channel = new Channel();
@@ -56,6 +57,7 @@ translationButtonIFrame.addEventListener("load", () => {
         padding: 0,
         margin: 0,
         border: "none",
+        overflow: "hidden",
     };
     Object.assign(translationButtonIFrame.contentDocument.documentElement.style, CleanStyle);
     Object.assign(translationButtonIFrame.contentDocument.body.style, CleanStyle);
@@ -75,8 +77,7 @@ let scrollPropertyY = "pageYOffset";
 let ButtonPositionSetting = "TopRight";
 
 // Fetch the button position setting.
-chrome.storage.sync.get("LayoutSettings", (result) => {
-    if (!result.LayoutSettings && !result.LayoutSettings.SelectTranslatePosition) return;
+getOrSetDefaultSettings("LayoutSettings", DEFAULT_SETTINGS).then((result) => {
     ButtonPositionSetting = result.LayoutSettings.SelectTranslatePosition;
 });
 // Update the button position setting when the setting is changed.
@@ -129,7 +130,7 @@ window.addEventListener("DOMContentLoaded", () => {
         const inBlacklist = await isInBlacklist();
         if (inBlacklist) return;
 
-        chrome.storage.sync.get("OtherSettings", (result) => {
+        getOrSetDefaultSettings("OtherSettings", DEFAULT_SETTINGS).then((result) => {
             if (!result.OtherSettings) return;
 
             let OtherSettings = result.OtherSettings;
@@ -248,7 +249,7 @@ function translateSubmit() {
     let selection = getSelection();
     if (selection.text && selection.text.length > 0) {
         channel.request("translate", selection).then(() => {
-            chrome.storage.sync.get("OtherSettings", (result) => {
+            getOrSetDefaultSettings("OtherSettings", DEFAULT_SETTINGS).then((result) => {
                 // to check whether user need to cancel text selection after translation finished
                 if (result.OtherSettings && result.OtherSettings["CancelTextSelection"]) {
                     cancelTextSelection();
@@ -328,12 +329,10 @@ function scrollHandler() {
  * @returns {Promise<boolean>} result in promise form
  */
 function isInBlacklist() {
-    return new Promise((resolve) => {
-        chrome.storage.sync.get("blacklist", (result) => {
-            let url = window.location.href;
-            let blacklist = result.blacklist;
-            return resolve(blacklist && (blacklist.domains[getDomain(url)] || blacklist.urls[url]));
-        });
+    return getOrSetDefaultSettings("blacklist", DEFAULT_SETTINGS).then((result) => {
+        let url = window.location.href;
+        let blacklist = result.blacklist;
+        return blacklist.domains[getDomain(url)] || blacklist.urls[url];
     });
 }
 

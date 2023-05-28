@@ -3,6 +3,7 @@ import { h, Fragment } from "preact";
 import { useEffect, useRef, useReducer, useState } from "preact/hooks";
 import styled, { ThemeProvider } from "styled-components";
 import Channel from "common/scripts/channel.js";
+import { DEFAULT_SETTINGS, getOrSetDefaultSettings } from "common/scripts/settings.js";
 import Notifier from "./library/notifier/notifier.js";
 import DOMPurify from "dompurify";
 import { checkTimestamp } from "./Panel.jsx";
@@ -402,19 +403,19 @@ export default function Result(props) {
         /**
          * Update displaying contents based on user's setting.
          */
-        chrome.storage.sync.get(
+        getOrSetDefaultSettings(
             ["LayoutSettings", "TranslateResultFilter", "ContentDisplayOrder"],
-            (result) => {
-                setContentDisplayOrder(result.ContentDisplayOrder);
-                setDisplaySPronunciation(result.TranslateResultFilter["sPronunciation"]);
-                setDisplayTPronunciation(result.TranslateResultFilter["tPronunciation"]);
-                setDisplaySPronunciationIcon(result.TranslateResultFilter["sPronunciationIcon"]);
-                setDisplayTPronunciationIcon(result.TranslateResultFilter["tPronunciationIcon"]);
-                setContentFilter(result.TranslateResultFilter);
-                setTextDirection(result.LayoutSettings.RTL ? "rtl" : "ltr");
-                setFoldLongContent(result.LayoutSettings.FoldLongContent);
-            }
-        );
+            DEFAULT_SETTINGS
+        ).then((result) => {
+            setContentDisplayOrder(result.ContentDisplayOrder);
+            setDisplaySPronunciation(result.TranslateResultFilter["sPronunciation"]);
+            setDisplayTPronunciation(result.TranslateResultFilter["tPronunciation"]);
+            setDisplaySPronunciationIcon(result.TranslateResultFilter["sPronunciationIcon"]);
+            setDisplayTPronunciationIcon(result.TranslateResultFilter["tPronunciationIcon"]);
+            setContentFilter(result.TranslateResultFilter);
+            setTextDirection(result.LayoutSettings.RTL ? "rtl" : "ltr");
+            setFoldLongContent(result.LayoutSettings.FoldLongContent);
+        });
         chrome.storage.onChanged.addListener((changes, area) => {
             if (area !== "sync") return;
 

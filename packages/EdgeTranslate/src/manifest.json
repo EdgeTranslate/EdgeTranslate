@@ -1,7 +1,7 @@
 {
     "name": "__MSG_AppName__",
     "description": "__MSG_Description__",
-    "version": "2.4.0",
+    "version": "2.4.1",
     "default_locale": "en",
     "background": {
         "scripts": ["./background/background.js"]
@@ -69,7 +69,7 @@
             "description": "__MSG_TogglePageTranslateBanner__"
         }
     },
-    "web_accessible_resources": ["**/*.css", "**/*.png", "youdao/*", "google/*"],
+    "web_accessible_resources": ["**/*.css", "**/*.png", "google/*"],
     "icons": {
         "16": "icon/icon16.png",
         "48": "icon/icon48.png",

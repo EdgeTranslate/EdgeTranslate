@@ -1,5 +1,6 @@
 import { isChromePDFViewer } from "./common.js"; // judge if this page is a pdf file
 import Channel from "common/scripts/channel.js";
+import { DEFAULT_SETTINGS, getOrSetDefaultSettings } from "common/scripts/settings.js";
 
 const channel = new Channel();
 /**
@@ -51,7 +52,7 @@ window.addEventListener("load", () => {
  * @param {String} pdfSrc PDF file source.
  */
 function redirect(pdfSrc) {
-    chrome.storage.sync.get("OtherSettings", (result) => {
+    getOrSetDefaultSettings("OtherSettings", DEFAULT_SETTINGS).then((result) => {
         let OtherSettings = result.OtherSettings;
         if (OtherSettings && OtherSettings["UsePDFjs"]) {
             channel.emit("redirect", {

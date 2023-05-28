@@ -243,10 +243,6 @@
         "message": "Cancel text selection after translation",
         "description": "Cancel text selection automatically after translation"
     },
-    "YouDaoPageTranslate": {
-        "message": "YouDao Page Trans.",
-        "description": "Translate current page with YouDao translate api."
-    },
     "GooglePageTranslate": {
         "message": "Google Page Trans.",
         "description": "Translate current page with Google translate api."
@@ -262,10 +258,6 @@
     "TogglePageTranslateBanner": {
         "message": "Toggle page translate banner",
         "description": "Show/Hide page translator's banner."
-    },
-    "TranslatePageYouDao": {
-        "message": "Translate this page with YouDao",
-        "description": "Translate current page with YouDao translate api."
     },
     "TranslatePageGoogle": {
         "message": "Translate this page with Google",

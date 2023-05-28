@@ -256,7 +256,7 @@ class BingTranslator {
         this.IG = response.data.match(/IG:"([A-Za-z0-9]+)"/)[1];
 
         [, this.key, this.token] = response.data.match(
-            /var params_RichTranslateHelper\s*=\s*\[([0-9]+),\s*"([^"]+)",[^\]]*\];/
+            /var params_AbusePreventionHelper\s*=\s*\[([0-9]+),\s*"([^"]+)",[^\]]*\];/
         );
 
         const html = this.HTMLParser.parseFromString(response.data, "text/html");
