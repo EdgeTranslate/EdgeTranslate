@@ -1,6 +1,6 @@
 {
     "name": "edge_translate",
-    "version": "2.4.0",
+    "version": "2.4.1",
     "private": true,
     "scripts": {
         "test": "jest",
@@ -50,7 +50,7 @@
         "webpack-stream": "^6.1.2"
     },
     "dependencies": {
-        "@edge_translate/translators": "^0.1.1",
+        "@edge_translate/translators": "^0.1.2",
         "dompurify": "^2.3.6",
         "preact": "^10.6.6",
         "preact-render-to-string": "^5.1.20",
