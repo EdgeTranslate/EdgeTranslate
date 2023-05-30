@@ -1,3 +1,4 @@
+import type { HybridSupportedTranslators } from "@edge_translate/translators";
 import { SupportedLanguage } from "./utils/languages";
 
 /**
@@ -21,7 +22,7 @@ export type SyncData = {
     [SyncDataKey.LayoutSettings]: LayoutSettings;
     [SyncDataKey.LanguageSetting]: LanguageSetting;
     [SyncDataKey.OtherSettings]: OtherSettings;
-    [SyncDataKey.DefaultTranslator]: string;
+    [SyncDataKey.DefaultTranslator]: HybridSupportedTranslators;
     [SyncDataKey.DefaultPageTranslator]: string;
     [SyncDataKey.HybridTranslatorConfig]: HybridTranslatorConfig;
     [SyncDataKey.TranslateResultFilter]: TranslateResultFilter;
@@ -62,17 +63,17 @@ export type OtherSettings = {
 
 export type HybridTranslatorConfig = {
     // The translators used in current hybrid translate.
-    translators: string[];
+    translators: HybridSupportedTranslators[];
 
     // The translators for each item.
     selections: {
-        originalText: string;
-        mainMeaning: string;
-        tPronunciation: string;
-        sPronunciation: string;
-        detailedMeanings: string;
-        definitions: string;
-        examples: string;
+        originalText: HybridSupportedTranslators;
+        mainMeaning: HybridSupportedTranslators;
+        tPronunciation: HybridSupportedTranslators;
+        sPronunciation: HybridSupportedTranslators;
+        detailedMeanings: HybridSupportedTranslators;
+        definitions: HybridSupportedTranslators;
+        examples: HybridSupportedTranslators;
     };
 };
 

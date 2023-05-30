@@ -4,8 +4,56 @@
  * function: add resizable function to a specific element
  */
 
-import css from "css";
-import style from "./resizable.css"; // read plain content from css file
+const CSSStyle = {
+    "resizable-container": {
+        overflow: "hidden",
+        opacity: "0",
+    },
+    'resizable-s': {
+        width: "100 %",
+        position: "absolute",
+        left: "0",
+        cursor: "ns-resize",
+    },
+    'resizable-se': {
+        position: "absolute",
+        cursor: "nwse-resize",
+        zIndex: "1",
+    },
+    'resizable-e': {
+        height: "100 %",
+        position: "absolute",
+        top: "0",
+        cursor: "ew-resize",
+    },
+    "resizable-ne": {
+        position: "absolute",
+        cursor: "nesw-resize",
+        zIndex: "1",
+    },
+    "resizable-n": {
+        width: "100 %",
+        position: "absolute",
+        left: "0",
+        cursor: "ns-resize",
+    },
+    "resizable-nw": {
+        position: "absolute",
+        cursor: "nwse-resize",
+        zIndex: "1",
+    },
+    "resizable-w": {
+        height: "100 %",
+        position: "absolute",
+        top: "0",
+        cursor: "ew-resize",
+    },
+    "resizable-sw": {
+        position: "absolute",
+        cursor: "nesw-resize",
+        zIndex: "1",
+    }
+}
 
 export default class resizable {
     constructor(targetElement, options, handlers) {
@@ -71,14 +119,13 @@ export default class resizable {
      * create resizable div elements and their div container according to direction settings
      */
     createResizableDivElements() {
-        let cssObject = cssPreProcess(style);
         /* create a container for resizable div elements */
         // if the container has not been created
         if (!this.store.divContainer) {
             let divContainer = document.createElement("div");
             let divContainerID = "resizable-container";
             divContainer.id = divContainerID;
-            divContainer.style.cssText = cssObject.stringifyItems(cssObject[`#${divContainerID}`]);
+            Object.assign(divContainer.style, CSSStyle[divContainerID]);
             this.targetElement.appendChild(divContainer);
             this.store.divContainer = divContainer;
             this.store.divContainer.addEventListener("mousedown", this.resizeStartHandler);
@@ -89,7 +136,7 @@ export default class resizable {
         /* create resizable div elements according to direction settings */
         for (let direction in this.directions) {
             // css setting of the specific div
-            let divCss = cssObject[`#resizable-${direction}`];
+            let divCss = CSSStyle[`resizable-${direction}`];
             // store the css size value (used for width height properties)
             let sizeThresholdCSSValue = `${this.resizeThreshold[direction]}px`;
             // store the css position value ((used for left right top bottom properties))
@@ -114,9 +161,8 @@ export default class resizable {
                     break;
                 default:
                     if (getVarType(this.options.thresholdPosition) === "number")
-                        positionThresholdCSSValue = `-${
-                            this.options.thresholdPosition * this.resizeThreshold[direction]
-                        }px`;
+                        positionThresholdCSSValue = `-${this.options.thresholdPosition * this.resizeThreshold[direction]
+                            }px`;
                     break;
             }
             /* change css setting according to direction */
@@ -166,7 +212,7 @@ export default class resizable {
             let div = document.createElement("div");
             div.id = `resizable-${direction}`;
             div.setAttribute("class", "resizable-div");
-            div.style.cssText = cssObject.stringifyItems(divCss);
+            Object.assign(div.style, divCss);
             this.store.divContainer.appendChild(div);
             // store the div resizable element
             this.directions[direction] = div;
@@ -476,44 +522,6 @@ export default class resizable {
             });
         return true;
     }
-}
-
-/**
- * pre precess a css string to an object
- * @param {String} style css style string
- * @returns {Object} {selectorName:{property:value},...,stringifyItems:function,toString:function}
- */
-function cssPreProcess(style) {
-    let ast = css.parse(style);
-    let result = {};
-    for (let rule of ast.stylesheet.rules) {
-        let item = {};
-        let selector = rule.selectors[0];
-        for (let declaration of rule.declarations) {
-            item[declaration.property] = declaration.value;
-        }
-        result[selector] = item;
-    }
-    /**
-     * stringify css entries of property and value
-     * @param {Object} items {cssProperty: value}
-     */
-    result.stringifyItems = function (items) {
-        let text = "";
-        for (let key in items) {
-            text += `${key}: ${items[key]};\n`;
-        }
-        return text;
-    };
-    result.toString = function () {
-        let text = "";
-        for (let selector in this) {
-            if (typeof this[selector] !== "function")
-                text += `${selector}{\n${this.stringifyItems(this[selector])}}\n`;
-        }
-        return text;
-    };
-    return result;
 }
 
 /**

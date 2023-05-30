@@ -1,17 +1,48 @@
 import Browser from "webextension-polyfill";
-import { HybridTranslator } from "@edge_translate/translators";
-import { log } from "~/utils/index";
-import { delayPromise } from "~/utils/delay_promise";
+import {
+    BaiduTranslator,
+    BingTranslator,
+    DeeplTranslator,
+    GoogleTranslator,
+    HybridSupportedTranslators,
+    HybridTranslator,
+    PronunciationSpeed,
+    TencentTranslator,
+    TranslationResult,
+} from "@edge_translate/translators";
 import { DEFAULT_SETTINGS, getOrSetDefaultSettings } from "~/utils/settings";
+import Channel from "~/utils/channel";
+import { LanguageSetting, SyncDataKey } from "~/types";
 import LocalTTS from "./local_tts";
+import { SupportedLanguage } from "~/utils/languages";
+import { getOrCreateTab } from "~/utils/createTab";
 
-class TranslatorManager {
+export class TranslatorManager {
+    private channel: Channel;
+    private config_loader: Promise<void>;
+    private IN_MUTUAL_MODE: boolean = false;
+
+    private TTS_SPEED: PronunciationSpeed;
+    private localTTS: LocalTTS;
+
+    private TRANSLATORS: {
+        [key: string]:
+            | HybridTranslator
+            | BaiduTranslator
+            | BingTranslator
+            | GoogleTranslator
+            | TencentTranslator
+            | DeeplTranslator;
+    } = {};
+    private HYBRID_TRANSLATOR!: HybridTranslator;
+    private LANGUAGE_SETTING!: LanguageSetting;
+    private DEFAULT_TRANSLATOR: HybridSupportedTranslators = "GoogleTranslate";
     /**
-     * @param {import("~/utils/channel").default} channel Communication channel.
+     * Communication channel.
      */
-    constructor(channel) {
+    constructor(channel: Channel) {
         /**
-         * @type {import("~/utils/channel").default} Communication channel.
+         * Communication channel.
          */
         this.channel = channel;
 
@@ -19,7 +50,12 @@ class TranslatorManager {
          * @type {Promise<Void>} Initialize configurations.
          */
         this.config_loader = getOrSetDefaultSettings(
-            ["HybridTranslatorConfig", "DefaultTranslator", "languageSetting", "OtherSettings"],
+            [
+                SyncDataKey.HybridTranslatorConfig,
+                SyncDataKey.DefaultTranslator,
+                SyncDataKey.LanguageSetting,
+                SyncDataKey.OtherSettings,
+            ],
             DEFAULT_SETTINGS
         ).then((configs) => {
             // Init hybrid translator.
@@ -65,10 +101,19 @@ class TranslatorManager {
      */
     provideServices() {
         // Translate service.
-        this.channel.provide("translate", (params) => this.translate(params.text, params.position));
+        this.channel.provide("translate", (_params) => {
+            const params = _params as { text: string; position: number[] };
+            return this.translate(params.text, params.position);
+        });
 
         // Pronounce service.
-        this.channel.provide("pronounce", (params) => {
+        this.channel.provide("pronounce", (_params) => {
+            const params = _params as {
+                pronouncing: string;
+                text: string;
+                language: string;
+                speed: PronunciationSpeed;
+            };
             let speed = params.speed;
             if (!speed) {
                 speed = this.TTS_SPEED;
@@ -80,12 +125,22 @@ class TranslatorManager {
 
         // Get available translators service.
         this.channel.provide("get_available_translators", (params) =>
-            Promise.resolve(this.getAvailableTranslators(params))
+            Promise.resolve(
+                this.getAvailableTranslators(
+                    params as { from: SupportedLanguage; to: SupportedLanguage }
+                )
+            )
         );
 
         // Update default translator service.
         this.channel.provide("update_default_translator", (detail) =>
-            this.updateDefaultTranslator(detail.translator)
+            this.updateDefaultTranslator(
+                (
+                    detail as {
+                        translator: HybridSupportedTranslators;
+                    }
+                ).translator
+            )
         );
     }
 
@@ -101,7 +156,10 @@ class TranslatorManager {
         });
 
         // Language setting updated event.
-        this.channel.on("language_setting_update", this.onLanguageSettingUpdated.bind(this));
+        this.channel.on(
+            "language_setting_update",
+            this.onLanguageSettingUpdated.bind(this) as (detail: unknown) => unknown
+        );
 
         // Result frame closed event.
         this.channel.on("frame_closed", this.stopPronounce.bind(this));
@@ -109,14 +167,14 @@ class TranslatorManager {
         /**
          * Update config cache on config changed.
          */
-        chrome.storage.onChanged.addListener(
-            (async (changes, area) => {
+        Browser.storage.onChanged.addListener(
+            (async (changes: Record<string, Browser.Storage.StorageChange>, area: string) => {
                 if (area === "sync") {
                     // Ensure that configurations have been initialized.
                     await this.config_loader;
 
                     if (changes["HybridTranslatorConfig"]) {
-                        this.HYBRID_TRANSLATOR.useConfig(
+                        this.HYBRID_TRANSLATOR?.useConfig(
                             changes["HybridTranslatorConfig"].newValue
                         );
                     }
@@ -146,63 +204,44 @@ class TranslatorManager {
     async getCurrentTabId() {
         let tabId = -1;
         const tabs = await Browser.tabs.query({ active: true, currentWindow: true });
-        tabId = tabs[0].id;
+        tabId = tabs[0].id || -1;
 
         // to test whether the current tab can receive message(display results)
-        await this.channel.requestToTab(tabId, "check_availability").catch(async () => {
-            const shouldOpenNoticePage = await new Promise((resolve) => {
-                // The page is a local file page
-                if (/^file:\/\.*/.test(tabs[0].url)) {
-                    chrome.extension.isAllowedFileSchemeAccess((allowed) => {
-                        if (!allowed && confirm(chrome.i18n.getMessage("PermissionRemind"))) {
-                            chrome.tabs.create({
-                                url: `chrome://extensions/?id=${chrome.runtime.id}`,
-                            });
-                            resolve(false);
-                        } else resolve(true);
+        await this.channel.requestToTab(tabId, "check_availability", {}).catch(async () => {
+            // The page is a local file page
+            if (/^file:\/\.*/.test(tabs[0].url || "")) {
+                const allowed = await Browser.extension.isAllowedFileSchemeAccess();
+                if (!allowed && confirm(Browser.i18n.getMessage("PermissionRemind"))) {
+                    await Browser.tabs.create({
+                        url: `chrome://extensions/?id=${chrome.runtime.id}`,
                     });
-                } else resolve(true);
-            });
-            if (!shouldOpenNoticePage) {
-                tabId = -1;
-                return;
+                    tabId = -1;
+                    return;
+                }
             }
             /**
              * the current tab can't display the result panel
              * so we open a notice page to display the result and explain why this page shows
              */
-            const noticePageUrl = chrome.runtime.getURL("content/notice/notice.html");
+            const noticePageUrl = Browser.runtime.getURL("content/notice/notice.html");
             // get the tab id of an existing notice page
-            try {
-                const tab = (await Browser.tabs.query({ url: noticePageUrl }))[0];
-                // jump to the existed page
-                chrome.tabs.highlight({
-                    tabs: tab.index,
-                });
-                tabId = tab.id;
-            } catch (error) {
-                // create a new notice page
-                const tab = await Browser.tabs.create({
-                    url: noticePageUrl,
-                    active: true,
-                });
-                // wait for browser to open a new page
-                await delayPromise(200);
-                tabId = tab.id;
-            }
+            const tab = await getOrCreateTab(noticePageUrl);
+            await Browser.tabs.highlight({
+                tabs: tab.index,
+            });
         });
         return tabId;
     }
 
     /**
      *
-     * 检测给定文本的语言。
+     * Detects the language of the given text.
      *
-     * @param {string} text 需要检测的文本
+     * @param {string} text Text to be tested
      *
      * @returns {Promise<String>} detected language Promise
      */
-    async detect(text) {
+    async detect(text: string) {
         // Ensure that configurations have been initialized.
         await this.config_loader;
 
@@ -217,12 +256,10 @@ class TranslatorManager {
      * 3. else use mutual translation mode(auto translate from both sides)
      * 4. send request, get result
      *
-     * @param {String} text original text to be translated
-     * @param {Array<Number>} position position of the text
-     *
-     * @returns {Promise<void>} translate finished Promise
+     * @param text original text to be translated
+     * @param position position of the text
      */
-    async translate(text, position) {
+    async translate(text: string, position: number[]) {
         // Ensure that configurations have been initialized.
         await this.config_loader;
 
@@ -260,7 +297,7 @@ class TranslatorManager {
                         tl = this.LANGUAGE_SETTING.tl;
                         break;
                     case this.LANGUAGE_SETTING.tl:
-                        tl = this.LANGUAGE_SETTING.sl;
+                        tl = this.LANGUAGE_SETTING.sl as SupportedLanguage;
                         break;
                     default:
                         sl = "auto";
@@ -269,7 +306,10 @@ class TranslatorManager {
             }
 
             // Do translate.
-            let result = await this.TRANSLATORS[this.DEFAULT_TRANSLATOR].translate(text, sl, tl);
+            let result: TranslationResult & {
+                sourceLanguage?: SupportedLanguage | "auto";
+                targetLanguage?: SupportedLanguage;
+            } = await this.TRANSLATORS[this.DEFAULT_TRANSLATOR].translate(text, sl, tl);
             result.sourceLanguage = sl;
             result.targetLanguage = tl;
 
@@ -290,14 +330,17 @@ class TranslatorManager {
     /**
      * Text to speech proxy.
      *
-     * @param {String} pronouncing which text are we pronouncing? enum{source, target}
-     * @param {String} text The text.
-     * @param {String} language The language of the text.
-     * @param {String} speed The speed of the speech.
-     *
-     * @returns {Promise<void>} pronounce finished Promise
+     * @param pronouncing which text are we pronouncing? enum{source, target}
+     * @param text The text.
+     * @param language The language of the text.
+     * @param speed The speed of the speech.
      */
-    async pronounce(pronouncing, text, language, speed) {
+    async pronounce(
+        pronouncing: string,
+        text: string,
+        language: string,
+        speed: PronunciationSpeed
+    ) {
         // Ensure that configurations have been initialized.
         await this.config_loader;
 
@@ -322,7 +365,7 @@ class TranslatorManager {
             }
 
             await this.TRANSLATORS[this.DEFAULT_TRANSLATOR].pronounce(text, lang, speed).catch(
-                ((error) => {
+                ((error: any) => {
                     // API pronouncing failed, try local TTS service.
                     if (!this.localTTS.speak(text, lang, speed)) {
                         throw error;
@@ -361,24 +404,22 @@ class TranslatorManager {
     /**
      * Get translators that support given source language and target language.
      *
-     * @param {Object} detail current language setting, detail.from is source language, detail.to is target language
+     * @param detail current language setting, detail.from is source language, detail.to is target language
      *
-     * @returns {Array<String>} available translators Promise.
+     * @returns available translators Promise.
      */
-    getAvailableTranslators(detail) {
+    getAvailableTranslators(detail: { from: SupportedLanguage; to: SupportedLanguage }) {
         return ["HybridTranslate"].concat(
             this.HYBRID_TRANSLATOR.getAvailableTranslatorsFor(detail.from, detail.to)
-        );
+        ) as (HybridSupportedTranslators | "HybridTranslate")[];
     }
 
     /**
      * Language setting update event listener.
      *
-     * @param {Object} detail updated language setting, detail.from is source language, detail.to is target language
-     *
-     * @returns {Promise<void>} finished Promise
+     * @param detail updated language setting, detail.from is source language, detail.to is target language
      */
-    async onLanguageSettingUpdated(detail) {
+    async onLanguageSettingUpdated(detail: { from: SupportedLanguage; to: SupportedLanguage }) {
         let selectedTranslator = this.DEFAULT_TRANSLATOR;
 
         // Get translators supporting new language setting.
@@ -387,12 +428,12 @@ class TranslatorManager {
         // Update hybrid translator config.
         const newConfig = this.HYBRID_TRANSLATOR.updateConfigFor(detail.from, detail.to);
         // Update config.
-        chrome.storage.sync.set({ HybridTranslatorConfig: newConfig });
+        await Browser.storage.sync.set({ HybridTranslatorConfig: newConfig });
 
         // If current default translator does not support new language setting, update it.
         if (!new Set(availableTranslators).has(selectedTranslator)) {
-            selectedTranslator = availableTranslators[1];
-            chrome.storage.sync.set({ DefaultTranslator: selectedTranslator });
+            selectedTranslator = availableTranslators[1] as HybridSupportedTranslators;
+            await Browser.storage.sync.set({ DefaultTranslator: selectedTranslator });
         }
 
         // Inform options page to update options.
@@ -402,7 +443,7 @@ class TranslatorManager {
         });
 
         // Inform result frame to update options.
-        Browser.tabs.query({ active: true, currentWindow: true }).then((tabs) =>
+        await Browser.tabs.query({ active: true, currentWindow: true }).then((tabs) =>
             this.channel.emitToTabs(tabs[0].id, "update_translator_options", {
                 selectedTranslator,
                 availableTranslators,
@@ -413,54 +454,42 @@ class TranslatorManager {
     /**
      * Update translator.
      *
-     * @param {string} translator the new translator to use.
-     *
-     * @returns {Promise<void>} update finished promise.
+     * @param translator the new translator to use.
      */
-    updateDefaultTranslator(translator) {
-        return new Promise((resolve) => {
-            chrome.storage.sync.set({ DefaultTranslator: translator }, () => {
-                resolve();
-            });
-        });
+    updateDefaultTranslator(translator: HybridSupportedTranslators) {
+        return Browser.storage.sync.set({ DefaultTranslator: translator });
     }
 }
 
 /**
- * 使用用户选定的网页翻译引擎翻译当前网页。
+ * Translate the current web page using the user-selected web translation engine.
  *
- * @param {import("~/utils/channel").default} channel Communication channel.
+ * @param channel Communication channel.
  */
-function translatePage(channel) {
-    getOrSetDefaultSettings(["DefaultPageTranslator"], DEFAULT_SETTINGS).then((result) => {
-        let translator = result.DefaultPageTranslator;
-        switch (translator) {
-            case "GooglePageTranslate":
-                executeGoogleScript(channel);
-                break;
-            default:
-                executeGoogleScript(channel);
-                break;
+export function translatePage(channel: Channel) {
+    getOrSetDefaultSettings([SyncDataKey.DefaultPageTranslator], DEFAULT_SETTINGS).then(
+        (result) => {
+            let translator = result.DefaultPageTranslator;
+            switch (translator) {
+                case "GooglePageTranslate":
+                    executeGoogleScript(channel);
+                    break;
+                default:
+                    executeGoogleScript(channel);
+                    break;
+            }
         }
-    });
+    );
 }
 
 /**
- * 执行谷歌网页翻译相关脚本。
+ * Execute Google web translation related scripts.
  *
- * @param {import("~/utils/channel").default} channel Communication channel.
+ * @param channel Communication channel.
  */
-function executeGoogleScript(channel) {
-    chrome.tabs.executeScript({ file: "/google/init.js" }, (result) => {
-        if (chrome.runtime.lastError) {
-            log(`Chrome runtime error: ${chrome.runtime.lastError}`);
-            log(`Detail: ${result}`);
-        } else {
-            Browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
-                channel.emitToTabs(tabs[0].id, "start_page_translate", { translator: "google" });
-            });
-        }
+export async function executeGoogleScript(channel: Channel) {
+    await Browser.tabs.executeScript({ file: "/google/init.js" });
+    await Browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
+        channel.emitToTabs(tabs[0].id, "start_page_translate", { translator: "google" });
     });
 }
-
-export { TranslatorManager, translatePage, executeGoogleScript };

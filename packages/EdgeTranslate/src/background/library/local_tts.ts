@@ -1,3 +1,5 @@
+import type { PronunciationSpeed } from "@edge_translate/translators";
+
 /**
  * Local TTS service provider.
  */
@@ -19,7 +21,7 @@ export default class LocalTTS {
      *
      * @returns is speaking succeeded?
      */
-    speak(text: string, language: string, speed: "fast" | "slow") {
+    speak(text: string, language: string, speed: PronunciationSpeed) {
         // Check if the language is supported.
         if (!this.synthesis.getVoices().find((voice) => voice.lang.startsWith(language))) {
             console.log(`No voice for language: "${language}"`);

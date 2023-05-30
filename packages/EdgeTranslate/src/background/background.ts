@@ -1,5 +1,4 @@
 import Browser from "webextension-polyfill";
-// @ts-ignore
 import { TranslatorManager, translatePage, executeGoogleScript } from "./library/translate";
 import {
     addUrlBlacklist,
@@ -25,14 +24,13 @@ Browser.contextMenus.create({
 });
 
 // Add an entry to options page for Firefox as it doesn't have one.
-// TODO
-// if (BROWSER_ENV === "firefox") {
-//     chrome.contextMenus.create({
-//         id: "settings",
-//         title: chrome.i18n.getMessage("Settings"),
-//         contexts: ["browser_action"],
-//     });
-// }
+if (import.meta.env.VITE_TARGET_BROWSER === "firefox") {
+    chrome.contextMenus.create({
+        id: "settings",
+        title: chrome.i18n.getMessage("Settings"),
+        contexts: ["browser_action"],
+    });
+}
 
 Browser.contextMenus.create({
     id: "shortcut",
@@ -190,7 +188,7 @@ Browser.contextMenus.onClicked.addListener((info, tab) => {
                 .catch((error) => {
                     // If content scripts can not access the tab the selection, use info.selectionText instead.
                     if (info.selectionText?.trim()) {
-                        return TRANSLATOR_MANAGER.translate(info.selectionText, null);
+                        return TRANSLATOR_MANAGER.translate(info.selectionText, []);
                     }
                     return Promise.resolve(error);
                 });

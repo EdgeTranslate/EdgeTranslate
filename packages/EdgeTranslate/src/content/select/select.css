@@ -20,11 +20,11 @@
     border: none !important;
     transition: box-shadow 200ms ease-in-out, transform 300ms ease !important;
     animation: fade-in 300ms ease-in-out !important;
+}
 
-    &:hover {
-        box-shadow: 0px 0px 8px 3px #bbb !important;
-        transform: rotate(180deg) !important;
-    }
+#edge-translate-button:hover {
+    box-shadow: 0px 0px 4px 4px #ddd !important;
+    transform: scale(1.1) !important;
 }
 
 @keyframes fade-in {
