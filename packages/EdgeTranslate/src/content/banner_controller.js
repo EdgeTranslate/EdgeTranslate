@@ -1,5 +1,5 @@
-import Channel from "common/scripts/channel.js";
-import { DEFAULT_SETTINGS, getOrSetDefaultSettings } from "common/scripts/settings.js";
+import Channel from "~/utils/channel";
+import { DEFAULT_SETTINGS, getOrSetDefaultSettings } from "~/utils/settings";
 
 /**
  * Control the visibility of page translator banners.

@@ -1,6 +1,6 @@
 import { isChromePDFViewer } from "./common.js"; // judge if this page is a pdf file
-import Channel from "common/scripts/channel.js";
-import { DEFAULT_SETTINGS, getOrSetDefaultSettings } from "common/scripts/settings.js";
+import Channel from "~/utils/channel";
+import { DEFAULT_SETTINGS, getOrSetDefaultSettings } from "~/utils/settings";
 
 const channel = new Channel();
 /**

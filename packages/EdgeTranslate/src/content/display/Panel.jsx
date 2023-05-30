@@ -1,15 +1,14 @@
-/** @jsx h */
-import { h, Fragment } from "preact";
+import { Fragment } from "preact";
 import { useEffect, useState, useRef, useCallback } from "preact/hooks";
 import { useLatest, useEvent, useClickAway } from "react-use";
 import styled, { createGlobalStyle } from "styled-components";
 import root from "react-shadow/styled-components";
 import SimpleBar from "simplebar-react";
 import SimpleBarStyle from "simplebar-react/dist/simplebar.min.css";
-import Channel from "common/scripts/channel.js";
+import Channel from "~/utils/channel";
+import { delayPromise } from "~/utils/delay_promise";
 import Moveable from "./library/moveable/moveable.js";
-import { delayPromise } from "common/scripts/promise.js";
-import { DEFAULT_SETTINGS, getOrSetDefaultSettings } from "common/scripts/settings.js";
+import { DEFAULT_SETTINGS, getOrSetDefaultSettings } from "~/utils/settings";
 import { isChromePDFViewer } from "../common.js";
 import Result from "./Result.jsx"; // display translate result
 import Loading from "./Loading.jsx"; // display loading animation

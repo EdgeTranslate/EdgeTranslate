@@ -1,4 +1,3 @@
-/** @jsx h */
 import { h, cloneElement } from "preact";
 import { forwardRef } from "preact/compat";
 import { useState, useRef, useCallback, useEffect } from "preact/hooks";

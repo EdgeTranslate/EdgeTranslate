@@ -3,11 +3,9 @@
  * part: display.notifier
  * function:  a notifier to notify users of messages including(info, success, warning, error)
  */
-/** @jsx h */
-import { h } from "preact";
 import render from "preact-render-to-string";
 import NotifierTemplate from "./notifier.jsx";
-import { delayPromise } from "common/scripts/promise.js";
+import { delayPromise } from "~/utils/delay_promise";
 
 // prefix for CSS selector name
 const SELECTOR_PREFIX = "edge-translate-notifier-";

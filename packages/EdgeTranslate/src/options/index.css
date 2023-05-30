@@ -1,6 +1,11 @@
-@import '../common/style/input.styl';
+@import '../utils/style/input.css';
 
-html, body {
+:root {
+    --color-primary: #4a8cf7;
+}
+
+html,
+body {
     width: 100%;
     padding: 0;
     margin: 0;
@@ -12,7 +17,7 @@ html, body {
     margin: auto;
     max-width: 840px;
     margin: 0px auto;
-    box-shadow: 0px 0px 50px rgb(200, 200, 200, 0.5);
+    box-shadow: 0px 0px 50px rgba(200, 200, 200, 0.5);
     background-color: white;
 }
 
@@ -22,7 +27,7 @@ header {
     padding: 5% 0;
     font-size: 64px;
     font-weight: bold;
-    color: color-primary;
+    color: var(--color-primary);
     display: flex;
     align-items: center;
 }

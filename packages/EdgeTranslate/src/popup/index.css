@@ -1,0 +1,186 @@
+@import '../utils/style/input.css';
+
+@font-face {
+    font-family: 'translateIcon';
+    src: url('data:application/x-font-woff;charset=utf-8;base64,d09GRgABAAAAAAWIAAsAAAAACBQAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAABHU1VCAAABCAAAADMAAABCsP6z7U9TLzIAAAE8AAAARAAAAFZW7krlY21hcAAAAYAAAABvAAABsgqQ1FBnbHlmAAAB8AAAAX4AAAGUgi8mY2hlYWQAAANwAAAALwAAADYR+m+yaGhlYQAAA6AAAAAcAAAAJAfeA4ZobXR4AAADvAAAABMAAAAUE+kAAGxvY2EAAAPQAAAADAAAAAwBIAFUbWF4cAAAA9wAAAAeAAAAIAEUAF1uYW1lAAAD/AAAAUUAAAJtPlT+fXBvc3QAAAVEAAAAQwAAAGbAr9KWeJxjYGRgYOBikGPQYWB0cfMJYeBgYGGAAJAMY05meiJQDMoDyrGAaQ4gZoOIAgCKIwNPAHicY2Bk/s04gYGVgYOpk+kMAwNDP4RmfM1gxMjBwMDEwMrMgBUEpLmmMDgwVLz4wdzwv4EhhrmBoQEozAiSAwA25Q1peJzFkMEJgDAMRV9sLSKO4hAO5MmTi3TF4gje9LfxoBP4wwvJJ5AQoAeCmEUE2zCqVrnW/MDY/MiifmSgU+wllXyc1yXvXbtMcx61jprXDkv8Jvtv9VdTy8vT6ePsDzqxJKf6JTv6HcfpEG6lABmwAHicPY/PShtRGMW/c6/3TiZNZnT+JhNjMpkm18Y60Mm/hVSzKIWKYKGrQjc+gG7ddJFNoYsu+gyikZBNcWEpdVUopev4AkVfo1fHLno4HPjB+fg4JIju/vArXiGX1ukZvaDXRJAbaFmsjlj1U7YBPxZ+6FlcJSo2klbKnyNsSS/Ihv1OKA1pw8IaenE2VClTGPS32RayoA5Ua9Ebp73q8M8oVtTaB73LTuA3klV7e1O/errjZU23cFxynKrjfCpIIQqMLdkWDsPAFGZR6lNhR/5V4wlroFRV0d7bcrPmHHzsH9XboQlMJnBrTet8ZyVayf0+ClynaiyXC5WonDz2cHz7qOKW6p0byoWH4L9Yl/LVJgwTChq/bf1S71qsq7972NI/PWL/ehN2TQbZ+ZkfD3qj0OCxEY56g5hP/hJbbE7fsbPzdIEcaDzO+Y6m6fX4/58fuKByDkKqdkeGIhi1hx1+qfc41/uGkPjKOb7JJXyZATNm8Tkw5xbRPayfRwgAAHicY2BkYGAA4mtflz6J57f5ysDNwgAC13On3kPQ/x+yMDBLALkcDEwgUQB7Pgx8AHicY2BkYGBu+N/AEMPCAAJAkpEBFbACAEcLAm54nGNhYGBgfsnAwMKAwAAOmwD9AAAAAAAAdgCKAKoAynicY2BkYGBgZQgEYhBgAmIuIGRg+A/mMwAAES0BcgAAeJxlj01OwzAQhV/6B6QSqqhgh+QFYgEo/RGrblhUavdddN+mTpsqiSPHrdQDcB6OwAk4AtyAO/BIJ5s2lsffvHljTwDc4Acejt8t95E9XDI7cg0XuBeuU38QbpBfhJto41W4Rf1N2MczpsJtdGF5g9e4YvaEd2EPHXwI13CNT+E69S/hBvlbuIk7/Aq30PHqwj7mXle4jUcv9sdWL5xeqeVBxaHJIpM5v4KZXu+Sha3S6pxrW8QmU4OgX0lTnWlb3VPs10PnIhVZk6oJqzpJjMqt2erQBRvn8lGvF4kehCblWGP+tsYCjnEFhSUOjDFCGGSIyujoO1Vm9K+xQ8Jee1Y9zed0WxTU/3OFAQL0z1xTurLSeTpPgT1fG1J1dCtuy56UNJFezUkSskJe1rZUQuoBNmVXjhF6XNGJPyhnSP8ACVpuyAAAAHicY2BigAAuBuyAlZGJkZmRhZGVkY2BsUIkNz++IjMxL704A0hkAVkl+aX8YJGMUiA3P6M0MQ/CBxJQeQYGAIPOFckA') format('woff');
+}
+
+:root {
+    --color-primary: #4a8cf7;
+}
+
+.translate-icon {
+    font-family: 'translateIcon' !important;
+    font-size: 20px;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.translate-icon-exchange::before {
+    content: '\e8f8';
+}
+
+.translate-icon-arrow-up::before {
+    content: '\e695';
+}
+
+.translate-icon-arrow-down::before {
+    content: '\e606';
+}
+
+.set {
+    font-size: 30px;
+    font-weight: bolder;
+    position: relative;
+    bottom: 6px;
+    height: 30px;
+}
+
+#arrow-up {
+    display: none;
+}
+
+#exchange {
+    color: var(--color-primary);
+}
+
+#exchange:active {
+    color: grey;
+}
+
+html,
+body {
+    max-width: 440px;
+    min-width: 350px;
+    overflow: hidden;
+}
+
+.frame {
+    margin: 5%;
+}
+
+.row {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    margin: 2% 0;
+    line-height: 4em;
+}
+
+.col {
+    flex: 1 0 50%;
+}
+
+.selection {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.switch-label {
+    display: block;
+    font-size: medium;
+    text-align: center;
+}
+
+select {
+    width: 90%;
+    max-width: 150px;
+    height: 25px;
+    background-color: #eee;
+}
+
+footer {
+    font-size: xx-small;
+    color: gray;
+    text-align: center;
+}
+
+footer a {
+    color: gray;
+}
+
+.multiple {
+    flex: 1 1 60%;
+    display: inline-block;
+}
+
+.select {
+    background-color: #eee;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+.option {
+    line-height: 20px;
+}
+
+i {
+    max-height: 35px;
+}
+
+#translate_input {
+    flex: 1 3 75%;
+    height: 20px;
+    border: var(--color-primary) solid 1px;
+}
+
+#translate_input:focus {
+    outline: var(--color-primary) solid 1px;
+}
+
+#translateSubmit {
+    height: 26px;
+    flex: 3 1 20%;
+    background-color: var(--color-primary);
+    color: white;
+    border-style: solid;
+    border-color: var(--color-primary);
+    border-radius: 5%;
+    margin-left: 5%;
+}
+
+#hint_message {
+    color: red;
+    display: none;
+}
+
+#setting-switch {
+    cursor: pointer;
+    margin-top: 5%;
+    height: 20px;
+    color: #aaa;
+    justify-content: center;
+}
+
+#setting-switch:hover {
+    color: black;
+}
+
+#setting {
+    display: none;
+    margin: 7% 0;
+}
+
+#page-translate {
+    margin-top: 10%;
+    font-size: medium;
+}
+
+#page-translate a {
+    line-height: 1em;
+    color: var(--color-primary);
+    padding: 0 2%;
+    user-select: none;
+}
+
+#page-translate a:hover {
+    cursor: pointer;
+}
+
+#page-translate a:active {
+    color: skyblue;
+}

@@ -3,9 +3,6 @@
  * Because svg loader can't process "stroke-width" and "stroke-dasharray" of <circle /> properly, we wrap this svg as a preact component.
  */
 
-/** @jsx h */
-import { h } from "preact";
-
 export default function Loading(props) {
     return (
         <svg

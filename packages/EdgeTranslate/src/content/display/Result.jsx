@@ -1,9 +1,8 @@
-/** @jsx h */
 import { h, Fragment } from "preact";
 import { useEffect, useRef, useReducer, useState } from "preact/hooks";
 import styled, { ThemeProvider } from "styled-components";
-import Channel from "common/scripts/channel.js";
-import { DEFAULT_SETTINGS, getOrSetDefaultSettings } from "common/scripts/settings.js";
+import Channel from "~/utils/channel";
+import { DEFAULT_SETTINGS, getOrSetDefaultSettings } from "~/utils/settings";
 import Notifier from "./library/notifier/notifier.js";
 import DOMPurify from "dompurify";
 import { checkTimestamp } from "./Panel.jsx";

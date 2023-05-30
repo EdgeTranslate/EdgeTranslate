@@ -1,4 +1,3 @@
-/** @jsx h */
 import { h } from "preact";
 import SuccessIcon from "./icons/success.svg";
 import InfoIcon from "./icons/info.svg";

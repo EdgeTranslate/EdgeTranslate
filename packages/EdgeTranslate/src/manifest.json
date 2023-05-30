@@ -1,21 +1,95 @@
 {
     "name": "__MSG_AppName__",
     "description": "__MSG_Description__",
-    "version": "2.4.1",
     "default_locale": "en",
+    "{{chrome}}.manifest_version": 3,
+    "{{firefox}}.manifest_version": 3,
+    "icons": {
+        "16": "icon/16.png",
+        "48": "icon/48.png",
+        "128": "icon/128.png"
+    },
+    "{{chrome}}.action": {
+        "default_popup": "popup/index.html"
+    },
+    "{{firefox}}.browser_action": {
+        "default_popup": "popup/index.html"
+    },
     "background": {
-        "scripts": ["./background/background.js"]
+        "{{chrome}}.service_worker": "background/background.ts",
+        "{{firefox}}.scripts": ["background/background.ts"]
     },
-    "browser_action": {
-        "default_popup": "./popup/popup.html",
-        "default_icon": {
-            "16": "icon/icon16.png",
-            "48": "icon/icon48.png",
-            "128": "icon/icon128.png"
+    "options_ui": {
+        "page": "options/index.html",
+        "open_in_tab": true
+    },
+    "host_permissions": ["<all_urls>"],
+    "{{chrome}}.permissions": [
+        "notifications",
+        "contextMenus",
+        "storage",
+        "cookies",
+        "tabs",
+        "webRequest"
+    ],
+    "{{firefox}}.permissions": [
+        "notifications",
+        "contextMenus",
+        "storage",
+        "cookies",
+        "tabs",
+        "<all_urls>",
+        "webRequest",
+        "webRequestBlocking"
+    ],
+    "{{chrome}}.content_security_policy": {
+        "extension_pages": "script-src 'self'; object-src 'self'"
+    },
+    "{{chrome}}.homepage_url": "https://github.com/EdgeTranslate/EdgeTranslate/wiki",
+    "{{chrome}}.content_scripts": [
+        {
+            "matches": ["<all_urls>"],
+            "js": ["content/display/index.jsx", "content/pdf.js"]
+        },
+        {
+            "matches": ["<all_urls>"],
+            "run_at": "document_start",
+            "js": ["content/select/select.js"],
+            "all_frames": true
+        },
+        {
+            "matches": ["<all_urls>"],
+            "js": ["content/banner_controller.js"]
+        },
+        {
+            "matches": ["*://*.deepl.com/*"],
+            "js": ["content/deepl_injector.js"],
+            "all_frames": true
         }
-    },
+    ],
+    "{{firefox}}.content_scripts": [
+        {
+            "matches": ["<all_urls>"],
+            "js": ["content/display/index.jsx"]
+        },
+        {
+            "matches": ["<all_urls>"],
+            "run_at": "document_start",
+            "js": ["content/select/select.js"],
+            "all_frames": true
+        },
+        {
+            "matches": ["<all_urls>"],
+            "js": ["content/banner_controller.js"]
+        },
+        {
+            "matches": ["*://*.deepl.com/*"],
+            "js": ["content/deepl_injector.js"],
+            "all_frames": true
+        }
+    ],
     "commands": {
-        "_execute_browser_action": {
+        "_execute_action": {
             "suggested_key": {
                 "default": "Alt+Q"
             }
@@ -69,16 +143,10 @@
             "description": "__MSG_TogglePageTranslateBanner__"
         }
     },
-    "web_accessible_resources": ["**/*.css", "**/*.png", "google/*"],
-    "icons": {
-        "16": "icon/icon16.png",
-        "48": "icon/icon48.png",
-        "128": "icon/icon128.png"
-    },
-    "options_ui": {
-        "page": "./options/options.html",
-        "open_in_tab": true,
-        "chrome_style": false
-    },
-    "manifest_version": 2
+    "web_accessible_resources": [
+        {
+            "resources": ["**/*.css", "**/*.png", "google/*"],
+            "matches": ["<all_urls>"]
+        }
+    ]
 }

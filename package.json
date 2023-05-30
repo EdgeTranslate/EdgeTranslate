@@ -38,7 +38,9 @@
         "husky": "^4.3.8",
         "jest": "^27.5.1",
         "prettier": "^2.6.0",
-        "turbo": "^1.2.16"
+        "turbo": "^1.2.16",
+        "typescript": "^5.0.4",
+        "vite": "^4.3.9"
     },
     "workspaces": [
         "packages/*"

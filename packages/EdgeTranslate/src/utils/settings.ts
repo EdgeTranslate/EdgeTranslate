@@ -1,9 +1,11 @@
-import { BROWSER_LANGUAGES_MAP } from "common/scripts/languages.js";
+import Browser from "webextension-polyfill";
+import { BROWSER_LANGUAGES_MAP } from "./languages";
+import { SyncData, SyncDataKey } from "~/types";
 
 /**
  * default settings for this extension
  */
-const DEFAULT_SETTINGS = {
+export const DEFAULT_SETTINGS: SyncData = {
     blacklist: {
         urls: {},
         domains: { "chrome.google.com": true, extensions: true },
@@ -19,7 +21,12 @@ const DEFAULT_SETTINGS = {
         SelectTranslatePosition: "TopRight",
     },
     // Default settings of source language and target language
-    languageSetting: { sl: "auto", tl: BROWSER_LANGUAGES_MAP[chrome.i18n.getUILanguage()] },
+    languageSetting: {
+        sl: "auto",
+        tl: BROWSER_LANGUAGES_MAP[
+            Browser.i18n.getUILanguage() as keyof typeof BROWSER_LANGUAGES_MAP
+        ],
+    },
     OtherSettings: {
         MutualTranslate: false,
         SelectTranslate: true,
@@ -74,19 +81,25 @@ const DEFAULT_SETTINGS = {
 
 /**
  * assign default value to settings which are undefined in recursive way
- * @param {*} result setting result stored in chrome.storage
- * @param {*} settings default settings
+ * @param result setting result stored in Browser.storage
+ * @param settings default settings
  */
-function setDefaultSettings(result, settings) {
+export function setDefaultSettings(
+    result: Record<string, unknown>,
+    settings: Record<string, unknown>
+) {
     for (let i in settings) {
         // settings[i] contains key-value settings
         if (
             typeof settings[i] === "object" &&
             !(settings[i] instanceof Array) &&
-            Object.keys(settings[i]).length > 0
+            Object.keys(settings[i] as {}).length > 0
         ) {
             if (result[i]) {
-                setDefaultSettings(result[i], settings[i]);
+                setDefaultSettings(
+                    result[i] as Record<string, unknown>,
+                    settings[i] as Record<string, unknown>
+                );
             } else {
                 // settings[i] contains several setting items but these have not been set before
                 result[i] = settings[i];
@@ -102,43 +115,37 @@ function setDefaultSettings(result, settings) {
  * Get settings from storage. If some of the settings have not been initialized,
  * initialize them with the given default values.
  *
- * @param {String | Array<String>} settings setting name to get
- * @param {Object | Function} defaults default values or function to generate default values
- * @returns {Promise<Any>} settings
+ * @param settings setting name to get
+ * @param defaults default values or function to generate default values
+ * @returns settings
  */
-function getOrSetDefaultSettings(settings, defaults) {
-    return new Promise((resolve) => {
-        // If there is only one setting to get, warp it up.
-        if (typeof settings === "string") {
-            settings = [settings];
-        } else if (settings === undefined) {
-            // If settings is undefined, collect all setting keys in defaults.
-            settings = [];
-            for (let key in defaults) {
-                settings.push(key);
-            }
+export async function getOrSetDefaultSettings(
+    settings: SyncDataKey | SyncDataKey[],
+    defaults: SyncData | ((arg: typeof settings) => SyncData)
+) {
+    // If there is only one setting to get, warp it up.
+    if (typeof settings === "string") {
+        settings = [settings];
+    } else if (settings === undefined) {
+        // If settings is undefined, collect all setting keys in defaults.
+        settings = [];
+        for (let key in defaults) {
+            settings.push(key as SyncDataKey);
         }
+    }
+    const result = (await Browser.storage.sync.get(settings)) as SyncData;
+    let updated = false;
 
-        chrome.storage.sync.get(settings, (result) => {
-            let updated = false;
-
-            for (let setting of settings) {
-                if (!result[setting]) {
-                    if (typeof defaults === "function") {
-                        defaults = defaults(settings);
-                    }
-                    result[setting] = defaults[setting];
-                    updated = true;
-                }
+    for (let setting of settings) {
+        if (!result[setting]) {
+            if (typeof defaults === "function") {
+                defaults = defaults(settings);
             }
+            result[setting] = defaults[setting] as never;
+            updated = true;
+        }
+    }
 
-            if (updated) {
-                chrome.storage.sync.set(result, () => resolve(result));
-            } else {
-                resolve(result);
-            }
-        });
-    });
+    if (updated) await Browser.storage.sync.set(result);
+    return result;
 }
-
-export { DEFAULT_SETTINGS, setDefaultSettings, getOrSetDefaultSettings };

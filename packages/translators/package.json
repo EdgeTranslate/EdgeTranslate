@@ -16,7 +16,7 @@
     ],
     "main": "dist/translators.umd.js",
     "unpkg": "dist/translators.iife.js",
-    "module": "./dist/translators.es.js",
+    "module": "./dist/translators.mjs",
     "types": "./dist/types/index.d.ts",
     "devDependencies": {
         "@types/chrome": "^0.0.190",
@@ -24,9 +24,7 @@
         "jest": "^28.1.1",
         "jest-chrome": "^0.7.2",
         "jest-environment-jsdom": "^28.1.1",
-        "ts-jest": "^28.0.5",
-        "typescript": "^4.7.4",
-        "vite": "^2.9.13"
+        "ts-jest": "^28.0.5"
     },
     "peerDependencies": {
         "axios": "^0.27.2"

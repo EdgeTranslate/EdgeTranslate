@@ -1,5 +1,3 @@
-/** @jsx h */
-import { h } from "preact";
 import styled from "styled-components";
 import { useEffect, useRef } from "preact/hooks";
 import { ContentWrapperCenterClassName } from "./Panel.jsx";

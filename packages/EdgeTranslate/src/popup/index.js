@@ -1,7 +1,7 @@
 import { LANGUAGES } from "@edge_translate/translators";
-import Channel from "common/scripts/channel.js";
+import Channel from "~/utils/channel";
 import { i18nHTML } from "common/scripts/common.js";
-import { DEFAULT_SETTINGS, getOrSetDefaultSettings } from "common/scripts/settings.js";
+import { DEFAULT_SETTINGS, getOrSetDefaultSettings } from "~/utils/settings";
 
 /**
  * Communication channel.

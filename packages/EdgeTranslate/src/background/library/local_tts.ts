@@ -1,7 +1,10 @@
 /**
  * Local TTS service provider.
  */
-class LocalTTS {
+export default class LocalTTS {
+    private speaking: boolean;
+    private synthesis: SpeechSynthesis;
+
     constructor() {
         this.speaking = false;
         this.synthesis = window.speechSynthesis;
@@ -10,13 +13,13 @@ class LocalTTS {
     /**
      * Speak given text.
      *
-     * @param {String} text text to pronounce
-     * @param {String} language language of text
-     * @param {String} speed "fast" or "slow"
+     * @param text text to pronounce
+     * @param language language of text
+     * @param speed "fast" or "slow"
      *
-     * @returns {boolean} is speaking succeeded?
+     * @returns is speaking succeeded?
      */
-    speak(text, language, speed) {
+    speak(text: string, language: string, speed: "fast" | "slow") {
         // Check if the language is supported.
         if (!this.synthesis.getVoices().find((voice) => voice.lang.startsWith(language))) {
             console.log(`No voice for language: "${language}"`);
@@ -44,5 +47,3 @@ class LocalTTS {
         }
     }
 }
-
-export default LocalTTS;

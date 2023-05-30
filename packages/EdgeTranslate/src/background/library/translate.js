@@ -1,16 +1,17 @@
+import Browser from "webextension-polyfill";
 import { HybridTranslator } from "@edge_translate/translators";
-import { log } from "common/scripts/common.js";
-import { promiseTabs, delayPromise } from "common/scripts/promise.js";
-import { DEFAULT_SETTINGS, getOrSetDefaultSettings } from "common/scripts/settings.js";
-import LocalTTS from "./local_tts.js";
+import { log } from "~/utils/index";
+import { delayPromise } from "~/utils/delay_promise";
+import { DEFAULT_SETTINGS, getOrSetDefaultSettings } from "~/utils/settings";
+import LocalTTS from "./local_tts";
 
 class TranslatorManager {
     /**
-     * @param {import("../../common/scripts/channel.js").default} channel Communication channel.
+     * @param {import("~/utils/channel").default} channel Communication channel.
      */
     constructor(channel) {
         /**
-         * @type {import("../../common/scripts/channel.js").default} Communication channel.
+         * @type {import("~/utils/channel").default} Communication channel.
          */
         this.channel = channel;
 
@@ -144,7 +145,7 @@ class TranslatorManager {
      */
     async getCurrentTabId() {
         let tabId = -1;
-        const tabs = await promiseTabs.query({ active: true, currentWindow: true });
+        const tabs = await Browser.tabs.query({ active: true, currentWindow: true });
         tabId = tabs[0].id;
 
         // to test whether the current tab can receive message(display results)
@@ -173,7 +174,7 @@ class TranslatorManager {
             const noticePageUrl = chrome.runtime.getURL("content/notice/notice.html");
             // get the tab id of an existing notice page
             try {
-                const tab = (await promiseTabs.query({ url: noticePageUrl }))[0];
+                const tab = (await Browser.tabs.query({ url: noticePageUrl }))[0];
                 // jump to the existed page
                 chrome.tabs.highlight({
                     tabs: tab.index,
@@ -181,7 +182,7 @@ class TranslatorManager {
                 tabId = tab.id;
             } catch (error) {
                 // create a new notice page
-                const tab = await promiseTabs.create({
+                const tab = await Browser.tabs.create({
                     url: noticePageUrl,
                     active: true,
                 });
@@ -401,7 +402,7 @@ class TranslatorManager {
         });
 
         // Inform result frame to update options.
-        promiseTabs.query({ active: true, currentWindow: true }).then((tabs) =>
+        Browser.tabs.query({ active: true, currentWindow: true }).then((tabs) =>
             this.channel.emitToTabs(tabs[0].id, "update_translator_options", {
                 selectedTranslator,
                 availableTranslators,
@@ -428,7 +429,7 @@ class TranslatorManager {
 /**
  * 使用用户选定的网页翻译引擎翻译当前网页。
  *
- * @param {import("../../common/scripts/channel.js").default} channel Communication channel.
+ * @param {import("~/utils/channel").default} channel Communication channel.
  */
 function translatePage(channel) {
     getOrSetDefaultSettings(["DefaultPageTranslator"], DEFAULT_SETTINGS).then((result) => {
@@ -447,7 +448,7 @@ function translatePage(channel) {
 /**
  * 执行谷歌网页翻译相关脚本。
  *
- * @param {import("../../common/scripts/channel.js").default} channel Communication channel.
+ * @param {import("~/utils/channel").default} channel Communication channel.
  */
 function executeGoogleScript(channel) {
     chrome.tabs.executeScript({ file: "/google/init.js" }, (result) => {
@@ -455,7 +456,7 @@ function executeGoogleScript(channel) {
             log(`Chrome runtime error: ${chrome.runtime.lastError}`);
             log(`Detail: ${result}`);
         } else {
-            promiseTabs.query({ active: true, currentWindow: true }).then((tabs) => {
+            Browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
                 channel.emitToTabs(tabs[0].id, "start_page_translate", { translator: "google" });
             });
         }
