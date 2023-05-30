@@ -289,11 +289,20 @@ function shouldTranslate() {
             !(window.isDisplayingResult && window.translateResult.originalText === selectionText)
         );
 
+    /**
+     * Filter out the nodes to avoid the translation button appearing in some unnecessary places.
+     * @param {Node} node the node to be filtered
+     * @returns {boolean} if the node should be passed
+     */
+    const filterNode = (node) => {
+        if (node.nodeType === Node.TEXT_NODE) return true;
+        // BODY is a special case. see https://github.com/EdgeTranslate/EdgeTranslate/issues/531
+        if (node.nodeType === Node.ELEMENT_NODE) return ["BODY"].includes(node.tagName);
+    };
+
     return (
         selectionText.length > 0 &&
-        // Make sure the selected text is not in input elements.
-        (selectionObject.anchorNode.nodeType === Node.TEXT_NODE ||
-            selectionObject.focusNode.nodeType === Node.TEXT_NODE) &&
+        (filterNode(selectionObject.anchorNode) || filterNode(selectionObject.focusNode)) &&
         // Do not re-translate translated text.
         !(window.isDisplayingResult && window.translateResult.originalText === selectionText)
     );
