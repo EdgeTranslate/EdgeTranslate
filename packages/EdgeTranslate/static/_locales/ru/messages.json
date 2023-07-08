@@ -243,10 +243,6 @@
         "message": "Отменить выделение текста после перевода",
         "description": "Отменить выделение текста автоматически после перевода"
     },
-    "YouDaoPageTranslate": {
-        "message": "Переводчик страниц YouDao",
-        "description": "Перевод текущей страницы с помощью YouDao Translate API."
-    },
     "GooglePageTranslate": {
         "message": "Переводчик страниц Google",
         "description": "Перевод текущей страницы с помощью Google Translate API."
@@ -262,10 +258,6 @@
     "TogglePageTranslateBanner": {
         "message": "Toggle page translate banner",
         "description": "Show/Hide page translator's banner."
-    },
-    "TranslatePageYouDao": {
-        "message": "Перевести страницу с помощью YouDao",
-        "description": "Перевод текущей страницы с помощью YouDao Translate API."
     },
     "TranslatePageGoogle": {
         "message": "Перевести страницу с помощью Google",

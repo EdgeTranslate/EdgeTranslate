@@ -1,3 +1,5 @@
+// import { DEFAULT_SETTINGS, getOrSetDefaultSettings } from "common/scripts/settings.js";
+
 // export { sendHitRequest };
 
 // // specification of this module is in: https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters
@@ -60,7 +62,7 @@
 //  * @param {function} callback the callback function executed when the result of settings is ready and value of UseGoogleAnalytics is true
 //  */
 // function useGoogleAnalytics(callback) {
-//     chrome.storage.sync.get("OtherSettings", function(result) {
+//     getOrSetDefaultSettings("OtherSettings", DEFAULT_SETTINGS).then((result) => {
 //         if (result.OtherSettings.UseGoogleAnalytics) callback();
 //     });
 // }
@@ -70,15 +72,12 @@
 //  * @param {function(UUID)} callback the callback function to be executed when the result is returned. If user is new, set a new UUID. UUID is a function parameter as result
 //  */
 // function getUUID(callback) {
-//     chrome.storage.sync.get("UUID", function(result) {
-//         let UUID = result.UUID;
-//         if (!UUID) {
-//             UUID = generateUUID();
-//             chrome.storage.sync.set({
-//                 UUID: UUID
-//             });
-//         }
-//         callback(UUID);
+//     getOrSetDefaultSettings("UUID", () => {
+//         return {
+//             UUID: generateUUID(),
+//         };
+//     }).then((result) => {
+//         callback(result.UUID);
 //     });
 // }
 

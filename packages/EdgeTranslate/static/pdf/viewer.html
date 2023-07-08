@@ -27,14 +27,16 @@ See https://github.com/adobe-type-tools/cmap-resources
     <meta name="google" content="notranslate">
     <title>PDF.js viewer</title>
 
-    <link rel="stylesheet" href="viewer.css">
-    <link rel="stylesheet" href="../content/select/select.css">
-
 <!-- This snippet is used in production (included from viewer.html) -->
 <link rel="resource" type="application/l10n" href="locale/locale.properties">
 <script src="lib/pdf.js"></script>
 
+    <link rel="stylesheet" href="viewer.css">
+
+    <link rel="stylesheet" href="../content/select/select.css">
+
   <script src="viewer.js"></script>
+
     <script src="../content/select/select.js"></script>
     <script src="../content/display/display.js"></script>
     <script src="vimium_c_injector.js"></script>
@@ -168,8 +170,8 @@ See https://github.com/adobe-type-tools/cmap-resources
               <span data-l10n-id="print_label">Print</span>
             </button>
 
-            <button id="secondaryDownload" class="secondaryToolbarButton visibleMediumView" title="Download" tabindex="53" data-l10n-id="download">
-              <span data-l10n-id="download_label">Download</span>
+            <button id="secondaryDownload" class="secondaryToolbarButton visibleMediumView" title="Save" tabindex="53" data-l10n-id="save">
+              <span data-l10n-id="save_label">Save</span>
             </button>
 
             <div class="horizontalToolbarSeparator visibleLargeView"></div>
@@ -178,11 +180,11 @@ See https://github.com/adobe-type-tools/cmap-resources
               <span data-l10n-id="presentation_mode_label">Presentation Mode</span>
             </button>
 
-            <a href="#" id="viewBookmark" class="secondaryToolbarButton" title="Current view (copy or open in new window)" tabindex="55" data-l10n-id="bookmark">
-              <span data-l10n-id="bookmark_label">Current View</span>
+            <a href="#" id="viewBookmark" class="secondaryToolbarButton" title="Current Page (View URL from Current Page)" tabindex="55" data-l10n-id="bookmark1">
+              <span data-l10n-id="bookmark1_label">Current Page</span>
             </a>
 
-            <div class="horizontalToolbarSeparator"></div>
+            <div id="viewBookmarkSeparator" class="horizontalToolbarSeparator"></div>
 
             <button id="firstPage" class="secondaryToolbarButton" title="Go to First Page" tabindex="56" data-l10n-id="first_page">
               <span data-l10n-id="first_page_label">Go to First Page</span>
@@ -273,7 +275,7 @@ See https://github.com/adobe-type-tools/cmap-resources
                     <span data-l10n-id="next_label">Next</span>
                   </button>
                 </div>
-                <input type="number" id="pageNumber" class="toolbarField" title="Page" value="1" size="4" min="1" tabindex="15" data-l10n-id="page" autocomplete="off">
+                <input type="number" id="pageNumber" class="toolbarField" title="Page" value="1" min="1" tabindex="15" data-l10n-id="page" autocomplete="off">
                 <span id="numPages" class="toolbarLabel"></span>
               </div>
               <div id="toolbarViewerRight">
@@ -293,8 +295,8 @@ See https://github.com/adobe-type-tools/cmap-resources
                   <span data-l10n-id="print_label">Print</span>
                 </button>
 
-                <button id="download" class="toolbarButton hiddenMediumView" title="Download" tabindex="33" data-l10n-id="download">
-                  <span data-l10n-id="download_label">Download</span>
+                <button id="download" class="toolbarButton hiddenMediumView" title="Save" tabindex="33" data-l10n-id="save">
+                  <span data-l10n-id="save_label">Save</span>
                 </button>
 
                 <div class="verticalToolbarSeparator hiddenMediumView"></div>

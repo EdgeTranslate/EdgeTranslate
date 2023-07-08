@@ -1,5 +1,6 @@
-import Channel from "../common/scripts/channel.js";
-import { i18nHTML } from "../common/scripts/common.js";
+import Channel from "common/scripts/channel.js";
+import { i18nHTML } from "common/scripts/common.js";
+import { DEFAULT_SETTINGS, getOrSetDefaultSettings } from "common/scripts/settings.js";
 
 /**
  * Communication channel.
@@ -19,19 +20,21 @@ window.onload = () => {
     /**
      * Set up hybrid translate config.
      */
-    chrome.storage.sync.get(["languageSetting", "HybridTranslatorConfig"], async (result) => {
-        let config = result.HybridTranslatorConfig;
-        let languageSetting = result.languageSetting;
-        let availableTranslators = await channel.request("get_available_translators", {
-            from: languageSetting.sl,
-            to: languageSetting.tl,
-        });
-        setUpTranslateConfig(
-            config,
-            // Remove the hybrid translator at the beginning of the availableTranslators array.
-            availableTranslators.slice(1)
-        );
-    });
+    getOrSetDefaultSettings(["languageSetting", "HybridTranslatorConfig"], DEFAULT_SETTINGS).then(
+        async (result) => {
+            let config = result.HybridTranslatorConfig;
+            let languageSetting = result.languageSetting;
+            let availableTranslators = await channel.request("get_available_translators", {
+                from: languageSetting.sl,
+                to: languageSetting.tl,
+            });
+            setUpTranslateConfig(
+                config,
+                // Remove the hybrid translator at the beginning of the availableTranslators array.
+                availableTranslators.slice(1)
+            );
+        }
+    );
 
     /**
      * Update translator config options on translator config update.
@@ -45,7 +48,7 @@ window.onload = () => {
      * attribute "setting-type": indicate the setting type of one option
      * attribute "setting-path": indicate the nested setting path. used to locate the path of one setting item in chrome storage
      */
-    chrome.storage.sync.get((result) => {
+    getOrSetDefaultSettings(undefined, DEFAULT_SETTINGS).then((result) => {
         let inputElements = document.getElementsByTagName("input");
         const selectTranslatePositionElement = document.getElementById("select-translate-position");
         for (let element of [...inputElements, selectTranslatePositionElement]) {
