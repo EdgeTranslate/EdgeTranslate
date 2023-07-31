@@ -1,1 +1,1072 @@
-__callback__({"sl":{"auto":"Tsinkayo harshe","sk":"Basulake","fr":"Faransanci","af":"Harshen Afirkanci","sq":"Harshen Albaniya","am":"Harshen Amharik","hy":"Harshen Armeniyanci","az":"Harshen Azerbaijanci","eu":"Harshen Basque","be":"Harshen Belarushiyanci","bn":"Harshen Bengali","bs":"Harshen Bosniyanci","bg":"Harshen Bulgariyanci","ceb":"Harshen Cebuano","ny":"Harshen Chichewa","ht":"Harshen Creole na Haiti","hr":"Harshen Croatia","cs":"Harshen Czech","da":"Harshen Danish","nl":"Harshen Dutch","eo":"Harshen Esperanto","fa":"Harshen Farisanci","tl":"Harshen Filipino","fi":"Harshen Finnish","fy":"Harshen Firsi","gd":"Harshen Gaelic na Scots","gl":"Harshen Galic","el":"Harshen Girka","gu":"Harshen Gujarati","haw":"Harshen Hawaii","iw":"Harshen Hebrew","hmn":"Harshen Hmong","hu":"Harshen Hongeriyanchi","is":"Harshen Icelandic","hi":"Harshen Indiyanci","id":"Harshen Indonesiya","ga":"Harshen Irish","et":"Harshen Istoniyanchi","jw":"Harshen Javanisanci","ka":"Harshen Jojiyanci","kn":"Harshen Kannada","kk":"Harshen Karzakh","ca":"Harshen Kataloniyanchi","km":"Harshen Khmer","rw":"Harshen Kinyarwandanci","ky":"Harshen Kirgizanci","co":"Harshen Kosika","lo":"Harshen Laotian","lv":"Harshen Latbiyanchi","la":"Harshen Latin","lt":"Harshen Lituweniyanchi","lb":"Harshen Luxembourg","mg":"Harshen Malagasy","ms":"Harshen Malay","ml":"Harshen Maleyalam","mt":"Harshen Maltese","mi":"Harshen Maori","mr":"Harshen Marathi","mk":"Harshen Masedoniya","mn":"Harshen Mongolia","my":"Harshen Myanmar (Burma)","ne":"Harshen Nepal","no":"Harshen Norway","ps":"Harshen Pashtanci","pl":"Harshen Polish","pt":"Harshen Portugal","pa":"Harshen Punjabi","ro":"Harshen Romaniyanchi","sm":"Harshen Samoa","sr":"Harshen Serbia","st":"Harshen Sesotanci","zh-CN":"Harshen Sinanci","sd":"Harshen Sindiyanci","so":"Harshen Somaliya","su":"Harshen Sudan","sl":"Harshen Sulobeniya","sw":"Harshen Swahili","sv":"Harshen Swedish","sn":"Harshen Shona","tg":"Harshen Tajik","ta":"Harshen Tamil","tt":"Harshen Tatar","th":"Harshen Tayanci","te":"Harshen Telugu","en":"Harshen Turanci","tr":"Harshen Turkiyya","uk":"Harshen Ukrain","ur":"Harshen Urdu","uz":"Harshen Uzbek","vi":"Harshen Vietnamese","cy":"Harshen Welsh","xh":"Harshen Xhosa","yi":"Harshen Yiddish","zu":"Harshen Zulu","ha":"Hausa","ig":"Igbo","it":"Italiyanci","ja":"Jafananchi","de":"Jamusanci","ko":"Koriyanci","ku":"Kurdish (Kurmanji)","ar":"Larabci","ru":"Rashiyanchi","es":"Sifaniyanci","si":"Sinhala","tk":"Tukmenistanci","ug":"Uyghur","yo":"Yarabanchi","or":"Yaren Odia (Oriya)"},"tl":{"sk":"Basulake","fr":"Faransanci","af":"Harshen Afirkanci","sq":"Harshen Albaniya","am":"Harshen Amharik","hy":"Harshen Armeniyanci","az":"Harshen Azerbaijanci","eu":"Harshen Basque","be":"Harshen Belarushiyanci","bn":"Harshen Bengali","bs":"Harshen Bosniyanci","bg":"Harshen Bulgariyanci","ceb":"Harshen Cebuano","ny":"Harshen Chichewa","ht":"Harshen Creole na Haiti","hr":"Harshen Croatia","cs":"Harshen Czech","da":"Harshen Danish","nl":"Harshen Dutch","eo":"Harshen Esperanto","fa":"Harshen Farisanci","tl":"Harshen Filipino","fi":"Harshen Finnish","fy":"Harshen Firsi","gd":"Harshen Gaelic na Scots","gl":"Harshen Galic","el":"Harshen Girka","gu":"Harshen Gujarati","haw":"Harshen Hawaii","iw":"Harshen Hebrew","hmn":"Harshen Hmong","hu":"Harshen Hongeriyanchi","is":"Harshen Icelandic","hi":"Harshen Indiyanci","id":"Harshen Indonesiya","ga":"Harshen Irish","et":"Harshen Istoniyanchi","jw":"Harshen Javanisanci","ka":"Harshen Jojiyanci","kn":"Harshen Kannada","kk":"Harshen Karzakh","ca":"Harshen Kataloniyanchi","km":"Harshen Khmer","rw":"Harshen Kinyarwandanci","ky":"Harshen Kirgizanci","co":"Harshen Kosika","lo":"Harshen Laotian","lv":"Harshen Latbiyanchi","la":"Harshen Latin","lt":"Harshen Lituweniyanchi","lb":"Harshen Luxembourg","mg":"Harshen Malagasy","ms":"Harshen Malay","ml":"Harshen Maleyalam","mt":"Harshen Maltese","mi":"Harshen Maori","mr":"Harshen Marathi","mk":"Harshen Masedoniya","mn":"Harshen Mongolia","my":"Harshen Myanmar (Burma)","ne":"Harshen Nepal","no":"Harshen Norway","ps":"Harshen Pashtanci","pl":"Harshen Polish","pt":"Harshen Portugal","pa":"Harshen Punjabi","ro":"Harshen Romaniyanchi","sm":"Harshen Samoa","sr":"Harshen Serbia","st":"Harshen Sesotanci","zh-CN":"Harshen Sinanci (A Saukake)","zh-TW":"Harshen Sinanci (Na Gargajiya)","sd":"Harshen Sindiyanci","so":"Harshen Somaliya","su":"Harshen Sudan","sl":"Harshen Sulobeniya","sw":"Harshen Swahili","sv":"Harshen Swedish","sn":"Harshen Shona","tg":"Harshen Tajik","ta":"Harshen Tamil","tt":"Harshen Tatar","th":"Harshen Tayanci","te":"Harshen Telugu","en":"Harshen Turanci","tr":"Harshen Turkiyya","uk":"Harshen Ukrain","ur":"Harshen Urdu","uz":"Harshen Uzbek","vi":"Harshen Vietnamese","cy":"Harshen Welsh","xh":"Harshen Xhosa","yi":"Harshen Yiddish","zu":"Harshen Zulu","ha":"Hausa","ig":"Igbo","it":"Italiyanci","ja":"Jafananchi","de":"Jamusanci","ko":"Koriyanci","ku":"Kurdish (Kurmanji)","ar":"Larabci","ru":"Rashiyanchi","es":"Sifaniyanci","si":"Sinhala","tk":"Tukmenistanci","ug":"Uyghur","yo":"Yarabanchi","or":"Yaren Odia (Oriya)"},"al":{}})
+// API callback
+callback({
+  "sourceLanguages": [
+    {
+      "language": "auto",
+      "name": "Tsinkayo harshe"
+    },
+    {
+      "language": "as",
+      "name": "Asamisanci"
+    },
+    {
+      "language": "sk",
+      "name": "Basulake"
+    },
+    {
+      "language": "fr",
+      "name": "Faransanci"
+    },
+    {
+      "language": "gn",
+      "name": "Guwaraniyanci"
+    },
+    {
+      "language": "af",
+      "name": "Harshen Afirkanci"
+    },
+    {
+      "language": "sq",
+      "name": "Harshen Albaniya"
+    },
+    {
+      "language": "am",
+      "name": "Harshen Amharik"
+    },
+    {
+      "language": "hy",
+      "name": "Harshen Armeniyanci"
+    },
+    {
+      "language": "az",
+      "name": "Harshen Azerbaijanci"
+    },
+    {
+      "language": "eu",
+      "name": "Harshen Basque"
+    },
+    {
+      "language": "be",
+      "name": "Harshen Belarushiyanci"
+    },
+    {
+      "language": "bn",
+      "name": "Harshen Bengali"
+    },
+    {
+      "language": "bs",
+      "name": "Harshen Bosniyanci"
+    },
+    {
+      "language": "bg",
+      "name": "Harshen Bulgariyanci"
+    },
+    {
+      "language": "ceb",
+      "name": "Harshen Cebuano"
+    },
+    {
+      "language": "ny",
+      "name": "Harshen Chichewa"
+    },
+    {
+      "language": "ht",
+      "name": "Harshen Creole na Haiti"
+    },
+    {
+      "language": "hr",
+      "name": "Harshen Croatia"
+    },
+    {
+      "language": "cs",
+      "name": "Harshen Czech"
+    },
+    {
+      "language": "da",
+      "name": "Harshen Danish"
+    },
+    {
+      "language": "dv",
+      "name": "Harshen Dhivehi"
+    },
+    {
+      "language": "nl",
+      "name": "Harshen Dutch"
+    },
+    {
+      "language": "eo",
+      "name": "Harshen Esperanto"
+    },
+    {
+      "language": "fa",
+      "name": "Harshen Farisanci"
+    },
+    {
+      "language": "tl",
+      "name": "Harshen Filipino"
+    },
+    {
+      "language": "fi",
+      "name": "Harshen Finnish"
+    },
+    {
+      "language": "fy",
+      "name": "Harshen Firsi"
+    },
+    {
+      "language": "gd",
+      "name": "Harshen Gaelic na Scots"
+    },
+    {
+      "language": "gl",
+      "name": "Harshen Galic"
+    },
+    {
+      "language": "el",
+      "name": "Harshen Girka"
+    },
+    {
+      "language": "gu",
+      "name": "Harshen Gujarati"
+    },
+    {
+      "language": "haw",
+      "name": "Harshen Hawaii"
+    },
+    {
+      "language": "iw",
+      "name": "Harshen Hebrew"
+    },
+    {
+      "language": "hmn",
+      "name": "Harshen Hmong"
+    },
+    {
+      "language": "hu",
+      "name": "Harshen Hongeriyanchi"
+    },
+    {
+      "language": "is",
+      "name": "Harshen Icelandic"
+    },
+    {
+      "language": "ilo",
+      "name": "Harshen Ilokano"
+    },
+    {
+      "language": "hi",
+      "name": "Harshen Indiyanci"
+    },
+    {
+      "language": "id",
+      "name": "Harshen Indonesiya"
+    },
+    {
+      "language": "ga",
+      "name": "Harshen Irish"
+    },
+    {
+      "language": "et",
+      "name": "Harshen Istoniyanchi"
+    },
+    {
+      "language": "jw",
+      "name": "Harshen Javanisanci"
+    },
+    {
+      "language": "ka",
+      "name": "Harshen Jojiyanci"
+    },
+    {
+      "language": "kn",
+      "name": "Harshen Kannada"
+    },
+    {
+      "language": "kk",
+      "name": "Harshen Karzakh"
+    },
+    {
+      "language": "ca",
+      "name": "Harshen Kataloniyanchi"
+    },
+    {
+      "language": "km",
+      "name": "Harshen Khmer"
+    },
+    {
+      "language": "rw",
+      "name": "Harshen Kinyarwandanci"
+    },
+    {
+      "language": "ky",
+      "name": "Harshen Kirgizanci"
+    },
+    {
+      "language": "gom",
+      "name": "Harshen Konkani"
+    },
+    {
+      "language": "co",
+      "name": "Harshen Kosika"
+    },
+    {
+      "language": "ku",
+      "name": "Harshen Kurdish (Kurmanji)"
+    },
+    {
+      "language": "ckb",
+      "name": "Harshen Kurdish (Sorani)"
+    },
+    {
+      "language": "lo",
+      "name": "Harshen Laotian"
+    },
+    {
+      "language": "lv",
+      "name": "Harshen Latbiyanchi"
+    },
+    {
+      "language": "la",
+      "name": "Harshen Latin"
+    },
+    {
+      "language": "ln",
+      "name": "Harshen Lingala"
+    },
+    {
+      "language": "lt",
+      "name": "Harshen Lituweniyanchi"
+    },
+    {
+      "language": "lb",
+      "name": "Harshen Luxembourg"
+    },
+    {
+      "language": "mg",
+      "name": "Harshen Malagasy"
+    },
+    {
+      "language": "ms",
+      "name": "Harshen Malay"
+    },
+    {
+      "language": "ml",
+      "name": "Harshen Maleyalam"
+    },
+    {
+      "language": "mt",
+      "name": "Harshen Maltese"
+    },
+    {
+      "language": "mi",
+      "name": "Harshen Maori"
+    },
+    {
+      "language": "mr",
+      "name": "Harshen Marathi"
+    },
+    {
+      "language": "mk",
+      "name": "Harshen Masedoniya"
+    },
+    {
+      "language": "mni-Mtei",
+      "name": "Harshen Meiteilon (Manipuri)"
+    },
+    {
+      "language": "mn",
+      "name": "Harshen Mongolia"
+    },
+    {
+      "language": "my",
+      "name": "Harshen Myanmar (Burma)"
+    },
+    {
+      "language": "ne",
+      "name": "Harshen Nepal"
+    },
+    {
+      "language": "no",
+      "name": "Harshen Norway"
+    },
+    {
+      "language": "ps",
+      "name": "Harshen Pashtanci"
+    },
+    {
+      "language": "pl",
+      "name": "Harshen Polish"
+    },
+    {
+      "language": "pt",
+      "name": "Harshen Portugal"
+    },
+    {
+      "language": "pa",
+      "name": "Harshen Punjabi"
+    },
+    {
+      "language": "ro",
+      "name": "Harshen Romaniyanchi"
+    },
+    {
+      "language": "sm",
+      "name": "Harshen Samoa"
+    },
+    {
+      "language": "nso",
+      "name": "Harshen Sepedi"
+    },
+    {
+      "language": "sr",
+      "name": "Harshen Serbia"
+    },
+    {
+      "language": "st",
+      "name": "Harshen Sesotanci"
+    },
+    {
+      "language": "zh-CN",
+      "name": "Harshen Sinanci"
+    },
+    {
+      "language": "sd",
+      "name": "Harshen Sindiyanci"
+    },
+    {
+      "language": "so",
+      "name": "Harshen Somaliya"
+    },
+    {
+      "language": "su",
+      "name": "Harshen Sudan"
+    },
+    {
+      "language": "sl",
+      "name": "Harshen Sulobeniya"
+    },
+    {
+      "language": "sw",
+      "name": "Harshen Swahili"
+    },
+    {
+      "language": "sv",
+      "name": "Harshen Swedish"
+    },
+    {
+      "language": "sn",
+      "name": "Harshen Shona"
+    },
+    {
+      "language": "tg",
+      "name": "Harshen Tajik"
+    },
+    {
+      "language": "ta",
+      "name": "Harshen Tamil"
+    },
+    {
+      "language": "tt",
+      "name": "Harshen Tatar"
+    },
+    {
+      "language": "th",
+      "name": "Harshen Tayanci"
+    },
+    {
+      "language": "te",
+      "name": "Harshen Telugu"
+    },
+    {
+      "language": "en",
+      "name": "Harshen Turanci"
+    },
+    {
+      "language": "tr",
+      "name": "Harshen Turkiyya"
+    },
+    {
+      "language": "ts",
+      "name": "Harshen Tsonga"
+    },
+    {
+      "language": "uk",
+      "name": "Harshen Ukrain"
+    },
+    {
+      "language": "ur",
+      "name": "Harshen Urdu"
+    },
+    {
+      "language": "uz",
+      "name": "Harshen Uzbek"
+    },
+    {
+      "language": "vi",
+      "name": "Harshen Vietnamese"
+    },
+    {
+      "language": "cy",
+      "name": "Harshen Welsh"
+    },
+    {
+      "language": "xh",
+      "name": "Harshen Xhosa"
+    },
+    {
+      "language": "yi",
+      "name": "Harshen Yiddish"
+    },
+    {
+      "language": "zu",
+      "name": "Harshen Zulu"
+    },
+    {
+      "language": "ha",
+      "name": "Hausa"
+    },
+    {
+      "language": "ig",
+      "name": "Igbo"
+    },
+    {
+      "language": "it",
+      "name": "Italiyanci"
+    },
+    {
+      "language": "ja",
+      "name": "Jafananchi"
+    },
+    {
+      "language": "de",
+      "name": "Jamusanci"
+    },
+    {
+      "language": "ko",
+      "name": "Koriyanci"
+    },
+    {
+      "language": "ar",
+      "name": "Larabci"
+    },
+    {
+      "language": "ru",
+      "name": "Rashiyanchi"
+    },
+    {
+      "language": "sa",
+      "name": "sanskrit"
+    },
+    {
+      "language": "es",
+      "name": "Sifaniyanci"
+    },
+    {
+      "language": "si",
+      "name": "Sinhala"
+    },
+    {
+      "language": "ti",
+      "name": "Tigriyanci"
+    },
+    {
+      "language": "ak",
+      "name": "Tiwiniyanci"
+    },
+    {
+      "language": "tk",
+      "name": "Tukmenistanci"
+    },
+    {
+      "language": "ug",
+      "name": "Uyghur"
+    },
+    {
+      "language": "yo",
+      "name": "Yarabanchi"
+    },
+    {
+      "language": "ay",
+      "name": "Yaren Aymara"
+    },
+    {
+      "language": "bm",
+      "name": "Yaren Bambara"
+    },
+    {
+      "language": "bho",
+      "name": "Yaren Bhojpuri"
+    },
+    {
+      "language": "doi",
+      "name": "Yaren Dogri"
+    },
+    {
+      "language": "ee",
+      "name": "Yaren Ewe"
+    },
+    {
+      "language": "kri",
+      "name": "Yaren Krio"
+    },
+    {
+      "language": "lg",
+      "name": "Yaren Luganda"
+    },
+    {
+      "language": "mai",
+      "name": "Yaren Maithili"
+    },
+    {
+      "language": "lus",
+      "name": "Yaren Mizo"
+    },
+    {
+      "language": "or",
+      "name": "Yaren Odia (Oriya)"
+    },
+    {
+      "language": "om",
+      "name": "Yaren Oromo"
+    },
+    {
+      "language": "qu",
+      "name": "Yaren Quechua"
+    }
+  ],
+  "targetLanguages": [
+    {
+      "language": "as",
+      "name": "Asamisanci"
+    },
+    {
+      "language": "sk",
+      "name": "Basulake"
+    },
+    {
+      "language": "fr",
+      "name": "Faransanci"
+    },
+    {
+      "language": "gn",
+      "name": "Guwaraniyanci"
+    },
+    {
+      "language": "af",
+      "name": "Harshen Afirkanci"
+    },
+    {
+      "language": "sq",
+      "name": "Harshen Albaniya"
+    },
+    {
+      "language": "am",
+      "name": "Harshen Amharik"
+    },
+    {
+      "language": "hy",
+      "name": "Harshen Armeniyanci"
+    },
+    {
+      "language": "az",
+      "name": "Harshen Azerbaijanci"
+    },
+    {
+      "language": "eu",
+      "name": "Harshen Basque"
+    },
+    {
+      "language": "be",
+      "name": "Harshen Belarushiyanci"
+    },
+    {
+      "language": "bn",
+      "name": "Harshen Bengali"
+    },
+    {
+      "language": "bs",
+      "name": "Harshen Bosniyanci"
+    },
+    {
+      "language": "bg",
+      "name": "Harshen Bulgariyanci"
+    },
+    {
+      "language": "ceb",
+      "name": "Harshen Cebuano"
+    },
+    {
+      "language": "ny",
+      "name": "Harshen Chichewa"
+    },
+    {
+      "language": "ht",
+      "name": "Harshen Creole na Haiti"
+    },
+    {
+      "language": "hr",
+      "name": "Harshen Croatia"
+    },
+    {
+      "language": "cs",
+      "name": "Harshen Czech"
+    },
+    {
+      "language": "da",
+      "name": "Harshen Danish"
+    },
+    {
+      "language": "dv",
+      "name": "Harshen Dhivehi"
+    },
+    {
+      "language": "nl",
+      "name": "Harshen Dutch"
+    },
+    {
+      "language": "eo",
+      "name": "Harshen Esperanto"
+    },
+    {
+      "language": "fa",
+      "name": "Harshen Farisanci"
+    },
+    {
+      "language": "tl",
+      "name": "Harshen Filipino"
+    },
+    {
+      "language": "fi",
+      "name": "Harshen Finnish"
+    },
+    {
+      "language": "fy",
+      "name": "Harshen Firsi"
+    },
+    {
+      "language": "gd",
+      "name": "Harshen Gaelic na Scots"
+    },
+    {
+      "language": "gl",
+      "name": "Harshen Galic"
+    },
+    {
+      "language": "el",
+      "name": "Harshen Girka"
+    },
+    {
+      "language": "gu",
+      "name": "Harshen Gujarati"
+    },
+    {
+      "language": "haw",
+      "name": "Harshen Hawaii"
+    },
+    {
+      "language": "iw",
+      "name": "Harshen Hebrew"
+    },
+    {
+      "language": "hmn",
+      "name": "Harshen Hmong"
+    },
+    {
+      "language": "hu",
+      "name": "Harshen Hongeriyanchi"
+    },
+    {
+      "language": "is",
+      "name": "Harshen Icelandic"
+    },
+    {
+      "language": "ilo",
+      "name": "Harshen Ilokano"
+    },
+    {
+      "language": "hi",
+      "name": "Harshen Indiyanci"
+    },
+    {
+      "language": "id",
+      "name": "Harshen Indonesiya"
+    },
+    {
+      "language": "ga",
+      "name": "Harshen Irish"
+    },
+    {
+      "language": "et",
+      "name": "Harshen Istoniyanchi"
+    },
+    {
+      "language": "jw",
+      "name": "Harshen Javanisanci"
+    },
+    {
+      "language": "ka",
+      "name": "Harshen Jojiyanci"
+    },
+    {
+      "language": "kn",
+      "name": "Harshen Kannada"
+    },
+    {
+      "language": "kk",
+      "name": "Harshen Karzakh"
+    },
+    {
+      "language": "ca",
+      "name": "Harshen Kataloniyanchi"
+    },
+    {
+      "language": "km",
+      "name": "Harshen Khmer"
+    },
+    {
+      "language": "rw",
+      "name": "Harshen Kinyarwandanci"
+    },
+    {
+      "language": "ky",
+      "name": "Harshen Kirgizanci"
+    },
+    {
+      "language": "gom",
+      "name": "Harshen Konkani"
+    },
+    {
+      "language": "co",
+      "name": "Harshen Kosika"
+    },
+    {
+      "language": "ku",
+      "name": "Harshen Kurdish (Kurmanji)"
+    },
+    {
+      "language": "ckb",
+      "name": "Harshen Kurdish (Sorani)"
+    },
+    {
+      "language": "lo",
+      "name": "Harshen Laotian"
+    },
+    {
+      "language": "lv",
+      "name": "Harshen Latbiyanchi"
+    },
+    {
+      "language": "la",
+      "name": "Harshen Latin"
+    },
+    {
+      "language": "ln",
+      "name": "Harshen Lingala"
+    },
+    {
+      "language": "lt",
+      "name": "Harshen Lituweniyanchi"
+    },
+    {
+      "language": "lb",
+      "name": "Harshen Luxembourg"
+    },
+    {
+      "language": "mg",
+      "name": "Harshen Malagasy"
+    },
+    {
+      "language": "ms",
+      "name": "Harshen Malay"
+    },
+    {
+      "language": "ml",
+      "name": "Harshen Maleyalam"
+    },
+    {
+      "language": "mt",
+      "name": "Harshen Maltese"
+    },
+    {
+      "language": "mi",
+      "name": "Harshen Maori"
+    },
+    {
+      "language": "mr",
+      "name": "Harshen Marathi"
+    },
+    {
+      "language": "mk",
+      "name": "Harshen Masedoniya"
+    },
+    {
+      "language": "mni-Mtei",
+      "name": "Harshen Meiteilon (Manipuri)"
+    },
+    {
+      "language": "mn",
+      "name": "Harshen Mongolia"
+    },
+    {
+      "language": "my",
+      "name": "Harshen Myanmar (Burma)"
+    },
+    {
+      "language": "ne",
+      "name": "Harshen Nepal"
+    },
+    {
+      "language": "no",
+      "name": "Harshen Norway"
+    },
+    {
+      "language": "ps",
+      "name": "Harshen Pashtanci"
+    },
+    {
+      "language": "pl",
+      "name": "Harshen Polish"
+    },
+    {
+      "language": "pt",
+      "name": "Harshen Portugal"
+    },
+    {
+      "language": "pa",
+      "name": "Harshen Punjabi"
+    },
+    {
+      "language": "ro",
+      "name": "Harshen Romaniyanchi"
+    },
+    {
+      "language": "sm",
+      "name": "Harshen Samoa"
+    },
+    {
+      "language": "nso",
+      "name": "Harshen Sepedi"
+    },
+    {
+      "language": "sr",
+      "name": "Harshen Serbia"
+    },
+    {
+      "language": "st",
+      "name": "Harshen Sesotanci"
+    },
+    {
+      "language": "zh-CN",
+      "name": "Harshen Sinanci (A Saukake)"
+    },
+    {
+      "language": "zh-TW",
+      "name": "Harshen Sinanci (Na Gargajiya)"
+    },
+    {
+      "language": "sd",
+      "name": "Harshen Sindiyanci"
+    },
+    {
+      "language": "so",
+      "name": "Harshen Somaliya"
+    },
+    {
+      "language": "su",
+      "name": "Harshen Sudan"
+    },
+    {
+      "language": "sl",
+      "name": "Harshen Sulobeniya"
+    },
+    {
+      "language": "sw",
+      "name": "Harshen Swahili"
+    },
+    {
+      "language": "sv",
+      "name": "Harshen Swedish"
+    },
+    {
+      "language": "sn",
+      "name": "Harshen Shona"
+    },
+    {
+      "language": "tg",
+      "name": "Harshen Tajik"
+    },
+    {
+      "language": "ta",
+      "name": "Harshen Tamil"
+    },
+    {
+      "language": "tt",
+      "name": "Harshen Tatar"
+    },
+    {
+      "language": "th",
+      "name": "Harshen Tayanci"
+    },
+    {
+      "language": "te",
+      "name": "Harshen Telugu"
+    },
+    {
+      "language": "en",
+      "name": "Harshen Turanci"
+    },
+    {
+      "language": "tr",
+      "name": "Harshen Turkiyya"
+    },
+    {
+      "language": "ts",
+      "name": "Harshen Tsonga"
+    },
+    {
+      "language": "uk",
+      "name": "Harshen Ukrain"
+    },
+    {
+      "language": "ur",
+      "name": "Harshen Urdu"
+    },
+    {
+      "language": "uz",
+      "name": "Harshen Uzbek"
+    },
+    {
+      "language": "vi",
+      "name": "Harshen Vietnamese"
+    },
+    {
+      "language": "cy",
+      "name": "Harshen Welsh"
+    },
+    {
+      "language": "xh",
+      "name": "Harshen Xhosa"
+    },
+    {
+      "language": "yi",
+      "name": "Harshen Yiddish"
+    },
+    {
+      "language": "zu",
+      "name": "Harshen Zulu"
+    },
+    {
+      "language": "ha",
+      "name": "Hausa"
+    },
+    {
+      "language": "ig",
+      "name": "Igbo"
+    },
+    {
+      "language": "it",
+      "name": "Italiyanci"
+    },
+    {
+      "language": "ja",
+      "name": "Jafananchi"
+    },
+    {
+      "language": "de",
+      "name": "Jamusanci"
+    },
+    {
+      "language": "ko",
+      "name": "Koriyanci"
+    },
+    {
+      "language": "ar",
+      "name": "Larabci"
+    },
+    {
+      "language": "ru",
+      "name": "Rashiyanchi"
+    },
+    {
+      "language": "sa",
+      "name": "sanskrit"
+    },
+    {
+      "language": "es",
+      "name": "Sifaniyanci"
+    },
+    {
+      "language": "si",
+      "name": "Sinhala"
+    },
+    {
+      "language": "ti",
+      "name": "Tigriyanci"
+    },
+    {
+      "language": "ak",
+      "name": "Tiwiniyanci"
+    },
+    {
+      "language": "tk",
+      "name": "Tukmenistanci"
+    },
+    {
+      "language": "ug",
+      "name": "Uyghur"
+    },
+    {
+      "language": "yo",
+      "name": "Yarabanchi"
+    },
+    {
+      "language": "ay",
+      "name": "Yaren Aymara"
+    },
+    {
+      "language": "bm",
+      "name": "Yaren Bambara"
+    },
+    {
+      "language": "bho",
+      "name": "Yaren Bhojpuri"
+    },
+    {
+      "language": "doi",
+      "name": "Yaren Dogri"
+    },
+    {
+      "language": "ee",
+      "name": "Yaren Ewe"
+    },
+    {
+      "language": "kri",
+      "name": "Yaren Krio"
+    },
+    {
+      "language": "lg",
+      "name": "Yaren Luganda"
+    },
+    {
+      "language": "mai",
+      "name": "Yaren Maithili"
+    },
+    {
+      "language": "lus",
+      "name": "Yaren Mizo"
+    },
+    {
+      "language": "or",
+      "name": "Yaren Odia (Oriya)"
+    },
+    {
+      "language": "om",
+      "name": "Yaren Oromo"
+    },
+    {
+      "language": "qu",
+      "name": "Yaren Quechua"
+    }
+  ]
+}
+);
