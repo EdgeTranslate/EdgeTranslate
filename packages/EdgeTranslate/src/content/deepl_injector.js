@@ -27,10 +27,13 @@
          */
         const intervalId = setInterval(() => {
             /**
-             * "target-dummydiv" is the element which holds the translate result.
+             * "lmt__target_textarea" is the element which holds the translate result.
              */
-            const targetDummyDIV = document.getElementById("target-dummydiv");
-            const result = targetDummyDIV ? targetDummyDIV.textContent.trim() : "";
+            const targetTextAreas = document.getElementsByClassName("lmt__target_textarea");
+            const result =
+                targetTextAreas && targetTextAreas.length > 0 && targetTextAreas[0].innerText
+                    ? targetTextAreas[0].innerText.trim()
+                    : "";
 
             if (result.length > 0) {
                 /**

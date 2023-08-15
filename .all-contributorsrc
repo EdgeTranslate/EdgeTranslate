@@ -27,10 +27,10 @@
       ]
     },
     {
-      "login": "Mark-Fenng",
-      "name": "Lucky Feng",
+      "login": "YunFeng0817",
+      "name": "Yun Feng",
       "avatar_url": "https://avatars.githubusercontent.com/u/27533910?v=4",
-      "profile": "https://blog.csdn.net/Clark_Fitz817",
+      "profile": "https://github.com/YunFeng0817",
       "contributions": [
         "code",
         "design",
@@ -40,10 +40,10 @@
       ]
     },
     {
-      "login": "sansroman",
+      "login": "tboevil",
       "name": "Zia",
       "avatar_url": "https://avatars.githubusercontent.com/u/17476682?v=4",
-      "profile": "https://github.com/sansroman",
+      "profile": "https://github.com/tboevil",
       "contributions": [
         "code",
         "design",
@@ -107,10 +107,10 @@
       ]
     },
     {
-      "login": "electrolom42",
-      "name": "ElectroLom",
+      "login": "khan-san",
+      "name": "Khan-San",
       "avatar_url": "https://avatars.githubusercontent.com/u/25820887?v=4",
-      "profile": "https://github.com/electrolom42",
+      "profile": "https://github.com/khan-san",
       "contributions": [
         "translation"
       ]
@@ -140,6 +140,15 @@
       "profile": "https://github.com/knlyknly",
       "contributions": [
         "code"
+      ]
+    },
+    {
+      "login": "wfk007",
+      "name": "fukang wang",
+      "avatar_url": "https://avatars.githubusercontent.com/u/22289445?v=4",
+      "profile": "https://github.com/wfk007",
+      "contributions": [
+        "doc"
       ]
     }
   ],
