@@ -17,7 +17,7 @@ describe("All languages supported by Google web page translate should be in BROW
         });
 
         const langInMain = fs
-            .readdirSync("static/google/main/")
+            .readdirSync("static/google/elms/")
             .map((file) => file.split("_")[1].split(".")[0]);
         langInMain.forEach((lang) => {
             expect(langSet).toContain(lang);
