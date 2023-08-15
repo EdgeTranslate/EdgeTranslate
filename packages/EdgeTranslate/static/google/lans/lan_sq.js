@@ -1,1 +1,1072 @@
-__callback__({"sl":{"auto":"Zbulo gjuhën","af":"Afrikanisht","am":"Amarikisht","en":"Anglisht","ar":"Arabisht","hy":"Armenisht","az":"Azerisht","eu":"Baskisht","bn":"Bengalisht","my":"Birmanisht","be":"Bjellorusisht","bs":"Boshnjakisht","bg":"Bullgarisht","cs":"Çekisht","ny":"Çiçeuaisht","da":"Danisht","eo":"Esperanto","et":"Estonisht","tl":"Filipinase","fi":"Finlandisht","fr":"Frëngjisht","fy":"Frizianisht","gl":"Galicianisht","gd":"Galishte skoceze","el":"Greqisht","gu":"Guxharati","ka":"Gjeorgjisht","de":"Gjermanisht","haw":"Hauajane","ha":"Hausa","iw":"Hebraisht","hi":"Hindisht","hmn":"Hmong","nl":"Holandisht","hu":"Hungarisht","ig":"Igboisht","id":"Indonezisht","ga":"Irlandisht","is":"Islandisht","it":"Italisht","ja":"Japonisht","jw":"Javanisht","yi":"Jidisht","yo":"Joruba","kn":"Kanada","ca":"Katalonisht","kk":"Kazakisht","zh-CN":"Kinezisht","rw":"Kiniaruanda","ky":"Kirgizisht","km":"Kmere","ko":"Koreanisht","co":"Korsikançe","ht":"Kreolishte haitiane","hr":"Kroatisht","ku":"Kurde","lo":"Laosisht","la":"Latinisht","lv":"Letonisht","lt":"Lituanisht","lb":"Luksemburgisht","mg":"Malagasisht","ml":"Malajalamisht","ms":"Malajzisht","mt":"Malteze","mi":"Maorisht","mk":"Maqedonisht","mr":"Maratisht","mn":"Mongolisht","ne":"Nepalisht","no":"Norvegjisht","or":"Odiaisht (orijaisht)","pa":"Panxhabisht","ps":"Pashto","fa":"Persisht","pl":"Polonisht","pt":"Portugalisht","ro":"Rumanisht","ru":"Rusisht","sm":"Samoanisht","sr":"Serbisht","st":"Sesotoisht","ceb":"Sibuanoisht","sd":"Sindisht","si":"Sinhalisht","sk":"Sllovakisht","sl":"Sllovenisht","so":"Somalisht","es":"Spanjisht","sw":"Suahilisht","sv":"Suedisht","su":"Sundanisht","sn":"Shonaisht","sq":"Shqip","th":"Tajlandisht","ta":"Tamilisht","tt":"Tatar","tg":"Taxhikisht","te":"Telugisht","tk":"Turkmenisht","tr":"Turqisht","cy":"Uellsisht","ug":"Ujgurisht","uk":"Ukrainisht","ur":"Urdu","uz":"Uzbekisht","vi":"Vietnamisht","xh":"Xhosa","zu":"Zulu"},"tl":{"af":"Afrikanisht","am":"Amarikisht","en":"Anglisht","ar":"Arabisht","hy":"Armenisht","az":"Azerisht","eu":"Baskisht","bn":"Bengalisht","my":"Birmanisht","be":"Bjellorusisht","bs":"Boshnjakisht","bg":"Bullgarisht","cs":"Çekisht","ny":"Çiçeuaisht","da":"Danisht","eo":"Esperanto","et":"Estonisht","tl":"Filipinase","fi":"Finlandisht","fr":"Frëngjisht","fy":"Frizianisht","gl":"Galicianisht","gd":"Galishte skoceze","el":"Greqisht","gu":"Guxharati","ka":"Gjeorgjisht","de":"Gjermanisht","haw":"Hauajane","ha":"Hausa","iw":"Hebraisht","hi":"Hindisht","hmn":"Hmong","nl":"Holandisht","hu":"Hungarisht","ig":"Igboisht","id":"Indonezisht","ga":"Irlandisht","is":"Islandisht","it":"Italisht","ja":"Japonisht","jw":"Javanisht","yi":"Jidisht","yo":"Joruba","kn":"Kanada","ca":"Katalonisht","kk":"Kazakisht","zh-CN":"Kinezisht (E thjeshtuar)","zh-TW":"Kinezisht (Tradicionale)","rw":"Kiniaruanda","ky":"Kirgizisht","km":"Kmere","ko":"Koreanisht","co":"Korsikançe","ht":"Kreolishte haitiane","hr":"Kroatisht","ku":"Kurde","lo":"Laosisht","la":"Latinisht","lv":"Letonisht","lt":"Lituanisht","lb":"Luksemburgisht","mg":"Malagasisht","ml":"Malajalamisht","ms":"Malajzisht","mt":"Malteze","mi":"Maorisht","mk":"Maqedonisht","mr":"Maratisht","mn":"Mongolisht","ne":"Nepalisht","no":"Norvegjisht","or":"Odiaisht (orijaisht)","pa":"Panxhabisht","ps":"Pashto","fa":"Persisht","pl":"Polonisht","pt":"Portugalisht","ro":"Rumanisht","ru":"Rusisht","sm":"Samoanisht","sr":"Serbisht","st":"Sesotoisht","ceb":"Sibuanoisht","sd":"Sindisht","si":"Sinhalisht","sk":"Sllovakisht","sl":"Sllovenisht","so":"Somalisht","es":"Spanjisht","sw":"Suahilisht","sv":"Suedisht","su":"Sundanisht","sn":"Shonaisht","sq":"Shqip","th":"Tajlandisht","ta":"Tamilisht","tt":"Tatar","tg":"Taxhikisht","te":"Telugisht","tk":"Turkmenisht","tr":"Turqisht","cy":"Uellsisht","ug":"Ujgurisht","uk":"Ukrainisht","ur":"Urdu","uz":"Uzbekisht","vi":"Vietnamisht","xh":"Xhosa","zu":"Zulu"},"al":{}})
+// API callback
+callback({
+  "sourceLanguages": [
+    {
+      "language": "auto",
+      "name": "Zbulo gjuhën"
+    },
+    {
+      "language": "af",
+      "name": "Afrikanisht"
+    },
+    {
+      "language": "ay",
+      "name": "Ajmarisht"
+    },
+    {
+      "language": "am",
+      "name": "Amarikisht"
+    },
+    {
+      "language": "en",
+      "name": "Anglisht"
+    },
+    {
+      "language": "ar",
+      "name": "Arabisht"
+    },
+    {
+      "language": "hy",
+      "name": "Armenisht"
+    },
+    {
+      "language": "as",
+      "name": "Asamezisht"
+    },
+    {
+      "language": "az",
+      "name": "Azerisht"
+    },
+    {
+      "language": "bm",
+      "name": "Bambaraisht"
+    },
+    {
+      "language": "eu",
+      "name": "Baskisht"
+    },
+    {
+      "language": "bn",
+      "name": "Bengalisht"
+    },
+    {
+      "language": "my",
+      "name": "Birmanisht"
+    },
+    {
+      "language": "be",
+      "name": "Bjellorusisht"
+    },
+    {
+      "language": "bs",
+      "name": "Boshnjakisht"
+    },
+    {
+      "language": "bho",
+      "name": "Boxhpurisht"
+    },
+    {
+      "language": "bg",
+      "name": "Bullgarisht"
+    },
+    {
+      "language": "ts",
+      "name": "Congaisht"
+    },
+    {
+      "language": "cs",
+      "name": "Çekisht"
+    },
+    {
+      "language": "ny",
+      "name": "Çiçeuaisht"
+    },
+    {
+      "language": "da",
+      "name": "Danisht"
+    },
+    {
+      "language": "dv",
+      "name": "Divehisht"
+    },
+    {
+      "language": "doi",
+      "name": "Dogriisht"
+    },
+    {
+      "language": "eo",
+      "name": "Esperanto"
+    },
+    {
+      "language": "et",
+      "name": "Estonisht"
+    },
+    {
+      "language": "ee",
+      "name": "Eueisht"
+    },
+    {
+      "language": "tl",
+      "name": "Filipinisht"
+    },
+    {
+      "language": "fi",
+      "name": "Finlandisht"
+    },
+    {
+      "language": "fr",
+      "name": "Frëngjisht"
+    },
+    {
+      "language": "fy",
+      "name": "Frizianisht"
+    },
+    {
+      "language": "gl",
+      "name": "Galicianisht"
+    },
+    {
+      "language": "gd",
+      "name": "Galishte skoceze"
+    },
+    {
+      "language": "el",
+      "name": "Greqisht"
+    },
+    {
+      "language": "gn",
+      "name": "Guaranisht"
+    },
+    {
+      "language": "gu",
+      "name": "Guxharati"
+    },
+    {
+      "language": "ka",
+      "name": "Gjeorgjisht"
+    },
+    {
+      "language": "de",
+      "name": "Gjermanisht"
+    },
+    {
+      "language": "haw",
+      "name": "Hauajane"
+    },
+    {
+      "language": "ha",
+      "name": "Hausa"
+    },
+    {
+      "language": "iw",
+      "name": "Hebraisht"
+    },
+    {
+      "language": "hi",
+      "name": "Hindisht"
+    },
+    {
+      "language": "hmn",
+      "name": "Hmong"
+    },
+    {
+      "language": "nl",
+      "name": "Holandisht"
+    },
+    {
+      "language": "hu",
+      "name": "Hungarisht"
+    },
+    {
+      "language": "ig",
+      "name": "Igboisht"
+    },
+    {
+      "language": "ilo",
+      "name": "Ilokanisht"
+    },
+    {
+      "language": "id",
+      "name": "Indonezisht"
+    },
+    {
+      "language": "ga",
+      "name": "Irlandisht"
+    },
+    {
+      "language": "is",
+      "name": "Islandisht"
+    },
+    {
+      "language": "it",
+      "name": "Italisht"
+    },
+    {
+      "language": "ja",
+      "name": "Japonisht"
+    },
+    {
+      "language": "jw",
+      "name": "Javanisht"
+    },
+    {
+      "language": "yi",
+      "name": "Jidisht"
+    },
+    {
+      "language": "yo",
+      "name": "Joruba"
+    },
+    {
+      "language": "kn",
+      "name": "Kanadaisht"
+    },
+    {
+      "language": "ca",
+      "name": "Katalonisht"
+    },
+    {
+      "language": "kk",
+      "name": "Kazakisht"
+    },
+    {
+      "language": "qu",
+      "name": "Keçuaisht"
+    },
+    {
+      "language": "zh-CN",
+      "name": "Kinezisht"
+    },
+    {
+      "language": "rw",
+      "name": "Kiniaruanda"
+    },
+    {
+      "language": "ky",
+      "name": "Kirgizisht"
+    },
+    {
+      "language": "km",
+      "name": "Kmerisht"
+    },
+    {
+      "language": "gom",
+      "name": "Konkanisht"
+    },
+    {
+      "language": "ko",
+      "name": "Koreanisht"
+    },
+    {
+      "language": "co",
+      "name": "Korsikançe"
+    },
+    {
+      "language": "ht",
+      "name": "Kreolishte haitiane"
+    },
+    {
+      "language": "kri",
+      "name": "Krioisht"
+    },
+    {
+      "language": "hr",
+      "name": "Kroatisht"
+    },
+    {
+      "language": "ku",
+      "name": "Kurdisht (Kurmanjisht)"
+    },
+    {
+      "language": "ckb",
+      "name": "Kurdisht (Sorani)"
+    },
+    {
+      "language": "lo",
+      "name": "Laosisht"
+    },
+    {
+      "language": "la",
+      "name": "Latinisht"
+    },
+    {
+      "language": "lv",
+      "name": "Letonisht"
+    },
+    {
+      "language": "ln",
+      "name": "Lingalisht"
+    },
+    {
+      "language": "lt",
+      "name": "Lituanisht"
+    },
+    {
+      "language": "lg",
+      "name": "Lugandisht"
+    },
+    {
+      "language": "lb",
+      "name": "Luksemburgisht"
+    },
+    {
+      "language": "mai",
+      "name": "Maitilisht"
+    },
+    {
+      "language": "mg",
+      "name": "Malagasisht"
+    },
+    {
+      "language": "ml",
+      "name": "Malajalamisht"
+    },
+    {
+      "language": "ms",
+      "name": "Malajzisht"
+    },
+    {
+      "language": "mt",
+      "name": "Malteze"
+    },
+    {
+      "language": "mi",
+      "name": "Maorisht"
+    },
+    {
+      "language": "mk",
+      "name": "Maqedonisht"
+    },
+    {
+      "language": "mr",
+      "name": "Maratisht"
+    },
+    {
+      "language": "mni-Mtei",
+      "name": "Meiteilonisht (Manipurisht)"
+    },
+    {
+      "language": "lus",
+      "name": "Mizoisht"
+    },
+    {
+      "language": "mn",
+      "name": "Mongolisht"
+    },
+    {
+      "language": "ne",
+      "name": "Nepalisht"
+    },
+    {
+      "language": "no",
+      "name": "Norvegjisht"
+    },
+    {
+      "language": "or",
+      "name": "Odiaisht (Orijaisht)"
+    },
+    {
+      "language": "om",
+      "name": "Oromo"
+    },
+    {
+      "language": "pa",
+      "name": "Panxhabisht"
+    },
+    {
+      "language": "ps",
+      "name": "Pashto"
+    },
+    {
+      "language": "fa",
+      "name": "Persisht"
+    },
+    {
+      "language": "pl",
+      "name": "Polonisht"
+    },
+    {
+      "language": "pt",
+      "name": "Portugalisht"
+    },
+    {
+      "language": "ro",
+      "name": "Rumanisht"
+    },
+    {
+      "language": "ru",
+      "name": "Rusisht"
+    },
+    {
+      "language": "sm",
+      "name": "Samoanisht"
+    },
+    {
+      "language": "sa",
+      "name": "Sanskritisht"
+    },
+    {
+      "language": "nso",
+      "name": "Sepedisht"
+    },
+    {
+      "language": "sr",
+      "name": "Serbisht"
+    },
+    {
+      "language": "st",
+      "name": "Sesotoisht"
+    },
+    {
+      "language": "ceb",
+      "name": "Sibuanoisht"
+    },
+    {
+      "language": "sd",
+      "name": "Sindisht"
+    },
+    {
+      "language": "si",
+      "name": "Sinhalisht"
+    },
+    {
+      "language": "sk",
+      "name": "Sllovakisht"
+    },
+    {
+      "language": "sl",
+      "name": "Sllovenisht"
+    },
+    {
+      "language": "so",
+      "name": "Somalisht"
+    },
+    {
+      "language": "es",
+      "name": "Spanjisht"
+    },
+    {
+      "language": "sw",
+      "name": "Suahilisht"
+    },
+    {
+      "language": "sv",
+      "name": "Suedisht"
+    },
+    {
+      "language": "su",
+      "name": "Sundanisht"
+    },
+    {
+      "language": "sn",
+      "name": "Shonaisht"
+    },
+    {
+      "language": "sq",
+      "name": "Shqip"
+    },
+    {
+      "language": "th",
+      "name": "Tajlandisht"
+    },
+    {
+      "language": "ta",
+      "name": "Tamilisht"
+    },
+    {
+      "language": "tt",
+      "name": "Tatar"
+    },
+    {
+      "language": "tg",
+      "name": "Taxhikisht"
+    },
+    {
+      "language": "te",
+      "name": "Telugisht"
+    },
+    {
+      "language": "ti",
+      "name": "Tigrinisht"
+    },
+    {
+      "language": "ak",
+      "name": "Tuijanisht"
+    },
+    {
+      "language": "tk",
+      "name": "Turkmenisht"
+    },
+    {
+      "language": "tr",
+      "name": "Turqisht"
+    },
+    {
+      "language": "cy",
+      "name": "Uellsisht"
+    },
+    {
+      "language": "ug",
+      "name": "Ujgurisht"
+    },
+    {
+      "language": "uk",
+      "name": "Ukrainisht"
+    },
+    {
+      "language": "ur",
+      "name": "Urduisht"
+    },
+    {
+      "language": "uz",
+      "name": "Uzbekisht"
+    },
+    {
+      "language": "vi",
+      "name": "Vietnamisht"
+    },
+    {
+      "language": "xh",
+      "name": "Xhosa"
+    },
+    {
+      "language": "zu",
+      "name": "Zulu"
+    }
+  ],
+  "targetLanguages": [
+    {
+      "language": "af",
+      "name": "Afrikanisht"
+    },
+    {
+      "language": "ay",
+      "name": "Ajmarisht"
+    },
+    {
+      "language": "am",
+      "name": "Amarikisht"
+    },
+    {
+      "language": "en",
+      "name": "Anglisht"
+    },
+    {
+      "language": "ar",
+      "name": "Arabisht"
+    },
+    {
+      "language": "hy",
+      "name": "Armenisht"
+    },
+    {
+      "language": "as",
+      "name": "Asamezisht"
+    },
+    {
+      "language": "az",
+      "name": "Azerisht"
+    },
+    {
+      "language": "bm",
+      "name": "Bambaraisht"
+    },
+    {
+      "language": "eu",
+      "name": "Baskisht"
+    },
+    {
+      "language": "bn",
+      "name": "Bengalisht"
+    },
+    {
+      "language": "my",
+      "name": "Birmanisht"
+    },
+    {
+      "language": "be",
+      "name": "Bjellorusisht"
+    },
+    {
+      "language": "bs",
+      "name": "Boshnjakisht"
+    },
+    {
+      "language": "bho",
+      "name": "Boxhpurisht"
+    },
+    {
+      "language": "bg",
+      "name": "Bullgarisht"
+    },
+    {
+      "language": "ts",
+      "name": "Congaisht"
+    },
+    {
+      "language": "cs",
+      "name": "Çekisht"
+    },
+    {
+      "language": "ny",
+      "name": "Çiçeuaisht"
+    },
+    {
+      "language": "da",
+      "name": "Danisht"
+    },
+    {
+      "language": "dv",
+      "name": "Divehisht"
+    },
+    {
+      "language": "doi",
+      "name": "Dogriisht"
+    },
+    {
+      "language": "eo",
+      "name": "Esperanto"
+    },
+    {
+      "language": "et",
+      "name": "Estonisht"
+    },
+    {
+      "language": "ee",
+      "name": "Eueisht"
+    },
+    {
+      "language": "tl",
+      "name": "Filipinisht"
+    },
+    {
+      "language": "fi",
+      "name": "Finlandisht"
+    },
+    {
+      "language": "fr",
+      "name": "Frëngjisht"
+    },
+    {
+      "language": "fy",
+      "name": "Frizianisht"
+    },
+    {
+      "language": "gl",
+      "name": "Galicianisht"
+    },
+    {
+      "language": "gd",
+      "name": "Galishte skoceze"
+    },
+    {
+      "language": "el",
+      "name": "Greqisht"
+    },
+    {
+      "language": "gn",
+      "name": "Guaranisht"
+    },
+    {
+      "language": "gu",
+      "name": "Guxharati"
+    },
+    {
+      "language": "ka",
+      "name": "Gjeorgjisht"
+    },
+    {
+      "language": "de",
+      "name": "Gjermanisht"
+    },
+    {
+      "language": "haw",
+      "name": "Hauajane"
+    },
+    {
+      "language": "ha",
+      "name": "Hausa"
+    },
+    {
+      "language": "iw",
+      "name": "Hebraisht"
+    },
+    {
+      "language": "hi",
+      "name": "Hindisht"
+    },
+    {
+      "language": "hmn",
+      "name": "Hmong"
+    },
+    {
+      "language": "nl",
+      "name": "Holandisht"
+    },
+    {
+      "language": "hu",
+      "name": "Hungarisht"
+    },
+    {
+      "language": "ig",
+      "name": "Igboisht"
+    },
+    {
+      "language": "ilo",
+      "name": "Ilokanisht"
+    },
+    {
+      "language": "id",
+      "name": "Indonezisht"
+    },
+    {
+      "language": "ga",
+      "name": "Irlandisht"
+    },
+    {
+      "language": "is",
+      "name": "Islandisht"
+    },
+    {
+      "language": "it",
+      "name": "Italisht"
+    },
+    {
+      "language": "ja",
+      "name": "Japonisht"
+    },
+    {
+      "language": "jw",
+      "name": "Javanisht"
+    },
+    {
+      "language": "yi",
+      "name": "Jidisht"
+    },
+    {
+      "language": "yo",
+      "name": "Joruba"
+    },
+    {
+      "language": "kn",
+      "name": "Kanadaisht"
+    },
+    {
+      "language": "ca",
+      "name": "Katalonisht"
+    },
+    {
+      "language": "kk",
+      "name": "Kazakisht"
+    },
+    {
+      "language": "qu",
+      "name": "Keçuaisht"
+    },
+    {
+      "language": "zh-CN",
+      "name": "Kinezisht (E thjeshtuar)"
+    },
+    {
+      "language": "zh-TW",
+      "name": "Kinezisht (Tradicionale)"
+    },
+    {
+      "language": "rw",
+      "name": "Kiniaruanda"
+    },
+    {
+      "language": "ky",
+      "name": "Kirgizisht"
+    },
+    {
+      "language": "km",
+      "name": "Kmerisht"
+    },
+    {
+      "language": "gom",
+      "name": "Konkanisht"
+    },
+    {
+      "language": "ko",
+      "name": "Koreanisht"
+    },
+    {
+      "language": "co",
+      "name": "Korsikançe"
+    },
+    {
+      "language": "ht",
+      "name": "Kreolishte haitiane"
+    },
+    {
+      "language": "kri",
+      "name": "Krioisht"
+    },
+    {
+      "language": "hr",
+      "name": "Kroatisht"
+    },
+    {
+      "language": "ku",
+      "name": "Kurdisht (Kurmanjisht)"
+    },
+    {
+      "language": "ckb",
+      "name": "Kurdisht (Sorani)"
+    },
+    {
+      "language": "lo",
+      "name": "Laosisht"
+    },
+    {
+      "language": "la",
+      "name": "Latinisht"
+    },
+    {
+      "language": "lv",
+      "name": "Letonisht"
+    },
+    {
+      "language": "ln",
+      "name": "Lingalisht"
+    },
+    {
+      "language": "lt",
+      "name": "Lituanisht"
+    },
+    {
+      "language": "lg",
+      "name": "Lugandisht"
+    },
+    {
+      "language": "lb",
+      "name": "Luksemburgisht"
+    },
+    {
+      "language": "mai",
+      "name": "Maitilisht"
+    },
+    {
+      "language": "mg",
+      "name": "Malagasisht"
+    },
+    {
+      "language": "ml",
+      "name": "Malajalamisht"
+    },
+    {
+      "language": "ms",
+      "name": "Malajzisht"
+    },
+    {
+      "language": "mt",
+      "name": "Malteze"
+    },
+    {
+      "language": "mi",
+      "name": "Maorisht"
+    },
+    {
+      "language": "mk",
+      "name": "Maqedonisht"
+    },
+    {
+      "language": "mr",
+      "name": "Maratisht"
+    },
+    {
+      "language": "mni-Mtei",
+      "name": "Meiteilonisht (Manipurisht)"
+    },
+    {
+      "language": "lus",
+      "name": "Mizoisht"
+    },
+    {
+      "language": "mn",
+      "name": "Mongolisht"
+    },
+    {
+      "language": "ne",
+      "name": "Nepalisht"
+    },
+    {
+      "language": "no",
+      "name": "Norvegjisht"
+    },
+    {
+      "language": "or",
+      "name": "Odiaisht (Orijaisht)"
+    },
+    {
+      "language": "om",
+      "name": "Oromo"
+    },
+    {
+      "language": "pa",
+      "name": "Panxhabisht"
+    },
+    {
+      "language": "ps",
+      "name": "Pashto"
+    },
+    {
+      "language": "fa",
+      "name": "Persisht"
+    },
+    {
+      "language": "pl",
+      "name": "Polonisht"
+    },
+    {
+      "language": "pt",
+      "name": "Portugalisht"
+    },
+    {
+      "language": "ro",
+      "name": "Rumanisht"
+    },
+    {
+      "language": "ru",
+      "name": "Rusisht"
+    },
+    {
+      "language": "sm",
+      "name": "Samoanisht"
+    },
+    {
+      "language": "sa",
+      "name": "Sanskritisht"
+    },
+    {
+      "language": "nso",
+      "name": "Sepedisht"
+    },
+    {
+      "language": "sr",
+      "name": "Serbisht"
+    },
+    {
+      "language": "st",
+      "name": "Sesotoisht"
+    },
+    {
+      "language": "ceb",
+      "name": "Sibuanoisht"
+    },
+    {
+      "language": "sd",
+      "name": "Sindisht"
+    },
+    {
+      "language": "si",
+      "name": "Sinhalisht"
+    },
+    {
+      "language": "sk",
+      "name": "Sllovakisht"
+    },
+    {
+      "language": "sl",
+      "name": "Sllovenisht"
+    },
+    {
+      "language": "so",
+      "name": "Somalisht"
+    },
+    {
+      "language": "es",
+      "name": "Spanjisht"
+    },
+    {
+      "language": "sw",
+      "name": "Suahilisht"
+    },
+    {
+      "language": "sv",
+      "name": "Suedisht"
+    },
+    {
+      "language": "su",
+      "name": "Sundanisht"
+    },
+    {
+      "language": "sn",
+      "name": "Shonaisht"
+    },
+    {
+      "language": "sq",
+      "name": "Shqip"
+    },
+    {
+      "language": "th",
+      "name": "Tajlandisht"
+    },
+    {
+      "language": "ta",
+      "name": "Tamilisht"
+    },
+    {
+      "language": "tt",
+      "name": "Tatar"
+    },
+    {
+      "language": "tg",
+      "name": "Taxhikisht"
+    },
+    {
+      "language": "te",
+      "name": "Telugisht"
+    },
+    {
+      "language": "ti",
+      "name": "Tigrinisht"
+    },
+    {
+      "language": "ak",
+      "name": "Tuijanisht"
+    },
+    {
+      "language": "tk",
+      "name": "Turkmenisht"
+    },
+    {
+      "language": "tr",
+      "name": "Turqisht"
+    },
+    {
+      "language": "cy",
+      "name": "Uellsisht"
+    },
+    {
+      "language": "ug",
+      "name": "Ujgurisht"
+    },
+    {
+      "language": "uk",
+      "name": "Ukrainisht"
+    },
+    {
+      "language": "ur",
+      "name": "Urduisht"
+    },
+    {
+      "language": "uz",
+      "name": "Uzbekisht"
+    },
+    {
+      "language": "vi",
+      "name": "Vietnamisht"
+    },
+    {
+      "language": "xh",
+      "name": "Xhosa"
+    },
+    {
+      "language": "zu",
+      "name": "Zulu"
+    }
+  ]
+}
+);

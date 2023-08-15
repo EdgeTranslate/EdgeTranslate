@@ -41,7 +41,7 @@
         }
 
         let s = document.createElement("script");
-        s.src = `${this.EDGE_TRANSLATE_URL}google/element.js`;
+        s.src = `${this.EDGE_TRANSLATE_URL}google/elms/elm_${this.USER_LANG}.js`;
         document.getElementsByTagName("head")[0].appendChild(s);
     }
 })();
