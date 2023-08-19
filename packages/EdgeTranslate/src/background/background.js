@@ -323,7 +323,8 @@ chrome.webRequest.onHeadersReceived.addListener(
                               /((^|;)\s*(default-src|script-src|img-src|connect-src))\s/g,
                               // eslint-disable-next-line prefer-template
                               "$1 translate.googleapis.com translate.google.com www.google.com www.gstatic.com " +
-                                  chrome.runtime.getURL(" ")
+                                  chrome.runtime.getURL("") +
+                                  " "
                           ),
                   }
                 : header
