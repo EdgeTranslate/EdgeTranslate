@@ -1,7 +1,7 @@
 {
     "name": "__MSG_AppName__",
     "description": "__MSG_Description__",
-    "version": "2.4.2",
+    "version": "2.4.3",
     "default_locale": "en",
     "background": {
         "scripts": ["./background/background.js"]

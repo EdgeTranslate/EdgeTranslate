@@ -301,7 +301,14 @@ class GoogleTranslator {
      * @returns detected language
      */
     parseDetectResult(response: any) {
-        if (this.fallBacking) return this.CODE_TO_LAN.get(response[2]) || "";
+        if (this.fallBacking) {
+            return this.CODE_TO_LAN.get(response[2]) || "";
+        }
+
+        if (response.ld_result.extended_srclangs) {
+            return this.CODE_TO_LAN.get(response.ld_result.extended_srclangs[0]) || "";
+        }
+
         return this.CODE_TO_LAN.get(response.ld_result.srclangs[0]) || "";
     }
 
