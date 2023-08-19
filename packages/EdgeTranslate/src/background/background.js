@@ -314,7 +314,7 @@ chrome.webRequest.onHeadersReceived.addListener(
                       value: header.value
                           .replaceAll(
                               // Remove 'none' and "none".
-                              /((^|;)\s*(default-src|script-src|img-src|connect-src))\s+['"]none['"]/g,
+                              /((^|;)\s*(default-src|script-src|img-src|connect-src|frame-src))\s+['"]none['"]/g,
                               "$1 "
                           )
                           .replaceAll(
@@ -322,9 +322,11 @@ chrome.webRequest.onHeadersReceived.addListener(
                               // The last "\s" is added to prevent matching script-src-attr, script-src-elem, etc..
                               /((^|;)\s*(default-src|script-src|img-src|connect-src))\s/g,
                               // eslint-disable-next-line prefer-template
-                              "$1 translate.googleapis.com translate.google.com www.google.com www.gstatic.com " +
-                                  chrome.runtime.getURL(" ")
-                          ),
+                              "$1 'unsafe-inline' translate.googleapis.com translate.google.com *.google.com *.gstatic.com " +
+                                  chrome.runtime.getURL("") +
+                                  " "
+                          )
+                          .replaceAll(/((^|;)\s*frame-src)\s/g, "$1 'self' "), // Allow frame-src to the page itself.
                   }
                 : header
         ),
