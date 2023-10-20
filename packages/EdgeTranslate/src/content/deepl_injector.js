@@ -27,13 +27,15 @@
          */
         const intervalId = setInterval(() => {
             /**
-             * "lmt__target_textarea" is the element which holds the translate result.
+             * "sentence_highlight" is the element which holds the translate result.
              */
-            const targetTextAreas = document.getElementsByClassName("lmt__target_textarea");
-            const result =
-                targetTextAreas && targetTextAreas.length > 0 && targetTextAreas[0].innerText
-                    ? targetTextAreas[0].innerText.trim()
-                    : "";
+            const targetTextAreas = [...document.getElementsByClassName("sentence_highlight")];
+            var result = ""
+            if (targetTextAreas && targetTextAreas.length > 0) {
+                targetTextAreas.forEach(element => {
+                    result = result + element.innerText.trim()
+                });
+            }
 
             if (result.length > 0) {
                 /**
