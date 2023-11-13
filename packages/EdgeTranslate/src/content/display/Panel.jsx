@@ -726,6 +726,10 @@ const GlobalStyle = createGlobalStyle`
         background-color: rgba(150, 150, 150, 0.8);
     }
 
+    .simplebar-content-wrapper {
+        overscroll-behavior: contain;
+    }
+
     /* Apply to the content wrapper, which is the parent element of simplebar-content, to align content in the vertical center. */
     .${ContentWrapperCenterClassName} {
         display: flex;
@@ -740,7 +744,7 @@ const GlobalStyle = createGlobalStyle`
     }
 
     /* Adjust the content container, which is the parent element of Panel Body. */
-    .simplebar-content{
+    .simplebar-content {
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
@@ -859,7 +863,6 @@ const Body = styled.div`
     align-items: center;
     overflow-x: hidden;
     overflow-y: overlay;
-    overscroll-behavior: contain;
     flex-grow: 1;
     flex-shrink: 1;
     word-break: break-word;
