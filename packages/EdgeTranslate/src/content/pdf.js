@@ -24,7 +24,7 @@ window.addEventListener("load", () => {
          * https://www.yuque.com/.
          */
         let pdfSrc = window.location.href;
-        if (document.body.children[0].src && document.body.children[0].src !== "about:blank") {
+        if (document.body && document.body.children && document.body.children.length > 0 && document.body.children[0].src && document.body.children[0].src !== "about:blank") {
             pdfSrc = document.body.children[0].src;
         }
 

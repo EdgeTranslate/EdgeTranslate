@@ -11,10 +11,10 @@ function isPDF() {
  * Check if current page is Chrome PDF Viewer.
  */
 function isChromePDFViewer() {
+    let href = document.location.href;
     return (
-        document.body &&
-        document.body.children[0] &&
-        document.body.children[0].type === "application/pdf"
+        href.toLowerCase().endsWith('.pdf') &&
+        !href.startsWith("chrome-extension://")
     );
 }
 
