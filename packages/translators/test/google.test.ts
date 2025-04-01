@@ -68,4 +68,15 @@ describe("google translator api", () => {
                 done(error);
             });
     });
+
+    it("to check new translate api splice", (done) => {
+        TRANSLATOR.translate("僕は三十七歳で。", "ja", "en")
+            .then((result) => {
+                expect(result).toEqual("I'm thirty-seven years old.");
+                done();
+            })
+            .catch((error) => {
+                done(error);
+            })
+    })
 });

@@ -113,10 +113,28 @@ const LANGUAGES: [string, string][] = [
 ];
 
 /**
+ * HTML translation API headers.
+ */
+const HTML_TRANSLATION_HEADERS = {
+    "Accept": "*/*",
+    "X-Goog-API-Key": "AIzaSyATBXajvzQLTDHEQbcpq0Ihe0vWDHmO520",
+    "Content-Type": "application/json+protobuf",
+};
+
+/**
+ * HTML placeholders map
+ */
+const PLACEHOLDER_MAP = {
+    "&amp;": "&",
+    "&gt;": ">",
+    "&lt;": "<"
+} as const;
+
+/**
  * Google translate interface.
  */
 class GoogleTranslator {
-    // tk需要的密钥
+    // tk 需要的密钥
     TKK = [434217, 1534559001];
 
     // Google Translate home page.
@@ -132,6 +150,7 @@ class GoogleTranslator {
      * Translate API.
      */
     TRANSLATE_URL = `${this.HOST}translate_a/single?client=gtx&dj=1&dt=t&dt=at&dt=bd&dt=ex&dt=md&dt=rw&dt=ss&dt=rm`;
+    HTML_TRANSLATE_URL = "https://translate-pa.googleapis.com/v1/translateHtml";
     TTS_URL = `${this.HOST}translate_tts?client=gtx`;
 
     /**
@@ -255,6 +274,24 @@ class GoogleTranslator {
         setTimeout(() => {
             this.fallBacking = false;
         }, 30 * 60 * 1000 /* 30 minutes */);
+    }
+
+    /**
+     * Replace all quotes with placeholders
+     * @param text
+     */
+        replaceQuotes(text: string) {
+            return text.replace(/"/g, "&quot;").replace(/'/g, "&apos;").replace(/\r?\n/g, '","');
+        }
+    
+
+    /**
+     * Generate html translation api request body
+     */
+    createReuqestBody(text: string, from: string, to: string) {
+        const processedText = this.replaceQuotes(text);
+        const data = `[[["${processedText}"], "${from}", "${to}"], "te_lib"]`;
+        return data;
     }
 
     /**
@@ -570,6 +607,28 @@ class GoogleTranslator {
 
             if (response.status === 200) {
                 let result = this.parseTranslateResult(response.data);
+
+                if (
+                    !result.detailedMeanings?.length &&
+                    !result.definitions?.length &&
+                    !result.examples?.length
+                ) {
+                    // Use HTML translation api if text isn't a word or don't find anything explanatory
+                    const HTMLResponse = await axios.post(
+                        this.HTML_TRANSLATE_URL,
+                        this.createReuqestBody(text, from, to),
+                        { headers: HTML_TRANSLATION_HEADERS }
+                    );
+
+                    if (HTMLResponse.status === 200) {
+                        result.mainMeaning = (HTMLResponse.data[0] as unknown as string[]).join(
+                            "\n\n"
+                        ).replace(/&amp;|&gt;|&lt;/g, match => PLACEHOLDER_MAP[match as keyof typeof PLACEHOLDER_MAP]);
+                        result.originalText = text;
+                        return result;
+                    }
+                }
+
                 return result;
             }
 
