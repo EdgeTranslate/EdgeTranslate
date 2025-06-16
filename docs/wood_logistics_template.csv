@@ -1,0 +1,3 @@
+Date,Region,WoodType,PricePerM3,Source,Origin,Destination,DistanceKM,EstimatedDurationH,TruckModel,Axles,FreightPerKM
+2024-01-01,Sao Paulo,Pinus,120,ExampleSource,Sao Paulo,Rio de Janeiro,430,6.5,Truck A,4,7.5
+2024-01-01,Sao Paulo,Eucalyptus,150,ExampleSource,Sao Paulo,Rio de Janeiro,430,6.5,Truck A,4,7.5

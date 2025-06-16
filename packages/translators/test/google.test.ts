@@ -68,4 +68,32 @@ describe("google translator api", () => {
                 done(error);
             });
     });
+
+    it("to handle network error when pronouncing", async () => {
+        const translator = new GoogleTranslator();
+        translator.AUDIO = {
+            paused: true,
+            play: jest.fn(() => Promise.reject(new Error("fail"))),
+            pause: jest.fn(),
+            error: { code: 2 },
+        } as any;
+
+        await expect(
+            translator.pronounce("hello", "en", "fast")
+        ).rejects.toMatchObject({ errorType: "NET_ERR" });
+    });
+
+    it("to handle api error when pronouncing", async () => {
+        const translator = new GoogleTranslator();
+        translator.AUDIO = {
+            paused: true,
+            play: jest.fn(() => Promise.reject(new Error("fail"))),
+            pause: jest.fn(),
+            error: { code: 4 },
+        } as any;
+
+        await expect(
+            translator.pronounce("hello", "en", "fast")
+        ).rejects.toMatchObject({ errorType: "API_ERR", errorCode: 4 });
+    });
 });
