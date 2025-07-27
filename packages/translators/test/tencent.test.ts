@@ -23,4 +23,42 @@ describe("tencent translator api", () => {
             expect(result).toEqual("zh-CN");
         });
     });
+
+    it("to handle network error when pronouncing", async () => {
+        const t = new TRANSLATOR({});
+        t.AUDIO = {
+            paused: true,
+            play: jest.fn(() => Promise.reject(new Error("fail"))),
+            pause: jest.fn(),
+            error: { code: 2 },
+        } as any;
+
+        // mock cookie
+        chrome.cookies.get = jest
+            .fn()
+            .mockImplementation((_opts, callback) => callback({ value: "x" }));
+
+        await expect(t.pronounce("hello", "en", "fast")).rejects.toMatchObject({
+            errorType: "NET_ERR",
+        });
+    });
+
+    it("to handle api error when pronouncing", async () => {
+        const t = new TRANSLATOR({});
+        t.AUDIO = {
+            paused: true,
+            play: jest.fn(() => Promise.reject(new Error("fail"))),
+            pause: jest.fn(),
+            error: { code: 4 },
+        } as any;
+
+        chrome.cookies.get = jest
+            .fn()
+            .mockImplementation((_opts, callback) => callback({ value: "x" }));
+
+        await expect(t.pronounce("hello", "en", "fast")).rejects.toMatchObject({
+            errorType: "API_ERR",
+            errorCode: 4,
+        });
+    });
 });

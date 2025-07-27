@@ -48,3 +48,7 @@ TRANSLATORS.google.translate("hello", "en", "zh-CN").then((result) => {
 ### More Info
 
 Please refer to [tests](./test/).
+
+### Error Handling
+
+Pronunciation functions return structured errors. If audio playback fails due to network issues (for example when `AUDIO.error.code` equals `2` or is `undefined`), the promise rejects with an object whose `errorType` is `"NET_ERR"`. Other playback failures are reported as `"API_ERR"` with the `errorCode` taken from the audio element.

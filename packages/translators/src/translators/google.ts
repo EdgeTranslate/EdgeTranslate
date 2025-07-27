@@ -620,10 +620,25 @@ class GoogleTranslator {
         try {
             await this.AUDIO.play();
         } catch (error: any) {
-            // TODO: handle API_ERR and NET_ERR differently.
+            const errCode = (this.AUDIO as any).error?.code;
+            if (errCode === 2 || errCode === undefined) {
+                throw {
+                    errorType: "NET_ERR",
+                    errorCode: 0,
+                    errorMsg: error.message,
+                    errorAct: {
+                        api: "google",
+                        action: "pronounce",
+                        text,
+                        from: language,
+                        to: null,
+                    },
+                };
+            }
+
             throw {
-                errorType: "NET_ERR",
-                errorCode: 0,
+                errorType: "API_ERR",
+                errorCode: errCode,
                 errorMsg: error.message,
                 errorAct: {
                     api: "google",

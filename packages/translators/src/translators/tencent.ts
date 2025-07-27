@@ -421,10 +421,25 @@ class TencentTranslator {
                     return pronounceOnce();
                 }
 
-                // TODO: handle NET_ERR and API_ERR differently.
+                const errCode = (this.AUDIO as any).error?.code;
+                if (errCode === 2 || errCode === undefined) {
+                    throw {
+                        errorType: "NET_ERR",
+                        errorCode: 0,
+                        errorMsg: error.message,
+                        errorAct: {
+                            api: "tencent",
+                            action: "pronounce",
+                            text,
+                            from: language,
+                            to: null,
+                        },
+                    };
+                }
+
                 throw {
-                    errorType: "NET_ERR",
-                    errorCode: 0,
+                    errorType: "API_ERR",
+                    errorCode: errCode,
                     errorMsg: error.message,
                     errorAct: {
                         api: "tencent",
