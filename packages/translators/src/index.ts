@@ -4,6 +4,7 @@ import BaiduTranslator from "./translators/baidu";
 import DeeplTranslator from "./translators/deepl";
 import TencentTranslator from "./translators/tencent";
 import HybridTranslator from "./translators/hybrid";
+import ChatGPTTranslator from "./translators/chatgpt";
 import axios from "./axios";
 
 /**
@@ -235,6 +236,7 @@ export {
     TencentTranslator,
     BaiduTranslator,
     DeeplTranslator,
+    ChatGPTTranslator
 };
 export type { HybridSupportedTranslators, HybridConfig, Selections } from "./translators/hybrid";
 export * from "./types";
