@@ -8,7 +8,7 @@
 
 Welcome to Edge Translate!
 
-Edge Translate is a simple and practical translation plugin that supports mainstream browsers such as [Chrome](https://chrome.google.com/webstore/detail/bocbaocobfecmglnmeaeppambideimao), [Firefox](https://addons.mozilla.org/en-US/firefox/addon/edge_translate), and [360 Secure Browser](https://ext.se.360.cn/webstore/detail/jkhojcaggkaojlhfddocjkkphfdkejeg) . The main purpose of our plugin is to assist users in reading foreign literature. To this end, we have followed the principle of the user's reading experience first, and made the following efforts:
+Edge Translate is a simple and practical translation plugin that supports mainstream browsers such as [Chrome](https://chromewebstore.google.com/detail/bocbaocobfecmglnmeaeppambideimao), [Firefox](https://addons.mozilla.org/en-US/firefox/addon/edge_translate), and [360 Secure Browser](https://ext.se.360.cn/webstore/detail/jkhojcaggkaojlhfddocjkkphfdkejeg) . The main purpose of our plugin is to assist users in reading foreign literature. To this end, we have followed the principle of the user's reading experience first, and made the following efforts:
 
 -   **Google Translate API**
 
@@ -70,7 +70,7 @@ Edge Translate were developed by us ( [nickyc975](https://github.com/nickyc975) 
 
 -   Email: [nickyc975](mailto:chenjinlong2016@outlook.com), [Mark Fenng](mailto:f18846188605@gmail.com)
 
--   Chrome App Store: [Edge Translate](https://chrome.google.com/webstore/detail/bocbaocobfecmglnmeaeppambideimao/reviews)
+-   Chrome App Store: [Edge Translate](https://chromewebstore.google.com/detail/bocbaocobfecmglnmeaeppambideimao/reviews)
 
 -   Firefox Add-ons Store: [Edge Translate](https://addons.mozilla.org/en-US/firefox/addon/edge_translate/reviews)
 
